@@ -1,0 +1,3 @@
+[submodule "libsandstuff/jquery.transform.js"]
+	path = libsandstuff/jquery.transform.js
+	url = git://github.com/louisremi/jquery.transform.js.git
