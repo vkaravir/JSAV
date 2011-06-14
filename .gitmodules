@@ -22,3 +22,6 @@
 [submodule "libsandstuff/jquery-smartresize"]
 	path = libsandstuff/jquery-smartresize
 	url = git://github.com/louisremi/jquery-smartresize.git
+[submodule "libsandstuff/qunit"]
+	path = libsandstuff/qunit
+	url = git://github.com/jquery/qunit.git
