@@ -11,8 +11,22 @@
 */
 (function($) {
   if (typeof JSAV === "undefined") { return; }
-  var ds = {},
-    common = {
+  $.fn.getstyles = function() {
+    var res = {},
+      arg;
+    for (var i = 0; i < arguments.length; i++) {
+      arg = arguments[i];
+      if ($.isArray(arg)) {
+        for (var j = 0; j < arg.length; j++) {
+          res[arg[j]] = this.css(arg[j]);
+        }
+      } else {
+        res[arg] = this.css(arg);
+      }
+    }
+    return res;
+  };
+  var common = {
       'id': function(newId) { 
         if (newId) { 
           this._id = newId;
@@ -25,12 +39,13 @@
         return JSAV.position(this.element);
       }
     },
-    initDs = function(dstr, options, element) {
+    initDs = function(dstr, element, options) {
       dstr.options = options;
-      console.log("dstr", dstr, this, this.prototype, options, element);
-      if (element) {
+      if ($.isArray(element)) {
+        dstr.initialize(element, options);
+      } else if (element) { // assume it's a DOM element
         dstr.element = element;
-        dstr.initializeFromElement();
+        dstr.initializeFromElement(options);
       } else {
         // TODO: create an element for this data structure
       }
@@ -47,16 +62,16 @@
     };
 
  
-  ds.BinTreeNode = function(value, options, element) {
+  var BinTreeNode = function(value, element, options) {
    
   };
-  var btnodeproto = ds.BinTreeNode.prototype;
+  var btnodeproto = BinTreeNode.prototype;
   addCommonProperties(btnodeproto);
   addCommonProperties(btnodeproto, nodecommon);
  
-  var BinSearchTree = function(jsav, options, element) {
+  var BinSearchTree = function(jsav, element, options) {
     this.jsav = jsav;
-    initDs(this, options, element);
+    initDs(this, element, options);
   };
   var btproto = BinSearchTree.prototype;
   btproto.insert = function(value, callback) { return this; };
@@ -67,9 +82,6 @@
     // TODO: load from the element given
   };
   addCommonProperties(btproto);
-  ds.bst = function(options, element) {
-    return new BinSearchTree(this, options, element);
-  };
  
  
   var getIndices = function($elems, indices) {
@@ -92,70 +104,112 @@
         return $({});
       }
     }
-  }
+  };
 
-  var AVArray = function(jsav, options, element) {
+
+  /* Array data structure for JSAV library. */
+  var AVArray = function(jsav, element, options) {
     this.jsav = jsav;
     this._arr = [];
-    initDs(this, options, element);
+    initDs(this, element, options);
   };
   var arrproto = AVArray.prototype;
-  arrproto.highlight = function(indices, options, callback) {
-    var $elems = getIndices($(this.element).find("li"), indices);
-    if (!options) {
-      $elems.addClass("highlight", 2500);
-    } else {
-      $elems.animate(options, 2500);
-    }
-    if (callback) {}
+  function setHighlight(indices, mode) {
+    var $elems = getIndices($(this.element).find("li"), indices),
+      fname = (mode && mode === "add") ? "addClass" : "removeClass";
+    $elems[fname]("highlight", this.jsav.SPEED);
+  }
+  arrproto.highlight = JSAV.anim(function(indices, options) {
+    setHighlight.call(this, indices, "add");
     return this; 
-  };
-  arrproto.unhighlight = function(indices, options, callback) { return this; };
-  arrproto.css = function(indices, css, callback) { return this; };
-  arrproto.swap = function(index1, index2, options, callback) {
+  });
+
+  arrproto.unhighlight = JSAV.anim(function(indices, options) {
+    setHighlight.call(this, indices, "remove");
+    return this; 
+  });
+  arrproto.css = JSAV.anim(function(indices, css) { 
+    var $elems = getIndices($(this.element).find("li"), indices),
+      that = this;
+    $elems.animate(css, this.jsav.SPEED);
+    return this; 
+  });
+  function realSwap(index1, index2, options) {
     var tmp = this._arr[index1],
-      $i1 = $(this.element).find("li:eq(" + index1 + ")").find("span"),
-      $i2 = $(this.element).find("li:eq(" + index2 + ")").find("span"),
+      that = this,
+      args = arguments,
+      $pi1 = $(this.element).find("li:eq(" + index1 + ")"), // index
+      $pi2 = $(this.element).find("li:eq(" + index2 + ")"),
+      $i1 = $pi1.find("span"),
+      $i2 = $pi2.find("span"),
       p1 = JSAV.position($i1),
       p2 = JSAV.position($i2),
-      that = this,
-      args = arguments;
-    $i2.animate({"transform": "translateX(" + (p1.left-p2.left) + "px) translateY(" + (p1.top-p2.top) + "px)"}, 2500, 'linear');
-    $i1.animate({"transform": "translateX(" + (p2.left-p1.left) + "px) translateY(" + (p2.top-p1.top) + "px)"}, 2500, 'linear', 
+      indices = $($pi1).add($pi2),
+      i1prevStyle = $pi1.getstyles("color", "background-color"),
+      i2prevStyle = $pi2.getstyles("color", "background-color"),
+      speed = this.jsav.SPEED/10;
+    indices.animate({"color": "red", "background-color": "pink"}, 3*speed, function() {
+      $i2.animate({"transform": "translateX(" + (p1.left-p2.left) + "px) translateY(" + (p1.top-p2.top) + "px)"}, 7*speed, 'linear');
+      $i1.animate({"transform": "translateX(" + (p2.left-p1.left) + "px) translateY(" + (p2.top-p1.top) + "px)"}, 7*speed, 'linear', 
         function() {
           var htmlTmp = $i1.html();
-          $i1.parent().html("<span>" + $i2.html() + "</span>");
-          $i2.parent().html("<span>" + htmlTmp + "</span>");
-          if (callback) {
-            callback.apply(that, args); 
-          }});
+          $pi1.html("<span>" + $i2.html() + "</span>");
+          $pi2.html("<span>" + htmlTmp + "</span>");
+          $pi1.animate(i1prevStyle, speed);
+          $pi2.animate(i2prevStyle, speed);
+        });
+    });
     this._arr[index1] = this._arr[index2];
     this._arr[index2] = tmp;
-   
+  }
+  arrproto.swap = JSAV.anim(function(index1, index2, options) {
+    realSwap.apply(this, arguments);
     return this; 
+  }, realSwap
+  );
+  arrproto.clone = function() { 
+    return new AVArray(this.jsav, this._arr, {display: false}); 
   };
-  arrproto.clone = function(callback) { };
   arrproto.size = function() { return this._arr.length; };
-  arrproto.value = function(index, newValue, callback) {
+  arrproto.value = function(index, newValue) {
     if (!newValue) {
       return this._arr[index];
     } else {
-      var oldVal = this._arr[index] || undefined;
-      this._arr[index] = newValue;
-      $(this.element).find("li:eq(" + index + ")").html("" + newValue);
-      if (callback && oldVal && jQuery.isFunction(callback)) { callback(oldVal); }
+      return this.setvalue(index, newValue);
+    }
+  };
+  arrproto.setvalue = JSAV.anim(function(index, newValue) {
+    var oldVal = this._arr[index] || undefined;
+    this._arr[index] = newValue;
+    $(this.element).find("li:eq(" + index + ")").html("" + newValue);
+    return oldVal;
+  });
+  arrproto.initialize = function(data, options) {
+    var el = $("<ol class='array' />"),
+      liel;
+    options = jQuery.extend({display: true}, options);
+    this._arr = data;
+    $.each(data, function(index, item) {
+      el.append("<li class='node index'><span>" + item + "</span></li>");
+    });
+    $(this.jsav.container).append(el);
+    this.element = el;
+    this.layout();
+    if (options && typeof options.display === "boolean" && options.display === false) {
+      el.css("display", "none");
     }
   };
   arrproto.initializeFromElement = function() {
+    // TODO: handle settings from data-attributes
     if (!this.element) { return; }
     var that = this,
-      $elem = $(this.element);
+      $elem = $(this.element),
       $elems = $elem.find("li");
     $elem.addClass("array");
     this._arr = this._arr || [];
     this._arr.length = $elems.size();
     $elems.each(function(index, item) {
-      that._arr[index] = $(this).html();
+      that._arr[index] = parseInt($(this).html(), 10);
       $(this).addClass("node index").html("<span>" + $(this).html() + "</span>");     
     });
     this.layout();
@@ -163,10 +217,20 @@
   arrproto.layout = function() {
     this.jsav.layout.array._default(this);
   };
-  addCommonProperties(arrproto);
-  ds.array = function(options, element) {
-    return new AVArray(this, options, element);
+  arrproto.state = function(newstate) {
+    if (newstate) {
+      $(this.element).html(newstate.html);
+      this._arr = newstate.values;
+    } else {
+      var sta = {
+        html: $(this.element).html(),
+        values: [].concat(this._arr)
+      };
+      return sta;
+    }
   };
+  
+  addCommonProperties(arrproto);
  
   function addCommonProperties(dsPrototype, commonProps) {
     if (!commonProps) { commonProps = common; }
@@ -177,5 +241,13 @@
     }
   }
  
-  JSAV.ext.ds = ds;
+  // expose the data structures for the JSAV
+  JSAV.ext.ds = {
+    bst: function(element, options) {
+      return new BinSearchTree(this, element, options);
+    },
+    array: function(element, options) {
+      return new AVArray(this, element, options);
+    }
+  };
 })(jQuery);

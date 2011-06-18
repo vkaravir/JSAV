@@ -16,14 +16,16 @@
   }
   function verticalArray(array) {
     var $arr = $(array.element),
+    // rely on browser doing the calculation, float everything to the left
     $items = $arr.find("li").css({"float": "left", "position":"static"});
     $items.each(function(index, item) {
       var $i = $(this),
         pos = $i.position();
-      console.log(index, pos);
       $i.css({"left": pos.left, "top": pos.top});
     });
+    // and return float and positioning
     $items.css({"float": "none", "position": "absolute"});
+    $arr.height(60);
   }
   var layouts = {};
   layouts.array = {

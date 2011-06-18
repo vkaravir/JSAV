@@ -16,7 +16,6 @@
       return {left: offset.left + translate[0], top: offset.top + translate[1]};
     } else { return offset; }
   };
-  JSAV.dur = 2500;
   var jsavproto = JSAV.prototype;
   jsavproto.getSvg = function() {
     if (!this.svg) { // lazily create the SVG overlay only when needed
@@ -27,6 +26,10 @@
     return this.svg;
   };
   JSAV.ext = {}; // for extensions
+  JSAV.init = function(f) { // for initialization functions
+    JSAV.init.functions.push(f);
+  };
+  JSAV.init.functions = [];
   
   var AV = function() {},
     create = function() {
@@ -35,9 +38,22 @@
       } else {
         this.container = arguments[0];
       }
-      // initialize all plugins from ext namespace
+      this.RECORD = true;
+      jQuery.fx.off = true;
+      var options = arguments[1] || { }; // TODO: default options
+      // initialize stuff from init namespace
+      initializations.call(this, options);
+      // add all plugins from ext namespace
       extensions.call(this, this, JSAV.ext);
     };
+  function initializations(options) {
+    var fs = JSAV.init.functions;
+    for (var i = 0; i < fs.length; i++) {
+      if ($.isFunction(fs[i])) {
+        fs[i].call(this, options);
+      }
+    }
+  };
   function extensions(con, add) {
     var that = this;
     for (var prop in add) {

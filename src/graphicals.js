@@ -18,9 +18,10 @@
      return this; 
    }
    var c = raphael.circle(x, y, r),
-      elem = c.elem;
+      elem = c.node;
   $(elem).data("svgelem", c);
-  return elem;
+  console.log("svg circle", $(elem), elem);
+  return $(elem);
  };
  
  JSAV.ext.circle = function(x, y, r) {

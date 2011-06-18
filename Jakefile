@@ -3,7 +3,7 @@ var fs = require('fs'),
   sys = require('sys');
 
 task('concat', [], function () {
-  var files = ('src/core.js src/anim.js src/graphicals.js src/datastructures.js src/layout.js').split(' '),
+  var files = ('src/core.js src/anim.js src/messages.js src/graphicals.js src/datastructures.js src/layout.js').split(' '),
       filesLeft = files.length,
       pathName = '.',
       outFile = fs.openSync('build/jsav.js', 'w+');
