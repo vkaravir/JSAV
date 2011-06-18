@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>API documentation</title>
+    <style>
+    .todo, .note {
+      border: 2px solid red;
+      border-radius: 4px;
+      padding: 10px;
+      background-color: #eee;
+      font-weight: bold;
+    }
+    .note {
+      border-color: green;
+    }
+    .todo:before, .note:before {
+      content: "TODO: ";
+      color: red;
+      padding-right: 20px;
+    }
+    .note:before {
+      content: "NOTE: ";
+      color: green;
+    }
+    </style>
+  </head>
+  <body>
+    <h1>Documentation for the JavaScript Algorithm Visualization API</h1>
+    <p class="note">This documentation reflects the status of the library: it's mainly work-in-progress and subject
+      to change!</p>
+    <h2>Loading the Required Files</h2>
+    <p>The easiest way to check the required files is to take a peek in the examples directory and copy
+      one of the files as a template for the new AV.</p>
+    <p>If done manually, the files required (in this order) are the following:</p>
+    <ul>
+      <li>jQuery 1.6.1+: <code>http://code.jquery.com/jquery-1.6.1.js</code></li>
+      <li>jQuery UI: <code>https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/jquery-ui.min.js</code></li>
+      <li>jquery.transform: <code>/libsandstuff/jquery.transform.js/jquery.transform.light.js</code></li>
+      <li>Raphael: <code>/libsandstuff/raphael/raphael.js</code></li>
+      <li>The library: <code>/build/jsav.js</code></li>
+    </ul>
+    <h2>HTML Template for the Visualization</h2>
+    <p>The template HTML for a visualization should look something like this:</p>
+    <pre>
+      &lt;div id="container">
+        &lt;div class="controls">&lt;/div>
+        &lt;p class="output line">&lt;/p>
+      &lt;/div>
+    </pre>
+    <dl>
+      <dt>container</dt><dd>This is the container element for the visualization</dd>
+      <dt>controls</dt><dd>The library will generate the controls inside this element</dd>
+      <dt>output</dt><dd>The area where the messages from the visualization will be shown. Type can further be specified
+        using either class <code>line</code> or <code>scroll</code></dd>
+    </dl>
+    <h2>Creating A Visualization</h2>
+    <p>Initializing the visualization container is simple:</p>
+    <pre>var av = new JSAV("container");</pre>
+    <p>The <code>container</code> here refers to the id attribute of the container element. Alternatively, a DOM or jQuery
+      element can be used as well. So, the following are alternative ways to achieve the same result:</p>
+    <pre>var av = new JSAV(document.getElementById("container"));
+var av = new JSAV(jQuery("#container"));</pre>
+    <p>The constructor can also passed in a second argument with options for the visualization.</p>
+    <p class="todo">document these options</p>
+    
+    <h2>Animation API</h2>
+    <p class="todo">explain the way the animation works</p>
+    <p>The animation is created using the data structures available and some special API methods of the JSAV instance.</p>
+    <h3 class="apimethod">.step(options)</h3>
+    <p>Marks that a new step in the animation will start. Basically, everything within one step will be animated simultaneously 
+      when moving backward and forward.</p>
+    <h3 class="apimethod">.substep(options)</h3>
+    <p>A future improvement to allow hierarchy of animation steps. Currently, this does what .step does.</p>
+    <h3 class="apimethod">.recorded()</h3>
+    <p>When creating a visualization by calling the API methods, this function should be called when the visualization is
+      ready.</p>
+    <h2>Messages API</h2>
+    <h3 class="apimethod">.message(msg, options)</h3>
+    <p>This will add the given message <code>msg</code> to the message output. The optional <code>options</code> parameter
+      can be an object whose properties specify the behavior. Currently, only <code>color</code> property is used if
+      present to change the color of the message.</p>
+    
+    <h2>Array Data Structure API</h2>
+    <h3 class="apimethod">.ds.array(element) and .ds.array(Array)</h3>
+    <p>An array can be created using the .ds.array method of an JSAV instance. As a parameter, it takes either
+      a DOM/jQuery Element (ul or ol) or a JavaScript Array. For example, to initialize and add to the visualization
+      an array with four elements:</p>
+    <pre>var arr = av.ds.array([10, 13, 99, 25]);</pre>
+    <p>The returned array instance will have a collection of methods explained next.</p>
+
+    <h3 class="apimethod">.highlight()</h3>
+    <p>Call to highlight without any parameters will highlight all the elements in the array. Note, that this will only
+      animate addition of the CSS class <code>highlight</code> to the elements. It is up to the author to make sure the
+      loaded CSS files include such styling.</p>
+
+    <h3 class="apimethod">.highlight(number)</h3>
+    <p>Highlights the given index number. Zero refers to the first index of the array.</p>
+
+    <h3 class="apimethod">.highlight(array)</h3>
+    <p>Highlight the indices in the given array of numbers. The following would highlight 2nd, 3rd, and 6th indices.</p>
+    <pre>arr.highlight([1, 2, 5]);</pre>
+
+    <h3 class="apimethod">.highlight(function)</h3>
+    <p>Highlights all the indices that the passed function returns true. For example, to highlight all even indices:</p>
+    <pre>arr.highlight(function(index) { return index%2==0; });</pre>
+
+    <h3 class="apimethod">.unhighlight(indices)</h3>
+    <p>Removes the highlight from the given indices. Note, that this only adds the <code>highlight</code> class from the elements.
+      There are corresponding versions of this function with parameters like for highlight.</p> 
+
+    <h3 class="apimethod">.swap(index1, index2)</h3>
+    <p>Swaps the contents of the two indices.</p>
+    
+    <h3 class="apimethod">.css(indices, css)</h3>
+    <p>Animates the given CSS properties of the specified indices. Argument indices can be number, array, or function like for
+      the highlight function. The argument css should be an object with property name and value pairs. The following would make
+      indices 0 and 4 have green color and lightgray background:</p>
+    <pre>arr.css([0, 4], {"color": "green", "background-color": "#eee"});</pre>
+
+    <h3 class="apimethod">.size()</h3>
+    <p>Returns the size of the array. For the array of the array creation example, this would return 4:</p>
+    <pre>arr.size();</pre>
+    
+    <h3 class="apimethod">.value(index)</h3>
+    <p>Returns the value of the element at the given index.</p>
+    
+    <h3 class="apimethod">.value(index, newValue)</h3>
+    <p>Sets the value of the element at the given index to the given value.</p>
+    
+    <h3 class="apitopic">Extending the Array</h3>
+    <p class="todo">Example of extending to provide .opacity(indices, value) function as a shortcut to set the opacity of indices.</p>
+  </body>
+</html>
