@@ -48,6 +48,8 @@
   });
   
   function anim(effect, undo) {
+    // a function that can be used to provide function calls that are applied later
+    // when viewing the visualization
     return function() {
       var obj = this;
       var back = undo || undefined;
@@ -64,12 +66,22 @@
     };
   }
 
-  function rewind() {
+  function begin() {
+    var prevFx = $.fx.off;
     $.fx.off = true;
     while (this._undo.length) {
       this.backward();
     }
-    $.fx.off = false;
+    $.fx.off = prevFx;
+  }
+  
+  function end() {
+    var prevFx = $.fx.off;
+    $.fx.off = true;
+    while (this._redo.length) {
+      this.forward();
+    }
+    $.fx.off = prevFx;
   }
   
   /* Add the function effect to the animation queue */
@@ -80,7 +92,8 @@
   JSAV.anim = anim;
   JSAV.ext.SPEED = 400;
   JSAV.ext.queue = queue;
-  JSAV.ext.rewind = rewind;
+  JSAV.ext.begin = begin;
+  JSAV.ext.end = end;
   JSAV.ext.forward = forward;
   JSAV.ext.backward = backward;
   JSAV.ext.step = function(options) {
@@ -90,14 +103,12 @@
     return this;
   };
   JSAV.ext.substep = function(options) {
-    if (options && this.message && options.message) {
-      this.message(options.message);
-    }
-    return this;
+    // TODO: implement substep
+    return this.step(options);
   };
   JSAV.ext.stepdone = function() {return this;};
   JSAV.ext.recorded = function() {
     this.RECORD = false;
-    this.rewind();
+    this.begin();
   };
 })(jQuery);
