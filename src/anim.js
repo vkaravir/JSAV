@@ -14,37 +14,51 @@
   
   function backward() {
     if (this._undo.length === 0) { return; }
-    var prev = this._undo.pop();
-    this._redo.unshift(prev);
-    prev[3].apply(prev[0], prev[2]);
+    var ops = this._undo.pop();
+    for (var i = ops.length - 1; i >= 0; i--) {
+      var prev = ops[i];
+      prev[3].apply(prev[0], prev[2]);
+    }
+    this._redo.unshift(ops);
   }
-  
+
   function forward() {
     if (this._redo.length === 0) { return; }
-    var next = this._redo.shift();
-    if (!next[3]) {
-      next[3] = function() {
-        var obj = next[0],
-          state = obj.state();
-        return function() {
-          obj.state(state);
-        }
-      }();
+    var ops = this._redo.shift();
+    for (var i = 0; i < ops.length; i++) {
+      var next = ops[i];
+      if (!next[3]) {
+        next[3] = function() {
+          var obj = next[0],
+            state = obj.state();
+          return function() {
+            obj.state(state);
+          };
+        }();
+      } 
+      next[1].apply(next[0], next[2]);
     }
-    this._undo.push(next);
-    next[1].apply(next[0], next[2]);
+    this._undo.push(ops);
   }
   
   JSAV.init(function() {
     this._redo = [];
     this._undo = [];
-    var that = this;
-    $(this.container).bind("forward", function() {
-      that.forward();
-    });
-    $(this.container).bind("backward", function() {
+    var that = this,
+      $controls = $(".controls", $(this.container));
+    
+    $("<a class='begin' href='#'>Begin</a>").click(function() {
+      that.begin();
+    }).appendTo($controls);
+    $("<a class='backward' href='#'>Backward</a>").click(function() {
       that.backward();
-    });
+    }).appendTo($controls);
+    $("<a class='forward' href='#'>Forward</a>").click(function() {
+      that.forward();
+    }).appendTo($controls);
+    $("<a class='end' href='#'>End</a>").click(function() {
+      that.end();
+    }).appendTo($controls);
   });
   
   function anim(effect, undo) {
@@ -55,12 +69,15 @@
       var back = undo || undefined;
       var jsav = this;
       if (!jsav.hasOwnProperty("forward")) { jsav = this.jsav; }
+      var stackTop = jsav._redo[0];
+      if (!stackTop) {
+        stackTop = [];
+        jsav._redo.push(stackTop);
+      }
       if (jsav.RECORD) {
-        jsav._redo.push([this, effect, arguments, back]);
-        //effect.apply(this, arguments);
-        jsav.forward();
+        stackTop.push([this, effect, arguments, back]);
       } else {
-        jsav._redo.push([this, effect, arguments, back]);
+        stackTop.push([this, effect, arguments, back]);
       }
       return this;
     };
@@ -72,7 +89,7 @@
     while (this._undo.length) {
       this.backward();
     }
-    $.fx.off = prevFx;
+    $.fx.off = false;
   }
   
   function end() {
@@ -81,7 +98,7 @@
     while (this._redo.length) {
       this.forward();
     }
-    $.fx.off = prevFx;
+    $.fx.off = false;
   }
   
   /* Add the function effect to the animation queue */
@@ -97,6 +114,8 @@
   JSAV.ext.forward = forward;
   JSAV.ext.backward = backward;
   JSAV.ext.step = function(options) {
+    this.forward();
+    this._redo.push([]); // add new empty step to oper. stack
     if (options && this.message && options.message) {
       this.message(options.message);
     }
@@ -108,6 +127,7 @@
   };
   JSAV.ext.stepdone = function() {return this;};
   JSAV.ext.recorded = function() {
+    this.forward(); // apply the last steps
     this.RECORD = false;
     this.begin();
   };

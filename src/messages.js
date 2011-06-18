@@ -18,7 +18,7 @@
   };
   MessageHandler.prototype.message = JSAV.anim(function(msg, options) {
     if (!this.jsav.RECORD) { // trigger events only if not recording
-      $(this.jsav).trigger("message", [msg, options]); 
+      $(this.jsav.container).trigger("message", [msg, options]); 
     }
     if (this.output) {
       var col = "black";

@@ -85,6 +85,7 @@
  
  
   var getIndices = function($elems, indices) {
+    if (!indices) { return $elems; } // use all if no restrictions are given
     if ($.isFunction(indices)) {
       return $elems.filter(indices);
     } else if ($.isArray(indices)) {
