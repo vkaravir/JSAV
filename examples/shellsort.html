@@ -2,49 +2,11 @@
 <html>
   <head>
     <title>Shellsort v0.0.01</title>
-        <style>
-        .array {
-          position: relative;
-          list-style: none;
-          overflow: hidden;
-        }
-        .array:after {
-          content: "";
-          clear: both;
-        }
-        .array .index {
-          width: 50px;
-          height: 50px;
-          text-align: center;
-          line-height: 45px;
-          border: 1px solid black;
-          border-color: black;
-          background-color: white;
-        }
-        .array .index span {
-          z-index: 99;
-        }
-        .array .index.highlight {
-          background-color: yellow;
-        }
-        #container, #container2 {
-          overflow:hidden;
-          height: 400px;
-          width: 640px;
-        }
-        .output.line {
-          height: 80px;
-        }
-        svg {
-          position: absolute;
-          z-index: 500;
-        }
-        </style>
-      </head>
-      <body>
-      <a id="backward" href="#">Backward</a>
-      <a id="forward" href="#">Forward</a>
+    <link rel="stylesheet" href="jsav.css" type="text/css" media="screen" title="no title" charset="utf-8" />
+  </head>
+  <body>
       <div id="container">
+        <div class="controls"></div>
         <p class="output line"></p>
       </div>
         <script src="http://code.jquery.com/jquery-1.6.1.js"></script>
@@ -60,25 +22,27 @@
         var av = new JSAV("container"); //containing HTML element with id container
         //var arr = av.ds.array($("#initialarray")), // HTML element containing the initial array, id initialarray
         // alternatively, generate from data: 
-        var arr = av.ds.array([20, 30, 12, 54, 55, 11, 78, 14, 13, 79, 44]);
+        var arr = av.ds.array([20, 30, 12, 54, 55, 11, 78, 14, 13, 79, 44, 98, 76, 45, 32, 12]);
         // or, generate from random data: var arr = av.ds.array.random(10); size as param, range as params as well??
 
           origarr = arr.clone(); // clone for showing the array comparison, not added to document yet (not showed)
 
         av.message("During each iteration, Shellsort breaks the list into disjoint sublists so that each element in a sublist is a fixed number of positions apart. For example, let us assume for convenience that n, the number of values to be sorted, is a power of two."); // message to be shown initially
         // create a new step to the visualization, a given message
-        av.step({"message": "One possible implementation of Shellsort will begin by breaking the list into n/2 sublists of 2 elements each, where the array index of the 2 elements in each sublist differs by n/2. We say that the increment is n/2. If there are 16 elements in the array indexed from 0 to 15, there would initially be 8 sublists of 2 elements each. The first sublist would be the elements in positions 0 and 8..."});
+        av.step().message("One possible implementation of Shellsort will begin by breaking the list into n/2 sublists of 2 elements each, where the array index of the 2 elements in each sublist differs by n/2. We say that the increment is n/2. If there are 16 elements in the array indexed from 0 to 15, there would initially be 8 sublists of 2 elements each. The first sublist would be the elements in positions 0 and 8...");
 
        // av.ds.variable("increment", 8); // display a variable named increment with value 8
         arr.css(function(index, item) { return index%8 != 0;}, {"opacity": 0.5}).highlight([0, 8]); // set opacity to 0.5 for the whole array, then highlight indices 0 and 8
         av.step().message("... the second in positions 1 and 9..."); // another way to specify a message for a step
-        arr.unhighlight([0,8]).highlight([1, 9]);
+        arr.unhighlight().highlight([1, 9]);
         for (var i=2; i<8; i++) { // loop through the rest of the array sublists
           av.step().message("... and so on ...");
-          arr.unhighlight(i-1, i+8).highlight(i, i+8);
+          console.log("unhighlighting ", i-1, i+7, "highlighting", i, i+8);
+          arr.unhighlight([i-1, i+7]).highlight([i, i+8]);
         }
 
         av.step().message("Each sublist of two is sorted using Insertion Sort.");
+        //arr.unhighlight([7, 15]).highlight([0, 8]);
         shellsort(arr, 8); // first sweep with increment 8
 
         av.step().message('At the end of the first pass, the resulting array is "a little better sorted".');
@@ -134,23 +98,25 @@
           var j = 0;
           for (; j<incr; j++) {         // Sort each sublist
             av.substep();
-            myarr.highlight(function(index, item) { return index%incr === 0;}); // a function for highlight that will highlight all indices for which it returns true
+            myarr.highlight(function(index, item) { return index%j === 0;}); // a function for highlight that will highlight all indices for which it returns true
             inssort2(myarr, j, incr);
+            av.step();
             myarr.unhighlight();
-            myarr.highlight(function(index, item) { return index%incr === 0;}, {"color": "green"}); // a function for highlight that will highlight all indices for which it returns true
+            myarr.css(function(index, item) { return index%j === 0;}, {"color": "green"}); // a function for css that will style all indices for which it returns true
             av.stepdone();
           }
           //inssort2(arr, 0, 1);     // Could call regular inssort here
         }
 
         function inssort2(myarr, start, incr) {
-          for (var i=start+incr; i<myarr.length; i+=incr)
-            for (var j=i; (j>=incr) && (myarr[j] < myarr[j-incr]); j-=incr) {
+          for (var i=start+incr; i<myarr.size(); i+=incr) {
+            for (var j=i; j>=incr && (myarr.value(j) < myarr.value(j-incr)); j-=incr) {
               // should we highlight the compared items first?
               av.substep(); // create new substeps for each swap
               myarr.swap(j, j-incr); // swap the two indices
               av.stepdone();
             }
+          }
         }
 
         </script>
