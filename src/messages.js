@@ -27,6 +27,11 @@
     }
     return this;
   });
+  MessageHandler.prototype.clear = JSAV.anim(function() {
+    if (this.output) {
+      this.output.html("");
+    }
+  });
   
   MessageHandler.prototype.state = function(newValue) {
     if (newValue) {
@@ -38,6 +43,9 @@
   
   JSAV.ext.umsg = function(msg, options) {
     this._msg.umsg(msg, options);
+  };
+  JSAV.ext.clearMsgs = function(msg, options) {
+    this._msg.clear();
   };
   
   JSAV.init(function(options) {
