@@ -83,6 +83,7 @@
       this.backward();
     }
     $.fx.off = false;
+    return this;
   }
   
   function end() {
@@ -92,6 +93,7 @@
       this.forward();
     }
     $.fx.off = false;
+    return this;
   }
   
   /* Add the function effect to the animation queue */
