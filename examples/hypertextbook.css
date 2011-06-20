@@ -1,0 +1,46 @@
+html, body {
+  background-color: #eed;
+  color: #000000;
+  margin: 0px;
+  padding: 4px;
+}
+
+div h1 {
+  text-align: center;
+  border-bottom: 1px solid black;
+  background-color: #eed;
+  margin: -8px -8px 0px -8px;
+  padding: 8px 8px 2px 8px;
+}
+
+p.annotation {
+  color:red;
+}
+
+a, a:visited {
+  color: #900;
+}
+
+a:hover {
+  color: #d70;
+}
+
+applet {
+  border: 1px solid black;
+}
+o.output {
+  width:100%;
+}
+p.output.scroll {
+  overflow: auto; 
+  background-color: white; 
+  border: 1px solid black;
+  height:220px;
+}
+
+p.output.line {
+  overflow: hidden;
+  border: none;
+  background-color: inherit;
+  height:50px;
+}
