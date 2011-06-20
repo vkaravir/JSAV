@@ -1,27 +1,15 @@
 [submodule "libsandstuff/jquery.transform.js"]
 	path = libsandstuff/jquery.transform.js
 	url = git://github.com/louisremi/jquery.transform.js.git
-[submodule "libsandstuff/g.raphael"]
-	path = libsandstuff/g.raphael
-	url = git://github.com/DmitryBaranovskiy/g.raphael.git
 [submodule "libsandstuff/raphael"]
 	path = libsandstuff/raphael
 	url = git://github.com/DmitryBaranovskiy/raphael.git
 [submodule "libsandstuff/jquery-ui"]
 	path = libsandstuff/jquery-ui
 	url = git://github.com/jquery/jquery-ui.git
-[submodule "libsandstuff/jquery-mobile"]
-	path = libsandstuff/jquery-mobile
-	url = git://github.com/jquery/jquery-mobile.git
 [submodule "libsandstuff/jquery"]
 	path = libsandstuff/jquery
 	url = git://github.com/jquery/jquery.git
-[submodule "libsandstuff/Modernizr"]
-	path = libsandstuff/Modernizr
-	url = git://github.com/Modernizr/Modernizr.git
-[submodule "libsandstuff/jquery-smartresize"]
-	path = libsandstuff/jquery-smartresize
-	url = git://github.com/louisremi/jquery-smartresize.git
 [submodule "libsandstuff/qunit"]
 	path = libsandstuff/qunit
 	url = git://github.com/jquery/qunit.git
