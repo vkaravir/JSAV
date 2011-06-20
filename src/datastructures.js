@@ -78,7 +78,7 @@
  
  
   var getIndices = function($elems, indices) {
-    if (!indices) { return $elems; } // use all if no restrictions are given
+    if (typeof indices === "undefined") { return $elems; } // use all if no restrictions are given
     if ($.isFunction(indices)) {
       return $elems.filter(indices);
     } else if ($.isArray(indices)) {
@@ -122,12 +122,18 @@
     setHighlight.call(this, indices, "remove");
     return this; 
   });
-  arrproto.css = JSAV.anim(function(indices, css) { 
+  arrproto.css = function(indices, cssprop) { 
     var $elems = getIndices($(this.element).find("li"), indices),
       that = this;
-    $elems.animate(css, this.jsav.SPEED);
-    return this; 
-  });
+    if (typeof cssprop === "string") {
+      return $elems.css(cssprop);
+    } else {
+      JSAV.anim( function() {
+        $elems.animate(cssprop, this.jsav.SPEED);
+        return this;
+      });
+    }
+  };
   function realSwap(index1, index2, options) {
     var tmp = this._arr[index1],
       that = this,
