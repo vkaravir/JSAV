@@ -9,7 +9,7 @@
     this.jsav = jsav;
     this.output = output;
   };
-  MessageHandler.prototype.message = JSAV.anim(function(msg, options) {
+  MessageHandler.prototype.umsg = JSAV.anim(function(msg, options) {
     if (!this.jsav.RECORD) { // trigger events only if not recording
       $(this.jsav.container).trigger("message", [msg, options]); 
     }
@@ -36,8 +36,8 @@
     }
   };
   
-  JSAV.ext.message = function(msg, options) {
-    this._msg.message(msg, options);
+  JSAV.ext.umsg = function(msg, options) {
+    this._msg.umsg(msg, options);
   };
   
   JSAV.init(function(options) {
