@@ -1,10 +1,10 @@
 RM = rm -rf
-LIB = libsandstuff
-MINIMIZE = touch $(TARGET)/JSAV-min.js # java magic $(SOURCES) > $(TARGET)/JSAV-min.js
+LIB = lib
+MINIMIZE = touch $(TARGET)/JSAV-min.js # java $(LIB)/magic $(SOURCES) > $(TARGET)/JSAV-min.js
 CAT = cat
 SRC = src
 TARGET = build
-SOURCES = $(SRC)/init.txt $(SRC)/core.js $(SRC)/messages.js $(SRC)/graphicals.js $(SRC)/datastructures.js $(SRC)/layout.js
+SOURCES = $(SRC)/core.js $(SRC)/anim.js $(SRC)/messages.js $(SRC)/graphicals.js $(SRC)/datastructures.js $(SRC)/layout.js
 
 
 all: build
@@ -22,7 +22,7 @@ clean:
 
 library:
 	git submodule init
-	git submodule
+	git submodule update
 
 build: $(TARGET)/JSAV.js
 
