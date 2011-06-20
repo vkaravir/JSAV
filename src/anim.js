@@ -39,7 +39,9 @@
     this._undo = [];
     var that = this,
       $controls = $(".controls", $(this.container));
-    
+    if ($controls.size() === 0) {
+      return; // no controls, no need to proceed
+    }
     $("<a class='begin' href='#'>Begin</a>").click(function() {
       that.begin();
     }).appendTo($controls);
@@ -67,8 +69,8 @@
         stackTop = [];
         jsav._redo.push(stackTop);
       }
-      if (jsav.RECORD) {
-        stackTop.push([this, effect, arguments, back]);
+      if (jsav.options.animationMode == 'none') {
+        effect.apply(this, arguments);
       } else {
         stackTop.push([this, effect, arguments, back]);
       }

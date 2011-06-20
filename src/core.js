@@ -38,6 +38,7 @@
       } else {
         this.container = arguments[0];
       }
+      this.options = arguments[1] || { }
       this.RECORD = true;
       jQuery.fx.off = true;
       var options = arguments[1] || { }; // TODO: default options
