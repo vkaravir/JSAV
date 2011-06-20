@@ -1,10 +1,3 @@
-/*
- * JSAV 0.0.01 - JavaScript Algorithm Visualization Library
- *
- * Copyright (c) 2011 Ville Karavirta (http://)
- * Licensed under the MIT license.
- */
-
 /**
 * Module that contains the animator implementations.
 * Depends on core.js

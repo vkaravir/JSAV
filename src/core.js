@@ -1,8 +1,8 @@
 /*!
  * JSAV 0.0.01 - JavaScript Algorithm Visualization Library
  *
- * Copyright (c) 2011 Ville Karavirta (http://)
- * Licensed under the MIT license.
+ * Copyright (c) 2011 OpenDSA Project (http://....)
+ * Dual licensed under the MIT or GPL Version 3 licenses.
  */
 (function() {
   var JSAV = function() {
