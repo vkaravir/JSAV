@@ -1,15 +1,15 @@
-[submodule "libsandstuff/jquery.transform.js"]
-	path = libsandstuff/jquery.transform.js
+[submodule "lib/jquery.transform.js"]
+	path = lib/jquery.transform.js
 	url = git://github.com/louisremi/jquery.transform.js.git
-[submodule "libsandstuff/raphael"]
-	path = libsandstuff/raphael
+[submodule "lib/raphael"]
+	path = lib/raphael
 	url = git://github.com/DmitryBaranovskiy/raphael.git
-[submodule "libsandstuff/jquery-ui"]
-	path = libsandstuff/jquery-ui
+[submodule "lib/jquery-ui"]
+	path = lib/jquery-ui
 	url = git://github.com/jquery/jquery-ui.git
-[submodule "libsandstuff/jquery"]
-	path = libsandstuff/jquery
+[submodule "lib/jquery"]
+	path = lib/jquery
 	url = git://github.com/jquery/jquery.git
-[submodule "libsandstuff/qunit"]
-	path = libsandstuff/qunit
+[submodule "lib/qunit"]
+	path = lib/qunit
 	url = git://github.com/jquery/qunit.git
