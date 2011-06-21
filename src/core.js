@@ -34,13 +34,14 @@
   var AV = function() {},
     create = function() {
       if (typeof arguments[0] == "string") {
-        this.container = document.getElementById(arguments[0]);
+        this.container = $(document.getElementById(arguments[0]));
       } else {
-        this.container = arguments[0];
+        this.container = $(arguments[0]); // make sure it is jQuery object
       }
+      this.container.addClass("jsavcontainer");
       this.options = arguments[1] || { }
       this.RECORD = true;
-      jQuery.fx.off = true;
+      jQuery.fx.off = true; // by default we are recording changes, not animating them
       var options = arguments[1] || { }; // TODO: default options
       // initialize stuff from init namespace
       initializations.call(this, options);
