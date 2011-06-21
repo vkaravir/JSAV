@@ -23,4 +23,3 @@ var arrayUtils = {
     }
   }
 };
-console.log(arrayUtils);
