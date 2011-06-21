@@ -13,16 +13,15 @@
     if (!this.jsav.RECORD) { // trigger events only if not recording
       $(this.jsav.container).trigger("message", [msg, options]); 
     }
+    var opts = $.extend({color: "black", preserve: false}, options);
     if (this.output) {
-      var col = "black";
-      if (options) {
-        col = options.color || "black";
-      }
-      var msgelem = "<div style='color:" + col + ";'>" + msg + "</div>";
-      if (this.output.hasClass("line")) {
-        this.output.html(msgelem);
-      } else if (this.output.hasClass("scroll")) {
-        this.output.html(this.output.html() + msgelem);
+      if (this.output.hasClass("line") && opts.preserve) {
+        this.output.find("div:last").append("<span style='color:" + opts.color + ";'>" + msg + "</span>");
+      } else if (this.output.hasClass("line")) {
+        this.output.html("<div style='color:" + opts.color + ";'>" + msg + "</div>");
+      //} else if (this.output.hasClass("scroll")) {
+      } else { // e.g. "scroll", which is default
+        this.output.append("<div style='color:" + opts.color + ";'>" + msg + "</div>");
       }      
     }
     return this;

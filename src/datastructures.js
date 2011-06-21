@@ -133,6 +133,7 @@
         return this;
       });
     }
+    return this;
   };
   function realSwap(index1, index2, options) {
     var tmp = this._arr[index1],
