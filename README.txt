@@ -16,7 +16,7 @@ For new developers:
 * Install Git
 * Check out the JSAV repository. For example, at the commandline you
   can do the following to create a new JSAV folder or directory:
-    git clone https://cashaffer@github.com/vkaravir/JSAV.git JSAV
+    git clone git://github.com/vkaravir/JSAV.git JSAV
 * Go to the JSAV folder or directory that you just created and run:
     make setup
   This will download all of the various standard development libraries
