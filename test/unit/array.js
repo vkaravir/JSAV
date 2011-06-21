@@ -1,6 +1,5 @@
 (function() {
   module("datastructures.array", {  });
-
 test("Initializing from HTML", function() {
   var values = [12, 22, 14, 39, 10]; // array in HTML
   expect(8);
@@ -28,25 +27,14 @@ test("Initializing from Array", function() {
 	}
 });
 
-function testHighlights(arr, hlIndices, hlDiv, unhlDiv, props) {
-  for (var i= 0; i < arr.size(); i++) {
-    var el = hlIndices[i]?hlDiv:unhlDiv,
-      hlText = hlIndices[i]?"highlighted":"not highlighted";
-    for (var j=0; j < props.length; j++) {
-      equals(arr.css(i, props[j]), el.css(props[j]), "index " + i + " " + props[j] + " " + hlText);
-    }
-  }
-}
-
 test("Highlighting indices in Array", function() {
   // [12, 22, 14, 39, 10] array in HTML
 	var av = new JSAV("arraycontainer"),
 	  arr = av.ds.array($("#array")),
-	  testDiv = $('<div class="array"><div class="node index highlight"></div><div class="node index" ></div></div>').find(".node"),
+	  testDiv = $('<div class="array" style="position:absolute;left:-10000px;"><div class="node index highlight"></div><div class="node index" ></div></div>').find(".node"),
 	  hlDiv = testDiv.filter(".highlight");
 	  unhlDiv = testDiv.not(".highlight");
 	  props = ["color", "background-color"];
-
 	arr.highlight(0);
 	av.step();
 	arr.highlight([1]); // highlight with an array
@@ -57,25 +45,25 @@ test("Highlighting indices in Array", function() {
 	av.recorded(); // will do rewind, nothing should be highlighted
 	$.fx.off = true;
 
-  testHighlights(arr, [0, 0, 0, 0, 0], hlDiv, unhlDiv, props);
+  testArrayHighlights(arr, [0, 0, 0, 0, 0], hlDiv, unhlDiv, props);
   
   av.forward(); // apply first highlight
 
-  testHighlights(arr, [1, 0, 0, 0, 0], hlDiv, unhlDiv, props);
+  testArrayHighlights(arr, [1, 0, 0, 0, 0], hlDiv, unhlDiv, props);
 
   av.forward(); // apply 2nd (array version) highlight
-  testHighlights(arr, [1, 1, 0, 0, 0], hlDiv, unhlDiv, props);
+  testArrayHighlights(arr, [1, 1, 0, 0, 0], hlDiv, unhlDiv, props);
 
   av.forward(); // apply 3rd (function version) highlight
-  testHighlights(arr, [1, 1, 0, 0, 1], hlDiv, unhlDiv, props);
+  testArrayHighlights(arr, [1, 1, 0, 0, 1], hlDiv, unhlDiv, props);
 
   av.forward(); // apply last highlight (all should now be highlighted)
-  testHighlights(arr, [1, 1, 1, 1, 1], hlDiv, unhlDiv, props);
+  testArrayHighlights(arr, [1, 1, 1, 1, 1], hlDiv, unhlDiv, props);
 
 	av.begin(); // going to beginning should remove all highlights
-  testHighlights(arr, [0, 0, 0, 0, 0], hlDiv, unhlDiv, props);
+  testArrayHighlights(arr, [0, 0, 0, 0, 0], hlDiv, unhlDiv, props);
 	av.end(); // going to the end should reapply the highlights
-  testHighlights(arr, [1, 1, 1, 1, 1], hlDiv, unhlDiv, props);
+  testArrayHighlights(arr, [1, 1, 1, 1, 1], hlDiv, unhlDiv, props);
 	testDiv = null;
 });
 
@@ -100,27 +88,27 @@ test("Unhighlighting indices in Array", function() {
 	av.recorded(); // will do rewind, nothing should be highlighted
 	$.fx.off = true;
 
-  testHighlights(arr, [0, 0, 0, 0, 0], hlDiv, unhlDiv, props);
+  testArrayHighlights(arr, [0, 0, 0, 0, 0], hlDiv, unhlDiv, props);
   
   av.forward(); // apply first highlight
-  testHighlights(arr, [1, 1, 1, 1, 1], hlDiv, unhlDiv, props);
+  testArrayHighlights(arr, [1, 1, 1, 1, 1], hlDiv, unhlDiv, props);
 
   av.forward(); // apply first unhighlight
-  testHighlights(arr, [0, 1, 1, 1, 1], hlDiv, unhlDiv, props);
+  testArrayHighlights(arr, [0, 1, 1, 1, 1], hlDiv, unhlDiv, props);
 
   av.forward(); // apply 2nd (array version) unhighlight
-  testHighlights(arr, [0, 0, 1, 1, 1], hlDiv, unhlDiv, props);
+  testArrayHighlights(arr, [0, 0, 1, 1, 1], hlDiv, unhlDiv, props);
 
   av.forward(); // apply 3rd (function version) unhighlight
-  testHighlights(arr, [0, 0, 1, 1, 0], hlDiv, unhlDiv, props);
+  testArrayHighlights(arr, [0, 0, 1, 1, 0], hlDiv, unhlDiv, props);
 
   av.forward(); // apply last unhighlight (all should now be unhighlighted)
-  testHighlights(arr, [0, 0, 0, 0, 0], hlDiv, unhlDiv, props);
+  testArrayHighlights(arr, [0, 0, 0, 0, 0], hlDiv, unhlDiv, props);
 
 	av.begin(); // going to beginning should remove all highlights
-  testHighlights(arr, [0, 0, 0, 0, 0], hlDiv, unhlDiv, props);
+  testArrayHighlights(arr, [0, 0, 0, 0, 0], hlDiv, unhlDiv, props);
 	av.end(); // going to the end should reapply the unhighlights
-  testHighlights(arr, [0, 0, 0, 0, 0], hlDiv, unhlDiv, props);
+  testArrayHighlights(arr, [0, 0, 0, 0, 0], hlDiv, unhlDiv, props);
 	testDiv = null;
 });
 
@@ -133,18 +121,11 @@ test("Highlight without parameters", function() {
 	  props = ["color", "background-color"];
 	arr.highlight();
 	av.recorded();
-	testHighlights(arr, [0, 0, 0, 0, 0], hlDiv, unhlDiv, props);
+	testArrayHighlights(arr, [0, 0, 0, 0, 0], hlDiv, unhlDiv, props);
 	$.fx.off = true;
 	av.forward();
-	testHighlights(arr, [1, 1, 1, 1, 1], hlDiv, unhlDiv, props);
+	testArrayHighlights(arr, [1, 1, 1, 1, 1], hlDiv, unhlDiv, props);
 });
-
-function testArrayValues(arr, values) {
-  equals(arr.size(), values.length, "Equal array sizes");
-  for (var i = 0; i < values.length; i++) {
-    equals(arr.value(i), values[i], "Values in index " + i);
-  }
-}
 
 test("Simple swaps", function() {
   var av = new JSAV("emptycontainer"),
@@ -179,16 +160,16 @@ test("Swaps with highlights", function() {
   arr.unhighlight(function(index) { return index%2 == 0;});
   av.recorded();
   $.fx.off = true;
-  testHighlights(arr, [0, 0, 0, 0, 0], hlDiv, unhlDiv, props);
+  testArrayHighlights(arr, [0, 0, 0, 0, 0], hlDiv, unhlDiv, props);
   testArrayValues(arr, [10, 20, 30, 40]);
 	av.forward(); // apply highlight
-	testHighlights(arr, [1, 0, 1, 0, 0], hlDiv, unhlDiv, props);
+	testArrayHighlights(arr, [1, 0, 1, 0, 0], hlDiv, unhlDiv, props);
   testArrayValues(arr, [10, 20, 30, 40]);
   av.forward(); // apply swap
-	testHighlights(arr, [1, 0, 1, 0, 0], hlDiv, unhlDiv, props);
+	testArrayHighlights(arr, [1, 0, 1, 0, 0], hlDiv, unhlDiv, props);
   testArrayValues(arr, [30, 20, 10, 40]);
 	av.forward(); // apply unhighlight
-  testHighlights(arr, [0, 0, 0, 0, 0], hlDiv, unhlDiv, props);
+  testArrayHighlights(arr, [0, 0, 0, 0, 0], hlDiv, unhlDiv, props);
   testArrayValues(arr, [30, 20, 10, 40]);
 });
 })();
