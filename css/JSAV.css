@@ -27,9 +27,8 @@
 }
 /***** END STYLING OF THE ARRAY DATA STRUCTURE *****/
 
-#container {
+.jsavcontainer {
   overflow:hidden;
-  height: 400px;
   width: 100%;
 }
 
@@ -55,6 +54,34 @@ svg {
   position: absolute;
   z-index: 500;
 }
-.controls a {
-  padding: 10px;
+
+/**** STYLING THE CONTROLS ****/
+.controls {
+  text-align: center;
 }
+.controls a {
+  display: inline-block;
+  color: transparent;
+  width: 30px;
+  height: 30px;
+  margin: 10px;
+  background-color: #aaa;
+  -moz-border-radius: 20px;
+  -webkit-border-radius: 20px;
+  border-radius: 20px;
+  background-repeat:no-repeat;
+  background-position:50% 50%;
+}
+.controls .begin {
+  background-image: url(images/begin.png);
+}
+.controls .end {
+  background-image: url(images/end.png);
+}
+.controls .backward {
+  background-image: url(images/backward.png);
+}
+.controls .forward {
+  background-image: url(images/forward.png);
+}
+/**** END STYLING THE CONTROLS ****/

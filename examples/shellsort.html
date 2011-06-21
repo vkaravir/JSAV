@@ -6,6 +6,15 @@
   <link rel="stylesheet" href="../css/JSAV.css" media="screen" />
 </head>
 <body>
+  <style>
+  #container {
+    width: 900px;
+    height: 400px;
+  }
+  p.output.line {
+    height: 100px;
+  }
+  </style>
 <div id="container">
   <div class="controls"></div>
   <p class="output line"></p>
@@ -32,7 +41,7 @@
   av.umsg("During each iteration, Shellsort breaks the list into disjoint sublists so that each element in a sublist is a fixed number of positions apart. For example, let us assume for convenience that n, the number of values to be sorted, is a power of two."); // message to be shown initially
 
   // create a new step to the visualization, a given message
-  av.step().umsg("One possible implementation of Shellsort will begin by breaking the list into n/2 sublists of 2 elements each, where the array index of the 2 elements in each sublist differs by n/2. We say that the increment is n/2. If there are 16 elements in the array indexed from 0 to 15, there would initially be 8 sublists of 2 elements each.");
+  av.umsg("One possible implementation of Shellsort will begin by breaking the list into n/2 sublists of 2 elements each, where the array index of the 2 elements in each sublist differs by n/2. We say that the increment is n/2. If there are 16 elements in the array indexed from 0 to 15, there would initially be 8 sublists of 2 elements each.");
 
   av.step().umsg(" The first sublist would be the elements in positions 0 and 8...", {preserve: true});
   // av.ds.variable("increment", 8); // display a variable named increment with value 8
