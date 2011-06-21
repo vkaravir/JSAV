@@ -42,22 +42,30 @@
     if ($controls.size() === 0) {
       return; // no controls, no need to proceed
     }
-    $("<a class='begin' href='#' title='Begin'>Begin</a>").click(function(e) {
+    var beginHandler = function(e) {
       e.preventDefault();
       that.begin();
-    }).appendTo($controls);
-    $("<a class='backward' href='#' title='Backward'>Backward</a>").click(function(e) {
+    };
+    var backwardHandler = function(e) {
       e.preventDefault();
       that.backward();
-    }).appendTo($controls);
-    $("<a class='forward' href='#' title='Forward'>Forward</a>").click(function(e) {
+    };
+    var forwardHandler = function(e) {
       e.preventDefault();
       that.forward();
-    }).appendTo($controls);
-    $("<a class='end' href='#' title='End'>End</a>").click(function(e) {
+    };
+    var endHandler = function(e) {
       e.preventDefault();
       that.end();
-    }).appendTo($controls);
+    };
+    $("<a class='begin' href='#' title='Begin'>Begin</a>").click(beginHandler).appendTo($controls);
+    $("<a class='backward' href='#' title='Backward'>Backward</a>").click(backwardHandler).appendTo($controls);
+    $("<a class='forward' href='#' title='Forward'>Forward</a>").click(forwardHandler).appendTo($controls);
+    $("<a class='end' href='#' title='End'>End</a>").click(endHandler).appendTo($controls);
+    this.container.bind("forward", forwardHandler);
+    this.container.bind("backward", backwardHandler);
+    this.container.bind("begin", beginHandler);
+    this.container.bind("end", endHandler);
   });
   
   function anim(effect, undo) {
