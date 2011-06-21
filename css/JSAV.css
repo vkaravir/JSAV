@@ -1,3 +1,4 @@
+/***** STYLING OF THE ARRAY DATA STRUCTURE *****/
 .array {
   position: relative;
   list-style: none;
@@ -24,14 +25,32 @@
 .array .index.highlight {
   background-color: yellow;
 }
+/***** END STYLING OF THE ARRAY DATA STRUCTURE *****/
+
 #container {
   overflow:hidden;
   height: 400px;
   width: 100%;
 }
-.output.line {
-  height: 80px;
+
+/*** OUTPUT STYLING ***/
+.output {
+  width:100%;
 }
+.output.scroll {
+  overflow: auto; 
+  background-color: white; 
+  border: 1px solid black;
+  height:220px;
+}
+.output.line {
+  overflow: hidden;
+  border: none;
+  background-color: inherit;
+  height:50px;
+}
+/**** END OUTPUT STYLING ***/
+
 svg {
   position: absolute;
   z-index: 500;

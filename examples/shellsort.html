@@ -2,7 +2,8 @@
 <html>
 <head>
   <title>Shellsort v0.0.01</title>
-  <link rel="stylesheet" href="JSAV.css" type="text/css" media="screen" title="no title" charset="utf-8" />
+  <meta charset="utf-8" />
+  <link rel="stylesheet" href="../css/JSAV.css" media="screen" />
 </head>
 <body>
 <div id="container">
@@ -22,7 +23,7 @@
   //var arr = av.ds.array($("#initialarray")),
   // HTML element containing the initial array, id initialarray
   // alternatively, generate from data: 
-  var arr = av.ds.array([20, 30, 12, 54, 55, 11, 78, 14, 13, 79, 44, 98, 76, 45, 32, 12]);
+  var arr = av.ds.array([20, 30, 12, 54, 55, 11, 78, 14, 13, 79, 44, 98, 76, 45, 32, 11]);
   // or, generate from random data: var arr = av.ds.array.random(10);
   // size as param, range as params as well??
 
@@ -56,7 +57,7 @@
   arr.unhighlight();
   //arr.title("Array after sorting the sublists with increment 8:");
   //origarr.insertBefore(arr).show().title("Original Array:"); // add the origarr before (that is, above) the partly-sorted array
-  av.step().umsg("The second pass of Shellsort looks at fewer, bigger lists. For our example the second pass would have n/4 lists of size 4, with the increment being n/4 = 4. Thus, the second pass would have as its first sublist the 4 elements in positions 0, 4, 8, and 12…");
+  av.step().umsg("The second pass of Shellsort looks at fewer, bigger lists. For our example the second pass would have n/4 lists of size 4, with the increment being n/4 = 4. Thus, the second pass would have as its first sublist the 4 elements in positions 0, 4, 8, and 12...");
   // av.ds.variable("increment", 4); // set the value of variable increment to 4
   arr.css("opacity", 0.5).highlight([0, 4, 8, 12]); // on slide 10
 
