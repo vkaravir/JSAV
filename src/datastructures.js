@@ -110,30 +110,34 @@
   var arrproto = AVArray.prototype;
   function setHighlight(indices, mode) {
     var $elems = getIndices($(this.element).find("li"), indices),
-      fname = (mode && mode === "add") ? "addClass" : "removeClass";
-    $elems[fname]("highlight", this.jsav.SPEED);
+      testDiv = $('<ol class="array" style="position:absolute;left:-10000px"><li class="node index highlight"></li><li class="node index" ></li></li>'),
+  	  styleDiv = (mode && mode === "add" ? testDiv.find(".node").filter(".highlight"):testDiv.find(".node").not(".highlight"));
+  	// TODO: general way to get styles for the whole av system??
+  	$("body").append(testDiv);
+    this.css(indices, {color: styleDiv.css("color"), "background-color": styleDiv.css("background-color")});
+    testDiv.remove();
   }
-  arrproto.highlight = JSAV.anim(function(indices, options) {
+  arrproto.highlight = function(indices, options) {
     setHighlight.call(this, indices, "add");
     return this; 
-  });
+  };
 
-  arrproto.unhighlight = JSAV.anim(function(indices, options) {
+  arrproto.unhighlight = function(indices, options) {
     setHighlight.call(this, indices, "remove");
     return this; 
+  };
+  arrproto._setcss = JSAV.anim(function(indices, cssprop) {
+    var $elems = getIndices($(this.element).find("li"), indices);
+    $elems.animate(cssprop, this.jsav.SPEED);
+    return this;
   });
-  arrproto.css = function(indices, cssprop) { 
-    var $elems = getIndices($(this.element).find("li"), indices),
-      that = this;
+  arrproto.css = function(indices, cssprop) {
+    var $elems = getIndices($(this.element).find("li"), indices);
     if (typeof cssprop === "string") {
       return $elems.css(cssprop);
     } else {
-      JSAV.anim( function() {
-        $elems.animate(cssprop, this.jsav.SPEED);
-        return this;
-      });
+      return this._setcss(indices, cssprop);
     }
-    return this;
   };
   function realSwap(index1, index2, options) {
     var tmp = this._arr[index1],
