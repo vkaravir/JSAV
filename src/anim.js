@@ -20,7 +20,7 @@
     var ops = this._redo.shift();
     for (var i = 0; i < ops.length; i++) {
       var next = ops[i];
-      if (!next[3]) {
+      if (typeof next[3] === "undefined" || !$.isFunction(next[3])) {
         next[3] = function() {
           var obj = next[0],
             state = obj.state();
@@ -60,10 +60,8 @@
     // a function that can be used to provide function calls that are applied later
     // when viewing the visualization
     return function() {
-      var obj = this;
-      var back = undo || undefined;
       var jsav = this;
-      if (!jsav.hasOwnProperty("forward")) { jsav = this.jsav; }
+      if (!jsav.hasOwnProperty("_redo")) { jsav = this.jsav; }
       var stackTop = jsav._redo[0];
       if (!stackTop) {
         stackTop = [];
@@ -72,7 +70,7 @@
       if (jsav.options.animationMode == 'none') {
         effect.apply(this, arguments);
       } else {
-        stackTop.push([this, effect, arguments, back]);
+        stackTop.push([this, effect, arguments, undo]);
       }
       return this;
     };
