@@ -111,6 +111,9 @@
   JSAV.ext.forward = forward;
   JSAV.ext.backward = backward;
   JSAV.ext.step = function(options) {
+    if (this._redo.length === 0 || this._redo[0].length === 0) { // ignore step if no operations in it
+      return this;
+    }
     this.forward();
     this._redo.push([]); // add new empty step to oper. stack
     if (options && this.message && options.message) {
