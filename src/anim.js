@@ -42,16 +42,20 @@
     if ($controls.size() === 0) {
       return; // no controls, no need to proceed
     }
-    $("<a class='begin' href='#'>Begin</a>").click(function() {
+    $("<a class='begin' href='#' title='Begin'>Begin</a>").click(function(e) {
+      e.preventDefault();
       that.begin();
     }).appendTo($controls);
-    $("<a class='backward' href='#'>Backward</a>").click(function() {
+    $("<a class='backward' href='#' title='Backward'>Backward</a>").click(function(e) {
+      e.preventDefault();
       that.backward();
     }).appendTo($controls);
-    $("<a class='forward' href='#'>Forward</a>").click(function() {
+    $("<a class='forward' href='#' title='Forward'>Forward</a>").click(function(e) {
+      e.preventDefault();
       that.forward();
     }).appendTo($controls);
-    $("<a class='end' href='#'>End</a>").click(function() {
+    $("<a class='end' href='#' title='End'>End</a>").click(function(e) {
+      e.preventDefault();
       that.end();
     }).appendTo($controls);
   });
