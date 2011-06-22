@@ -42,6 +42,15 @@
 
   var av = new JSAV("container"); //containing HTML element with id container
   av.SPEED = 200;
+
+  // message to be shown initially
+  av.umsg("Shellsort provides a huge improvement over O(n<sup>2</sup>) sorts sorts like Insertion Sort. It works by taking advantage of the fact that Insertion Sort works very well (in linear time) when the list is nearly sorted. Shellsort works by performing a series of Insertion Sorts on carefully selected sublists, first on small sublists and then on increasingly large sublists.");
+
+  // create a new step to the visualization, a given message
+  av.umsg("During each iteration, Shellsort breaks the list into disjoint sublists so that each element in a sublist is a fixed number of positions apart. For example, let us assume for convenience that n, the number of values to be sorted, is a power of two.");
+
+  av.step().umsg("One possible implementation of Shellsort will begin by breaking the list into n/2 sublists of 2 elements each, where the array index of the 2 elements in each sublist differs by n/2. We say that the increment is n/2. If there are 16 elements in the array indexed from 0 to 15, there would initially be 8 sublists of 2 elements each.");
+
   //var arr = av.ds.array($("#initialarray")),
   // HTML element containing the initial array, id initialarray
   // alternatively, generate from data: 
@@ -51,45 +60,47 @@
 
   origarr = arr.clone(); // clone for showing the array comparison, not added to document yet (not shown)
 
-  // message to be shown initially
-  av.umsg("During each iteration, Shellsort breaks the list into disjoint sublists so that each element in a sublist is a fixed number of positions apart. For example, let us assume for convenience that n, the number of values to be sorted, is a power of two.");
-
-  // create a new step to the visualization, a given message
-  av.umsg("One possible implementation of Shellsort will begin by breaking the list into n/2 sublists of 2 elements each, where the array index of the 2 elements in each sublist differs by n/2. We say that the increment is n/2. If there are 16 elements in the array indexed from 0 to 15, there would initially be 8 sublists of 2 elements each.");
-
   av.step().umsg(" The first sublist would be the elements in positions 0 and 8...", {preserve: true});
 
-  // set opacity to LIGHT for the whole array, then highlight indices 0 and 8
+  // set color to LIGHT for the whole array, then highlight indices 0 and 8
   arr.css(function(index, item)
     { return index%8 != 0;}, {"color": LIGHT}).highlight([0, 8]);
   // another way to specify a message for a step
   av.step().umsg("... the second in positions 1 and 9...");
   arr.unhighlight([0, 8]).css([0, 8], {"color": LIGHT}).highlight([1, 9]);
   
-  av.step();
-  
-  av.umsg("... and so on ...");
-  for (var i=2; i<8; i++) { // loop through the rest of the array sublists
-    av.step();
-    arr.unhighlight([i-1, i+7]).css([i-1, i+7], {"color": LIGHT}).highlight([i, i+8]);
-  }
+  av.step().umsg("... and so on ...");
+/////////////////////////////////////////
+// CUT OUT TO SAVE TIME, RESTORE LATER
+//  for (var i=2; i<8; i++) { // loop through the rest of the array sublists
+//    av.step();
+//    arr.unhighlight([i-1, i+7]).css([i-1, i+7], {"color": LIGHT}).highlight([i, i+8]);
+//  }
 
   av.step().umsg("Each of these sublists of length two is sorted using Insertion Sort.");
-  arr.unhighlight([7, 15]);
-  arr.css(function(index, item)
-    {return true; }, {"color": DARK});
-
-  av.step().umsg("Start sorting sweep");
-  
-  av.step().umsg("test 1");
+  arr.unhighlight([7, 15]).css([7, 15], {"color": LIGHT});
 
   sweep(arr, 8); // first sweep with increment 8
 
-  av.step().umsg('At the end of the first pass, the resulting array is "a little better sorted".');
-  av.step().umsg("test 2");
-  arr.unhighlight();
-  //arr.title("Array after sorting the sublists with increment 8:");
-  //origarr.insertBefore(arr).show().title("Original Array:"); // add the origarr before (that is, above) the partly-sorted array
+av.step().umsg('At the end of the first pass, the resulting array is "a little better sorted".');
+
+console.log(arr);
+
+console.log(origarr);
+
+  for (i=0; i<16; i++) {
+//    if (arr[i] !== origarr[i]) {
+      arr.css(i, {"color": "green"});
+//    }
+  }
+
+
+  var arrlabel = av.label("Values in green were swapped during this pass", {before: arr});
+  origarr.show();
+  var origlabel = av.label("Original Array:", {before: origarr});
+
+//  arr.unhighlight();
+
   av.step().umsg("The second pass of Shellsort looks at fewer, bigger lists. For our example the second pass would have n/4 lists of size 4, with the increment being n/4 = 4. Thus, the second pass would have as its first sublist the 4 elements in positions 0, 4, 8, and 12...");
   // av.ds.variable("increment", 4); // set the value of variable increment to 4
   arr.css(function(index, item)
@@ -108,7 +119,6 @@
   sweep(arr, 4); // second sweep with increment 4
 
   av.step().umsg("At the end of processing sublists with increment 4, the array is \"even more sorted\".");
-  arr.unhighlight();
 
   av.step().umsg("The third pass would be made on sublists with increment 2. This means we process two lists, one consisting of the odd positions and the other consisting of the even positions.");
   //  av.ds.variable("increment", 2); // set the value of variable increment to 2
@@ -151,9 +161,7 @@
       //myarr.highlight(function(index, item) { return index%incr == j;});
       av.step();
       inssort(myarr, j, incr);
-      av.step();
       myarr.unhighlight();
-      myarr.css(function(index, item) { return index%incr === j;}, {"color": "green"});
     }
   }
 
@@ -161,9 +169,12 @@
   function inssort(A, start, incr) {
     var i, j;
     for (i=start+incr; i<A.size(); i+=incr) {
+      setBlue(i);
       for (j=i; j>=incr && (A.value(j) < A.value(j-incr)); j-=incr) {
         A.swap(j, j-incr); // swap the two indices
-        av.step(); // create new substeps for each swap
+	arr.highlight(j);
+	setBlue(j-incr);
+        av.step();
       }
     }
   }
