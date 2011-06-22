@@ -41,6 +41,7 @@
   // setBlue([0, 9]); // Will set positions 0 and 9
 
   var av = new JSAV("container"); //containing HTML element with id container
+  av.SPEED = 200;
   //var arr = av.ds.array($("#initialarray")),
   // HTML element containing the initial array, id initialarray
   // alternatively, generate from data: 
@@ -78,7 +79,7 @@
   arr.css(function(index, item)
     {return true; }, {"color": DARK});
 
-  av.step().av.umsg("Start sorting sweep");
+  av.step().umsg("Start sorting sweep");
   
   av.step().umsg("test 1");
 
@@ -123,7 +124,7 @@
   arr.unhighlight();
 
   av.step().umsg("The culminating pass in this example would be a \"normal\" Insertion Sort of all elements.");
-  inssort2(arr, 0, 1);
+  inssort(arr, 0, 1);
 
   av.step().umsg("Finally, the array is sorted.");
   arr.unhighlight();
@@ -140,12 +141,19 @@
     var j = 0;
     for (; j<incr; j++) {         // Sort each sublist
       // Highlight the sublist
-      myarr.highlight(function(index, item) { return index%incr === j;});
+      var highlightArray = [];
+      for (var k=0; k < myarr.size(); k++) {
+        if (k%incr == j) {
+          highlightArray.push(k);
+        }
+      }
+      myarr.highlight(highlightArray);
+      //myarr.highlight(function(index, item) { return index%incr == j;});
+      av.step();
       inssort(myarr, j, incr);
       av.step();
       myarr.unhighlight();
       myarr.css(function(index, item) { return index%incr === j;}, {"color": "green"});
-      av.stepdone();
     }
   }
 
@@ -153,10 +161,9 @@
   function inssort(A, start, incr) {
     var i, j;
     for (i=start+incr; i<A.size(); i+=incr) {
-      for (j=i; j>=incr && (myarr.value(j) < myarr.value(j-incr)); j-=incr) {
-        av.substep(); // create new substeps for each swap
+      for (j=i; j>=incr && (A.value(j) < A.value(j-incr)); j-=incr) {
+        av.step(); // create new substeps for each swap
         A.swap(j, j-incr); // swap the two indices
-        av.stepdone();
       }
     }
   }
