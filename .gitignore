@@ -3,6 +3,9 @@
 #Mac stuff
 .DS_Store
 
+#build directory
+build
+
 #Eclipse settings
 .project
 .settings
