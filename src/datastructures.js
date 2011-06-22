@@ -35,10 +35,10 @@
     initDs = function(dstr, element, options) {
       dstr.options = $.extend({}, options);
       if ($.isArray(element)) {
-        dstr.initialize(element, options);
+        dstr.initialize(element);
       } else if (element) { // assume it's a DOM element
         dstr.element = element;
-        dstr.initializeFromElement(options);
+        dstr.initializeFromElement();
       } else {
         // TODO: create an element for this data structure
       }
@@ -99,7 +99,6 @@
       }
     }
   };
-
 
   /* Array data structure for JSAV library. */
   var AVArray = function(jsav, element, options) {
@@ -172,7 +171,7 @@
   }, realSwap
   );
   arrproto.clone = function() { 
-    return new AVArray(this.jsav, this._arr, $.extend(this.options, {display: false})); 
+    return new AVArray(this.jsav, this._arr.slice(0), $.extend({}, this.options, {display: false})); 
   };
   arrproto.size = function() { return this._arr.length; };
   arrproto.value = function(index, newValue) {
@@ -188,10 +187,10 @@
     $(this.element).find("li:eq(" + index + ")").html("" + newValue);
     return oldVal;
   });
-  arrproto.initialize = function(data, options) {
+  arrproto.initialize = function(data) {
     var el = $("<ol class='array' />"),
       liel;
-    options = jQuery.extend({display: true}, options);
+    this.options = jQuery.extend({display: true}, this.options);
     this._arr = data;
     $.each(data, function(index, item) {
       el.append("<li class='node index'><span>" + item + "</span></li>");
@@ -199,8 +198,14 @@
     $(this.jsav.container).append(el);
     this.element = el;
     this.layout();
-    if (options && typeof options.display === "boolean" && options.display === false) {
-      el.css("display", "none");
+    el.css("display", "none");
+    var visible = (typeof this.options.display === "boolean" && this.options.display === true);
+    if (visible) {
+      if (this.jsav.currentStep() === 0) { // at beginning, just show
+        el.css("display", "block");
+      } else { // add effect to show otherwise
+        this.show();
+      }
     }
   };
   arrproto.initializeFromElement = function() {
