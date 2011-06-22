@@ -30,7 +30,19 @@
       },
       'position': function() {
         return JSAV.position(this.element);
-      }
+      },
+      show: JSAV.anim(function() {
+          $(this.element).fadeIn(this.jsav.SPEED);
+        }, 
+        function() { 
+          $(this.element).fadeOut(this.jsav.SPEED); 
+       }),
+      hide: JSAV.anim(function() {
+          $(this.element).fadeOut(this.jsav.SPEED);
+        },
+        function() {
+          $(this.element).fadeIn(this.jsav.SPEED);
+      })
     },
     initDs = function(dstr, element, options) {
       dstr.options = $.extend({}, options);
@@ -239,18 +251,6 @@
       return sta;
     }
   };
-  arrproto.show = JSAV.anim(function() {
-      $(this.element).fadeIn(this.jsav.SPEED);
-    }, 
-    function() { 
-      $(this.element).fadeOut(this.jsav.SPEED); 
-    });
-  arrproto.hide = JSAV.anim(function() {
-      $(this.element).fadeOut(this.jsav.SPEED);
-    },
-    function() {
-      $(this.element).fadeIn(this.jsav.SPEED);
-    });
   
   addCommonProperties(arrproto);
  
