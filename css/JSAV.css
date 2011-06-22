@@ -13,6 +13,9 @@
   list-style: none;
   overflow: hidden;
 }
+.array.indexed {
+  margin-bottom: 0;
+}
 .array:after {
   content: "";
   clear: both;
@@ -27,6 +30,13 @@
   background-color: white;
   color: black;
   opacity: 1;
+}
+.indexlabel {
+  display: inline-block;
+  width: 50px;
+  height: 20px;
+  line-height: 20px;
+  top: 55px;
 }
 .array .index span {
   z-index: 99;
