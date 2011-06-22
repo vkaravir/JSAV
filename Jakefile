@@ -6,7 +6,7 @@ task('concat', [], function () {
   var files = ('src/core.js src/anim.js src/messages.js src/graphicals.js src/datastructures.js src/layout.js').split(' '),
       filesLeft = files.length,
       pathName = '.',
-      outFile = fs.openSync('build/jsav.js', 'w+');
+      outFile = fs.openSync('build/JSAV.js', 'w+');
 
   files.forEach(function(fileName) {
     var fileName = path.join(pathName, fileName),
@@ -22,9 +22,9 @@ task('clean', [], function() {
 });
 
 task('minify', ['concat'], function() {
-  var code = fs.readFileSync('build/jsav.js'),
+  var code = fs.readFileSync('build/JSAV.js'),
       jsmin = require('jsmin').jsmin,
-      outFile = fs.openSync('build/jsav-min.js', 'w+');
+      outFile = fs.openSync('build/JSAV-min.js', 'w+');
   sys.puts('Read: ' + code.length + ', written: ' + fs.writeSync(outFile, jsmin(code.toString())));
   fs.closeSync(outFile);
 });
