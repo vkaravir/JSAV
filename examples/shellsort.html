@@ -25,9 +25,11 @@
 <script src="../lib/raphael/raphael.js"></script>
 <script src="../build/JSAV.js"></script>
 <script>
-  var LIGHT = 0.25;  // For "greying out" array elements
-  var DARK = 1;       // Make array elements dark again
-
+  var LIGHT = "rgb(200, 200, 200)";  // For "greying out" array elements
+  var DARK = "black";       // Make array elements dark again
+  var setBlue = function(index) {
+    arr.css(index, {"background-color": "blue"});
+  };
   var av = new JSAV("container"); //containing HTML element with id container
   //var arr = av.ds.array($("#initialarray")),
   // HTML element containing the initial array, id initialarray
@@ -48,10 +50,14 @@
 
   // set opacity to LIGHT for the whole array, then highlight indices 0 and 8
   arr.css(function(index, item)
-    { return index%8 != 0;}, {"opacity": LIGHT}).highlight([0, 8]);
+    { return index%8 != 0;}, {"color": LIGHT}).highlight([0, 8]);
   // another way to specify a message for a step
   av.step().umsg("... the second in positions 1 and 9...");
-  arr.unhighlight().highlight([1, 9]);
+  arr.unhighlight([0, 8]).css([0, 8], {"color": LIGHT}).highlight([1, 9]);
+  
+  av.step();
+  setBlue([0, 9]);
+  
   av.umsg("... and so on ...");
   for (var i=2; i<8; i++) { // loop through the rest of the array sublists
     av.step();
@@ -69,7 +75,8 @@
   //origarr.insertBefore(arr).show().title("Original Array:"); // add the origarr before (that is, above) the partly-sorted array
   av.step().umsg("The second pass of Shellsort looks at fewer, bigger lists. For our example the second pass would have n/4 lists of size 4, with the increment being n/4 = 4. Thus, the second pass would have as its first sublist the 4 elements in positions 0, 4, 8, and 12...");
   // av.ds.variable("increment", 4); // set the value of variable increment to 4
-  arr.css("opacity", LIGHT).highlight([0, 4, 8, 12]); // on slide 10
+  arr.css(function(index, item)
+    { return index%4 != 0;}, {"color": LIGHT}).highlight([0, 4, 8, 12]); // on slide 10
 
   av.step().umsg("... the second sublist would have elements in positions 1, 5, 9, and 13 ...");
   arr.unhighlight([0, 4, 8, 12]).highlight([1, 5, 9, 13]); // slide 11
@@ -80,7 +87,7 @@
   av.step().umsg("and so on.");
   arr.unhighlight([2, 6, 10, 14]).highlight([3, 7, 11, 15]);
 
-  av.step().umsg("Each sublist of four elements would also be sorted using an Insertion Sort.")
+  av.step().umsg("Each sublist of four elements would also be sorted using an Insertion Sort.");
   shellsort(arr, 4); // second sweep with increment 4
 
   av.step().umsg("At the end of processing sublists with increment 4, the array is \"even more sorted\".");
