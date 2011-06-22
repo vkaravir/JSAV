@@ -1,5 +1,5 @@
 /**
-* Module that contains the animator implementations.
+* Module that contains the message output implementations.
 * Depends on core.js
 */
 (function($) {
@@ -22,6 +22,7 @@
       //} else if (this.output.hasClass("scroll")) {
       } else { // e.g. "scroll", which is default
         this.output.append("<div style='color:" + opts.color + ";'>" + msg + "</div>");
+        this.output[0].scrollTop = this.output[0].scrollHeight;
       }      
     }
     return this;
