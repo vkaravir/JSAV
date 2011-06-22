@@ -28,19 +28,3 @@ a:hover {
 applet {
   border: 1px solid black;
 }
-o.output {
-  width:100%;
-}
-p.output.scroll {
-  overflow: auto; 
-  background-color: white; 
-  border: 1px solid black;
-  height:220px;
-}
-
-p.output.line {
-  overflow: hidden;
-  border: none;
-  background-color: inherit;
-  height:50px;
-}
