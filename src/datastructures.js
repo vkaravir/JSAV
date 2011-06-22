@@ -31,18 +31,16 @@
       'position': function() {
         return JSAV.position(this.element);
       },
-      show: JSAV.anim(function() {
-          $(this.element).fadeIn(this.jsav.SPEED);
-        }, 
-        function() { 
-          $(this.element).fadeOut(this.jsav.SPEED); 
-       }),
-      hide: JSAV.anim(function() {
-          $(this.element).fadeOut(this.jsav.SPEED);
-        },
-        function() {
-          $(this.element).fadeIn(this.jsav.SPEED);
-      })
+      _hide: function() {
+        $(this.element).fadeOut(this.jsav.SPEED);
+      },
+      _show: function() {
+        $(this.element).fadeIn(this.jsav.SPEED);
+      },
+      show: JSAV.anim(function() { this._show(); }, 
+        function() { this._hide(); }),
+      hide: JSAV.anim(function() { this._hide(); },
+        function() { this._show(); })
     },
     initDs = function(dstr, element, options) {
       dstr.options = $.extend({}, options);
@@ -119,10 +117,11 @@
     initDs(this, element, options);
   };
   var arrproto = AVArray.prototype;
+  addCommonProperties(arrproto); // add functionality from common
   function setHighlight(indices, mode) {
     var testDiv = $('<ol class="array" style="position:absolute;left:-10000px"><li class="node index highlight"></li><li class="node index" ></li></li>'),
   	  styleDiv = (mode && mode === "add" ? testDiv.find(".node").filter(".highlight"):testDiv.find(".node").not(".highlight"));
-  	// TODO: general way to get styles for the whole av system??
+  	// TODO: general way to get styles for the whole av system
   	$("body").append(testDiv);
     this.css(indices, {color: styleDiv.css("color"), "background-color": styleDiv.css("background-color")});
     testDiv.remove();
@@ -155,8 +154,8 @@
       args = arguments,
       $pi1 = $(this.element).find("li:eq(" + index1 + ")"), // index
       $pi2 = $(this.element).find("li:eq(" + index2 + ")"),
-      $i1 = $pi1.find("span"),
-      $i2 = $pi2.find("span"),
+      $i1 = $pi1.find("span.value"),
+      $i2 = $pi2.find("span.value"),
       p1 = JSAV.position($i1),
       p2 = JSAV.position($i2),
       indices = $($pi1).add($pi2),
@@ -168,10 +167,11 @@
       $i1.animate({"transform": "translateX(" + (p2.left-p1.left) + "px) translateY(" + (p2.top-p1.top) + "px)"}, 7*speed, 'linear', 
         function() {
           var htmlTmp = $i1.html();
-          $pi1.html("<span>" + $i2.html() + "</span>");
-          $pi2.html("<span>" + htmlTmp + "</span>");
+          $pi1.html("<span class='value'>" + $i2.html() + "</span>");
+          $pi2.html("<span class='value'>" + htmlTmp + "</span>");
           $pi1.animate(i1prevStyle, speed);
           $pi2.animate(i2prevStyle, speed);
+          that.layout();
         });
     });
     this._arr[index1] = this._arr[index2];
@@ -205,7 +205,7 @@
     this.options = jQuery.extend({display: true}, this.options);
     this._arr = data;
     $.each(data, function(index, item) {
-      el.append("<li class='node index'><span>" + item + "</span></li>");
+      el.append("<li class='node index'><span class='value'>" + item + "</span></li>");
     });
     $(this.jsav.container).append(el);
     this.element = el;
@@ -213,7 +213,7 @@
     el.css("display", "none");
     var visible = (typeof this.options.display === "boolean" && this.options.display === true);
     if (visible) {
-      if (this.jsav.currentStep() === 0) { // at beginning, just show
+      if (this.jsav.currentStep() === 0) { // at beginning, just make it visible
         el.css("display", "block");
       } else { // add effect to show otherwise
         this.show();
@@ -224,14 +224,14 @@
     // TODO: handle settings from data-attributes
     if (!this.element) { return; }
     var that = this,
-      $elem = $(this.element),
+      $elem = this.element,
       $elems = $elem.find("li");
     $elem.addClass("array");
     this._arr = this._arr || [];
     this._arr.length = $elems.size();
     $elems.each(function(index, item) {
       that._arr[index] = parseInt($(this).html(), 10);
-      $(this).addClass("node index").html("<span>" + $(this).html() + "</span>");     
+      $(this).addClass("node index").html("<span class='value'>" + $(this).html() + "</span>");     
     });
     this.layout();
   };
@@ -251,8 +251,6 @@
       return sta;
     }
   };
-  
-  addCommonProperties(arrproto);
  
   function addCommonProperties(dsPrototype, commonProps) {
     if (!commonProps) { commonProps = common; }
