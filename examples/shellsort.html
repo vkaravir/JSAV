@@ -7,16 +7,16 @@
   <link rel="stylesheet" href="../css/JSAV.css" media="screen" />
 </head>
 <body>
-  <style>
+<style>
   #container {
-    width: 900px;
+    width: 915px;
     height: 400px;
-    background-color: #eee;
+    background-color: #efe;
   }
   p.output.line {
     height: 100px;
   }
-  </style>
+</style>
 <div id="container">
   <div class="controls"></div>
   <p class="output line"></p>
@@ -27,7 +27,7 @@
 <script src="../lib/raphael/raphael.js"></script>
 <script src="../build/JSAV.js"></script>
 <script>
-  var LIGHT = "rgb(200, 200, 200)";  // For "greying out" array elements
+  var LIGHT = "rgb(215, 215, 215)";  // For "greying out" array elements
   var DARK = "black";       // Make array elements dark again
   var setBlue = function(index) {
     arr.css(index, {"background-color": "blue"});
@@ -40,7 +40,7 @@
   // or, generate from random data: var arr = av.ds.array.random(10);
   // size as param, range as params as well??
 
-  origarr = arr.clone(); // clone for showing the array comparison, not added to document yet (not showed)
+  origarr = arr.clone(); // clone for showing the array comparison, not added to document yet (not shown)
 
   // message to be shown initially
   av.umsg("During each iteration, Shellsort breaks the list into disjoint sublists so that each element in a sublist is a fixed number of positions apart. For example, let us assume for convenience that n, the number of values to be sorted, is a power of two.");
