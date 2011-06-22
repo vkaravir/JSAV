@@ -1,0 +1,8 @@
+#Temp files
+*~
+#Mac stuff
+.DS_Store
+
+#Eclipse settings
+.project
+.settings
