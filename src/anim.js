@@ -120,6 +120,9 @@
   JSAV.ext.end = end;
   JSAV.ext.forward = forward;
   JSAV.ext.backward = backward;
+  JSAV.ext.currentStep = function() {
+    return this._undo.length;
+  };
   JSAV.ext.step = function(options) {
     if (this._redo.length === 0 || this._redo[0].length === 0) { // ignore step if no operations in it
       return this;
