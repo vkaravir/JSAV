@@ -25,8 +25,8 @@
 <script src="../lib/raphael/raphael.js"></script>
 <script src="../build/JSAV.js"></script>
 <script>
-  // this is what I would imagine the ShellSort visualization implementation 
-  // might look like
+  var LIGHT = 0.25;  // For "greying out" array elements
+  var DARK = 1;       // Make array elements dark again
 
   var av = new JSAV("container"); //containing HTML element with id container
   //var arr = av.ds.array($("#initialarray")),
@@ -38,21 +38,23 @@
 
   origarr = arr.clone(); // clone for showing the array comparison, not added to document yet (not showed)
 
-  av.umsg("During each iteration, Shellsort breaks the list into disjoint sublists so that each element in a sublist is a fixed number of positions apart. For example, let us assume for convenience that n, the number of values to be sorted, is a power of two."); // message to be shown initially
+  // message to be shown initially
+  av.umsg("During each iteration, Shellsort breaks the list into disjoint sublists so that each element in a sublist is a fixed number of positions apart. For example, let us assume for convenience that n, the number of values to be sorted, is a power of two.");
 
   // create a new step to the visualization, a given message
   av.umsg("One possible implementation of Shellsort will begin by breaking the list into n/2 sublists of 2 elements each, where the array index of the 2 elements in each sublist differs by n/2. We say that the increment is n/2. If there are 16 elements in the array indexed from 0 to 15, there would initially be 8 sublists of 2 elements each.");
 
   av.step().umsg(" The first sublist would be the elements in positions 0 and 8...", {preserve: true});
-  // av.ds.variable("increment", 8); // display a variable named increment with value 8
-  // set opacity to 0.5 for the whole array, then highlight indices 0 and 8
+
+  // set opacity to LIGHT for the whole array, then highlight indices 0 and 8
   arr.css(function(index, item)
-    { return index%8 != 0;}, {"opacity": 0.5}).highlight([0, 8]);
+    { return index%8 != 0;}, {"opacity": LIGHT}).highlight([0, 8]);
   // another way to specify a message for a step
   av.step().umsg("... the second in positions 1 and 9...");
   arr.unhighlight().highlight([1, 9]);
+  av.umsg("... and so on ...");
   for (var i=2; i<8; i++) { // loop through the rest of the array sublists
-    av.step().umsg("... and so on ...");
+    av.step();
     arr.unhighlight([i-1, i+7]).highlight([i, i+8]);
   }
 
@@ -67,7 +69,7 @@
   //origarr.insertBefore(arr).show().title("Original Array:"); // add the origarr before (that is, above) the partly-sorted array
   av.step().umsg("The second pass of Shellsort looks at fewer, bigger lists. For our example the second pass would have n/4 lists of size 4, with the increment being n/4 = 4. Thus, the second pass would have as its first sublist the 4 elements in positions 0, 4, 8, and 12...");
   // av.ds.variable("increment", 4); // set the value of variable increment to 4
-  arr.css("opacity", 0.5).highlight([0, 4, 8, 12]); // on slide 10
+  arr.css("opacity", LIGHT).highlight([0, 4, 8, 12]); // on slide 10
 
   av.step().umsg("... the second sublist would have elements in positions 1, 5, 9, and 13 ...");
   arr.unhighlight([0, 4, 8, 12]).highlight([1, 5, 9, 13]); // slide 11
