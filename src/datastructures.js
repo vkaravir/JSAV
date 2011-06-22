@@ -33,7 +33,7 @@
       }
     },
     initDs = function(dstr, element, options) {
-      dstr.options = options;
+      dstr.options = $.extend({}, options);
       if ($.isArray(element)) {
         dstr.initialize(element, options);
       } else if (element) { // assume it's a DOM element
@@ -109,8 +109,7 @@
   };
   var arrproto = AVArray.prototype;
   function setHighlight(indices, mode) {
-    var $elems = getIndices($(this.element).find("li"), indices),
-      testDiv = $('<ol class="array" style="position:absolute;left:-10000px"><li class="node index highlight"></li><li class="node index" ></li></li>'),
+    var testDiv = $('<ol class="array" style="position:absolute;left:-10000px"><li class="node index highlight"></li><li class="node index" ></li></li>'),
   	  styleDiv = (mode && mode === "add" ? testDiv.find(".node").filter(".highlight"):testDiv.find(".node").not(".highlight"));
   	// TODO: general way to get styles for the whole av system??
   	$("body").append(testDiv);
@@ -173,7 +172,7 @@
   }, realSwap
   );
   arrproto.clone = function() { 
-    return new AVArray(this.jsav, this._arr, {display: false}); 
+    return new AVArray(this.jsav, this._arr, $.extend(this.options, {display: false})); 
   };
   arrproto.size = function() { return this._arr.length; };
   arrproto.value = function(index, newValue) {
@@ -220,7 +219,8 @@
     this.layout();
   };
   arrproto.layout = function() {
-    this.jsav.layout.array._default(this);
+    var layoutAlg = this.options.layout || "_default";
+    this.jsav.layout.array[layoutAlg](this);
   };
   arrproto.state = function(newstate) {
     if (newstate) {
