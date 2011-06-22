@@ -1,3 +1,12 @@
+.jsavcontainer {
+  overflow:hidden;
+  width: 100%;
+  padding: 0.7em;
+  border: 1px solid black;
+  background-color: white;
+  margin: 1em auto;
+}
+
 /***** STYLING OF THE ARRAY DATA STRUCTURE *****/
 .array {
   position: relative;
@@ -26,15 +35,6 @@
   background-color: yellow;
 }
 /***** END STYLING OF THE ARRAY DATA STRUCTURE *****/
-
-.jsavcontainer {
-  overflow:hidden;
-  width: 100%;
-  padding: 0.7em;
-  border: 1px solid black;
-  background-color: white;
-  margin: 1em auto;
-}
 
 /*** OUTPUT STYLING ***/
 .output {
