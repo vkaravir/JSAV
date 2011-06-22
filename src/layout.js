@@ -14,7 +14,7 @@
     $items.each(function(index, item) {
       var $i = $(this),
         pos = $i.position();
-      $i.css({"left": pos.left, "top": pos.top});
+      $i.css({"left": pos.left - index, "top": pos.top});
     });
     // and return float and positioning
     $items.css({"float": "none", "position": "absolute"});
