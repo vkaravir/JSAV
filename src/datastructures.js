@@ -234,6 +234,18 @@
       return sta;
     }
   };
+  arrproto.show = JSAV.anim(function() {
+      $(this.element).fadeIn(this.jsav.SPEED);
+    }, 
+    function() { 
+      $(this.element).fadeOut(this.jsav.SPEED); 
+    });
+  arrproto.hide = JSAV.anim(function() {
+      $(this.element).fadeOut(this.jsav.SPEED);
+    },
+    function() {
+      $(this.element).fadeIn(this.jsav.SPEED);
+    });
   
   addCommonProperties(arrproto);
  
