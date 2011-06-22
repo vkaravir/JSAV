@@ -162,8 +162,8 @@
     var i, j;
     for (i=start+incr; i<A.size(); i+=incr) {
       for (j=i; j>=incr && (A.value(j) < A.value(j-incr)); j-=incr) {
-        av.step(); // create new substeps for each swap
         A.swap(j, j-incr); // swap the two indices
+        av.step(); // create new substeps for each swap
       }
     }
   }

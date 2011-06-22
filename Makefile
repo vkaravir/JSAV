@@ -19,6 +19,7 @@ clean:
 	$(RM) build/*
 	$(RM) examples/*~
 	$(RM) src/*~
+	$(RM) css/*~
 
 library:
 	git submodule init
