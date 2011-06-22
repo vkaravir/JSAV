@@ -151,7 +151,7 @@
       indices = $($pi1).add($pi2),
       i1prevStyle = $pi1.getstyles("color", "background-color"),
       i2prevStyle = $pi2.getstyles("color", "background-color"),
-      speed = this.jsav.SPEED/10;
+      speed = this.jsav.SPEED/5;
     indices.animate({"color": "red", "background-color": "pink"}, 3*speed, function() {
       $i2.animate({"transform": "translateX(" + (p1.left-p2.left) + "px) translateY(" + (p1.top-p2.top) + "px)"}, 7*speed, 'linear');
       $i1.animate({"transform": "translateX(" + (p2.left-p1.left) + "px) translateY(" + (p2.top-p1.top) + "px)"}, 7*speed, 'linear', 
