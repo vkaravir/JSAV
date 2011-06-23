@@ -17,7 +17,7 @@ clean:
 	$(RM) *~
 	$(RM) build/*
 	$(RM) examples/*~
-	$(RM) src/*~
+	$(RM) src/*~ src/version.txt src/front.js
 	$(RM) css/*~
 
 library:

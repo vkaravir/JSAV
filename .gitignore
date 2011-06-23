@@ -9,3 +9,7 @@ build
 #Eclipse settings
 .project
 .settings
+
+#Generated files
+src/version.txt
+src/front.js
