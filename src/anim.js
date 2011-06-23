@@ -62,10 +62,10 @@
     $("<a class='backward' href='#' title='Backward'>Backward</a>").click(backwardHandler).appendTo($controls);
     $("<a class='forward' href='#' title='Forward'>Forward</a>").click(forwardHandler).appendTo($controls);
     $("<a class='end' href='#' title='End'>End</a>").click(endHandler).appendTo($controls);
-    this.container.bind("forward", forwardHandler);
-    this.container.bind("backward", backwardHandler);
-    this.container.bind("begin", beginHandler);
-    this.container.bind("end", endHandler);
+    this.container.bind({ "forward": forwardHandler, 
+                          "backward": backwardHandler,
+                          "begin": beginHandler,
+                          "end": endHandler });
   });
   
   function anim(effect, undo) {
