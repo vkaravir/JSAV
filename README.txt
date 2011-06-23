@@ -26,6 +26,5 @@ For new developers:
   development projects.
 
 For SVN users new to git:
-* To "checkout" a new copy of the library, use "git clone" instead of
-  "svn checkout".
+* To "checkout" a new copy of the library, use "git clone".
 * To "update" your copy of the repository, use "git pull".

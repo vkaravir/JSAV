@@ -4,8 +4,7 @@ MINIMIZE = touch $(TARGET)/JSAV-min.js # java $(LIB)/magic $(SOURCES) > $(TARGET
 CAT = cat
 SRC = src
 TARGET = build
-SOURCES = $(SRC)/core.js $(SRC)/anim.js $(SRC)/messages.js $(SRC)/graphicals.js $(SRC)/datastructures.js $(SRC)/layout.js
-
+SOURCES = $(SRC)/front.js $(SRC)/core.js $(SRC)/anim.js $(SRC)/messages.js $(SRC)/graphicals.js $(SRC)/datastructures.js $(SRC)/layout.js $(SRC)/version.js 
 
 all: build
 
@@ -27,8 +26,13 @@ library:
 
 build: $(TARGET)/JSAV.js
 
-$(TARGET)/JSAV.js: $(SOURCES)
+$(TARGET)/JSAV.js: version $(SOURCES)
 	$(CAT) $(SOURCES) > $(TARGET)/JSAV.js
+
+# This is not correct for now
+version:
+	git describe --tags --long > $(SRC)/version.txt
+	cat $(SRC)/front1.txt $(SRC)/version.txt $(SRC)/front2.txt > $(SRC)/front.js
 
 minimize: $(TARGET)/JSAV-min.js
 

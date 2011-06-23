@@ -1,9 +1,3 @@
-/*!
- * JSAV 0.0.01 - JavaScript Algorithm Visualization Library
- *
- * Copyright (c) 2011- Ville Karavirta and Cliff Shaffer
- * Dual licensed under the MIT or GPL Version 3 licenses.
- */
 (function() {
   var JSAV = function() {
     create['apply'](this, arguments);
@@ -82,4 +76,4 @@
   } else if (exports) { // CommonJS, no idea if this works, though :(
     exports['JSAV'] = JSAV;
   }
-})();
+ })();

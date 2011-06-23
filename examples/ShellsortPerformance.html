@@ -38,6 +38,9 @@ div h1 {
 
 <body>
 <div id="container">
+  <form id="aboutform">
+    <input type="button" name="about" value="About" />
+  </form>
   <h1>Shellsort Performance</h1>
   <div id="left">
     <form id="ssperform">
@@ -84,6 +87,7 @@ div h1 {
   *  The first line you need to set to use your form's name       *
   ************************************************************** */
   var context = $("#ssperform"); // Define the local context (from form name)
+  var c2 = $("#aboutform"); // Define the local context (from form name)
   var Output = $('p.output', context); // Output text area for Tells
   var av = new JSAV("ssperform", {'animationMode': 'none'});
   var Tell = function(msg, color) { av.umsg(msg, {color: color}); };   // Set up an output message buffer object 
@@ -95,6 +99,7 @@ div h1 {
   *  This section connects the action callbacks to the            *
   *  form entities.                                               *
   ************************************************************** */
+  $('input[name="about"]', c2).click(About);
   $('input[name="run"]', context).click(RunIt);
   $('input[name="clear"]', context).click(Clear);
   $('input[name="arraysize"]', context).focusout(Change);
@@ -115,6 +120,13 @@ div h1 {
   // True if we already printed baseline info;
   // False means to print it out again and toggle
   var InitFlag = false;
+
+  // Process About button: Pop up a message with an Alert
+  function About() {
+    var mystring = "Shellsort Performance Applet\nWritten by Cliff Shaffer and Ville Karavirta\nWritten during June, 2011\nLast update: June 23, 2011\nJSAV library version " + JSAV.version();
+console.log("Doh");
+    alert(mystring);
+  }
 
   // Process clear button: Clear the output textbox
   function Clear() {

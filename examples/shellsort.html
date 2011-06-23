@@ -21,6 +21,9 @@
   }
 </style>
 <div id="container">
+  <form id="aboutform">
+    <input type="button" name="about" value="About" />
+  </form>
   <div class="controls"></div>
   <p class="output line"></p>
 </div>
@@ -40,6 +43,16 @@
 
   var av = new JSAV("container"); //containing HTML element with id container
   av.SPEED = 200;
+
+  var c2 = $("#aboutform"); // Define the local context (from form name)
+  $('input[name="about"]', c2).click(About);
+
+  // Process About button: Pop up a message with an Alert
+  function About() {
+    var mystring = "Shellsort Performance Applet\nWritten by Cliff Shaffer and Ville Karavirta\nWritten during June, 2011\nLast update: June 23, 2011\nJSAV library version " + JSAV.version();
+console.log("Doh");
+    alert(mystring);
+  }
 
   // message to be shown initially
   av.umsg("Shellsort provides a huge improvement over O(n<sup>2</sup>) sorts sorts like Insertion Sort. It works by taking advantage of the fact that Insertion Sort works very well (in linear time) when the list is nearly sorted. Shellsort works by performing a series of Insertion Sorts on carefully selected sublists, first on small sublists and then on increasingly large sublists.");
