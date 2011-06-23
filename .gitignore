@@ -13,3 +13,4 @@ build
 #Generated files
 src/version.txt
 src/front.js
+src/version.js

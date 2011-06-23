@@ -17,7 +17,7 @@ clean:
 	$(RM) *~
 	$(RM) build/*
 	$(RM) examples/*~
-	$(RM) src/*~ src/version.txt src/front.js
+	$(RM) src/*~ src/version.txt src/front.js src/version.js
 	$(RM) css/*~
 
 library:
@@ -29,10 +29,10 @@ build: $(TARGET)/JSAV.js
 $(TARGET)/JSAV.js: version $(SOURCES)
 	$(CAT) $(SOURCES) > $(TARGET)/JSAV.js
 
-# This is not correct for now
 version:
-	git describe --tags --long > $(SRC)/version.txt
+	git describe --tags --long | awk '{ printf "%s", $$0 }' - > $(SRC)/version.txt
 	cat $(SRC)/front1.txt $(SRC)/version.txt $(SRC)/front2.txt > $(SRC)/front.js
+	cat $(SRC)/version1.txt $(SRC)/version.txt $(SRC)/version2.txt > $(SRC)/version.js
 
 minimize: $(TARGET)/JSAV-min.js
 
