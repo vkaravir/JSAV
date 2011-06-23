@@ -61,7 +61,6 @@ test("Highlighting indices in Array", function() {
   arrayUtils.testArrayHighlights(arr, [0, 0, 0, 0, 0], props);
 	av.end(); // going to the end should reapply the highlights
   arrayUtils.testArrayHighlights(arr, [1, 1, 1, 1, 1], props);
-	testDiv = null;
 });
 
 test("Unhighlighting indices in Array", function() {
@@ -103,7 +102,6 @@ test("Unhighlighting indices in Array", function() {
   arrayUtils.testArrayHighlights(arr, [0, 0, 0, 0, 0], props);
 	av.end(); // going to the end should reapply the unhighlights
   arrayUtils.testArrayHighlights(arr, [0, 0, 0, 0, 0], props);
-	testDiv = null;
 });
 
 test("Highlight without parameters", function() {

@@ -37,6 +37,7 @@
   height: 20px;
   line-height: 20px;
   top: 55px;
+  color: black;
 }
 .array .index span {
   z-index: 99;
