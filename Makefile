@@ -1,5 +1,6 @@
 RM = rm -rf
 LIB = lib
+# This minimize is a dummy placeholder until we get something in place
 MINIMIZE = touch $(TARGET)/JSAV-min.js # java $(LIB)/magic $(SOURCES) > $(TARGET)/JSAV-min.js
 CAT = cat
 SRC = src

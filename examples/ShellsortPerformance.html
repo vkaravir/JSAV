@@ -88,7 +88,6 @@ div h1 {
   ************************************************************** */
   var context = $("#ssperform"); // Define the local context (from form name)
   var c2 = $("#aboutform"); // Define the local context (from form name)
-  var Output = $('p.output', context); // Output text area for Tells
   var av = new JSAV("ssperform", {'animationMode': 'none'});
   var Tell = function(msg, color) { av.umsg(msg, {color: color}); };   // Set up an output message buffer object 
   /* **************************************************************
@@ -109,7 +108,8 @@ div h1 {
   // The permanent array of numbers.
   // This is "permanent" in that we want to use the same values
   // each time that we sort, so that we can compare costs.
-  // It only changes when the user re-sets the array size.
+  // It only changes when the user re-sets the array size, at which
+  // time a new set of random numbers is drawn.
   var theArray = [];
 
   var ASize = $('input[name="arraysize"]', context).val(); // Array size
@@ -129,7 +129,7 @@ div h1 {
 
   // Process clear button: Clear the output textbox
   function Clear() {
-    Output.html("");
+    av.clearumsg();
     InitFlag = false;
   }
 

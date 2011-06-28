@@ -10,14 +10,14 @@
 <style>
   #container {
     width: 880px;
-    height: 400px;
+    height: 420px;
     background-color: #efe;
   }
   #container .array {
      left: -10px;
   }
   p.output.line {
-    height: 100px;
+    height: 70px;
   }
 </style>
 <div id="container">
@@ -49,16 +49,17 @@
 
   // Process About button: Pop up a message with an Alert
   function About() {
-    var mystring = "Shellsort Performance Applet\nWritten by Cliff Shaffer and Ville Karavirta\nWritten during June, 2011\nLast update: June 23, 2011\nJSAV library version " + JSAV.version();
+    var mystring = "Shellsort Performance Applet\nWritten by Cliff Shaffer and Ville Karavirta\nCreated as part of the OpenDSA hypertextbook project.\nFor more information, see\nSOME URL\nWritten during June, 2011\nLast update: June 23, 2011\nJSAV library version " + JSAV.version();
 console.log("Doh");
     alert(mystring);
   }
 
   // message to be shown initially
+  av.umsg("<b style='font-size:300%;'>Shellsort Algorithm Presentation</b>");
   av.umsg("Shellsort provides a huge improvement over O(n<sup>2</sup>) sorts sorts like Insertion Sort. It works by taking advantage of the fact that Insertion Sort works very well (in linear time) when the list is nearly sorted. Shellsort works by performing a series of Insertion Sorts on carefully selected sublists, first on small sublists and then on increasingly large sublists.");
 
   // create a new step to the visualization, a given message
-  av.umsg("During each iteration, Shellsort breaks the list into disjoint sublists so that each element in a sublist is a fixed number of positions apart. For example, let us assume for convenience that n, the number of values to be sorted, is a power of two.");
+  av.step().umsg("During each iteration, Shellsort breaks the list into disjoint sublists so that each element in a sublist is a fixed number of positions apart. For example, let us assume for convenience that n, the number of values to be sorted, is a power of two.");
 
   av.step().umsg("One possible implementation of Shellsort will begin by breaking the list into n/2 sublists of 2 elements each, where the array index of the 2 elements in each sublist differs by n/2. We say that the increment is n/2. If there are 16 elements in the array indexed from 0 to 15, there would initially be 8 sublists of 2 elements each.");
 
@@ -69,6 +70,8 @@ console.log("Doh");
       98, 76, 45, 32, 11], {indexed: true});
   // or, generate from random data: var arr = av.ds.array.random(10);
   // size as param, range as params as well??
+  var arrlabel = av.label("Values in <b style='color:#0f0;'>green</b> were swapped during this pass", {before: arr});
+  arrlabel.hide();
 
   origarr = arr.clone(); // clone for showing the array comparison, not added to document yet (not shown)
 
@@ -99,9 +102,9 @@ console.log("Doh");
   arr.css(function(i, item)
     { return arr.value(i) !== origarr.value(i); }, {"color": "#0f0"});
 
-  var arrlabel = av.label("Values in green were swapped during this pass", {before: arr});
   origarr.show();
   var origlabel = av.label("Original Array:", {before: origarr});
+  arrlabel.show();
 
   av.step().umsg("The second pass of Shellsort looks at fewer, bigger lists. For our example the second pass would have n/4 lists of size 4, with the increment being n/4 = 4. Thus, the second pass would have as its first sublist the 4 elements in positions 0, 4, 8, and 12...");
 

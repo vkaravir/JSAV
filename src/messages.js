@@ -44,7 +44,7 @@
   JSAV.ext.umsg = function(msg, options) {
     this._msg.umsg(msg, options);
   };
-  JSAV.ext.clearMsgs = function(msg, options) {
+  JSAV.ext.clearumsg = function(msg, options) {
     this._msg.clear();
   };
   
