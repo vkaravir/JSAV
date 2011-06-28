@@ -24,7 +24,7 @@ library:
 	git submodule init
 	git submodule update
 
-build: $(TARGET)/JSAV.js
+build: $(TARGET)/JSAV.js minimize
 
 $(TARGET)/JSAV.js: version $(SOURCES)
 	$(CAT) $(SOURCES) > $(TARGET)/JSAV.js
