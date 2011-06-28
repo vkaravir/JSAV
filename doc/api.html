@@ -1,29 +1,29 @@
 <!DOCTYPE html>
 <html>
-<head>
-<title>API documentation</title>
-<style>
-  .todo, .note {
-    border: 2px solid red;
-    border-radius: 4px;
-    padding: 10px;
-    background-color: #eee;
-    font-weight: bold;
-  }
-  .note {
-    border-color: green;
-  }
-  .todo:before, .note:before {
-    content: "TODO: ";
-    color: red;
-    padding-right: 20px;
-  }
-  .note:before {
-    content: "NOTE: ";
-    color: green;
-  }
-</style>
-</head>
+  <head>
+    <title>API documentation</title>
+    <style>
+    .todo, .note {
+      border: 2px solid red;
+      border-radius: 4px;
+      padding: 10px;
+      background-color: #eee;
+      font-weight: bold;
+    }
+    .note {
+      border-color: green;
+    }
+    .todo:before, .note:before {
+      content: "TODO: ";
+      color: red;
+      padding-right: 20px;
+    }
+    .note:before {
+      content: "NOTE: ";
+      color: green;
+    }
+    </style>
+  </head>
 
 <body>
 <h1>Documentation for the JavaScript Algorithm Visualization API</h1>
@@ -39,10 +39,17 @@ It is a work-in-progress and subject to change!</p>
 <ul>
   <li>jQuery 1.6.1+: <code>http://code.jquery.com/jquery-1.6.1.js</code></li>
   <li>jQuery UI: <code>https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/jquery-ui.min.js</code></li>
-  <li>jquery.transform: <code>/libsandstuff/jquery.transform.js/jquery.transform.light.js</code></li>
-  <li>Raphael: <code>/libsandstuff/raphael/raphael.js</code></li>
+  <li>jquery.transform: <code>/lib/jquery.transform.js/jquery.transform.light.js</code></li>
+  <li>Raphael: <code>/lib/raphael/raphael.js</code></li>
   <li>The library: <code>/build/jsav.js</code> This must always be included.</li>
 </ul>
+
+<p>jQuery UI and jquery.transform are only needed when you use the
+      library to show animations, such as using the data structures or
+      graphical primitives and modifying them. In other words, using
+      any other part of the library than the messaging API. Raphael is
+      only needed when using graphical primitives like circles and
+      rectangles.</p>
 
 <h2>HTML Template for the Visualization</h2>
 <p>The template HTML for a visualization should look something like
@@ -129,7 +136,7 @@ override the default height and width.
    <code>msg</code> is output as standard HTML, therefore the style of
    the message output can be controlled by using HTML commands.
 </p>
-    
+
 <h3 class="apimethod">.clearumsg()</h3>
 <p>Clear the contents of the output message buffer.</p>
 
