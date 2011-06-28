@@ -31,14 +31,15 @@
     <h2>Loading the Required Files</h2>
     <p>The easiest way to check the required files is to take a peek in the examples directory and copy
       one of the files as a template for the new AV.</p>
-    <p>If done manually, the files required (in this order) are the following:</p>
+    <p>If done manually, the files used (in this order) are the following (note, that some are optional):</p>
     <ul>
       <li>jQuery 1.6.1+: <code>http://code.jquery.com/jquery-1.6.1.js</code></li>
-      <li>jQuery UI: <code>https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/jquery-ui.min.js</code></li>
-      <li>jquery.transform: <code>/libsandstuff/jquery.transform.js/jquery.transform.light.js</code></li>
-      <li>Raphael: <code>/libsandstuff/raphael/raphael.js</code></li>
+      <li>jQuery UI (optional): <code>https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/jquery-ui.min.js</code></li>
+      <li>jquery.transform (optional): <code>/libsandstuff/jquery.transform.js/jquery.transform.light.js</code></li>
+      <li>Raphael (optional): <code>/libsandstuff/raphael/raphael.js</code></li>
       <li>The library: <code>/build/jsav.js</code></li>
     </ul>
+    <p>jQuery UI and jquery.transform are only needed when you use the library to show animations, such as using the data structures or graphical primitives and modifying them. In other words, using any other part of the library than the messaging API. Raphael is only needed when using graphical primitives like circles and rectangles.</p>
     <h2>HTML Template for the Visualization</h2>
     <p>The template HTML for a visualization should look something like this:</p>
     <pre>
