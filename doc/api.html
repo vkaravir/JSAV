@@ -75,10 +75,12 @@ var av = new JSAV(jQuery("#container"));</pre>
     <p>When creating a visualization by calling the API methods, this function should be called when the visualization is
       ready.</p>
     <h2>Messages API</h2>
-    <h3 class="apimethod">.message(msg, options)</h3>
+    <h3 class="apimethod">.umsg(msg, options)</h3>
     <p>This will add the given message <code>msg</code> to the message output. The optional <code>options</code> parameter
       can be an object whose properties specify the behavior. Currently, only <code>color</code> property is used if
       present to change the color of the message.</p>
+    <h3 class="apimethod">.clearMsgs()</h3>
+    <p>Clears the message area.</p>
     
     <h2>Array Data Structure API</h2>
     <h3 class="apimethod">.ds.array(element) and .ds.array(Array)</h3>
