@@ -103,13 +103,13 @@ console.log("Doh");
   arr.css(function(i, item)
     { return arr.value(i) !== origarr.value(i); }, {"color": "#0f0"});
 
-  arrlabel._setText("Values in <b style='color:#0f0;'>green</b> were swapped during this pass");
+  arrlabel.text("Values in <b style='color:#0f0;'>green</b> were swapped during this pass");
   origarr.show();
   var origlabel = av.label("Original Array:", {before: origarr});
 
   av.step().umsg("The second pass of Shellsort looks at fewer, bigger lists. For our example the second pass would have n/4 lists of size 4, with the increment being n/4 = 4. Thus, the second pass would have as its first sublist the 4 elements in positions 0, 4, 8, and 12...");
 
-  arrlabel._setText("&nbsp;");
+  arrlabel.text("&nbsp;");
   origarr.hide();
   origlabel.hide();
 
@@ -136,14 +136,14 @@ console.log("Doh");
   arr.css(function(i, item)
     { return arr.value(i) !== origarr.value(i); }, {"color": "#0f0"});
 
-  arrlabel._setText("Values in <b style='color:#0f0;'>green</b> were swapped during this pass");
+  arrlabel.text("Values in <b style='color:#0f0;'>green</b> were swapped during this pass");
   origarr.show();
   origlabel.show();
 
   av.step().umsg("The third pass would be made on sublists with increment 2. This means we process two lists, one consisting of the odd positions and the other consisting of the even positions.");
 
   arr.css(function(i, item) {}, {"color": DARK});
-  arrlabel._setText("&nbsp;");
+  arrlabel.text("&nbsp;");
   origarr.hide();
   origlabel.hide();
 
