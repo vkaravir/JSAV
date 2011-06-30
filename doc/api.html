@@ -26,16 +26,24 @@
   </head>
 
 <body>
-<h1>Documentation for the JavaScript Algorithm Visualization API</h1>
-<p class="note">This documentation reflects the status of the library.
-It is a work-in-progress and subject to change!</p>
+<h1>Documentation for the JavaScript Algorithm Visualization API (JSAV)</h1>
+
+<p class="note">
+This documentation reflects the current status of the library.
+It is a work-in-progress and subject to change!
+</p>
 
 <h2>Loading the Required Files</h2>
-<p>The easiest way to check the required files is to take a peek in
-   the examples directory and copy one of the files as a template for
-   the new AV.</p> 
-<p>If done manually, the files required (in this order) are the
-   following:</p> 
+<p>
+The easiest way to check the required files is to look at
+the examples directory and copy one of those files as a template for
+your new AV.
+</p> 
+
+<p>
+If done manually, the files required (in this order) are as follows:
+</p> 
+
 <ul>
   <li>jQuery 1.6.1+: <code>http://code.jquery.com/jquery-1.6.1.js</code></li>
   <li>jQuery UI: <code>https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/jquery-ui.min.js</code></li>
@@ -44,16 +52,23 @@ It is a work-in-progress and subject to change!</p>
   <li>The library: <code>/build/jsav.js</code> This must always be included.</li>
 </ul>
 
-<p>jQuery UI and jquery.transform are only needed when you use the
-      library to show animations, such as using the data structures or
-      graphical primitives and modifying them. In other words, using
-      any other part of the library than the messaging API. Raphael is
-      only needed when using graphical primitives like circles and
-      rectangles.</p>
+<p>
+The main jQuery library must always be loaded.
+jQuery UI and jquery.transform are only needed when you use the
+library to show animations, such as using the data structures or
+graphical primitives and modifying them. In other words, using
+any other part of the library than the messaging API. Raphael is
+only needed when using graphical primitives like circles and
+rectangles.
+</p>
 
 <h2>HTML Template for the Visualization</h2>
-<p>The template HTML for a visualization should look something like
-   this:</p> 
+
+<p>
+The template HTML for a visualization should look something like
+this:
+</p> 
+
 <pre>
   &lt;div id="container">
   &lt;div class="controls">&lt;/div>
@@ -61,9 +76,12 @@ It is a work-in-progress and subject to change!</p>
   &lt;/div>
 </pre>
 <dl>
-  <dt>container</dt><dd>This is the container element for the visualization</dd>
-  <dt>controls</dt><dd>The library will generate the controls inside this element</dd>
-  <dt>output</dt><dd>The area where the messages from the
+  <dt><code>container</code></dt>
+  <dd>This is the container element for the visualization</dd>
+  <dt><code>controls</code></dt>
+  <dd>The library will generate the controls inside this element</dd>
+  <dt><code>output</code></dt>
+  <dd>The area where the messages from the
       visualization will be shown. Type can further be specified 
       using either class <code>line</code> or <code>scroll</code></dd>
 </dl>
@@ -72,14 +90,12 @@ It is a work-in-progress and subject to change!</p>
 <p>Initializing the visualization container is simple:</p>
 <pre>var av = new JSAV("container");</pre>
 <p>The <code>container</code> here refers to the id attribute of the
-  container element. Alternatively, a DOM or jQuery element can be
+  container element (see the HTML template above).
+  Alternatively, a DOM or jQuery element can be
   used as well. So, the following are alternative ways to achieve
   the same result:</p>
 <pre>var av = new JSAV(document.getElementById("container"));
 var av = new JSAV(jQuery("#container"));</pre>
-<p>The constructor can also pass in a second argument with options
-   for the visualization.</p> 
-<p class="todo">document these options</p>
     
 <h2>Slideshow Support API</h2>
 
@@ -89,16 +105,22 @@ var av = new JSAV(jQuery("#container"));</pre>
   the appropriate data structures and UI elements along with any
   actions to take place (such as swapping elements in an array or
   highlighting an element).</p>
-<h3 class="apimethod">.step(options)</h3>
+
+<h3 class="apimethod">.step()</h3>
 <p>Marks that a new step in the animation will start. Basically,
    everything within one step will be animated simultaneously when
    moving backward and forward.</p>
-<h3 class="apimethod">.substep(options)</h3>
-<p>A future improvement to allow hierarchy of animation
-   steps. Currently, this does what <code>.step()</code> does.</p>
+
+<p>
+<b>Returns:</b> A JSAV object. Thus, this method may be chained with,
+for example, the <code>umsg</code> method.
+</p>
+
 <h3 class="apimethod">.recorded()</h3>
-<p>A call to this method is placed at the end of the series of
-   <code>.step()</code> method calls to start the slideshow.</p>
+<p>
+A call to this method is placed at the end of the series of
+<code>.step()</code> method calls to start the slideshow.
+</p>
 
 <h2>Messages API</h2>
 
@@ -127,73 +149,160 @@ the textbox unwriteable by the user, or to
 override the default height and width.
 </p>
 
-<h3 class="apimethod">.umsg(msg, options)</h3>
-<p>Add the given message <code>msg</code> to the message
-   output. The optional <code>options</code> parameter
-   can be an object whose properties specify the
-   behavior. Currently, only <code>color</code> property is used if
-   present to change the color of the message. Of course, the
-   <code>msg</code> is output as standard HTML, therefore the style of
-   the message output can be controlled by using HTML commands.
+<h3 class="apimethod">.umsg(msg[, options])</h3>
+<p>
+Add the given message <code>msg</code> to the message
+output. The optional <code>options</code> parameter
+can be an object whose properties specify the
+behavior. Currently, only <code>color</code> property is used (when
+present) to change the color of the message.
+Use would look something like:
 </p>
+<pre>
+av.umsg("My message here", {"color": "blue"});
+</pre>
+<p>
+Since the
+<code>msg</code> is output as standard HTML, the style of
+the message text can also be controlled by using HTML commands.
+</p>
+
+<p>
+<b>Returns:</b> A JSAV object. Thus, this method may be chained with,
+for example, the <code>step</code> method.
+</p>
+
 
 <h3 class="apimethod">.clearumsg()</h3>
 <p>Clear the contents of the output message buffer.</p>
 
     <h2>Array Data Structure API</h2>
-    <h3 class="apimethod">.ds.array(element) and .ds.array(Array)</h3>
-    <p>An array can be created using the .ds.array method of an JSAV instance. As a parameter, it takes either
-      a DOM/jQuery Element (ul or ol) or a JavaScript Array. For example, to initialize and add to the visualization
-      an array with four elements:</p>
-    <pre>var arr = av.ds.array([10, 13, 99, 25]);</pre>
-    <p>The returned array instance will have a collection of methods explained next.</p>
-    <p>Options that the second, optional, parameter can specify:</p>
-    <ul>
-      <li>layout</li>
-      <li>indexed</li>
-      <li>display</li>
-    </ul>
 
-    <h3 class="apimethod">.highlight()</h3>
-    <p>Call to highlight without any parameters will highlight all the elements in the array. Note, that this will only
-      animate addition of the CSS class <code>highlight</code> to the elements. It is up to the author to make sure the
-      loaded CSS files include such styling.</p>
+<p>
+JSAV will ultimately provide layout support for a number of standard
+data structures. Presently, only arrays are supported, as described in
+this section.
+</p>
 
-    <h3 class="apimethod">.highlight(number)</h3>
-    <p>Highlights the given index number. Zero refers to the first index of the array.</p>
+<h3 class="apimethod">.ds.array(element[, options]) and
+.ds.array(Array[, options])</h3>
+<p>
+An array can be created using the .ds.array method on an JSAV
+instance. As a parameter, it takes either a DOM/jQuery Element
+(ul or ol) or a JavaScript Array. For example, to initialize and add
+to the visualization an array with four elements:</p>
+<pre>var arr = av.ds.array([10, 13, 99, 25]);</pre>
 
-    <h3 class="apimethod">.highlight(array)</h3>
-    <p>Highlight the indices in the given array of numbers. The following would highlight 2nd, 3rd, and 6th indices.</p>
-    <pre>arr.highlight([1, 2, 5]);</pre>
+<p>
+Array indexing begins at zero.
+</p>
 
-    <h3 class="apimethod">.highlight(function)</h3>
-    <p>Highlights all the indices that the passed function returns true. For example, to highlight all even indices:</p>
-    <pre>arr.highlight(function(index) { return index%2==0; });</pre>
+<p>The returned array instance is controlled through a collection of
+methods explained next. Note that changes to the array contents must
+go through this API (the <code>.value</code> method),
+since the array contents must be managed by
+JSAV rather than by the developer.
+</p>
 
-    <h3 class="apimethod">.unhighlight(indices)</h3>
-    <p>Removes the highlight from the given indices. Note, that this only adds the <code>highlight</code> class from the elements.
-      There are corresponding versions of this function with parameters like for highlight.</p> 
+<p>Options that the second, optional, parameter can specify:</p>
+<ul>
+<li>layout: Defines choices of layout (bars for example). Details to
+      come.</li>
+<li>indexed: Boolean to determine if array indices are shown or not.</li>
+<li>visible: Boolean to determine if initially the array is shown or
+      not.</li>
+</ul>
 
-    <h3 class="apimethod">.swap(index1, index2)</h3>
-    <p>Swaps the contents of the two indices.</p>
+<h3 class="apimethod">.highlight()</h3>
+<p>
+Call to <code>highlight</code> without any parameters will highlight
+all elements in the array. Note, that this will only 
+apply the CSS class <code>highlight</code> to the
+elements.
+It is up to the author to make sure the 
+loaded CSS files include such styling.
+</p>
+
+<p>
+<b>Returns:</b> a JSAV array object. Thus, this method can be chained.
+</p>
+
+<h3 class="apimethod">.highlight(number)</h3>
+<p>
+Highlight the given index number.
+</p>
+
+<h3 class="apimethod">.highlight(indexlist)</h3>
+<p>
+Highlight the indices in the given <code>indexlist</code>.
+For example, the following would highlight array positions 1, 2, and 5.
+</p>
+<pre>arr.highlight([1, 2, 5]);</pre>
+
+<h3 class="apimethod">.highlight(function)</h3>
+<p>
+Highlights all the indices that the passed function returns true.
+For example, to highlight all even indices:</p> 
+<pre>arr.highlight(function(index) { return index%2==0; });</pre>
+
+<h3 class="apimethod">.unhighlight(indices)</h3>
+<p>
+Removes the highlight from the given <code>indices</code>.
+There are corresponding versions of this function with parameters like
+for highlight.
+</p>
+
+<p>
+<b>Returns:</b> a JSAV array object. Thus, this method can be chained.
+</p>
+
+<h3 class="apimethod">.swap(index1, index2)</h3>
+<p>Swaps the contents (and graphics state) of the two array positions.</p>
     
-    <h3 class="apimethod">.css(indices, css)</h3>
-    <p>Animates the given CSS properties of the specified indices. Argument indices can be number, array, or function like for
-      the highlight function. The argument css should be an object with property name and value pairs. The following would make
-      indices 0 and 4 have green color and lightgray background:</p>
-    <pre>arr.css([0, 4], {"color": "green", "background-color": "#eee"});</pre>
+<h3 class="apimethod">.css(indices, css)</h3>
+<p>
+Apply the given CSS properties to the specified <code>indices</code>.
+Parameter <code>indices</code> can be a number, array, or function like for 
+the <code>highlight</code> method.
+The argument <code>css</code> should be an object with property
+name-and-value pairs.
+For example, to make
+positions 0 and 4 have green color and lightgray background:
+</p>
+<pre>
+arr.css([0, 4], {"color": "green", "background-color": "#eee"});
+</pre>
 
-    <h3 class="apimethod">.size()</h3>
-    <p>Returns the size of the array. For the array of the array creation example, this would return 4:</p>
-    <pre>arr.size();</pre>
+<p>
+<b>Returns:</b> a JSAV array object. Thus, this method can be chained.
+</p>
+
+<h3 class="apimethod">.size()</h3>
+<p>
+Returns the size of the array.
+For the array defined in the array creation example above,
+the following would return 4:
+</p>
+<pre>arr.size();</pre>
     
-    <h3 class="apimethod">.value(index)</h3>
-    <p>Returns the value of the element at the given index.</p>
+<h3 class="apimethod">.value(index)</h3>
+<p>Returns the value of the element at the given index.</p>
     
-    <h3 class="apimethod">.value(index, newValue)</h3>
-    <p>Sets the value of the element at the given index to the given value.</p>
+<h3 class="apimethod">.value(index, newValue)</h3>
+<p>
+Sets the value of the element at the given index to the given value.
+</p>
     
-    <h3 class="apitopic">Extending the Array</h3>
-    <p class="todo">Example of extending to provide .opacity(indices, value) function as a shortcut to set the opacity of indices.</p>
-  </body>
+<h3 class="apitopic">Labels</h3>
+<p class="todo">
+Discuss the label methods.
+</p> 
+
+<h3 class="apitopic">Extending the Array</h3>
+<p class="todo">
+Example of extending to provide .opacity(indices, value) function as a
+shortcut to set the opacity of indices.
+</p> 
+
+</body>
 </html>

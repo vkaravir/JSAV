@@ -72,7 +72,9 @@ console.log("Doh");
   // size as param, range as params as well??
   var arrlabel = av.label("&nbsp;", {before: arr});
 
-  origarr = arr.clone(); // clone for showing the array comparison, not added to document yet (not shown)
+  // Cloned copy for holding the original value positions.
+  // Will be shown later to compare against progress made by the algorithm
+  origarr = arr.clone();
 
   av.step().umsg(" The first sublist would be the elements in positions 0 and 8...", {preserve: true});
 
@@ -111,7 +113,6 @@ console.log("Doh");
   origarr.hide();
   origlabel.hide();
 
-  // av.ds.variable("increment", 4); // set the value of variable increment to 4
   arr.css(function(index, item)
     { return index%4 != 0;}, {"color": LIGHT}).highlight([0, 4, 8, 12]);
 
@@ -141,12 +142,13 @@ console.log("Doh");
 
   av.step().umsg("The third pass would be made on sublists with increment 2. This means we process two lists, one consisting of the odd positions and the other consisting of the even positions.");
 
+  arr.css(function(i, item) {}, {"color": DARK});
   arrlabel._setText("&nbsp;");
   origarr.hide();
   origlabel.hide();
 
-  //  av.ds.variable("increment", 2); // set the value of variable increment to 2
-
+  arr.css(function(index, item)
+    { return index%2 != 0;}, {"color": LIGHT});
   arr.highlight([0, 2, 4, 6, 8, 10, 12, 14]);
   av.step();
   arr.unhighlight([0, 2, 4, 6, 8, 10, 12, 14]).highlight([1, 3, 5, 7, 9, 11, 13, 15]);
@@ -181,8 +183,7 @@ console.log("Doh");
 
   // Partial Shellsort. Sweep with the given increment
   function sweep(myarr, incr) {
-    var j = 0;
-    for (; j<incr; j++) {         // Sort each sublist
+    for (var j=0; j<incr; j++) {         // Sort each sublist
       // Highlight the sublist
       var highlightArray = [];
       for (var k=0; k < myarr.size(); k++) {
@@ -191,7 +192,7 @@ console.log("Doh");
         }
       }
       myarr.highlight(highlightArray);
-      //myarr.highlight(function(index, item) { return index%incr == j;});
+//      myarr.highlight(function(index, item) { return index%incr == j;});
       av.step();
       inssort(myarr, j, incr);
       myarr.unhighlight();
