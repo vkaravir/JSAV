@@ -176,7 +176,7 @@ for example, the <code>step</code> method.
 <h3 class="apimethod">.clearumsg()</h3>
 <p>Clear the contents of the output message buffer.</p>
 
-    <h2>Array Data Structure API</h2>
+<h2>Array Data Structure API</h2>
 
 <p>
 JSAV will ultimately provide layout support for a number of standard
@@ -213,6 +213,36 @@ JSAV rather than by the developer.
       not.</li>
 </ul>
 
+<h3 class="apimethod">.clone()</h3>
+<p>
+Create and return a clone of an array.
+The clone will remain invisible until the <code>show</code>
+method is called on it.
+</p>
+
+<h3 class="apimethod">.css(indices, css)</h3>
+<p>
+Apply the given CSS properties to the specified <code>indices</code>.
+Parameter <code>indices</code> can be a number, array, or function like for 
+the <code>highlight</code> method.
+The argument <code>css</code> should be an object with property
+name-and-value pairs.
+For example, to make
+positions 0 and 4 have green color and lightgray background:
+</p>
+<pre>
+arr.css([0, 4], {"color": "green", "background-color": "#eee"});
+</pre>
+
+<p>
+<b>Returns:</b> a JSAV array object. Thus, this method can be chained.
+</p>
+
+<h3 class="apimethod">.hide()</h3>
+<p>
+Make the array invisible.
+</p>
+
 <h3 class="apimethod">.highlight()</h3>
 <p>
 Call to <code>highlight</code> without any parameters will highlight
@@ -245,6 +275,22 @@ Highlights all the indices that the passed function returns true.
 For example, to highlight all even indices:</p> 
 <pre>arr.highlight(function(index) { return index%2==0; });</pre>
 
+<h3 class="apimethod">.show()</h3>
+<p>
+Make the array visible.
+</p>
+
+<h3 class="apimethod">.size()</h3>
+<p>
+Returns the size of the array.
+For the array defined in the array creation example above,
+the following would return 4:
+</p>
+<pre>arr.size();</pre>
+    
+<h3 class="apimethod">.swap(index1, index2)</h3>
+<p>Swaps the contents (and graphics state) of the two array positions.</p>
+    
 <h3 class="apimethod">.unhighlight(indices)</h3>
 <p>
 Removes the highlight from the given <code>indices</code>.
@@ -256,35 +302,6 @@ for highlight.
 <b>Returns:</b> a JSAV array object. Thus, this method can be chained.
 </p>
 
-<h3 class="apimethod">.swap(index1, index2)</h3>
-<p>Swaps the contents (and graphics state) of the two array positions.</p>
-    
-<h3 class="apimethod">.css(indices, css)</h3>
-<p>
-Apply the given CSS properties to the specified <code>indices</code>.
-Parameter <code>indices</code> can be a number, array, or function like for 
-the <code>highlight</code> method.
-The argument <code>css</code> should be an object with property
-name-and-value pairs.
-For example, to make
-positions 0 and 4 have green color and lightgray background:
-</p>
-<pre>
-arr.css([0, 4], {"color": "green", "background-color": "#eee"});
-</pre>
-
-<p>
-<b>Returns:</b> a JSAV array object. Thus, this method can be chained.
-</p>
-
-<h3 class="apimethod">.size()</h3>
-<p>
-Returns the size of the array.
-For the array defined in the array creation example above,
-the following would return 4:
-</p>
-<pre>arr.size();</pre>
-    
 <h3 class="apimethod">.value(index)</h3>
 <p>Returns the value of the element at the given index.</p>
     
@@ -292,17 +309,49 @@ the following would return 4:
 <p>
 Sets the value of the element at the given index to the given value.
 </p>
-    
-<h3 class="apitopic">Labels</h3>
-<p class="todo">
-Discuss the label methods.
-</p> 
 
 <h3 class="apitopic">Extending the Array</h3>
 <p class="todo">
 Example of extending to provide .opacity(indices, value) function as a
 shortcut to set the opacity of indices.
 </p> 
+    
+<h2>Label API</h2>
+
+UI elements such as arrays can take a label.
+
+<h3 class="apimethod">.label(msg, options)</h3>
+<p>
+This is a method of the AV object.
+It creates a label that is associated with some UI element of the AV
+specified by the options.
+Parameter <code>msg</code> is the
+(initial) value for the label.
+Paramter <code>options</code> include the following:
+</p>
+<ul>
+<li> <code>{before: &lt;UI element>}</code> Set the label before element
+<code>UI element</code>
+<li> <code>{after: &lt;UI element>}</code> Set the label after element
+<code>UI element</code>
+<li> <code>{display: &lt;boolean>}</code> Determine whether the label
+is visible on creation.
+</ul>
+
+<h3 class="apitopic">._setText(msg)</h3>
+<p>
+Set the text for the label.
+</p>
+
+<h3 class="apitopic">.hide()</h3>
+<p>
+Make the label invisible.
+</p>
+
+<h3 class="apitopic">.show()</h3>
+<p>
+Make the label visible.
+</p>
 
 </body>
 </html>
