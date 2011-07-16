@@ -11,7 +11,6 @@ all: build
 # This will grab all of the libraries that one needs to be able to develop
 # This version is git-centric
 setup: library build minimize
-	-mkdir $(TARGET)
 
 clean:
 	$(RM) *~
@@ -27,6 +26,7 @@ library:
 build: $(TARGET)/JSAV.js minimize
 
 $(TARGET)/JSAV.js: version $(SOURCES)
+	-mkdir $(TARGET)
 	$(CAT) $(SOURCES) > $(TARGET)/JSAV.js
 
 version:
