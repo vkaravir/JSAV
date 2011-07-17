@@ -9,7 +9,7 @@ SOURCES = $(SRC)/front.js $(SRC)/core.js $(SRC)/anim.js $(SRC)/messages.js $(SRC
 all: build
 
 # This will grab all of the libraries that one needs to be able to develop
-# This version is git-centric
+# This version is git-centric 
 setup: library build minimize
 
 clean:
