@@ -25,14 +25,18 @@ library:
 
 build: $(TARGET)/JSAV.js minimize
 
-$(TARGET)/JSAV.js: version $(SOURCES)
+$(TARGET)/JSAV.js: $(SRC)/version.txt $(SRC)/front.js $(SRC)/version.js $(SOURCES)
 	-mkdir $(TARGET)
 	$(CAT) $(SOURCES) > $(TARGET)/JSAV.js
 
-version:
+$(SRC)/version.txt: .git/FETCH_HEAD
 	git describe --tags --long | awk '{ printf "%s", $$0 }' - > $(SRC)/version.txt
-	cat $(SRC)/front1.txt $(SRC)/version.txt $(SRC)/front2.txt > $(SRC)/front.js
-	cat $(SRC)/version1.txt $(SRC)/version.txt $(SRC)/version2.txt > $(SRC)/version.js
+
+$(SRC)/front.js: $(SRC)/front1.txt $(SRC)/version.txt $(SRC)/front2.txt
+	$(CAT) $(SRC)/front1.txt $(SRC)/version.txt $(SRC)/front2.txt > $(SRC)/front.js
+
+$(SRC)/version.js :$(SRC)/version1.txt $(SRC)/version.txt $(SRC)/version2.txt
+	$(CAT) $(SRC)/version1.txt $(SRC)/version.txt $(SRC)/version2.txt > $(SRC)/version.js
 
 minimize: $(TARGET)/JSAV-min.js
 
