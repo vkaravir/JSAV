@@ -63,23 +63,27 @@ console.log("Doh");
 
   av.step().umsg("One possible implementation of Shellsort will begin by breaking the list into n/2 sublists of 2 elements each, where the array index of the 2 elements in each sublist differs by n/2. We say that the increment is n/2. If there are 16 elements in the array indexed from 0 to 15, there would initially be 8 sublists of 2 elements each.");
 
-  //var arr = av.ds.array($("#initialarray")),
   // HTML element containing the initial array, id initialarray
-  // alternatively, generate from data: 
+  //var arr = av.ds.array($("#initialarray")),
+  // Alternatively, generate from data: 
   var arr = av.ds.array([20, 30, 12, 54, 55, 11, 78, 14, 13, 79, 44,
       98, 76, 45, 32, 11], {indexed: true});
   // or, generate from random data: var arr = av.ds.array.random(10);
   // size as param, range as params as well??
+
+  // Make a label before the array, and give it an empty string to
+  // take up the appropriate space since we don't want to see the
+  // label initially.
   var arrlabel = av.label("&nbsp;", {before: arr});
 
-  // Cloned copy for holding the original value positions.
+  // Cloned copy of array for holding the original value positions.
   // Will be shown later to compare against progress made by the algorithm
   origarr = arr.clone();
 
   av.step().umsg(" The first sublist would be the elements in positions 0 and 8...", {preserve: true});
 
   // set color to LIGHT for the whole array, then highlight indices 0 and 8
-  arr.css(function(index, item)
+  arr.css(function(index)
     { return index%8 != 0;}, {"color": LIGHT}).highlight([0, 8]);
   // another way to specify a message for a step
   av.step().umsg("... the second in positions 1 and 9...");
@@ -91,8 +95,9 @@ console.log("Doh");
     arr.unhighlight([i-1, i+7]).css([i-1, i+7], {"color": LIGHT}).highlight([i, i+8]);
   }
 
-  av.step().umsg("Each of these sublists of length two is sorted using Insertion Sort.");
-  arr.unhighlight([7, 15]).css([7, 15], {"color": LIGHT});
+  av.step().umsg("Each of these sublists of length two is sorted using Insertion Sort. (The blue element is the current element during the insertion sort, which is compared to the previous element in the current sublist.)");
+  arr.unhighlight(); // unhighlight seems to have the side effect of
+                     // making the cell dark.
 
   sweep(arr, 8); // first sweep with increment 8
 
@@ -100,7 +105,7 @@ console.log("Doh");
 
   arr.unhighlight();
 
-  arr.css(function(i, item)
+  arr.css(function(i)
     { return arr.value(i) !== origarr.value(i); }, {"color": "#0f0"});
 
   arrlabel.text("Values in <b style='color:#0f0;'>green</b> were swapped during this pass");
@@ -113,7 +118,7 @@ console.log("Doh");
   origarr.hide();
   origlabel.hide();
 
-  arr.css(function(index, item)
+  arr.css(function(index)
     { return index%4 != 0;}, {"color": LIGHT}).highlight([0, 4, 8, 12]);
 
   av.step().umsg("... the second sublist would have elements in positions 1, 5, 9, and 13 ...");
@@ -133,21 +138,21 @@ console.log("Doh");
 
   av.step().umsg("At the end of processing sublists with increment 4, the array is \"even more sorted\".");
 
-  arr.css(function(i, item)
+  arr.css(function(i)
     { return arr.value(i) !== origarr.value(i); }, {"color": "#0f0"});
 
-  arrlabel.text("Values in <b style='color:#0f0;'>green</b> were swapped during this pass");
+  arrlabel.text("Values in <b style='color:#0f0;'>green</b> have been swapped from their original positions.");
   origarr.show();
   origlabel.show();
 
   av.step().umsg("The third pass would be made on sublists with increment 2. This means we process two lists, one consisting of the odd positions and the other consisting of the even positions.");
 
-  arr.css(function(i, item) {}, {"color": DARK});
+  arr.css(function(i) {}, {"color": DARK});
   arrlabel.text("&nbsp;");
   origarr.hide();
   origlabel.hide();
 
-  arr.css(function(index, item)
+  arr.css(function(index)
     { return index%2 != 0;}, {"color": LIGHT});
   arr.highlight([0, 2, 4, 6, 8, 10, 12, 14]);
   av.step();
@@ -185,6 +190,11 @@ console.log("Doh");
   function sweep(myarr, incr) {
     for (var j=0; j<incr; j++) {         // Sort each sublist
       // Highlight the sublist
+
+// This following line of code should be able to replace the seven
+// lines of code to make a loop to compute the index list, but it
+// isn't working for some reason.
+//      myarr.highlight(function(index) { return index%incr == j;});
       var highlightArray = [];
       for (var k=0; k < myarr.size(); k++) {
         if (k%incr == j) {
@@ -192,7 +202,7 @@ console.log("Doh");
         }
       }
       myarr.highlight(highlightArray);
-//      myarr.highlight(function(index, item) { return index%incr == j;});
+
       av.step();
       inssort(myarr, j, incr);
       myarr.unhighlight();
