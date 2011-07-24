@@ -131,7 +131,7 @@
 
   av.step().umsg("Each sublist of four elements would also be sorted using an Insertion Sort.");
 
-  arr.unhighlight([3, 7, 11, 15]).css([3, 7, 11, 15], {"color": LIGHT});
+  arr.unhighlight();
 
   sweep(arr, 4); // second sweep with increment 4
 
@@ -146,13 +146,14 @@
 
   av.step().umsg("The third pass would be made on sublists with increment 2. This means we process two lists, one consisting of the odd positions and the other consisting of the even positions.");
 
-  arr.css(function(i) {}, {"color": DARK});
+  arr.css(function(index) {return index}, {"color": DARK});
+
   arrlabel.text("&nbsp;");
   origarr.hide();
   origlabel.hide();
 
-  arr.css(function(index)
-    { return index%2 != 0;}, {"color": LIGHT});
+//  arr.css(function(index)
+//    { return index%2 != 0;}, {"color": LIGHT});
   arr.highlight([0, 2, 4, 6, 8, 10, 12, 14]);
   av.step();
   arr.unhighlight([0, 2, 4, 6, 8, 10, 12, 14]).highlight([1, 3, 5, 7, 9, 11, 13, 15]);
@@ -163,6 +164,8 @@
   arr.unhighlight();
 
   av.step();
+  arr.unhighlight();
+
   sweep(arr, 2);
 
   av.step().umsg("And here is the result of the third pass. The list is getting even more sorted!");
