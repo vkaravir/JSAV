@@ -140,7 +140,7 @@
   };
   JSAV.ext.stepdone = function() {return this;};
   JSAV.ext.recorded = function() {
-    console.log("Number of states: ", this._undo.length)
+    console.log("Number of steps: ", this._undo.length)
     this.forward(); // apply the last steps
     this.RECORD = false;
     this.begin();
