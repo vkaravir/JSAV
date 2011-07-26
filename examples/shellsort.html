@@ -10,21 +10,21 @@
 <style>
   #container {
     width: 800px;
-    height: 400px;
+    height: 435px;
     background-color: #efe;
   }
   #container .array {
      left: -10px;
   }
   p.output.line {
-    height: 70px;
+    height: 80px;
   }
 </style>
 <div id="container">
   <table id=tableT style=" margin:-15px 0px;">
     <tr>
       <td>
-    	<input type="button" name="about" value="About" />
+    	<input type="button" name="about" value="About" onClick="About();"/>
       </td>
       <td width=700px>
     	<div class="controls"></div>
@@ -51,12 +51,9 @@
   var av = new JSAV("container"); //containing HTML element with id container
   av.SPEED = 200;
 
-  var c2 = $("#aboutform"); // Define the local context (from form name)
-  $('input[name="about"]', c2).click(About);
-
   // Process About button: Pop up a message with an Alert
   function About() {
-    var mystring = "Shellsort Performance Applet\nWritten by Cliff Shaffer and Ville Karavirta\nCreated as part of the OpenDSA hypertextbook project.\nFor more information, see\nSOME URL\nWritten during June, 2011\nLast update: June 28, 2011\nJSAV library version " + JSAV.version();
+    var mystring = "Shellsort Explanation Slideshow\nWritten by Cliff Shaffer and Ville Karavirta\nCreated as part of the OpenDSA hypertextbook project.\nFor more information, see http://algoviz.org/eBook\nWritten during June, 2011\nLast update: July 26, 2011\nJSAV library version " + JSAV.version();
     alert(mystring);
   }
 
