@@ -4,7 +4,8 @@
   padding: 0.7em;
   border: 1px solid black;
   background-color: white;
-  margin: 1em auto;
+  margin: -8px;
+  margin-left: -8px;
 }
 
 /***** STYLING OF THE ARRAY DATA STRUCTURE *****/
@@ -21,10 +22,10 @@
   clear: both;
 }
 .array .index {
-  width: 50px;
-  height: 50px;
+  width: 45px;
+  height: 45px;
   text-align: center;
-  line-height: 45px;
+  line-height: 40px;
   border: 1px solid black;
   border-color: black;
   background-color: white;
@@ -33,10 +34,10 @@
 }
 .indexlabel {
   display: inline-block;
-  width: 50px;
+  width: 45px;
   height: 20px;
   line-height: 20px;
-  top: 55px;
+  top: 50px;
   color: black;
 }
 .array .index span {
@@ -77,9 +78,9 @@ svg {
 .controls a {
   display: inline-block;
   color: transparent;
-  width: 30px;
-  height: 30px;
-  margin: 10px;
+  width: 50px;
+  height: 50px;
+  margin: 20px;
   background-color: #aaa;
   -moz-border-radius: 20px;
   -webkit-border-radius: 20px;

@@ -9,8 +9,8 @@
 <body>
 <style>
   #container {
-    width: 880px;
-    height: 420px;
+    width: 800px;
+    height: 400px;
     background-color: #efe;
   }
   #container .array {
@@ -21,12 +21,19 @@
   }
 </style>
 <div id="container">
-  <form id="aboutform">
-    <input type="button" name="about" value="About" />
-  </form>
-  <div class="controls"></div>
+  <table id=tableT style=" margin:-15px -10px;">
+    <tr>
+      <td>
+    	<input type="button" name="about" value="About" />
+      </td>
+      <td width=700px>
+    	<div class="controls"></div>
+      </td>
+    </tr>
+  </table>
   <p class="output line"></p>
 </div>
+
 <script src="http://code.jquery.com/jquery-1.6.1.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/jquery-ui.min.js"></script>
 <script src="../lib/jquery.transform.js/jquery.transform.light.js"></script>
@@ -54,7 +61,7 @@
   }
 
   // message to be shown initially
-  av.umsg("<b style='font-size:300%;'>Shellsort Algorithm Presentation</b>");
+  av.umsg("<p style='text-align:center'><b style='font-size:300%'>Shellsort Algorithm Presentation</b></p>");
   av.umsg("Shellsort provides a huge improvement over O(n<sup>2</sup>) sorts sorts like Insertion Sort. It works by taking advantage of the fact that Insertion Sort works very well (in linear time) when the list is nearly sorted. Shellsort works by performing a series of Insertion Sorts on carefully selected sublists, first on small sublists and then on increasingly large sublists.");
 
   // create a new step to the visualization, a given message
