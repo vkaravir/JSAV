@@ -22,6 +22,7 @@ clean:
 library:
 	git submodule init
 	git submodule update
+	git pull
 
 build: $(TARGET)/JSAV.js minimize
 
