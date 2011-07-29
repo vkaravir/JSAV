@@ -41,15 +41,30 @@ your new AV.
 </p> 
 
 <p>
-If done manually, the files required (in this order) are as follows:
+If done manually, the files required (in this order) are as follows.
+Note that <code>[JSAV]</code> refers to the relative position of the
+JSAV library directory, which depends on where you are developing from.
 </p> 
+
+<p class="todo">
+This reflects placement in the Git development repository.
+The SourceForge "release" version has a simplified library directory
+without all the sourcecode, so the relative URLs are:
+<ul class="todo">
+  <li>jquery.transform: <code>[JSAV]/lib/jquery.transform.light.js</code></li>
+  <li>Raphael: <code>[JSAV]/lib/raphael.js</code></li>
+  <li>The library: Either <code>[JSAV]/build/jsav.js</code> or
+      <code>[JSAV]/build/jsav-min.js</code>.
+      This must always be included.</li>
+</ul>
+</p>
 
 <ul>
   <li>jQuery 1.6.1+: <code>http://code.jquery.com/jquery-1.6.1.js</code></li>
   <li>jQuery UI: <code>https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/jquery-ui.min.js</code></li>
-  <li>jquery.transform: <code>/lib/jquery.transform.js/jquery.transform.light.js</code></li>
-  <li>Raphael: <code>/lib/raphael/raphael.js</code></li>
-  <li>The library: <code>/build/jsav.js</code> This must always be included.</li>
+  <li>jquery.transform: <code>[JSAV]/lib/jquery.transform.js/jquery.transform.light.js</code></li>
+  <li>Raphael: <code>[JSAV]/lib/raphael/raphael.js</code></li>
+  <li>The library: <code>[JSAV]/build/jsav.js</code> This must always be included.</li>
 </ul>
 
 <p>
@@ -62,11 +77,17 @@ only needed when using graphical primitives like circles and
 rectangles.
 </p>
 
+<p>
+In addition, developers must include the supporting .css file:
+<code>[JSAV]/css/JSAV.css</code>
+</p>
+
 <h2>HTML Template for the Visualization</h2>
 
 <p>
-The template HTML for a visualization should look something like
-this:
+Visualizations generally include two parts:
+HTML DOM elements, and JavaScript elements. 
+The HTML section typical includes something like this:
 </p> 
 
 <pre>
@@ -79,11 +100,14 @@ this:
   <dt><code>container</code></dt>
   <dd>This is the container element for the visualization</dd>
   <dt><code>controls</code></dt>
-  <dd>The library will generate the controls inside this element</dd>
+  <dd>The library will generate slideshow controls inside this
+  element if your visualization uses the slideshow API</dd>
   <dt><code>output</code></dt>
   <dd>The area where the messages from the
-      visualization will be shown. Type can further be specified 
-      using either class <code>line</code> or <code>scroll</code></dd>
+      visualization will be displayed to the user.
+      Type can further be specified using either
+      class <code>line</code> or <code>scroll</code>.
+      See the Messages API for more details.</dd>
 </dl>
 
 <h2>Creating A Visualization</h2>
@@ -187,10 +211,11 @@ this section.
 <h3 class="apimethod">.ds.array(element[, options]) and
 .ds.array(Array[, options])</h3>
 <p>
-An array can be created using the .ds.array method on an JSAV
-instance. As a parameter, it takes either a DOM/jQuery Element
-(ul or ol) or a JavaScript Array. For example, to initialize and add
-to the visualization an array with four elements:</p>
+An array can be created using the .ds.array method on a JSAV instance.
+It takes one parameter indicating either a DOM/jQuery Element
+(ul or ol) or a JavaScript Array.
+For example, to initialize and add to the visualization an array with
+four elements:</p>
 <pre>var arr = av.ds.array([10, 13, 99, 25]);</pre>
 
 <p>
@@ -246,11 +271,11 @@ Make the array invisible.
 <h3 class="apimethod">.highlight()</h3>
 <p>
 Call to <code>highlight</code> without any parameters will highlight
-all elements in the array. Note, that this will only 
-apply the CSS class <code>highlight</code> to the
-elements.
-It is up to the author to make sure the 
-loaded CSS files include such styling.
+all elements in the array.
+Note that this will only apply the CSS class <code>highlight</code> to
+the array elements.
+It is up to the author to make sure the loaded CSS files include such
+styling.
 </p>
 
 <p>
@@ -353,6 +378,33 @@ Make the label visible.
 Set the text for the label. If the <code>msg</code> parameter is left
 out, this method will return the current text of the label.
 </p>
+
+<h2>Best Practice for Modularity</h2>
+
+<p>
+When you create a visualization, you might want to make it easy for
+other people to use.
+Some simple steps will make it easy for others to include your
+visualization within their own HTML pages using a
+simple <code>iframe</code> tag.
+The library is set up to make it natural for your visualization to
+reside within the <code>container</code> element.
+There is no margin or padding around the <code>container</code>, and
+it has a one-pixel-wide black border.
+So long as you stay within this, an <code>iframe</code> can include
+your whole visualization without any disruption to the user's page.
+If you would like to support mobiles, you will probably want to keep
+the full size of your <code>container</code> at most 800 by 435 pixels.
+A visualization can then be embedded with a call such as:
+</p>
+
+<pre>
+&lt;iframe src="http://algoviz.org/OpenDSA/trunk/AV/shellsort.html"
+   width="824" height="459" frameborder="0" marginwidth="0"
+   marginheight="0" scrolling="no">
+&lt;/iframe>
+</pre>
+
 
 </body>
 </html>
