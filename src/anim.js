@@ -141,7 +141,6 @@
   };
   JSAV.ext.stepdone = function() {return this;};
   JSAV.ext.recorded = function() {
-    if (console) { console.log("Number of steps: ", this._undo.length); }
     this.forward(); // apply the last steps
     this.RECORD = false;
     this.begin();
