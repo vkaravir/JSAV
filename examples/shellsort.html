@@ -191,19 +191,15 @@
 
   // Partial Shellsort. Sweep with the given increment
   function sweep(myarr, incr) {
-    var highlightArray;
+    var j = 0,
+      highlightFunction = function(index) { return index%incr == j;};
 
-    for (var j=0; j<incr; j++) {         // Sort each sublist
+    for (j=0; j<incr; j++) {         // Sort each sublist
       // Highlight the sublist
-      highlightArray = []; // Create the list of indices to highlight
-      for (var k=0; k < myarr.size(); k++) {
-        if (k%incr == j) { highlightArray.push(k); }
-      }
-      myarr.highlight(highlightArray);
-
+      myarr.highlight(highlightFunction);
       av.step();
       inssort(myarr, j, incr);
-      myarr.unhighlight(highlightArray);
+      myarr.unhighlight(highlightFunction);
     }
   }
 
