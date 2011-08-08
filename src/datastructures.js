@@ -145,6 +145,14 @@
     if (typeof cssprop === "string") {
       return $elems.css(cssprop);
     } else {
+      if ($.isFunction(indices)) { // if indices is a function, evaluate it right away and get a list of indices
+        var all_elems = $(this.element).find("li"),
+          sel_indices = []; // array of selected indices
+        for (var i = 0; i < $elems.size(); i++) {
+          sel_indices.push(all_elems.index($elems[i]));
+        }
+        indices = sel_indices;
+      }
       return this._setcss(indices, cssprop);
     }
   };
