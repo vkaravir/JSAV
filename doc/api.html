@@ -26,7 +26,7 @@
   </head>
 
 <body>
-<h1>Documentation for the JavaScript Algorithm Visualization API (JSAV) Version 0.1.1</h1>
+<h1>Documentation for the JavaScript Algorithm Visualization API (JSAV) Version 0.1.2</h1>
 
 <p class="note">
 This documentation reflects the current status of the library.
@@ -46,11 +46,7 @@ Note that <code>[JSAV]</code> refers to the relative position of the
 JSAV library directory, which depends on where you are developing from.
 </p> 
 
-<p class="todo">
-This reflects placement in the Git development repository.
-The SourceForge "release" version has a simplified library directory
-without all the sourcecode, so the relative URLs are:
-<ul class="todo">
+<ul>
   <li>jquery.transform: <code>[JSAV]/lib/jquery.transform.light.js</code></li>
   <li>Raphael: <code>[JSAV]/lib/raphael.js</code></li>
   <li>The library: Either <code>[JSAV]/build/jsav.js</code> or
@@ -58,14 +54,6 @@ without all the sourcecode, so the relative URLs are:
       This must always be included.</li>
 </ul>
 </p>
-
-<ul>
-  <li>jQuery 1.6.1+: <code>http://code.jquery.com/jquery-1.6.1.js</code></li>
-  <li>jQuery UI: <code>https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/jquery-ui.min.js</code></li>
-  <li>jquery.transform: <code>[JSAV]/lib/jquery.transform.js/jquery.transform.light.js</code></li>
-  <li>Raphael: <code>[JSAV]/lib/raphael/raphael.js</code></li>
-  <li>The library: <code>[JSAV]/build/jsav.js</code> This must always be included.</li>
-</ul>
 
 <p>
 The main jQuery library must always be loaded.
@@ -109,10 +97,6 @@ The HTML section typical includes something like this:
       class <code>line</code> or <code>scroll</code>.
       See the Messages API for more details.</dd>
 </dl>
-<p>In addition to these, a slideshow counter showing the position in 
-  slideshow (e.g. 2/120) can be added by adding an element with class 
-  <code>counter</code> inside the <code>container</code>. So, for example,
-  adding <code>&lt;span class="counter">&lt;/span></code>.
 
 <h2>Creating A Visualization</h2>
 <p>Initializing the visualization container is simple:</p>
@@ -125,7 +109,7 @@ The HTML section typical includes something like this:
 <pre>var av = new JSAV(document.getElementById("container"));
 var av = new JSAV(jQuery("#container"));</pre>
     
-<h2>Slideshow Support API</h2>
+<h2>Slideshow Support</h2>
 
 <p>A slideshow is created by using a series of calls to the
   <code>.step()</code> method.
@@ -149,6 +133,17 @@ for example, the <code>umsg</code> method.
 A call to this method is placed at the end of the series of
 <code>.step()</code> method calls to start the slideshow.
 </p>
+
+<h3>The <code>counter</code> element</h3>
+<p>
+A slideshow counter showing the position in slideshow (e.g. 2/120) can
+be added by including a DOM element with class <code>counter</code>
+inside the <code>container</code>.
+For example, you can add
+<code>&lt;span class="counter">&lt;/span></code> to some DOM element
+to attach the counter.
+</p>
+
 
 <h2>Messages API</h2>
 
