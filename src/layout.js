@@ -10,13 +10,15 @@
       $items = $arr.find("li").css({"float": "left", "position":"static"}),
       maxHeight = -1,
       indexed = !!array.options.indexed;
+    if (indexed) {
+      $arr.addClass("indexed");
+    }
     $items.each(function(index, item) {
       var $i = $(this),
         pos = $i.position();
       $i.css({"left": pos.left - index, "top": pos.top});
       maxHeight = Math.max(maxHeight, $i.outerHeight());
       if (indexed) {
-        $arr.addClass("indexed");
         var $indexLabel = $i.find(".indexlabel");
         if ($indexLabel.size() === 0) {
           $i.append('<span class="indexlabel">' + index + '</span>');
