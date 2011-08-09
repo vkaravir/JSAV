@@ -98,9 +98,11 @@
     // add slideshow counter if an element with class counter exists
     var counter = $(".counter", this.container);
     // register an event to be triggered on container to update the counter
-    this.container.bind("updatecounter", function() { 
-      counter.text(that.currentStep() + 1 + " / " + (that.totalSteps() + 1));
-    });
+    if (counter.size() > 0) {
+      this.container.bind("updatecounter", function() { 
+        counter.text(that.currentStep() + 1 + " / " + (that.totalSteps() + 1));
+      });
+    }
   });
   
   // this function can be used to "decorate" effects to be applied when moving forward
@@ -137,7 +139,7 @@
   };
   JSAV.ext.totalSteps = function() {
     return this._undo.length + this._redo.length;
-  }
+  };
   JSAV.ext.step = function(options) {
     if (this._redo.length === 0 || this._redo[0].length === 0) { // ignore step if no operations in it
       return this;
@@ -156,7 +158,7 @@
   JSAV.ext.stepdone = function() {return this;};
   JSAV.ext.recorded = function() {
     this.forward(); // apply the last steps
-    this.RECORD = false;
     this.begin();
+    this.RECORD = false;
   };
 })(jQuery);
