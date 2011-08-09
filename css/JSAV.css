@@ -41,8 +41,38 @@
 .array .index span {
   z-index: 99;
 }
-.array .index.highlight {
+.array .index.highlight, .array.bararray .index.highlight {
   background-color: yellow;
+}
+
+.array.bararray {
+  height: 150px;
+  overflow: visible;
+}
+.array.bararray .index {
+  width: 25px;
+  height: 100%;
+  vertical-align: bottom;
+  border: none;
+  background-color: #eee;
+  margin-left: 2px;
+}
+.bararray .index .value {
+  z-index: 100;
+  bottom: 0;
+/*  border: 1px solid #eee;*/
+  background-color: inherit;
+}
+.bararray .index .value, .bararray .index .valuebar {
+  display: inline-block;
+  line-height: 20px;
+  padding: 0;
+  position: absolute;
+  width: inherit;
+}
+.bararray .index .valuebar {
+  top: 0;
+  background-color: #fff;
 }
 /***** END STYLING OF THE ARRAY DATA STRUCTURE *****/
 

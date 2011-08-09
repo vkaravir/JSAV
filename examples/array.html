@@ -16,7 +16,7 @@
     <script>
     var c1;
     var av = new JSAV("container");
-    var arr = av.ds.array([30, 34, 27, 90, 12, 11, 56, 89], {indexed: true});
+    var arr = av.ds.array([30, 34, 27, 90, 12, 11, 56, 89], {indexed: false, layout: "bar"});
     jQuery.fx.off = false;
     $(function() { 
       $(".index").click(function() {

@@ -30,9 +30,31 @@
     $items.css({"float": "none", "position": "absolute"});
     $arr.height(maxHeight + (indexed?30:0));
   }
+  function barArray(array) {
+    var $arr = $(array.element).addClass("bararray"),
+      $items = $arr.find("li").css({"float": "left", "position":"static"});
+    var maxValue = Number.MIN_VALUE;
+    for (var i = 0; i < array._arr.length; i++) {
+      maxValue = Math.max(maxValue, array._arr[i]);
+    }
+    $items.each(function(index, item) {
+      var $i = $(this),
+        pos = $i.position();
+      var $valueBar = $i.find(".valuebar");
+      if ($valueBar.size() === 0) {
+        $i.append('<span class="valuebar" />');
+        $valueBar = $i.find(".valuebar");
+      }
+      $valueBar.css({"height": "100%"});
+      $i.find(".value").css("height", (100.0*array.value(index) / maxValue) + "%")
+        .html('<span style="position:absolute;width:inherit;display:inline-block;bottom:-20px;">' + $i.text() + '</span>');
+      //$i.css({"left": pos.left - index});
+    });
+  }
   var layouts = {};
   layouts.array = {
-    "_default": verticalArray
+    "_default": verticalArray,
+    "bar": barArray
   };
   JSAV.ext.layout = layouts;
 })();
