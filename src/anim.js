@@ -14,6 +14,8 @@
       prev[3].apply(prev[0], prev[2]);
     }
     this._redo.unshift(ops);
+    // trigger an event on the container to update the counter
+    this.container.trigger("updatecounter");
   }
 
   function forward() {
@@ -34,6 +36,8 @@
       next[1].apply(next[0], next[2]);
     }
     this._undo.push(ops);
+    // trigger an event on the container to update the counter
+    this.container.trigger("updatecounter");
   }
 
   function begin() {
@@ -60,7 +64,7 @@
     this._redo = []; // stack for operations to redo
     this._undo = []; // stack for operations to undo
     var that = this,
-      $controls = $(".controls", $(this.container));
+      $controls = $(".controls", this.container);
     if ($controls.size() === 0) {
       return; // no controls, no need to proceed
     }
@@ -90,6 +94,13 @@
                           "backward": backwardHandler,
                           "begin": beginHandler,
                           "end": endHandler });
+                          
+    // add slideshow counter if an element with class counter exists
+    var counter = $(".counter", this.container);
+    // register an event to be triggered on container to update the counter
+    this.container.bind("updatecounter", function() { 
+      counter.text(that.currentStep() + 1 + " / " + (that.totalSteps() + 1));
+    });
   });
   
   // this function can be used to "decorate" effects to be applied when moving forward
@@ -124,6 +135,9 @@
   JSAV.ext.currentStep = function() {
     return this._undo.length;
   };
+  JSAV.ext.totalSteps = function() {
+    return this._undo.length + this._redo.length;
+  }
   JSAV.ext.step = function(options) {
     if (this._redo.length === 0 || this._redo[0].length === 0) { // ignore step if no operations in it
       return this;
