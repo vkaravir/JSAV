@@ -10,7 +10,6 @@ all: build
 
 # This will grab all of the libraries that one needs to be able to develop
 # This version is git-centric 
-setup: library build minimize
 
 clean:
 	$(RM) *~
@@ -19,12 +18,7 @@ clean:
 	$(RM) src/*~ src/version.txt src/front.js src/version.js
 	$(RM) css/*~
 
-library:
-	git submodule init
-	git submodule update
-	git pull
-
-build: $(TARGET)/JSAV.js minimize
+build: $(TARGET)/JSAV.js $(TARGET)/JSAV-min.js
 
 $(TARGET)/JSAV.js: $(SRC)/version.txt $(SRC)/front.js $(SRC)/version.js $(SOURCES)
 	-mkdir $(TARGET)
@@ -39,7 +33,5 @@ $(SRC)/front.js: $(SRC)/front1.txt $(SRC)/version.txt $(SRC)/front2.txt
 $(SRC)/version.js :$(SRC)/version1.txt $(SRC)/version.txt $(SRC)/version2.txt
 	$(CAT) $(SRC)/version1.txt $(SRC)/version.txt $(SRC)/version2.txt > $(SRC)/version.js
 
-minimize: $(TARGET)/JSAV-min.js
-
-$(TARGET)/JSAV-min.js: $(SOURCES)
+$(TARGET)/JSAV-min.js: $(SRC)/version.txt $(SRC)/front.js $(SRC)/version.js $(SOURCES)
 	$(MINIMIZE)
