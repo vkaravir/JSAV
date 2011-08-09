@@ -158,30 +158,34 @@
   };
   function realSwap(index1, index2, options) {
     var tmp = this._arr[index1],
-      that = this,
-      args = arguments,
       $pi1 = $(this.element).find("li:eq(" + index1 + ")"), // index
       $pi2 = $(this.element).find("li:eq(" + index2 + ")"),
       $i1 = $pi1.find("span.value"),
       $i2 = $pi2.find("span.value"),
-      p1 = JSAV.position($i1),
-      p2 = JSAV.position($i2),
+      posdiff = JSAV.position($i1).left - JSAV.position($i2).left,
       indices = $($pi1).add($pi2),
       i1prevStyle = $pi1.getstyles("color", "background-color"),
       i2prevStyle = $pi2.getstyles("color", "background-color"),
-      speed = this.jsav.SPEED/5;
+      speed = this.jsav.SPEED/5,
+      htmlTmp = $pi1.html();
+    // first swap the contents of the indices..
+    $pi1.html($pi2.html());
+    $pi2.html(htmlTmp);
+    // .. then set the position so that the array appears unchanged..
+    $pi2.css({"transform": "translateX(" + (posdiff) + "px)", "color": "red"});
+    $pi1.css({"transform": "translateX(" + (-posdiff) + "px)", "color": "red"});
+    // .. animate the color ..
     indices.animate({"color": "red", "background-color": "pink"}, 3*speed, function() {
-      $i2.animate({"transform": "translateX(" + (p1.left-p2.left) + "px)"}, 7*speed, 'linear');
-      $i1.animate({"transform": "translateX(" + (p2.left-p1.left) + "px)"}, 7*speed, 'linear', 
+      // ..animate the translation to 0, so they'll be in their final positions..
+      $pi2.animate({"transform": "translateX(0px)"}, 7*speed, 'linear');
+      $pi1.animate({"transform": "translateX(0px)"}, 7*speed, 'linear', 
         function() {
-          var htmlTmp = $i1.html();
-          $pi1.html("<span class='value'>" + $i2.html() + "</span>");
-          $pi2.html("<span class='value'>" + htmlTmp + "</span>");
+          // ..and finally animate to the original styles.
           $pi1.animate(i1prevStyle, speed);
           $pi2.animate(i2prevStyle, speed);
-          that.layout();
         });
     });
+    // swap the actual values in the array
     this._arr[index1] = this._arr[index2];
     this._arr[index2] = tmp;
   }
