@@ -140,6 +140,21 @@
   JSAV.ext.totalSteps = function() {
     return this._undo.length + this._redo.length;
   };
+  JSAV.ext.animInfo = function() {
+    // get some "size" info about the animation, namely the number of steps
+    // and the total number of effects (or operations) in the animation
+    var info = { steps: this.totalSteps()},
+      i,
+      effects = 0;
+    for (i = this._undo.length; i--; ) {
+      effects += this._undo[i].length;
+    }
+    for (i = this._redo.length; i--; ) {
+      effects += this._redo[i].length;
+    }
+    info.effects = effects;
+    return info;
+  };
   JSAV.ext.step = function(options) {
     if (this._redo.length === 0 || this._redo[0].length === 0) { // ignore step if no operations in it
       return this;
