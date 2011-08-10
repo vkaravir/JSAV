@@ -227,7 +227,7 @@
     var el = $("<ol class='array' />"),
       liel;
     this.options = jQuery.extend({display: true}, this.options);
-    this._arr = data;
+    this._arr = data.slice(0); // create a copy
     $.each(data, function(index, item) {
       el.append("<li class='node index'><span class='value'>" + item + "</span></li>");
     });
