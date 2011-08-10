@@ -26,34 +26,54 @@ div h1 {
   padding-left:0;
 }
 p.output.line {
-  height: 80px;
+  height: 30px;
 }
 
 </style>
 </head>
 
 <body>
-  <div id="container">
-    <input type="button" name="about" value="About" />
-    <h1 style="margin:-25px 0px 0px 0px">Shellsort AV</h1>
+<div id="container">
+  <input type="button" name="about" value="About" />
+  <h1 style="margin:-25px 0px 0px 0px">Shellsort AV</h1>
 
-    <form id="ssperform">
-      <p><label for="increments">Increments: Type your increment
-                                 series below.</label></p>
-      <input size="50" name="increments" type="text"
-             placeholder="Space separated values, for example 8 4 2 1" />
-      <p>
-        <input type="button" name="run" value="Run" />
-        <input type="button" name="clear" value="Clear" />
-        <label for="arraysize">&nbsp;List size:&nbsp;</label>
-        <input size="5" name="arraysize" type="number" value="16"/>
-      </p>
-    </form>
-    <div id="avcontainer">
-      <span class="counter"></span><div class="controls"></div>
-      <p class="output line" readonly="readonly"></p>
-    </div> <!--avcontainer-->
-  </div> <!--container-->
+  <form id="ssperform">
+    <p><label for="increments">Increments: Type your increment
+                               series below.</label></p>
+    <input size="50" name="increments" type="text"
+           placeholder="Space separated values, for example 8 4 2 1" />
+    <p>
+      <input type="button" name="run" value="Run" />
+      <input type="button" name="clear" value="Clear" />
+      <label for="arraysize">&nbsp;List size:&nbsp;</label>
+      <select id="arraysize">
+        <option value = 5>5</option>
+        <option value = 6>6</option>
+        <option value = 7>7</option>
+        <option value = 8>8</option>
+        <option value = 9>9</option>
+        <option value = 10>10</option>
+        <option value = 11>11</option>
+        <option value = 12>12</option>
+        <option value = 13>13</option>
+        <option value = 14>14</option>
+        <option value = 15>15</option>
+        <option value = 16>16</option>
+      </select>
+    </p>
+  </form>
+  <div id="avcontainer">
+    <table id=tableT style="margin-top:-15px; margin-bottom:-15px">
+    <tr>
+      <td width=100><span class="counter"></span></td>
+      <td width=520px>
+        <div class="controls"></div>
+      </td>
+    </tr>
+    </table>
+    <p class="output line" readonly="readonly"></p>
+  </div> <!--avcontainer-->
+</div> <!--container-->
 
 <script
    src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js">
@@ -66,14 +86,10 @@ p.output.line {
 <script>
 (function($) {
   var context = $("#ssperform");
-  // The permanent array of numbers.
-  // This is "permanent" in that we want to use the same values
-  // each time that we sort, so that we can compare costs.
-  // It only changes when the user re-sets the array size, at which
-  // time a new set of random numbers is drawn.
+  // The array of numbers.
   var theArray = [];
 
-  var ASize = $('input[name="arraysize"]', context).val(); // Array size
+  var ASize;
   var emptyContent = $("#avcontainer").html();
 
   var av, // for JSAV av
@@ -85,7 +101,6 @@ p.output.line {
   $('input[name="about"]').click(about);
   $('input[name="run"]', context).click(runIt);
   $('input[name="clear"]', context).click(clear);
-  $('input[name="arraysize"]', context).focusout(change);
   $('input[name="increments"]', context).focusout(checkIncrements);
 
   // Process About button: Pop up a message with an Alert
@@ -114,16 +129,9 @@ p.output.line {
   }    
   // Change the array size
   function change() {
-    // Validate arraysize
-    var newVal = Number($('input[name="arraysize"]', context).val());
-    if (isNaN(newVal) || (newVal < 1) || (newVal > 16)) {
-      alert("List size has to be a positive number less than 17");
-      return;
-    }
-    if (newVal !== ASize) {
-      ASize = newVal;
-      InitArray(ASize);
-    }
+    var newVal = document.getElementById('arraysize').selectedIndex + 5;
+    ASize = newVal;
+    InitArray(ASize);
   }
   // Validate the increment series
   // TODO: It is annoying that extra spaces come up as null numbers,
@@ -198,16 +206,14 @@ av.umsg("Sorting the subarray");
     }
   }
   
+  // Execute the "Run" button function
   function runIt() {
-    // This should only happen the very first time we run
-    if (theArray.length != ASize) {
-      InitArray(ASize);
-    }
     // Validate the user's increments
     var incrs = checkIncrements();
     if (!incrs) {
       return;
     }
+    change();
     clear(); // clear any previous visualization
     av = new JSAV("avcontainer"); // initialize JSAV ..
     arr = av.ds.array(theArray, {indexed: true}); // .. and the array
