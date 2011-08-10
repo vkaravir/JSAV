@@ -1,0 +1,212 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>ShellSort AV</title>
+<link href="AeBookAV.css" title="CSS" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="../css/JSAV.css" type="text/css" />
+<style>
+
+#container {
+  width: 800px;
+  height: 465px;
+  border: 1px solid black;
+  background-color: #efe;
+  padding: 10px;
+  overflow: hidden;
+}
+
+div h1 {
+  background-color: #efe;
+}
+.jsavcontainer {
+  background-color: #efe;
+}
+
+p.output.scroll {
+  height: 150px;
+}
+
+</style>
+</head>
+
+<body>
+  <div id="container">
+    <input type="button" name="about" value="About" />
+    <h1 style="margin:-25px 0px 0px 0px">Shellsort AV</h1>
+
+    <form id="ssperform">
+      <p><label for="increments">Increments: Type your increment
+                                 series below.</label></p>
+      <input size="50" name="increments" type="text"
+             placeholder="Space separated values, for example 8 4 2 1" />
+      <p>
+        <input type="button" name="run" value="Run" />
+        <input type="button" name="clear" value="Clear" />
+        <label for="arraysize">&nbsp;List size:&nbsp;</label>
+        <input size="5" name="arraysize" type="number" value="15"/>
+      </p>
+    </form>
+    <div id="avcontainer">
+      <span class="counter"></span><div class="controls"></div>
+      <p class="output" readonly="readonly"></p>
+    </div> <!--avcontainer-->
+  </div> <!--container-->
+
+<script
+   src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js">
+</script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/jquery-ui.min.js"></script>
+<script src="../lib/jquery.transform.light.js"></script>
+
+<script src="../build/JSAV-min.js"></script>
+
+<script>
+(function($) {
+  var context = $("#ssperform");
+  // The permanent array of numbers.
+  // This is "permanent" in that we want to use the same values
+  // each time that we sort, so that we can compare costs.
+  // It only changes when the user re-sets the array size, at which
+  // time a new set of random numbers is drawn.
+  var theArray = [];
+
+  var ASize = $('input[name="arraysize"]', context).val(); // Array size
+  var emptyContent = $("#avcontainer").html();
+
+  var av, // for JSAV av
+    arr;  // for the JSAV array
+  /* **************************************************************
+  *  This section connects the action callbacks to the            *
+  *  form entities.                                               *
+  ************************************************************** */
+  $('input[name="about"]').click(about);
+  $('input[name="run"]', context).click(runIt);
+  $('input[name="clear"]', context).click(clear);
+  $('input[name="arraysize"]', context).focusout(change);
+  $('input[name="increments"]', context).focusout(checkIncrements);
+
+  // Process About button: Pop up a message with an Alert
+  function about() {
+    var mystring = "Shellsort Algorithm Visualization\nWritten by Cliff Shaffer and Ville Karavirta\nCreated as part of the OpenDSA hypertextbook project.\nFor more information, see http://algoviz.org/eBook\nWritten during August, 2011\nLast update: August 10, 2011\nJSAV library version " + JSAV.version();
+    alert(mystring);
+  }
+
+  // Process clear button: Clear the output textbox and the AV
+  function clear() {
+    if (av) {
+      av.clearumsg();
+      $("#avcontainer").unbind().html(emptyContent);
+    }
+  }
+
+  // Initialize theArray to be size random numbers
+  function InitArray(size) {
+    var i;
+    theArray.length = 0; // Out with the old
+    // Give random numbers in range 0..9999
+    for (i=0; i < size; i++) {
+      theArray[i] = Math.floor(Math.random()*10000);
+    }
+    ASize = size;
+  }    
+  // Change the array size
+  function change() {
+    // Validate arraysize
+    var newVal = Number($('input[name="arraysize"]', context).val());
+    if (isNaN(newVal) || (newVal < 1) || (newVal > 15)) {
+      alert("List size has to be a positive number less than 16");
+      return;
+    }
+    if (newVal !== ASize) {
+      ASize = newVal;
+      InitArray(ASize);
+    }
+  }
+  // Validate the increment series
+  // TODO: It is annoying that extra spaces come up as null numbers,
+  // causing validation to fail
+  function checkIncrements() {
+    var i, 
+      num, 
+      prev = Number.MAX_VALUE, 
+      msg = "Increments sequence must be decreasing positive values ending with 1";
+    // Convert user's increments to an array,
+    // assuming values are space separated
+    var incrs = $('input[name="increments"]', context).val().split(' ');
+    for (i=0; i<incrs.length; i++) {
+      incrs[i] = Number(incrs[i]);
+      if (isNaN(incrs[i]) || incrs[i] < 0 || incrs[i] > prev) { 
+        alert(msg);
+        return null; 
+      }
+      prev = incrs[i];
+    }
+    if (incrs[incrs.length - 1] !== 1) { 
+      alert(msg);
+      return null; 
+    }
+    return incrs;
+  }
+
+  var setBlue = function(index) {
+    arr.css(index, {"background-color": "#ddf" });
+  };
+
+  // Partial Shellsort. Sweep with the given increment
+  function sweep(incr) {
+    var j = 0,
+      highlightFunction = function(index) { return index%incr == j;};
+
+    for (j=0; j<incr; j++) {         // Sort each sublist
+      // Highlight the sublist
+      arr.highlight(highlightFunction);
+      av.step();
+      inssort(j, incr);
+      arr.unhighlight(highlightFunction);
+    }
+  }
+
+  // Insertion sort using increments
+  function inssort(start, incr) {
+    var i, j;
+    for (i=start+incr; i<arr.size(); i+=incr) {
+      setBlue(i);
+      av.step();
+      for (j=i; j>=incr && (arr.value(j) < arr.value(j-incr)); j-=incr) {
+        arr.swap(j, j-incr); // swap the two indices
+        av.step();
+
+	      setBlue(j-incr);
+	      arr.highlight(j);
+        av.step();
+      }
+      arr.highlight(j);
+      av.step();
+    }
+  }
+  
+  function runIt() {
+    // This should only happen the very first time we run
+    if (theArray.length != ASize) {
+      InitArray(ASize);
+    }
+    // Validate the user's increments
+    var incrs = checkIncrements();
+    if (!incrs) {
+      return;
+    }
+    clear(); // clear any previous visualization
+    av = new JSAV("avcontainer"); // initialize JSAV ..
+    arr = av.ds.array(theArray, {indexed: true}); // .. and the array
+    var i, incr;
+    for (i=0; i<incrs.length; i+=1) {
+      if (incrs[i] < theArray.length) {
+        sweep(incrs[i]); // run the sweep to create the AV
+      }
+    }
+    av.recorded(); // mark the end
+  }
+})(jQuery);
+</script>
+</body>
+</html>
