@@ -7,7 +7,7 @@
 <style>
 
 #container {
-  width: 800px;
+  width: 770px;
   height: 465px;
   border: 1px solid black;
   background-color: #efe;
@@ -20,8 +20,11 @@ div h1 {
 }
 .jsavcontainer {
   background-color: #efe;
+  border: none;
 }
-
+.array {
+  padding-left:0;
+}
 p.output.scroll {
   height: 150px;
 }
@@ -43,7 +46,7 @@ p.output.scroll {
         <input type="button" name="run" value="Run" />
         <input type="button" name="clear" value="Clear" />
         <label for="arraysize">&nbsp;List size:&nbsp;</label>
-        <input size="5" name="arraysize" type="number" value="15"/>
+        <input size="5" name="arraysize" type="number" value="16"/>
       </p>
     </form>
     <div id="avcontainer">
@@ -113,8 +116,8 @@ p.output.scroll {
   function change() {
     // Validate arraysize
     var newVal = Number($('input[name="arraysize"]', context).val());
-    if (isNaN(newVal) || (newVal < 1) || (newVal > 15)) {
-      alert("List size has to be a positive number less than 16");
+    if (isNaN(newVal) || (newVal < 1) || (newVal > 16)) {
+      alert("List size has to be a positive number less than 17");
       return;
     }
     if (newVal !== ASize) {
