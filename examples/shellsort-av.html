@@ -25,8 +25,8 @@ div h1 {
 .array {
   padding-left:0;
 }
-p.output.scroll {
-  height: 150px;
+p.output.line {
+  height: 80px;
 }
 
 </style>
@@ -51,7 +51,7 @@ p.output.scroll {
     </form>
     <div id="avcontainer">
       <span class="counter"></span><div class="controls"></div>
-      <p class="output" readonly="readonly"></p>
+      <p class="output line" readonly="readonly"></p>
     </div> <!--avcontainer-->
   </div> <!--container-->
 
@@ -157,12 +157,23 @@ p.output.scroll {
 
   // Partial Shellsort. Sweep with the given increment
   function sweep(incr) {
-    var j = 0,
-      highlightFunction = function(index) { return index%incr == j;};
-
+    var j = 0;
+    var numElem = 0;
+    av.umsg("Start the next increment size: " + incr);
+    av.step();
+    highlightFunction = function(index) { return index%incr == j;};
     for (j=0; j<incr; j++) {         // Sort each sublist
       // Highlight the sublist
       arr.highlight(highlightFunction);
+      numElem = Math.ceil(theArray.length/incr);
+      if(j+(incr*(numElem-1))>=theArray.length) numElem = numElem-1;
+      if (numElem == 1) {
+        av.umsg("Since the rest of the subarrays for this increment are of length 1, we will skip them");
+        av.step();
+        arr.unhighlight(highlightFunction);
+        return;
+      }
+      av.umsg("Starting to sort a new subarray with " + numElem + " elements");
       av.step();
       inssort(j, incr);
       arr.unhighlight(highlightFunction);
@@ -172,19 +183,18 @@ p.output.scroll {
   // Insertion sort using increments
   function inssort(start, incr) {
     var i, j;
+av.umsg("Sorting the subarray");
     for (i=start+incr; i<arr.size(); i+=incr) {
       setBlue(i);
       av.step();
       for (j=i; j>=incr && (arr.value(j) < arr.value(j-incr)); j-=incr) {
         arr.swap(j, j-incr); // swap the two indices
         av.step();
-
-	      setBlue(j-incr);
-	      arr.highlight(j);
+        setBlue(j-incr);
+	arr.highlight(j);
         av.step();
       }
       arr.highlight(j);
-      av.step();
     }
   }
   

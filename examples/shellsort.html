@@ -18,6 +18,7 @@
   }
   p.output.line {
     height: 80px;
+    margin: 10px, 0px;
   }
 </style>
 <div id="container">
@@ -32,7 +33,7 @@
       </td>
     </tr>
   </table>
-  <p class="output line" style="margin:10px 0px"></p>
+  <p class="output line"></p>
 </div>
 
 <script src="http://code.jquery.com/jquery-1.6.1.js"></script>
@@ -192,9 +193,8 @@
 
   // Partial Shellsort. Sweep with the given increment
   function sweep(myarr, incr) {
-    var j = 0,
-      highlightFunction = function(index) { return index%incr == j;};
-
+    var j = 0;
+    highlightFunction = function(index) { return index%incr == j;};
     for (j=0; j<incr; j++) {         // Sort each sublist
       // Highlight the sublist
       myarr.highlight(highlightFunction);
@@ -213,7 +213,6 @@
       for (j=i; j>=incr && (A.value(j) < A.value(j-incr)); j-=incr) {
         A.swap(j, j-incr); // swap the two indices
         av.step();
-
 	setBlue(j-incr);
 	arr.highlight(j);
         av.step();
