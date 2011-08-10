@@ -157,8 +157,7 @@
     }
   };
   function realSwap(index1, index2, options) {
-    var tmp = this._arr[index1],
-      $pi1 = $(this.element).find("li:eq(" + index1 + ")"), // index
+    var $pi1 = $(this.element).find("li:eq(" + index1 + ")"), // index
       $pi2 = $(this.element).find("li:eq(" + index2 + ")"),
       $i1 = $pi1.find("span.value"),
       $i2 = $pi2.find("span.value"),
@@ -167,18 +166,30 @@
       i1prevStyle = $pi1.getstyles("color", "background-color"),
       i2prevStyle = $pi2.getstyles("color", "background-color"),
       speed = this.jsav.SPEED/5,
-      htmlTmp = $pi1.html();
-    // first swap the contents of the indices..
+      tmp = $pi1.html(),
+      $ind1label, $ind2label;
+    // first swap the contents of the elements..
     $pi1.html($pi2.html());
-    $pi2.html(htmlTmp);
+    $pi2.html(tmp);
+    // .. get the value elements again since the content swap lost the nodes ..
+    $i1 = $pi1.find("span.value");
+    $i2 = $pi2.find("span.value");
+    // .. change back the index labels ..
+    if (this.options.indexed) {
+      $ind1label = $pi1.find("span.indexlabel");
+      $ind2label = $pi2.find("span.indexlabel");
+      tmp = $ind1label.html();
+      $ind1label.html($ind2label.html());
+      $ind2label.html(tmp);
+    }
     // .. then set the position so that the array appears unchanged..
-    $pi2.css({"transform": "translateX(" + (posdiff) + "px)", "color": "red"});
-    $pi1.css({"transform": "translateX(" + (-posdiff) + "px)", "color": "red"});
+    $i2.css({"transform": "translateX(" + (posdiff) + "px)"});
+    $i1.css({"transform": "translateX(" + (-posdiff) + "px)"});
     // .. animate the color ..
     indices.animate({"color": "red", "background-color": "pink"}, 3*speed, function() {
       // ..animate the translation to 0, so they'll be in their final positions..
-      $pi2.animate({"transform": "translateX(0px)"}, 7*speed, 'linear');
-      $pi1.animate({"transform": "translateX(0px)"}, 7*speed, 'linear', 
+      $i2.animate({"transform": "translateX(0px)"}, 7*speed, 'linear');
+      $i1.animate({"transform": "translateX(0px)"}, 7*speed, 'linear', 
         function() {
           // ..and finally animate to the original styles.
           $pi1.animate(i1prevStyle, speed);
@@ -186,6 +197,7 @@
         });
     });
     // swap the actual values in the array
+    tmp = this._arr[index1];
     this._arr[index1] = this._arr[index2];
     this._arr[index2] = tmp;
   }
