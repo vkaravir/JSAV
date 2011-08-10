@@ -134,6 +134,14 @@ A call to this method is placed at the end of the series of
 <code>.step()</code> method calls to start the slideshow.
 </p>
 
+<h3 class="apimethod">.animInfo()</h3>
+<p>
+This will return an object that has two properties: number of slides
+and and number of effects.
+It might be better used when called from somewhere like the FireBug
+command line than in an actual AV implementation.
+It can help a developer to optimize the complexity of the slideshow.
+
 <h3>The <code>counter</code> element</h3>
 <p>
 A slideshow counter showing the position in slideshow (e.g. 2/120) can
@@ -143,13 +151,6 @@ For example, you can add
 <code>&lt;span class="counter">&lt;/span></code> to some DOM element
 to attach the counter.
 </p>
-
-<h3>Debugging and Optimization Support</h3>
-<p>
-From the Firebug command line, you can type <code>av.animInfo()</code>.
-This will return an object that has two properties: number of slides
-and and number of effects.
-
 
 <h2>Messages API</h2>
 
