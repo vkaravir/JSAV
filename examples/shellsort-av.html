@@ -50,7 +50,7 @@ p.output.line {
         <option value = 5>5</option>
         <option value = 6>6</option>
         <option value = 7>7</option>
-        <option value = 8>8</option>
+        <option selected value = 8>8</option>
         <option value = 9>9</option>
         <option value = 10>10</option>
         <option value = 11>11</option>
@@ -117,22 +117,6 @@ p.output.line {
     }
   }
 
-  // Initialize theArray to be size random numbers
-  function InitArray(size) {
-    var i;
-    theArray.length = 0; // Out with the old
-    // Give random numbers in range 0..9999
-    for (i=0; i < size; i++) {
-      theArray[i] = Math.floor(Math.random()*10000);
-    }
-    ASize = size;
-  }    
-  // Change the array size
-  function change() {
-    var newVal = document.getElementById('arraysize').selectedIndex + 5;
-    ASize = newVal;
-    InitArray(ASize);
-  }
   // Validate the increment series
   // TODO: It is annoying that extra spaces come up as null numbers,
   // causing validation to fail
@@ -208,12 +192,22 @@ av.umsg("Sorting the subarray");
   
   // Execute the "Run" button function
   function runIt() {
+    var i;
+    var newVal;
+
     // Validate the user's increments
     var incrs = checkIncrements();
     if (!incrs) {
       return;
     }
-    change();
+
+    newVal = document.getElementById('arraysize').selectedIndex + 5;
+    ASize = newVal;
+    theArray.length = 0; // Out with the old
+    // Give random numbers in range 0..9999
+    for (i=0; i < ASize; i++) {
+      theArray[i] = Math.floor(Math.random()*10000);
+    }
     clear(); // clear any previous visualization
     av = new JSAV("avcontainer"); // initialize JSAV ..
     arr = av.ds.array(theArray, {indexed: true}); // .. and the array
