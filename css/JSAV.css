@@ -50,7 +50,6 @@
   overflow: visible;
 }
 .array.bararray .index {
-  width: 25px;
   height: 100%;
   vertical-align: bottom;
   border: none;
@@ -60,8 +59,13 @@
 .bararray .index .value {
   z-index: 100;
   bottom: 0;
-/*  border: 1px solid #eee;*/
   background-color: inherit;
+}
+.bararray .index .value span {
+  position: absolute;
+  width: inherit;
+  display: inline-block;
+  bottom: 0;
 }
 .bararray .index .value, .bararray .index .valuebar {
   display: inline-block;
@@ -73,6 +77,14 @@
 .bararray .index .valuebar {
   top: 0;
   background-color: #fff;
+}
+.bararray.indexed {
+  margin-bottom: 25px;
+}
+.bararray .indexlabel {
+  font-size: 90%;
+  position: relative;
+  top: 95%;
 }
 /***** END STYLING OF THE ARRAY DATA STRUCTURE *****/
 

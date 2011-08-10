@@ -32,8 +32,13 @@
   }
   function barArray(array) {
     var $arr = $(array.element).addClass("bararray"),
-      $items = $arr.find("li").css({"float": "left", "position":"static"});
-    var maxValue = Number.MIN_VALUE;
+      $items = $arr.find("li").css({"float": "left", "position":"static"}), 
+      maxValue = Number.MIN_VALUE,
+      indexed = !!array.options.indexed;
+    if (indexed) {
+      $arr.addClass("indexed");
+    }
+      
     for (var i = 0; i < array._arr.length; i++) {
       maxValue = Math.max(maxValue, array._arr[i]);
     }
@@ -47,8 +52,14 @@
       }
       $valueBar.css({"height": "100%"});
       $i.find(".value").css("height", (100.0*array.value(index) / maxValue) + "%")
-        .html('<span style="position:absolute;width:inherit;display:inline-block;bottom:-20px;">' + $i.text() + '</span>');
-      //$i.css({"left": pos.left - index});
+        .html('<span>' + $i.text() + '</span>');
+      if (indexed) {
+        var $indexLabel = $i.find(".indexlabel");
+        if ($indexLabel.size() === 0) {
+          $i.append('<span class="indexlabel">' + index + '</span>');
+          $indexLabel = $i.find(".indexlabel");
+        }
+      }
     });
   }
   var layouts = {};
