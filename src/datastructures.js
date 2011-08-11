@@ -4,7 +4,13 @@
 */
 (function($) {
   if (typeof JSAV === "undefined") { return; }
+
+  // create a utility function as a jQuery "plugin"
   $.fn.getstyles = function() {
+    // Returns the values of CSS properties that are given as 
+    // arguments. For example, $elem.getstyles("background-color", "color")
+    // could return an object {"background-color" : "rgb(255, 120, 120)",
+    //                         "color" : "rgb(0, 0, 0)"}
     var res = {},
       arg;
     for (var i = 0; i < arguments.length; i++) {
@@ -19,7 +25,11 @@
     }
     return res;
   };
+  
+  // common properties/functions for all data structures, these can be copied
+  // to the prototype of a new DS using the addCommonProperties(prototype) function
   var common = {
+      // gets or sets the id of the DS
       'id': function(newId) { 
         if (newId) { 
           this._id = newId;
@@ -28,20 +38,30 @@
           return this._id; 
         }
       },
+      // returns the position of the DS
       'position': function() {
         return JSAV.position(this.element);
       },
+      // utility function that actually implements hide
       _hide: function() {
         $(this.element).fadeOut(this.jsav.SPEED);
       },
+      // utility function that actually implements show
       _show: function() {
         $(this.element).fadeIn(this.jsav.SPEED);
       },
+      // animated show function
       show: JSAV.anim(function() { this._show(); }, 
         function() { this._hide(); }),
+      // animated hide function
       hide: JSAV.anim(function() { this._hide(); },
-        function() { this._show(); })
+        function() { this._show(); }),
+      // dummy methods for initializing a DS, the DS should override these
+      initialize: function() { },
+      initializeFromElement: function() { },
+      clone: function() {}
     },
+    // initializes a data structure
     initDs = function(dstr, element, options) {
       dstr.options = $.extend({}, options);
       if ($.isArray(element)) {
@@ -52,45 +72,14 @@
       } else {
         // TODO: create an element for this data structure
       }
-    },
-    nodecommon = {
-      'value': function(newValue) {
-         if (newValue) {
-           this._val = newValue;
-           return this;
-         } else {
-           return this._val;
-         }
-       }
-    };
-
+    }; 
  
-  var BinTreeNode = function(value, element, options) {
-   
-  };
-  var btnodeproto = BinTreeNode.prototype;
-  addCommonProperties(btnodeproto);
-  addCommonProperties(btnodeproto, nodecommon);
- 
-  var BinSearchTree = function(jsav, element, options) {
-    this.jsav = jsav;
-    initDs(this, element, options);
-  };
-  var btproto = BinSearchTree.prototype;
-  btproto.insert = function(value, callback) { return this; };
-  btproto.remove = function(value, callback) { return this; };
-  btproto.search = function(value, callback) { return this; };
-  btproto.initializeFromElement = function() {
-    if (!this.element) { return; }
-    // TODO: load from the element given
-  };
-  addCommonProperties(btproto);
- 
- 
+  // function that selects elements from $elems that match the indices
+  // filter (number, array of numbers, or filter function)
   var getIndices = function($elems, indices) {
     if (typeof indices === "undefined") { return $elems; } // use all if no restrictions are given
-    if ($.isFunction(indices)) {
-      return $elems.filter(indices);
+    if ($.isFunction(indices)) { // use a filter function..
+      return $elems.filter(indices); // ..and let jQuery do the work
     } else if ($.isArray(indices)) {
       // return indices that are in the array
       return $elems.filter(function(index, item) {
@@ -100,12 +89,12 @@
         return false;
       });
     } else if (typeof indices === "number"){
-      return $elems.eq(indices);
+      return $elems.eq(indices); // return the specific index
     } else {
-      try {
+      try { // last resort, try if the argument can be parsed into an int..
         return $elems.eq(parseInt(indices, 10));
       } catch (err) {
-        return $({});
+        return $({}); // ..if not, return an empty set
       }
     }
   };
@@ -295,9 +284,6 @@
  
   // expose the data structures for the JSAV
   JSAV.ext.ds = {
-    bst: function(element, options) {
-      return new BinSearchTree(this, element, options);
-    },
     array: function(element, options) {
       return new AVArray(this, element, options);
     }
