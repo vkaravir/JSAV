@@ -88,20 +88,12 @@ p.output.line {
 <script>
 (function($) {
   // check query parameters from URL
-  var params = window.location.search;
-  if (params) {
-    params = params.slice(1).split('&'); // get rid of ?
-    var vars = {};
-    for (var i=params.length; i--; ) {
-      var pair = params[i].split('='); // split to name and value
-      vars[pair[0]] = decodeURIComponent(pair[1]); // decode URI
-    }
-    if ("increments" in vars) { // set value of increments if it is a param
-      $('input[name="increments"]').val(vars["increments"]).prop("disabled", true);
-    }
-    if ("array" in vars) { // set value of array pick if it is a param
-      $('#arrayValues').val(vars["array"]).prop("disabled", true);
-    }
+  var params = JSAV.utils.getQueryParameter();
+  if ("increments" in params) { // set value of increments if it is a param
+    $('input[name="increments"]').val(params["increments"]).prop("disabled", true);
+  }
+  if ("array" in params) { // set value of array pick if it is a param
+    $('#arrayValues').val(params["array"]).prop("disabled", true);
   }
   var context = $("#ssperform");
   // The array of numbers.
