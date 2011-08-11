@@ -35,7 +35,7 @@ p.output.line {
 <body>
 <div id="container">
   <input type="button" name="about" value="About" />
-  <h1 style="margin:-25px 0px 0px 0px">Shellsort AV</h1>
+  <h1 style="margin:-25px 0px 0px 0px">Shellsort Visualization</h1>
 
   <form id="ssperform">
     <p><label for="increments">Increments: Type your increment
@@ -60,6 +60,8 @@ p.output.line {
         <option value = 15>15</option>
         <option value = 16>16</option>
       </select>
+      <input type="button" name="pick" id="pick" value="Pick Values" />
+      <input size="60" name="arrayValues" id="arrayValues" type="text" disabled="disabled" />
     </p>
   </form>
   <div id="avcontainer">
@@ -94,6 +96,8 @@ p.output.line {
 
   var av, // for JSAV av
     arr;  // for the JSAV array
+  var picking = false;
+
   /* **************************************************************
   *  This section connects the action callbacks to the            *
   *  form entities.                                               *
@@ -102,6 +106,23 @@ p.output.line {
   $('input[name="run"]', context).click(runIt);
   $('input[name="clear"]', context).click(clear);
   $('input[name="increments"]', context).focusout(checkIncrements);
+  $('input[name="pick"]', context).click(pickIt);
+
+  // Process Pick button: Enable/disable text field
+  function pickIt() {
+    if (picking) { // Stop picking
+console.log("true picking");
+      picking = false; // toggle
+      document.getElementById("arrayValues").disabled = true;
+      document.getElementById("pick").value = "Pick Values";
+    }
+    else { // picking === false, so start picking
+console.log("false picking");
+      picking = true; // toggle
+      document.getElementById("arrayValues").disabled = false;
+      document.getElementById("pick").value = "Accept Values";
+    }
+  }
 
   // Process About button: Pop up a message with an Alert
   function about() {
@@ -115,6 +136,11 @@ p.output.line {
       av.clearumsg();
       $("#avcontainer").unbind().html(emptyContent);
     }
+
+    // Clean up picking activity
+    picking = false; // toggle
+    document.getElementById("arrayValues").disabled = true;
+    document.getElementById("pick").value = "Pick Values";
   }
 
   // Validate the increment series
@@ -204,13 +230,13 @@ av.umsg("Sorting the subarray");
     newVal = document.getElementById('arraysize').selectedIndex + 5;
     ASize = newVal;
     theArray.length = 0; // Out with the old
-    // Give random numbers in range 0..9999
+    // Give random numbers in range 0..999
     for (i=0; i < ASize; i++) {
-      theArray[i] = Math.floor(Math.random()*10000);
+      theArray[i] = Math.floor(Math.random()*1000);
     }
     clear(); // clear any previous visualization
     av = new JSAV("avcontainer"); // initialize JSAV ..
-    arr = av.ds.array(theArray, {indexed: true}); // .. and the array
+    arr = av.ds.array(theArray, {indexed: true, layout: "bar"}); // .. and the array
     var i, incr;
     for (i=0; i<incrs.length; i+=1) {
       if (incrs[i] < theArray.length) {
