@@ -63,14 +63,15 @@ div h1 {
        Input array to highlight them. Once you have the sublist
        selected, click "Done Selecting". Next, drag and drop the items
        to sort them. Then click "Done Sorting Sublist" to go on to the next
-       sublist. When you ahve processed all of the sublists for a given
+       sublist. When you have processed all of the sublists for a given
        increment, click "Done Increment".
     </p>
 
     Increments to use: <input type="text" readonly="readonly" name="incrField" id="incrField" width="50">
 
     <p><b>Input:</b></p>
-    <p>// --> TODO: ARRAY GOES HERE<br/></p>
+
+    <ol id="profArray"></ol>
 
     <input type="button" name="selecting" value="Done Selecting" />
     <input type="button" name="sorting" value="Done Sorting Sublist" />
@@ -122,13 +123,33 @@ div h1 {
   $('input[name="sorting"]', context).click(Sorting);
   $('input[name="incrementing"]', context).click(Incrementing);
 
+  var incrs = []; // The array of increments
+  var $theArray = $("#profArray");
+  htmldata = "";
+  for (var i=16; i--; ) {
+    htmldata += "<li>" + Math.floor(Math.random()*100) + "</li>";
+  }
+  $theArray.html(htmldata);
+
+  av.ds.array($theArray);
+  Reset();
+
+  function generateIncrements() {
+    var curr;
+    
+     incrs[0] = Math.floor(Math.random()*3) + 6; // First increment: 6 to 9
+     incrs[2] = Math.floor(Math.random()*3) + 2; // First increment: 2 to 4
+     // incrs[1] is something between incrs[0] and incrs[2]
+     incrs[1] = Math.floor(Math.random()*(incrs[0]-incrs[2]-1)) + incrs[2] + 1;
+     incrs[3] = 1;
+  }
+
+
   // Process Reset button: Re-initialize everything, including the increments
   function Reset() {
-    // TODO: Generate and store new increments for use.
-    // TODO: Have increments set up initially
-    // TODO: Put a background/border on the increments field
-    // TODO: Put the increments field by its label
-    document.forms['ssproficiency'].elements['incrField'].value = 'Hello World';
+    generateIncrements();
+    document.forms['ssproficiency'].elements['incrField'].value = incrs;
+    // TODO: Set new random values into the array
   }
 
   // Process Answer button: Show the model answer slideshow
