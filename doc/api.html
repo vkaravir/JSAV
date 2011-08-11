@@ -369,22 +369,33 @@ Paramter <code>options</code> include the following:
 is visible on creation.
 </ul>
 
-<h3 class="apitopic">.hide()</h3>
+<h3 class="apimethod">.hide()</h3>
 <p>
 Make the label invisible.
 </p>
 
-<h3 class="apitopic">.show()</h3>
+<h3 class="apimethod">.show()</h3>
 <p>
 Make the label visible.
 </p>
 
-<h3 class="apitopic">.text(msg)</h3>
+<h3 class="apimethod">.text(msg)</h3>
 <p>
 Set the text for the label. If the <code>msg</code> parameter is left
 out, this method will return the current text of the label.
 </p>
 
+<h2>Utility Functions</h2>
+<p>The module <code>JSAV.utils</code> includes some utility functions
+  for working with HTML pages and visualizations.</p>
+<h3 class="apimethod">JSAV.utils.getQueryParameter()</h3>
+<p>Returns an object containing all query parameters given for the HTML
+  page. If no parameters exist, returns an empty object.</p>
+  
+<h3 class="apimethod">JSAV.utils.getQueryParameter(name)</h3>
+<p>Returns the value of the query parameter <code>name</code>. If no such
+  parameter exists, return <code>undefined</code></p>
+  
 <h2>Best Practice for Modularity</h2>
 
 <p>
