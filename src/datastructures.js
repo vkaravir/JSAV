@@ -119,7 +119,9 @@
   var arrproto = AVArray.prototype;
   addCommonProperties(arrproto); // add functionality from common
   function setHighlight(indices, mode) {
-    var testDiv = $('<ol class="array" style="position:absolute;left:-10000px"><li class="node index highlight"></li><li class="node index" ></li></li>'),
+    var testDiv = $('<ol class="' + this.element[0].className + 
+        '" style="position:absolute;left:-10000px">' + 
+        '<li class="node index highlight"></li><li class="node index" ></li></li></ol>'),
   	  styleDiv = (mode && mode === "add" ? testDiv.find(".node").filter(".highlight"):testDiv.find(".node").not(".highlight"));
   	// TODO: general way to get styles for the whole av system
   	$("body").append(testDiv);
