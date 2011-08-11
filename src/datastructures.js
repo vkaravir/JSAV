@@ -139,7 +139,11 @@
   };
   arrproto._setcss = JSAV.anim(function(indices, cssprop) {
     var $elems = getIndices($(this.element).find("li"), indices);
-    $elems.animate(cssprop, this.jsav.SPEED);
+    if (!this.jsav.RECORD) { // only animate when playing, not when recording
+      $elems.animate(cssprop, this.jsav.SPEED);
+    } else {
+      $elems.css(cssprop);
+    }
     return this;
   });
   arrproto.css = function(indices, cssprop) {
@@ -184,20 +188,22 @@
       $ind1label.html($ind2label.html());
       $ind2label.html(tmp);
     }
-    // .. then set the position so that the array appears unchanged..
-    $i2.css({"transform": "translateX(" + (posdiff) + "px)"});
-    $i1.css({"transform": "translateX(" + (-posdiff) + "px)"});
-    // .. animate the color ..
-    indices.animate({"color": "red", "background-color": "pink"}, 3*speed, function() {
-      // ..animate the translation to 0, so they'll be in their final positions..
-      $i2.animate({"transform": "translateX(0px)"}, 7*speed, 'linear');
-      $i1.animate({"transform": "translateX(0px)"}, 7*speed, 'linear', 
-        function() {
-          // ..and finally animate to the original styles.
-          $pi1.animate(i1prevStyle, speed);
-          $pi2.animate(i2prevStyle, speed);
+    if (!this.jsav.RECORD) {  // only animate when playing, not when recording
+      // .. then set the position so that the array appears unchanged..
+      $i2.css({"transform": "translateX(" + (posdiff) + "px)"});
+      $i1.css({"transform": "translateX(" + (-posdiff) + "px)"});
+      // .. animate the color ..
+      indices.animate({"color": "red", "background-color": "pink"}, 3*speed, function() {
+        // ..animate the translation to 0, so they'll be in their final positions..
+        $i2.animate({"transform": "translateX(0px)"}, 7*speed, 'linear');
+        $i1.animate({"transform": "translateX(0px)"}, 7*speed, 'linear', 
+          function() {
+            // ..and finally animate to the original styles.
+            $pi1.animate(i1prevStyle, speed);
+            $pi2.animate(i2prevStyle, speed);
         });
-    });
+      });
+    }
     // swap the actual values in the array
     tmp = this._arr[index1];
     this._arr[index1] = this._arr[index2];
