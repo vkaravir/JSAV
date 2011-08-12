@@ -1,3 +1,9 @@
+// TODO: Right now, this is a real logic muddle with too many state
+// variables and special conditions related to when random values are
+// selected for the array. It needs to be cleaned up.
+// A good way to do that is to have "Pick Values" generate a popup
+// window where the user selects the values in an atomic action.
+
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
@@ -87,6 +93,13 @@ p.output.line {
 
 <script>
 (function($) {
+  // State variables
+  var picking = false; // True iff the user is currently picking values
+  var changeArrayVals = true; // True iff array values should be replaced on "Run"
+  // Number of values in the array
+  var ASize = document.getElementById('arraysize').selectedIndex + 5;
+  var theArray = [];  // The array of numbers.
+
   // check query parameters from URL
   var params = JSAV.utils.getQueryParameter();
   if ("increments" in params) { // set value of increments if it is a param
@@ -94,17 +107,16 @@ p.output.line {
   }
   if ("array" in params) { // set value of array pick if it is a param
     $('#arrayValues').val(params["array"]).prop("disabled", true);
+    // TODO: Put the array values into theArray
+    changeArrayVals = false; // We don't want to change the values again
   }
   var context = $("#ssperform");
-  // The array of numbers.
-  var theArray = [];
 
-  var ASize;
   var emptyContent = $("#avcontainer").html();
 
   var av, // for JSAV av
     arr;  // for the JSAV array
-  var picking = false;
+
 
   /* **************************************************************
   *  This section connects the action callbacks to the            *
@@ -119,13 +131,13 @@ p.output.line {
   // Process Pick button: Enable/disable text field
   function pickIt() {
     if (picking) { // Stop picking
-console.log("true picking");
       picking = false; // toggle
       document.getElementById("arrayValues").disabled = true;
       document.getElementById("pick").value = "Pick Values";
+      processArrayValues();
     }
     else { // picking === false, so start picking
-console.log("false picking");
+      if ("array" in params) return; // Do nothing
       picking = true; // toggle
       document.getElementById("arrayValues").disabled = false;
       document.getElementById("pick").value = "Accept Values";
@@ -177,6 +189,31 @@ console.log("false picking");
     return incrs;
   }
 
+  // Validate the user-defined array values
+  // TODO: It is annoying that extra spaces come up as null numbers,
+  // causing validation to fail
+  function processArrayValues() {
+    var i, 
+      num, 
+    msg = "There must be " + ASize + " positive numeric values";
+    // Convert user's increments to an array,
+    // assuming values are space separated
+    theArray = $('input[name="arrayValues"]', context).val().split(' ');
+    if (theArray.length !== ASize) {
+      alert(msg);
+      return null;
+    }
+    for (i=0; i<theArray.length; i++) {
+      theArray[i] = Number(theArray[i]);
+      if (isNaN(theArray[i]) || theArray[i] < 0) { 
+        alert(msg);
+        return null; 
+      }
+    }
+    changeArrayVals = false; // Don't want them changing again!
+  }
+
+
   var setBlue = function(index) {
     arr.css(index, {"background-color": "#ddf" });
   };
@@ -227,7 +264,7 @@ av.umsg("Sorting the subarray");
   // Execute the "Run" button function
   function runIt() {
     var i;
-    var newVal;
+    var newSize = document.getElementById('arraysize').selectedIndex + 5;
 
     // Validate the user's increments
     var incrs = checkIncrements();
@@ -235,12 +272,14 @@ av.umsg("Sorting the subarray");
       return;
     }
 
-    newVal = document.getElementById('arraysize').selectedIndex + 5;
-    ASize = newVal;
-    theArray.length = 0; // Out with the old
-    // Give random numbers in range 0..999
-    for (i=0; i < ASize; i++) {
-      theArray[i] = Math.floor(Math.random()*1000);
+    if (newSize !== ASize) changeArrayVals = true;
+    if (changeArrayVals) {
+      ASize = newSize;
+      theArray.length = 0; // Out with the old
+      // Give random numbers in range 0..999
+      for (i=0; i < ASize; i++) {
+        theArray[i] = Math.floor(Math.random()*1000);
+      }
     }
     clear(); // clear any previous visualization
     av = new JSAV("avcontainer"); // initialize JSAV ..
