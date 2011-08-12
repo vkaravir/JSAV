@@ -4,7 +4,7 @@
 */
 (function($) {
   if (typeof JSAV === "undefined") { return; }
-  
+
   function backward() {
     if (this._undo.length === 0) { return; }
     var ops = this._undo.pop(); // get the operations in the step we're about to undo
@@ -64,26 +64,54 @@
     this._redo = []; // stack for operations to redo
     this._undo = []; // stack for operations to undo
     var that = this,
-      $controls = $(".controls", this.container);
+      $controls = $(".controls", this.container),
+      playingCl = "jsavplaying"; // class used to mark controls when playing
     if ($controls.size() === 0) {
       return; // no controls, no need to proceed
+    }
+
+    // function for clearing the playing flag
+    function clearPlaying() {
+      // check to see if some elements are still animated
+      if (!that.container.find(":animated").size()) {
+        // if not, clear the playing flag
+        $controls.removeClass(playingCl);
+      } else {
+        // if still animating, set a new timeout
+        setTimeout(clearPlaying, that.SPEED/4);
+      }
     }
     // reqister event handlers for the control buttons
     var beginHandler = function(e) {
       e.preventDefault();
-      that.begin();
+      // if playing flag is set, don't respond
+      if ($controls.hasClass(playingCl)) { return; }
+      // set the playing flag, that is, a class on the controls
+      $controls.addClass(playingCl);
+      that.begin(); // go to beginning
+      clearPlaying(); // clear the flag
     };
     var backwardHandler = function(e) {
       e.preventDefault();
+      if ($controls.hasClass(playingCl)) { return; }
+      $controls.addClass(playingCl);
       that.backward();
+      // clear playing flag after a timeout for animations to end
+      setTimeout(clearPlaying, that.SPEED + that.SPEED/4);
     };
     var forwardHandler = function(e) {
       e.preventDefault();
+      if ($controls.hasClass(playingCl)) { return; }
+      $controls.addClass(playingCl);
       that.forward();
+      setTimeout(clearPlaying, that.SPEED + that.SPEED/4);
     };
     var endHandler = function(e) {
       e.preventDefault();
+      if ($controls.hasClass(playingCl)) { return; }
+      $controls.addClass(playingCl);
       that.end();
+      clearPlaying();
     };
     $("<a class='begin' href='#' title='Begin'>Begin</a>").click(beginHandler).appendTo($controls);
     $("<a class='backward' href='#' title='Backward'>Backward</a>").click(backwardHandler).appendTo($controls);
