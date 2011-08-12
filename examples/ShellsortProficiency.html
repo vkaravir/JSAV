@@ -124,10 +124,13 @@ div h1 {
   $('input[name="incrementing"]', context).click(Incrementing);
 
   var incrs = []; // The array of increments
-  var $theArray = $("#profArray");
+  var $theArray = $("#profArray"),
+    initialArray = []; // needed for model answer
   htmldata = "";
   for (var i=16; i--; ) {
-    htmldata += "<li>" + Math.floor(Math.random()*100) + "</li>";
+    var randomVal = Math.floor(Math.random()*100);
+    htmldata += "<li>" + randomVal + "</li>";
+    initialArray[i] = randomVal;
   }
   $theArray.html(htmldata);
 
@@ -154,8 +157,8 @@ div h1 {
 
   // Process Answer button: Show the model answer slideshow
   function Answer() {
-    var mystring = "Model Answer not yet implemented";
-    alert(mystring);
+    window.open('shellsort-av.html?array=' + encodeURIComponent(initialArray.join(' ')) + 
+      '&increments=' + encodeURIComponent(incrs.join(' ')));
   }
 
   // Process Grade button: Show the current grade status
