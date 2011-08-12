@@ -132,7 +132,7 @@
   };
   arrproto._setcss = JSAV.anim(function(indices, cssprop) {
     var $elems = getIndices($(this.element).find("li"), indices);
-    if (!this.jsav.RECORD) { // only animate when playing, not when recording
+    if (!this.jsav.RECORD || !$.fx.off) { // only animate when playing, not when recording
       $elems.animate(cssprop, this.jsav.SPEED);
     } else {
       $elems.css(cssprop);
@@ -181,7 +181,7 @@
       $ind1label.html($ind2label.html());
       $ind2label.html(tmp);
     }
-    if (!this.jsav.RECORD) {  // only animate when playing, not when recording
+    if (!this.jsav.RECORD || !$.fx.off) {  // only animate when playing, not when recording
       // .. then set the position so that the array appears unchanged..
       $i2.css({"transform": "translateX(" + (posdiff) + "px)"});
       $i1.css({"transform": "translateX(" + (-posdiff) + "px)"});
