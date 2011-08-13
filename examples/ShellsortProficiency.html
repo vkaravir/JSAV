@@ -127,10 +127,10 @@ div h1 {
   var $theArray = $("#profArray"),
     initialArray = []; // needed for model answer
   htmldata = "";
-  for (var i=16; i--; ) {
+  for (var i=16; i>0; i--) {
     var randomVal = Math.floor(Math.random()*100);
     htmldata += "<li>" + randomVal + "</li>";
-    initialArray[i] = randomVal;
+    initialArray[16-i] = randomVal;
   }
   $theArray.html(htmldata);
 

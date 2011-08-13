@@ -44,7 +44,7 @@ p.output.line {
            placeholder="Space separated values, for example 8 4 2 1" />
     <p>
       <input type="button" name="run" value="Run" />
-      <input type="button" name="clear" value="Clear" />
+      <input type="button" name="reset" value="Reset" />
       <label for="arraysize">&nbsp;List size:&nbsp;</label>
       <select id="arraysize">
         <option value = 5>5</option>
@@ -60,8 +60,8 @@ p.output.line {
         <option value = 15>15</option>
         <option value = 16>16</option>
       </select>
-      <input type="button" name="pick" id="pick" value="Pick Values" />
-      <input size="60" name="arrayValues" id="arrayValues" type="text" disabled="disabled" />
+      <label for="arrayValues">&nbsp;Your values:&nbsp;</label>
+      <input size="60" name="arrayValues" id="arrayValues" type="text" />
     </p>
   </form>
   <div id="avcontainer">
@@ -87,12 +87,10 @@ p.output.line {
 
 <script>
 (function($) {
-  // State variables
-  var picking = false; // True iff the user is currently picking values
-  var changeArrayVals = true; // True iff array values should be replaced on "Run"
   // Number of values in the array
   var ASize = document.getElementById('arraysize').selectedIndex + 5;
-  var theArray = [];  // The array of numbers.
+  // The array of numbers.
+  var theArray = [];
 
   // check query parameters from URL
   var params = JSAV.utils.getQueryParameter();
@@ -101,8 +99,6 @@ p.output.line {
   }
   if ("array" in params) { // set value of array pick if it is a param
     $('#arrayValues').val(params["array"]).prop("disabled", true);
-    // TODO: Put the array values into theArray
-    changeArrayVals = false; // We don't want to change the values again
   }
   var context = $("#ssperform");
 
@@ -118,25 +114,8 @@ p.output.line {
   ************************************************************** */
   $('input[name="about"]').click(about);
   $('input[name="run"]', context).click(runIt);
-  $('input[name="clear"]', context).click(clear);
+  $('input[name="reset"]', context).click(reset);
   $('input[name="increments"]', context).focusout(checkIncrements);
-  $('input[name="pick"]', context).click(pickIt);
-
-  // Process Pick button: Enable/disable text field
-  function pickIt() {
-    if (picking) { // Stop picking
-      picking = false; // toggle
-      document.getElementById("arrayValues").disabled = true;
-      document.getElementById("pick").value = "Pick Values";
-      processArrayValues();
-    }
-    else { // picking === false, so start picking
-      if ("array" in params) return; // Do nothing
-      picking = true; // toggle
-      document.getElementById("arrayValues").disabled = false;
-      document.getElementById("pick").value = "Accept Values";
-    }
-  }
 
   // Process About button: Pop up a message with an Alert
   function about() {
@@ -144,17 +123,18 @@ p.output.line {
     alert(mystring);
   }
 
-  // Process clear button: Clear the output textbox and the AV
-  function clear() {
+  // Process Reset button: Reinitialize the output textbox and the AV
+  function reset(flag) {
     if (av) {
       av.clearumsg();
       $("#avcontainer").unbind().html(emptyContent);
     }
-
-    // Clean up picking activity
-    picking = false; // toggle
-    document.getElementById("arrayValues").disabled = true;
-    document.getElementById("pick").value = "Pick Values";
+    // Clear the array values field, when no params given and reset button hit
+    if (flag !== true) {
+      if (!$('#arrayValues').prop("disabled")) {
+        $('#arrayValues').val("");
+      }
+    }
   }
 
   // Validate the increment series
@@ -188,23 +168,30 @@ p.output.line {
   // causing validation to fail
   function processArrayValues() {
     var i, 
-      num, 
-    msg = "There must be " + ASize + " positive numeric values";
-    // Convert user's increments to an array,
+        num, 
+        msg = "Must be 5 to 16 positive integers";
+    // Convert user's values to an array,
     // assuming values are space separated
     theArray = $('input[name="arrayValues"]', context).val().split(' ');
-    if (theArray.length !== ASize) {
+    if (theArray.length === 1 && theArray[0] === '') { // Empty field
+      theArray.length = 0;
+      return true;
+    }
+    if (theArray.length < 5 || theArray.length > 16) {
       alert(msg);
-      return null;
+      theArray.length = 0;
+      return false;
     }
     for (i=0; i<theArray.length; i++) {
       theArray[i] = Number(theArray[i]);
       if (isNaN(theArray[i]) || theArray[i] < 0) { 
         alert(msg);
-        return null; 
+        theArray.length = 0;
+        return false;
       }
     }
-    changeArrayVals = false; // Don't want them changing again!
+    $('#arraysize').val(theArray.length);
+    return true;
   }
 
 
@@ -266,25 +253,30 @@ av.umsg("Sorting the subarray");
       return;
     }
 
-    if (newSize !== ASize) changeArrayVals = true;
-    if (changeArrayVals) {
-      ASize = newSize;
-      theArray.length = 0; // Out with the old
-      // Give random numbers in range 0..999
-      for (i=0; i < ASize; i++) {
-        theArray[i] = Math.floor(Math.random()*1000);
+    if (processArrayValues()) { // if it is false, we got junk user
+                                // needs to fix
+      if (theArray.length === 0) { // Make a random  array
+        ASize = newSize;
+        theArray.length = 0; // Out with the old
+        // Give random numbers in range 0..999
+        for (i=0; i < ASize; i++) {
+          theArray[i] = Math.floor(Math.random()*1000);
+        }
       }
-    }
-    clear(); // clear any previous visualization
-    av = new JSAV("avcontainer"); // initialize JSAV ..
-    arr = av.ds.array(theArray, {indexed: true, layout: "bar"}); // .. and the array
-    var i, incr;
-    for (i=0; i<incrs.length; i+=1) {
-      if (incrs[i] < theArray.length) {
-        sweep(incrs[i]); // run the sweep to create the AV
+      else { // Use the values we got out of the user's list
+        ASize = theArray.length;
       }
+      reset(true); // Reset any previous visualization
+      av = new JSAV("avcontainer"); // initialize JSAV ..
+      arr = av.ds.array(theArray, {indexed: true, layout: "bar"}); // .. and the array
+      var i, incr;
+      for (i=0; i<incrs.length; i+=1) {
+        if (incrs[i] < theArray.length) {
+          sweep(incrs[i]); // run the sweep to create the AV
+        }
+      }
+      av.recorded(); // mark the end
     }
-    av.recorded(); // mark the end
   }
 })(jQuery);
 </script>
