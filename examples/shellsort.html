@@ -99,7 +99,7 @@
     arr.unhighlight([i-1, i+7]).css([i-1, i+7], {"color": LIGHT}).highlight([i, i+8]);
   }
 
-  av.step().umsg("Each of these sublists of length two is sorted using Insertion Sort. (The blue element is the current element during the insertion sort, which is compared to the previous element in the current sublist.)");
+  av.step().umsg("Each of these sublists of length two is sorted using Insertion Sort. (The blue elements are being compared and swapped if appropriate)");
   arr.unhighlight(); // unhighlight seems to have the side effect of
                      // making the cell dark.
 
@@ -159,7 +159,7 @@
 
   arr.highlight([0, 2, 4, 6, 8, 10, 12, 14]);
   av.step();
-  arr.unhighlight([1, 3, 5, 7, 9, 11, 13, 15]).highlight([0, 2, 4, 6, 8, 10, 12, 14]);
+  arr.unhighlight([0, 2, 4, 6, 8, 10, 12, 14]).highlight([1, 3, 5, 7, 9, 11, 13, 15]);
 
   av.step().umsg("As usual, we sort the sublists using Insertion Sort.");
   arr.unhighlight();
@@ -206,15 +206,20 @@
   // Insertion sort using increments
   function inssort(A, start, incr) {
     var i, j;
-    for (i=start+incr; i<A.size(); i+=incr) {
+    for (i=start+incr; i<arr.size(); i+=incr) {
       setBlue(i);
-      av.step();
-      for (j=i; j>=incr && (A.value(j) < A.value(j-incr)); j-=incr) {
-        A.swap(j, j-incr); // swap the two indices
-        av.step();
-	setBlue(j-incr);
+      for (j=i; j>=incr; j-=incr) {
+        setBlue(j-incr);
+	av.step();
+        if (arr.value(j) < arr.value(j-incr)) {
+          arr.swap(j, j-incr); // swap the two indices
+          av.step();
+	}
+        else {
+  	  arr.highlight([j-incr, j]);
+          break; // Done pushing element, leave for loop
+        }
 	arr.highlight(j);
-        av.step();
       }
       arr.highlight(j);
     }
