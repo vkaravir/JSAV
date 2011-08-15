@@ -129,6 +129,7 @@ input {font-size: 0.7em; }
   font-size: 90%;
   position: relative;
   top: 95%;
+	vertical-align: middle;
 }
 /***** END STYLING OF THE ARRAY DATA STRUCTURE *****/
 

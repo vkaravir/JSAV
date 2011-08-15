@@ -45,6 +45,7 @@
     $items.each(function(index, item) {
       var $i = $(this),
         pos = $i.position();
+      $i.css({"left": pos.left - index, "top": pos.top});
       var $valueBar = $i.find(".valuebar");
       if ($valueBar.size() === 0) {
         $i.append('<span class="valuebar" />');
@@ -61,6 +62,7 @@
         }
       }
     });
+    $items.css({"float": "none", "position": "absolute"});
   }
   var layouts = {};
   layouts.array = {

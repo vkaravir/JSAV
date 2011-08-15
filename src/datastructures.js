@@ -34,7 +34,7 @@
     // utility function that actually implements show
     _show: function() {
       $(this.element).fadeIn(this.jsav.SPEED);
-    },
+    }
   };
   
   // common properties/functions for all data structures, these can be copied
@@ -133,9 +133,10 @@
   arrproto._setcss = JSAV.anim(function(indices, cssprop) {
     var $elems = getIndices($(this.element).find("li"), indices);
     if (!this.jsav.RECORD || !$.fx.off) { // only animate when playing, not when recording
-      $elems.animate(cssprop, this.jsav.SPEED);
+      // also animate the values due to a bug in webkit based browsers with inherited bg color not changing
+      $elems.animate(cssprop, this.jsav.SPEED).find("span.value").animate(cssprop, this.jsav.SPEED);
     } else {
-      $elems.css(cssprop);
+      $elems.css(cssprop).find("span.value").css(cssprop);
     }
     return this;
   });
