@@ -7,7 +7,15 @@
   var speedChoices = [5000, 3000, 1500, 1000, 500, 400, 300, 200, 100, 50];
   var speedSetting = function(jsav) {
     return function() {
-      var $elem = $('<div class="jsavspeed">Animation speed: <input type="range" min="1" max="10" step="1"' +
+      // Test if range type is supported
+      var inp = $("<input type='range' />");
+      $("body").append(inp);
+      var rangeSupported = (inp.prop("type") === "range");
+      inp.remove();
+      delete inp;
+      // add explanation if using range slider
+      var $elem = $('<div class="jsavspeed">Animation speed' + (rangeSupported?' (slow - fast)':'') + 
+          ': <input type="range" min="1" max="10" step="1"' +
           ' placeholder="Value between 1 (Slow) and 10 (Fast)." size="30"/></div>');
       $elem.find("input").change(function() {
         var speed = parseInt($(this).val(), 10);
