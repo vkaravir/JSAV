@@ -1,6 +1,6 @@
 /**
 * Module that contains the message output implementations.
-* Depends on core.js
+* Depends on core.js, anim.js
 */
 (function($) {
   if (typeof JSAV === "undefined") { return; }
@@ -37,7 +37,7 @@
     if (newValue) {
       this.output.html(newValue);
     } else {
-      return this.output.html();
+      return this.output.html() || "<span/>";
     }
   };
   
