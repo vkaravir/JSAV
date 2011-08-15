@@ -28,7 +28,7 @@
     });
     // ..and return float and positioning
     $items.css({"float": "none", "position": "absolute"});
-    //$arr.height(maxHeight + (indexed?30:0));
+    $arr.height(maxHeight + (indexed?30:0));
   }
   function barArray(array) {
     var $arr = $(array.element).addClass("bararray"),
@@ -53,7 +53,7 @@
       }
       $valueBar.css({"height": "100%"});
       $i.find(".value").css("height", (100.0*array.value(index) / maxValue) + "%")
-        .html('<span>' + $i.text() + '</span>');
+        .html('<span>' + $i.find(".value").text() + '</span>');
       if (indexed) {
         var $indexLabel = $i.find(".indexlabel");
         if ($indexLabel.size() === 0) {
