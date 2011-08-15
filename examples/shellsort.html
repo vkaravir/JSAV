@@ -10,7 +10,7 @@
 <style>
   #container {
     width: 800px;
-    height: 435px;
+    height: 400px;
     background-color: #efe;
   }
   #container .array {
@@ -29,7 +29,7 @@
     	<div class="controls"></div>
       </td>
       <td>
-    	<input type="button" name="about" value="About" onClick="About();"/>
+    	<input type="button" name="about" value="About"/>
       </td>
     </tr>
   </table>
@@ -37,24 +37,31 @@
 </div>
 
 <script src="http://code.jquery.com/jquery-1.6.1.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/jquery-ui.min.js"></script>
+<script
+  src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/jquery-ui.min.js">
+</script>
 <script src="../lib/jquery.transform.light.js"></script>
 <script src="../build/JSAV-min.js"></script>
+
 <script>
+(function($) {
   var LIGHT = "rgb(215, 215, 215)";  // For "greying out" array elements
   var DARK = "black";                // Make array elements dark again
   // Convenience function for setting another type of highlight
-  // (will be used for showing insertion sort)
+  // (will be used for showing which elements will be compared during sort)
   var setBlue = function(index) {
     arr.css(index, {"background-color": "#ddf" });
   };
 
   var av = new JSAV("container"); //containing HTML element with id container
-  av.SPEED = 200;
+  av.SPEED = 200; // Set the animation speed base
+
+  // Connect action callbacks to the HTML entities
+  $('input[name="about"]').click(about);
 
   // Process About button: Pop up a message with an Alert
-  function About() {
-    var mystring = "Shellsort Explanation Slideshow\nWritten by Cliff Shaffer and Ville Karavirta\nCreated as part of the OpenDSA hypertextbook project.\nFor more information, see http://algoviz.org/eBook\nWritten during June, 2011\nLast update: July 26, 2011\nJSAV library version " + JSAV.version();
+  function about() {
+    var mystring = "Shellsort Explanation Slideshow\nWritten by Cliff Shaffer and Ville Karavirta\nCreated as part of the OpenDSA hypertextbook project.\nFor more information, see http://algoviz.org/eBook\nWritten during June, 2011\nLast update: August 14, 2011\nJSAV library version " + JSAV.version();
     alert(mystring);
   }
 
@@ -67,13 +74,9 @@
 
   av.step().umsg("One possible implementation of Shellsort will begin by breaking the list into n/2 sublists of 2 elements each, where the array index of the 2 elements in each sublist differs by n/2. We say that the increment is n/2. If there are 16 elements in the array indexed from 0 to 15, there would initially be 8 sublists of 2 elements each.");
 
-  // HTML element containing the initial array, id initialarray
-  //var arr = av.ds.array($("#initialarray")),
-  // Alternatively, generate from data: 
+  // Create an array object under control of JSAV library
   var arr = av.ds.array([20, 30, 12, 54, 55, 11, 78, 14, 13, 79, 44,
       98, 76, 45, 32, 11], {indexed: true});
-  // or, generate from random data: var arr = av.ds.array.random(10);
-  // size as param, range as params as well??
 
   // Make a label before the array, and give it an empty string to
   // take up the appropriate space since we don't want to see the
@@ -224,6 +227,7 @@
       arr.highlight(j);
     }
   }
+})(jQuery);
 </script>
 </body>
 </html>

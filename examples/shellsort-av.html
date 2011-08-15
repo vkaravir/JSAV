@@ -34,8 +34,12 @@ p.output.line {
 
 <body>
 <div id="container">
-  <input type="button" name="about" value="About" />
-  <h1 style="margin:-25px 0px 0px 0px">Shellsort Visualization</h1>
+  <table id="Table1">
+    <td width="770px" align="right">
+      <input type="button" name="about" value="About"/>
+    </td>
+  </table>
+  <h1 style="margin-top:-25px">Shellsort Visualization</h1>
 
   <form id="ssperform">
     <p><label for="increments">Increments: Type your increment
@@ -80,15 +84,16 @@ p.output.line {
 <script
    src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js">
 </script>
-<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/jquery-ui.min.js"></script>
+<script
+  src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/jquery-ui.min.js">
+</script>
 <script src="../lib/jquery.transform.light.js"></script>
-
 <script src="../build/JSAV-min.js"></script>
 
 <script>
 (function($) {
   // Number of values in the array
-  var ASize = document.getElementById('arraysize').selectedIndex + 5;
+  var ASize = $('#arraysize').val();
   // The array of numbers.
   var theArray = [];
 
@@ -100,18 +105,13 @@ p.output.line {
   if ("array" in params) { // set value of array pick if it is a param
     $('#arrayValues').val(params["array"]).prop("disabled", true);
   }
+
   var context = $("#ssperform");
-
   var emptyContent = $("#avcontainer").html();
-
   var av, // for JSAV av
     arr;  // for the JSAV array
 
-
-  /* **************************************************************
-  *  This section connects the action callbacks to the            *
-  *  form entities.                                               *
-  ************************************************************** */
+  // Connect action callbacks to the HTML entities
   $('input[name="about"]').click(about);
   $('input[name="run"]', context).click(runIt);
   $('input[name="reset"]', context).click(reset);
@@ -119,7 +119,7 @@ p.output.line {
 
   // Process About button: Pop up a message with an Alert
   function about() {
-    var mystring = "Shellsort Algorithm Visualization\nWritten by Cliff Shaffer and Ville Karavirta\nCreated as part of the OpenDSA hypertextbook project.\nFor more information, see http://algoviz.org/eBook\nWritten during August, 2011\nLast update: August 10, 2011\nJSAV library version " + JSAV.version();
+    var mystring = "Shellsort Algorithm Visualization\nWritten by Cliff Shaffer and Ville Karavirta\nCreated as part of the OpenDSA hypertextbook project.\nFor more information, see http://algoviz.org/eBook\nWritten during August, 2011\nLast update: August 14, 2011\nJSAV library version " + JSAV.version();
     alert(mystring);
   }
 
@@ -250,10 +250,9 @@ p.output.line {
   // Execute the "Run" button function
   function runIt() {
     var i;
-    var newSize = document.getElementById('arraysize').selectedIndex + 5;
+    var newSize = $('#arraysize').val();
+    var incrs = checkIncrements(); // Validate the user's increments
 
-    // Validate the user's increments
-    var incrs = checkIncrements();
     if (!incrs) {
       return;
     }

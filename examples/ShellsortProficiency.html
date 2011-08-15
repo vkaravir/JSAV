@@ -38,8 +38,7 @@ div h1 {
 <div id="container">
   <table id=tableT>
   <tr>
-  <td width=125px>
-  </td>
+  <td width=125px>&nbsp;</td>
   <td width=550px align="center">
     <p align="center">
       <input type="button" name="reset" value="Reset" />
@@ -47,7 +46,7 @@ div h1 {
       <input type="button" name="grade" value="Grade" />
     </p>
   </td>
-  <td align="right">
+  <td width=125px align="right">
     <p align="right">
       <input type="button" name="help" value="Help" />
       <input type="button" name="about" value="About" />
@@ -56,7 +55,7 @@ div h1 {
   </tr>
   </table>
   <form style="border: 0px" id="ssproficiency">
-    <p style="margin-top: -15px">Instructions:</p>
+    <p style="margin-top:-5px">Instructions:</p>
     <p style="margin-top: -15px; padding: 10px; 10px; margin-right: 10px; border: 1px solid black">
        For each increment, you will need to process each
        sublist in turn. For each sublist, click on its entries in the
@@ -126,33 +125,31 @@ div h1 {
   var incrs = []; // The array of increments
   var $theArray = $("#profArray"),
     initialArray = []; // needed for model answer
-  htmldata = "";
-  for (var i=16; i>0; i--) {
-    var randomVal = Math.floor(Math.random()*100);
-    htmldata += "<li>" + randomVal + "</li>";
-    initialArray[16-i] = randomVal;
-  }
-  $theArray.html(htmldata);
-
-  av.ds.array($theArray);
   Reset();
 
+  // Generate a random (but constrained) set of four increments
   function generateIncrements() {
-    var curr;
-    
-     incrs[0] = Math.floor(Math.random()*3) + 6; // First increment: 6 to 9
-     incrs[2] = Math.floor(Math.random()*3) + 2; // First increment: 2 to 4
-     // incrs[1] is something between incrs[0] and incrs[2]
-     incrs[1] = Math.floor(Math.random()*(incrs[0]-incrs[2]-1)) + incrs[2] + 1;
-     incrs[3] = 1;
+    incrs[0] = Math.floor(Math.random()*3) + 6; // incrs[0]: 6 to 9
+    incrs[2] = Math.floor(Math.random()*3) + 2; // incrs[2]: 2 to 4
+    // incrs[1] is something between incrs[0] and incrs[2]
+    incrs[1] = Math.floor(Math.random()*(incrs[0]-incrs[2]-1)) + incrs[2] + 1;
+    incrs[3] = 1; // Always end in 1
   }
-
 
   // Process Reset button: Re-initialize everything, including the increments
   function Reset() {
     generateIncrements();
     document.forms['ssproficiency'].elements['incrField'].value = incrs;
-    // TODO: Set new random values into the array
+  
+    htmldata = "";
+    for (var i=16; i>0; i--) {
+      var randomVal = Math.floor(Math.random()*100);
+      htmldata += "<li>" + randomVal + "</li>";
+      initialArray[16-i] = randomVal;
+    }
+    $theArray.html(htmldata);
+
+    av.ds.array($theArray);
   }
 
   // Process Answer button: Show the model answer slideshow
