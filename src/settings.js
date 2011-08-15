@@ -19,7 +19,7 @@
           ' placeholder="Value between 1 (Slow) and 10 (Fast)." size="30"/></div>');
       $elem.find("input").change(function() {
         var speed = parseInt($(this).val(), 10);
-        if (isNaN(speed) || speed < 1 || speed > 10) { return; }
+        if (isNaN(speed) || speed < 1 || speed > 10) { return; }
         jsav.SPEED = speedChoices[speed-1];
       });
       return $elem;
