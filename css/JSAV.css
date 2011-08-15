@@ -224,7 +224,7 @@ a.jsavsettings {
   background-position: 50% 50%;
   background-repeat: no-repeat;
   background-color: #aaa;
-  text-indent: 10000px;
+  text-indent: -9000px;
   padding: 2px;
   border: 1px solid black;
   border-radius: 3px;
