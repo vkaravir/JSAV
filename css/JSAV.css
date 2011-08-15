@@ -199,7 +199,6 @@ svg {
   position: absolute;
   top: 0; 
   left: 0;
-  padding: 15px;
 }
 .jsavmodal {
   z-index: 999;
@@ -208,5 +207,30 @@ svg {
   position: absolute;
   top: 0;
   left: 0;
+}
+.jsavdialog h2 {
+  background-color: #eee;
+  border-bottom: 1px dashed black;
+  margin: 0;
+  padding: 5px;
+}
+.jsavsettings {
+  padding: 15px;
+}
+a.jsavsettings {
+  background-image: url(images/settings.png);
+  width: 20px;
+  height: 20px;
+  background-position: 50% 50%;
+  background-repeat: no-repeat;
+  background-color: #aaa;
+  text-indent: 10000px;
+  padding: 2px;
+  border: 1px solid black;
+  border-radius: 3px;
+  box-shadow: 1px 1px 1px #eee;
+  float:right; 
+  margin-right:10px; 
+  display:none;
 }
 /**** END STYLING THE DIALOG ****/

@@ -38,6 +38,7 @@
     //  - closeText
     //  - buttons
     //  - dialogClass
+    //  - title
     options = $.extend({}, options, {modal: true});
     var d = {
       },
@@ -49,6 +50,9 @@
       $dialog.html(html());
     } else {
       $dialog.append(html); // jquery or dom element
+    }
+    if ("title" in options) {
+      $dialog.prepend("<h2>" + options.title + "</h2>");
     }
     if ("dialogClass" in options) {
       $dialog.addClass(options["dialogClass"]);
