@@ -28,7 +28,7 @@
     });
     // ..and return float and positioning
     $items.css({"float": "none", "position": "absolute"});
-    $arr.height(maxHeight + (indexed?30:0));
+    //$arr.height(maxHeight + (indexed?30:0));
   }
   function barArray(array) {
     var $arr = $(array.element).addClass("bararray"),

@@ -55,6 +55,7 @@ input {font-size: 0.7em; }
   position: relative;
   list-style: none;
   overflow: hidden;
+  min-height: 50px;
 }
 .array.indexed {
   margin-bottom: 0;
@@ -189,3 +190,23 @@ svg {
   background-image: url(images/forward.png);
 }
 /**** END STYLING THE CONTROLS ****/
+
+/**** STYLING THE DIALOG ****/
+.jsavdialog {
+  border: 1px solid black;
+  background-color: #fff;
+  z-index: 1000;
+  position: absolute;
+  top: 0; 
+  left: 0;
+  padding: 15px;
+}
+.jsavmodal {
+  z-index: 999;
+  background-color: (120, 120, 120);
+  background-color: rgba(0, 0, 0, 0.2);
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+/**** END STYLING THE DIALOG ****/
