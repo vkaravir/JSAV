@@ -42,6 +42,7 @@
     for (var i = 0; i < array._arr.length; i++) {
       maxValue = Math.max(maxValue, array._arr[i]);
     }
+    maxValue *= 1.15;
     $items.each(function(index, item) {
       var $i = $(this),
         pos = $i.position();
@@ -52,7 +53,7 @@
         $valueBar = $i.find(".valuebar");
       }
       $valueBar.css({"height": "100%"});
-      $i.find(".value").css("height", (100.0*array.value(index) / maxValue) + "%")
+      $i.find(".value").css("height", (100.0*array.value(index) / maxValue) + 15 + "%")
         .html('<span>' + $i.find(".value").text() + '</span>');
       if (indexed) {
         var $indexLabel = $i.find(".indexlabel");
