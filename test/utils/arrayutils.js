@@ -1,19 +1,19 @@
 var arrayUtils = {
-  testDiv: $('<div class="array"><div class="node index highlight"></div><div class="node index" ></div></div>').find(".node"),
 
   testArrayHighlights: function(arr, hlIndices, props) {
-    if (!this.hlDiv) {
-      this.hlDiv = this.testDiv.filter(".highlight");
-      this.unhlDiv = this.testDiv.not(".highlight");
-    }
-    
+    var testDiv= $('<ol class="' + arr.element[0].className + '"><li class="node index highlight"></li><li class="node index" ></li></ol>'),
+      hlDiv = testDiv.find(".node").filter(".highlight"),
+      unhlDiv = testDiv.find(".node").not(".highlight");
+    $("#qunit-fixture").append(testDiv);
+    console.log("HL", arr.element[0].className, hlDiv.css("background-color"), hlDiv.size(), hlDiv.css("color"));
     for (var i= 0; i < arr.size(); i++) {
-      var el = hlIndices[i]?this.hlDiv:this.unhlDiv,
+      var el = hlIndices[i]?hlDiv:unhlDiv,
         hlText = hlIndices[i]?"highlighted":"not highlighted";
       for (var j=0; j < props.length; j++) {
         equals(arr.css(i, props[j]), el.css(props[j]), "index " + i + " " + props[j] + " " + hlText);
       }
     }
+    testDiv.remove();
   },
 
   testArrayValues: function(arr, values) {
