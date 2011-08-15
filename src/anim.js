@@ -84,6 +84,7 @@
     // reqister event handlers for the control buttons
     var beginHandler = function(e) {
       e.preventDefault();
+      e.stopPropagation();
       // if playing flag is set, don't respond
       if ($controls.hasClass(playingCl)) { return; }
       // set the playing flag, that is, a class on the controls
@@ -93,6 +94,8 @@
     };
     var backwardHandler = function(e) {
       e.preventDefault();
+      e.stopPropagation();
+      e.stopPropagation();
       if ($controls.hasClass(playingCl)) { return; }
       $controls.addClass(playingCl);
       that.backward();
@@ -101,6 +104,7 @@
     };
     var forwardHandler = function(e) {
       e.preventDefault();
+      e.stopPropagation();
       if ($controls.hasClass(playingCl)) { return; }
       $controls.addClass(playingCl);
       that.forward();
@@ -108,6 +112,7 @@
     };
     var endHandler = function(e) {
       e.preventDefault();
+      e.stopPropagation();
       if ($controls.hasClass(playingCl)) { return; }
       $controls.addClass(playingCl);
       that.end();
