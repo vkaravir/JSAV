@@ -8,6 +8,9 @@
   var MessageHandler = function(jsav, output) {
     this.jsav = jsav;
     this.output = output;
+    if (this.output && "title" in jsav.options) {
+      this.output.html("<div class='jsavtitle'>" + jsav.options.title + "</div>");
+    }
   };
   MessageHandler.prototype.umsg = JSAV.anim(function(msg, options) {
     if (!this.jsav.RECORD) { // trigger events only if not recording

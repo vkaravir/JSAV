@@ -150,6 +150,13 @@ input {font-size: 0.7em; }
   background-color: inherit;
   height:50px;
 }
+.output .jsavtitle {
+  display:block;
+  margin-top:35px;
+  font-size:300%;
+  text-align:center;
+}
+
 /**** END OUTPUT STYLING ***/
 
 svg {
