@@ -78,7 +78,7 @@
         $controls.removeClass(playingCl);
       } else {
         // if still animating, set a new timeout
-        setTimeout(clearPlaying, that.SPEED/4);
+        setTimeout(clearPlaying, 50);
       }
     }
     // reqister event handlers for the control buttons
@@ -100,7 +100,7 @@
       $controls.addClass(playingCl);
       that.backward();
       // clear playing flag after a timeout for animations to end
-      setTimeout(clearPlaying, that.SPEED + that.SPEED/4);
+      setTimeout(clearPlaying, 50);
     };
     var forwardHandler = function(e) {
       e.preventDefault();
@@ -108,7 +108,7 @@
       if ($controls.hasClass(playingCl)) { return; }
       $controls.addClass(playingCl);
       that.forward();
-      setTimeout(clearPlaying, that.SPEED + that.SPEED/4);
+      setTimeout(clearPlaying, 50);
     };
     var endHandler = function(e) {
       e.preventDefault();
