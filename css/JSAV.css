@@ -77,7 +77,7 @@ input {font-size: 0.7em; }
 }
 .indexlabel {
   display: inline-block;
-  width: 45px;
+  width: inherit;
   height: 20px;
   line-height: 20px;
   top: 50px;
@@ -232,5 +232,8 @@ a.jsavsettings {
   float:right; 
   margin-right:10px; 
   display:none;
+}
+.jsavsettings .help {
+  font-size: 80%;
 }
 /**** END STYLING THE DIALOG ****/
