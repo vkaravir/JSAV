@@ -1,6 +1,6 @@
 /**
 * Module that contains the configurable settings panel implementation
-* Depends on core.js
+* Depends on core.js, utils
 */
 (function($) {
   if (typeof JSAV === "undefined") { return; }
@@ -14,12 +14,12 @@
           (rangeSupported?'':'<span class="help">Value between 1 (Slow) and 10 (Fast).</span>') + 
           '</div>');
       // get the closest speed choice to the current speed
-      var curval = 9;
-      while (curval && speedChoices[curval] <= jsav.SPEED) {
+      var curval = speedChoices.length - 1;
+      while (curval && speedChoices[curval] < jsav.SPEED) {
         curval--;
       }
       // set the value and add a change event listener
-      $elem.find("input").val(curval).change(function() {
+      $elem.find("input").val(curval + 1).change(function() {
         var speed = parseInt($(this).val(), 10);
         if (isNaN(speed) || speed < 1 || speed > 10) { return; }
         jsav.SPEED = speedChoices[speed-1];
@@ -55,9 +55,13 @@
     // create should be a function that returns a DOM Element or jQuery object or HTML string
     this.components.push(create);
   };
-  
+  JSAV.utils.Settings = Settings;
   JSAV.init(function() {
-    this.settings = new Settings();
+    if (this.options.settings) {
+      this.setting = this.options.settings;
+    } else {
+      this.settings = new Settings();
+    }
     this.settings.add(speedSetting(this));
     var s = this.settings;
     $(this.container).find(".jsavsettings").show().click(function(e) {
