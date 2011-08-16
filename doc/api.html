@@ -255,15 +255,15 @@ Array indexing begins at zero.
 
 <p>The returned array instance is controlled through a collection of
 methods explained next. Note that changes to the array contents must
-go through this API (the <code>.value</code> method),
+go through this API (using the <code>.value</code> method),
 since the array contents must be managed by
 JSAV rather than by the developer.
 </p>
 
 <p>Options that the second, optional, parameter can specify:</p>
 <ul>
-<li>layout: Defines choices of layout (bars for example). Details to
-      come.</li>
+<li>layout: Defines choices of layout (<code>bar</code> for bars, the
+    default is to show an array).</li>
 <li>indexed: Boolean to determine if array indices are shown or not.</li>
 <li>visible: Boolean to determine if initially the array is shown or
       not.</li>
@@ -365,6 +365,23 @@ for highlight.
 <p>
 Sets the value of the element at the given index to the given value.
 </p>
+
+<h3 class="apitopic">CSS control</h3>
+
+There are various options and style effects that can be controlled via
+CSS.
+
+<h3 class="apimethod">width</h3>
+
+Controls the width of a bar or array element.
+
+Example:
+
+<pre>
+.array .index {
+  width: 20px;
+}
+</pre>
 
 <h3 class="apitopic">Extending the Array</h3>
 <p class="todo">
