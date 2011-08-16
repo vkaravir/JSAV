@@ -146,7 +146,7 @@ p.output.line {
       msg = "Increments sequence must be decreasing positive values ending with 1";
     // Convert user's increments to an array,
     // assuming values are space separated
-    var incrs = $('input[name="increments"]', context).val().match(/[0-9]+/g);
+    var incrs = $('input[name="increments"]', context).val().match(/[0-9]+/g) || [];
     for (i=0; i<incrs.length; i++) {
       incrs[i] = Number(incrs[i]);
       if (isNaN(incrs[i]) || incrs[i] < 0 || incrs[i] > prev) { 
@@ -169,8 +169,8 @@ p.output.line {
         msg = "Must be 5 to 16 positive integers";
     // Convert user's values to an array,
     // assuming values are space separated
-    theArray = $('input[name="arrayValues"]', context).val().match(/[0-9]+/g);
-    if (theArray.length === 1 && theArray[0] === '') { // Empty field
+    theArray = $('input[name="arrayValues"]', context).val().match(/[0-9]+/g) || [];
+    if (theArray.length === 0) { // Empty field
       theArray.length = 0;
       return true;
     }
