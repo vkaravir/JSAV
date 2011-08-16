@@ -5,6 +5,12 @@
 (function($) {
   if (typeof JSAV === "undefined") { return; }
   
+  // Test if range type is supported and add to jQuery.support
+  var inp = $("<input type='range' />");
+  $.support.inputTypeRange = (inp.prop("type") === "range");
+  delete inp;
+  
+  
   JSAV.utils = {};
   var u = JSAV.utils; // shortcut for easier and faster access
   

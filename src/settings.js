@@ -7,13 +7,7 @@
   var speedChoices = [5000, 3000, 1500, 1000, 500, 400, 300, 200, 100, 50];
   var speedSetting = function(jsav) {
     return function() {
-      // Test if range type is supported
-      // TODO: move this to JSAV.utils.support along with some other feature detections
-      var inp = $("<input type='range' />");
-      $("body").append(inp);
-      var rangeSupported = (inp.prop("type") === "range");
-      inp.remove();
-      delete inp;
+      var rangeSupported = !!$.support.inputTypeRange;
       // add explanation if using range slider, help text otherwise
       var $elem = $('<div class="jsavspeed">Animation speed' + (rangeSupported?' (slow - fast)':'') + 
           ': <input type="range" min="1" max="10" step="1" size="30"/> ' +
