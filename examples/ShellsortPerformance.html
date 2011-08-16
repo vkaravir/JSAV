@@ -192,16 +192,13 @@ p.output.scroll {
   }
     
   // Validate the increment series
-  // TODO: It is annoying that extra spaces come up as null numbers,
-  // causing validation to fail
   function CheckIncrements() {
     var i, 
       num, 
       prev = Number.MAX_VALUE, 
       msg = "Increments sequence must be decreasing positive values ending with 1";
     // Convert user's increments to an array,
-    // assuming values are space separated
-    var incrs = $('input[name="increments"]', context).val().split(' ');
+    var incrs = $('input[name="increments"]', context).val().match(/[0-9]+/g);
     for (i=0; i<incrs.length; i++) {
       incrs[i] = Number(incrs[i]);
       if (isNaN(incrs[i]) || incrs[i] < 0 || incrs[i] > prev) { 
