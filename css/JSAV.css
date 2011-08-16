@@ -232,6 +232,9 @@ a.jsavsettings {
   float:right; 
   margin-right:10px; 
   display:none;
+  white-space: nowrap;
+  overflow: hidden;
+  color: rgba(0, 0, 0, 0);
 }
 .jsavsettings .help {
   font-size: 80%;

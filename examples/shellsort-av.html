@@ -28,7 +28,11 @@ div h1 {
 p.output.line {
   height: 30px;
 }
-
+a.jsavsettings {
+display: block;
+margin-top: 10px;
+margin-left: 10px;
+}
 </style>
 </head>
 
@@ -36,7 +40,8 @@ p.output.line {
 <div id="container">
   <table id="Table1">
     <td width="770px" align="right">
-      <input type="button" name="about" value="About"/>
+      <input type="button" name="about" value="About" style="margin-top:10px;"/>
+      <a class="jsavsettings" href="#">Settings</a>
     </td>
   </table>
   <h1 style="margin-top:-25px">Shellsort Visualization</h1>
@@ -69,7 +74,6 @@ p.output.line {
     </p>
   </form>
   <div id="avcontainer">
-    <a class="jsavsettings" href="#">Settings</a>
     <table id=tableT style="margin-top:-15px; margin-bottom:-15px">
     <tr>
       <td width=100><span class="counter"></span></td>
@@ -106,6 +110,26 @@ p.output.line {
   if ("array" in params) { // set value of array pick if it is a param
     $('#arrayValues').val(params["array"]).prop("disabled", true);
   }
+  
+  var arrayLayout = "_default"; // user preference of array layout
+  // a function to use on settings panel for selecting array layout
+  var layoutSetting = function() {
+    // create an element for selecting the layout
+    var $elem = $("<p><label for='arraylayout'>Array layout: </label><select name='arraylayout'>" +
+      "<option value='bar'>Bar</option><option value='_default'>Vertical</option></select></p>");
+    // initialize the selection and register a change event listener
+    $elem.find("select").val(arrayLayout).change(function() {
+      // set the user preference
+      arrayLayout = $(this).val();
+      // show a not that the AV need to be regenerated
+      $elem.append("<span class='help'>Rerun for the change to take effect.</span>");
+    });
+    return $elem;
+  };
+  // create a new settings panel and specify the link to show it
+  var settings = new JSAV.utils.Settings($(".jsavsettings"));
+  // add the layout setting preference
+  settings.add(layoutSetting);
 
   var context = $("#ssperform");
   var emptyContent = $("#avcontainer").html();
@@ -269,7 +293,8 @@ p.output.line {
       }
       reset(true); // Reset any previous visualization
       av = new JSAV("avcontainer"); // initialize JSAV ..
-      arr = av.ds.array(theArray, {indexed: true, layout: "bar"}); // .. and the array
+      // .. and the array. use the layout the user has selected
+      arr = av.ds.array(theArray, {indexed: true, layout: arrayLayout});
       var i, incr;
       for (i=0; i<incrs.length; i+=1) {
         if (incrs[i] < theArray.length) {

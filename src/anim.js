@@ -136,6 +136,11 @@
         counter.text(that.currentStep() + 1 + " / " + (that.totalSteps() + 1));
       });
     }
+    
+    // register a listener for the speed change event
+    $(document).bind("jsav-speed-change", function(e, args) {
+      that.SPEED = args;
+    });
   });
   
   // this function can be used to "decorate" effects to be applied when moving forward

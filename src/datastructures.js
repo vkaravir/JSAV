@@ -63,12 +63,11 @@
       // dummy methods for initializing a DS, the DS should override these
       initialize: function() { },
       initializeFromElement: function() { },
-      clone: function() {},
-      addSettings: function() {}
+      clone: function() {}
     },
     // initializes a data structure
     initDs = function(dstr, element, options) {
-      dstr.options = $.extend({}, options, {'settings': false});
+      dstr.options = $.extend(true, {}, options);
       if ($.isArray(element)) {
         dstr.initialize(element);
       } else if (element) { // assume it's a DOM element
@@ -76,9 +75,6 @@
         dstr.initializeFromElement();
       } else {
         // TODO: create an element for this data structure
-      }
-      if (options.settings) {
-        dstr.addSettings();
       }
     }; 
  
@@ -213,7 +209,7 @@
   }, realSwap
   );
   arrproto.clone = function() { 
-    return new AVArray(this.jsav, this._arr.slice(0), $.extend({}, this.options, {display: false})); 
+    return new AVArray(this.jsav, this._arr.slice(0), $.extend(true, {}, this.options, {display: false})); 
   };
   arrproto.size = function() { return this._arr.length; };
   arrproto.value = function(index, newValue) {
@@ -265,23 +261,9 @@
     });
     this.layout();
   };
-  arrproto.addSettings = function() {
-    var that = this;
-    var layoutSetting = function() {
-      var $elem = $("<p><label for='" + this.id + "layout'>Array layout:</label><select id='"+this.id + "layout'>" +
-            "<option value='bar'>Bar</option><option value='_default'>Vertical</option></select></p>");
-      $elem.find("select").val(that.options.layout).change(function() {
-        that.options.layout = $(this).val();
-        that.layout();
-      });
-      return $elem;
-    }
-    this.jsav.settings.add(layoutSetting);
-  };
   arrproto.layout = function() {
     var layoutAlg = this.options.layout || "_default";
     this.element.removeClass("bararray");
-    console.log(layoutAlg);
     this.jsav.layout.array[layoutAlg](this);
   };
   arrproto.state = function(newstate) {

@@ -5,7 +5,8 @@
 (function($) {
   if (typeof JSAV === "undefined") { return; }
   var speedChoices = [5000, 3000, 1500, 1000, 500, 400, 300, 200, 100, 50];
-  var speedSetting = function(jsav) {
+  var speedSetting = function() {
+    var curSpeed = JSAV.ext.SPEED;
     return function() {
       var rangeSupported = !!$.support.inputTypeRange;
       // add explanation if using range slider, help text otherwise
@@ -15,22 +16,35 @@
           '</div>');
       // get the closest speed choice to the current speed
       var curval = speedChoices.length - 1;
-      while (curval && speedChoices[curval] < jsav.SPEED) {
+      while (curval && speedChoices[curval] < curSpeed) {
         curval--;
       }
       // set the value and add a change event listener
       $elem.find("input").val(curval + 1).change(function() {
         var speed = parseInt($(this).val(), 10);
         if (isNaN(speed) || speed < 1 || speed > 10) { return; }
-        jsav.SPEED = speedChoices[speed-1];
+        speed = speedChoices[speed - 1]; // speed in milliseconds
+        curSpeed = speed;
+        JSAV.ext.SPEED = speed;
+        //trigger speed change event to update all AVs on the page
+        $(document).trigger("jsav-speed-change", speed);
       });
       // return the element
       return $elem;
     };
   };
   
-  var Settings = function() {
+  var Settings = function(elem) {
       this.components = [];
+      this.add(speedSetting());
+      
+      var that = this;
+      if (elem) {
+        $(elem).click(function(e) {
+          e.preventDefault();
+          that.show();
+        });
+      }
     },
     sproto = Settings.prototype;
   sproto.show = function() {
@@ -58,15 +72,9 @@
   JSAV.utils.Settings = Settings;
   JSAV.init(function() {
     if (this.options.settings) {
-      this.setting = this.options.settings;
+      this.settings = this.options.settings;
     } else {
-      this.settings = new Settings();
+      this.settings = new Settings($(this.container).find(".jsavsettings").show());
     }
-    this.settings.add(speedSetting(this));
-    var s = this.settings;
-    $(this.container).find(".jsavsettings").show().click(function(e) {
-      e.preventDefault();
-      s.show();
-    });
   });
 })(jQuery);
