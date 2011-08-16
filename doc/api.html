@@ -133,6 +133,14 @@ The HTML section typical includes something like this:
   the same result:</p>
 <pre>var av = new JSAV(document.getElementById("container"));
 var av = new JSAV(jQuery("#container"));</pre>
+<p>Both alternatives accept an optional second parameter <code>options</code> 
+  which should be a JavaScript object. The options that are currently 
+  supported:</p>
+<dl>
+  <dt><code>title</code></dt>
+  <dd>Title of the AV which will be shown as the first slide of the
+    slideshow.</dd>
+</dl>
     
 <h2>Slideshow Support</h2>
 
