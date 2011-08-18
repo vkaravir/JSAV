@@ -4,6 +4,19 @@
 */
 (function() {
   if (typeof JSAV === "undefined") { return; }
+  
+  function centerArray(array, $lastItem) {
+    // center the array inside its parent container
+    if (array.options.hasOwnProperty("center") && !array.options.center) {
+      // if options center is set to falsy value, return
+      return;
+    }
+    // width of array expected to be last items position + its width
+    var width = $lastItem.position().left + $lastItem.outerWidth(),
+      containerWidth = $(array.jsav.container).width();
+    array.element.css("left", (containerWidth - width)/2);
+  }
+  
   function verticalArray(array) {
     var $arr = $(array.element),
       // rely on browser doing the calculation, float everything to the left..
@@ -29,6 +42,7 @@
     // ..and return float and positioning
     $items.css({"float": "none", "position": "absolute"});
     $arr.height(maxHeight + (indexed?30:0));
+    centerArray(array, $items.last());
   }
   function barArray(array) {
     var $arr = $(array.element).addClass("jsavbararray"),
@@ -64,6 +78,7 @@
       }
     });
     $items.css({"float": "none", "position": "absolute"});
+    centerArray(array, $items.last());
   }
   var layouts = {};
   layouts.array = {

@@ -56,6 +56,7 @@ input {font-size: 0.7em; }
   list-style: none;
   overflow: hidden;
   min-height: 50px;
+  padding: 0;
 }
 .jsavarray.jsavindexed {
   margin-bottom: 0;
