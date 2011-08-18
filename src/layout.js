@@ -68,7 +68,8 @@
   var layouts = {};
   layouts.array = {
     "_default": verticalArray,
-    "bar": barArray
+    "bar": barArray,
+    "array": verticalArray
   };
   JSAV.ext.layout = layouts;
 })();
