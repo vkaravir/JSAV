@@ -115,14 +115,15 @@ margin-left: 10px;
   // a function to use on settings panel for selecting array layout
   var layoutSetting = function() {
     // create an element for selecting the layout
-    var $elem = $("<p><label for='arraylayout'>Array layout: </label><select name='arraylayout'>" +
-      "<option value='bar'>Bar</option><option value='array'>Array</option></select></p>");
+    var $elem = $("<div class='jsavrow'><label for='arraylayout'>Array layout: </label><select name='arraylayout'>" +
+      "<option value='bar'>Bar</option><option value='array'>Array</option></select></div>" +
+      "<div class='jsavhelp' style='display:none;'>Rerun for the change to take effect.</div>");
     // initialize the selection and register a change event listener
     $elem.find("select").val(arrayLayout).change(function() {
       // set the user preference
       arrayLayout = $(this).val();
-      // show a not that the AV need to be regenerated
-      $elem.append("<span class='jsavhelp'>Rerun for the change to take effect.</span>");
+      // show a note that the AV need to be regenerated
+      $elem.next(".jsavhelp").show();
     });
     return $elem;
   };

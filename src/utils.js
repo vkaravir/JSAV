@@ -42,7 +42,6 @@
     //  - width (and min/maxWidth)
     //  - height (and min/maxHeight)
     //  - closeText
-    //  - buttons
     //  - dialogClass
     //  - title
     options = $.extend({}, options, {modal: true});
@@ -77,7 +76,7 @@
       scrollLeft = $doc.scrollLeft(),
       scrollTop = $doc.scrollTop();
     if (!("width" in options)) {
-      $dialog.css("width", winWidth/2);
+      $dialog.css("width", Math.max(500, winWidth/2)); // min width 500px
     }
     var close = function(e) {
       if (e) { // if used as an event handler, prevent default behavior
@@ -91,6 +90,11 @@
       $modalElem.css({width: docWidth, height: docHeight});
       $modalElem.appendTo($("body"));
       $modalElem.click(close);
+    }
+    if ("closeText" in options) {
+      var closeButton = $('<button type="button" class="jsavrow">' + options.closeText + '</button>')
+        .click(close);
+      $dialog.append(closeButton);
     }
     $dialog.appendTo($("body"));
     $dialog.css({

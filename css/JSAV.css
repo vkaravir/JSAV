@@ -246,5 +246,9 @@ a.jsavsettings {
 }
 .jsavsettings .jsavhelp {
   font-size: 80%;
+  margin-left: 40px;
+}
+.jsavrow {
+  margin: 15px 8px 4px 8px;
 }
 /**** END STYLING THE DIALOG ****/

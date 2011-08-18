@@ -10,9 +10,9 @@
     return function() {
       var rangeSupported = !!$.support.inputTypeRange;
       // add explanation if using range slider, help text otherwise
-      var $elem = $('<div class="jsavspeed">Animation speed' + (rangeSupported?' (slow - fast)':'') + 
-          ': <input type="range" min="1" max="10" step="1" size="30"/> ' +
-          (rangeSupported?'':'<span class="jsavhelp">Value between 1 (Slow) and 10 (Fast).</span>') + 
+      var $elem = $('<div class="jsavrow">Animation speed' + (rangeSupported?' (slow - fast)':'') + 
+          ': <input type="range" min="1" max="10" step="1" size="30"/></div> ' +
+          (rangeSupported?'':'<div class="jsavhelp">Value between 1 (Slow) and 10 (Fast).') + 
           '</div>');
       // get the closest speed choice to the current speed
       var curval = speedChoices.length - 1;
@@ -50,7 +50,7 @@
   sproto.show = function() {
     var $cont = $("<div class='jsavsettings'></div>"),
       that = this,
-      $close = $('<button>Close</button>').click(function() {
+      $close = $('<button class="jsavrow">Close</button>').click(function() {
         that.close();
       });
     for (var i = 0; i < this.components.length; i++) {
