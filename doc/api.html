@@ -437,6 +437,34 @@ Set the text for the label. If the <code>msg</code> parameter is left
 out, this method will return the current text of the label.
 </p>
 
+<h2>Settings Dialog for AV</h2>
+<p>There is a configurable settings dialog class in JSAV.utils.Settings.
+  The settings objects can be instantiated with <code>new JSAV.utils.Settings(elem)</code>
+  where the optional <code>elem</code> parameter specifies an element on which a
+  click will open the dialog. </p>
+
+<p>The settings used by an instance of JSAV can be specified with the <code>settings</code>
+  option for the constructor. For example, <code>var av = 
+  new JSAV(jQuery("#container"), {"settings": settings});</code>. If no custom settings
+  are given, JSAV will automatically create a default settings panel and attach it to
+  <code>a</code> element with class <code>jsavsettings</code> inside the container. No
+  matter how the settings is initialized, it can be accessed through <code>av.settings</code>
+  field.</p>
+
+<p>A settings instance has the following functions.</p>
+
+<h3 class="apimethod">settings.show()</h3>
+<p>Shows the settings dialog.</p>
+
+<h3 class="apimethod">settings.close()</h3>
+<p>Closes the settings dialog.</p>
+
+<h3 class="apimethod">settings.add(function)</h3>
+<p>Adds a component to the settings dialog. The parameter should be a function
+  that returns a DOM element or a jQuery object. For an example, see file examples/shellsort-av.html
+  and search for <code>layoutSetting</code>.</p>
+
+
 <h2>Utility Functions</h2>
 <p>The module <code>JSAV.utils</code> includes some utility functions
   for working with HTML pages and visualizations.</p>
@@ -447,7 +475,22 @@ out, this method will return the current text of the label.
 <h3 class="apimethod">JSAV.utils.getQueryParameter(name)</h3>
 <p>Returns the value of the query parameter <code>name</code>. If no such
   parameter exists, return <code>undefined</code></p>
-  
+
+<h3 class="apimethod">JSAV.utils.dialog(html, options)</h3>
+<p>Shows a pop-up dialog with the given HTML as content. Returns an object
+  with function <code>close()</code> that can be used to close the dialog.
+  Options can include:</p>
+<ul>
+  <li>modal: whether the dialog is modal (default true)</li>
+  <li>width (and min/maxWidth): control the width of the dialog</li>
+  <li>height (and min/maxHeight): control the height of the dialog</li>
+  <li>closeText: if specified, a button with this text to close the dialog
+    will be added</li>
+  <li>dialogClass: custom CSS classes to be added to the created component.
+    Class <code>jsavdialog</code> is always added.</li>
+  <li>title: title of the dialog</li>
+</ul>
+
 <h2>Best Practice for Modularity</h2>
 
 <p>
