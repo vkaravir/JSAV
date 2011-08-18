@@ -1,9 +1,10 @@
 var arrayUtils = {
 
   testArrayHighlights: function(arr, hlIndices, props) {
-    var testDiv= $('<ol class="' + arr.element[0].className + '"><li class="node index highlight"></li><li class="node index" ></li></ol>'),
-      hlDiv = testDiv.find(".node").filter(".highlight"),
-      unhlDiv = testDiv.find(".node").not(".highlight");
+    console.log(arr.element[0].className);
+    var testDiv= $('<ol class="' + arr.element[0].className + '"><li class="jsavnode jsavindex jsavhighlight"></li><li class="jsavnode jsavindex" ></li></ol>'),
+      hlDiv = testDiv.find(".jsavnode").filter(".jsavhighlight"),
+      unhlDiv = testDiv.find(".jsavnode").not(".jsavhighlight");
     $("#qunit-fixture").append(testDiv);
     console.log("HL", arr.element[0].className, hlDiv.css("background-color"), hlDiv.size(), hlDiv.css("color"));
     for (var i= 0; i < arr.size(); i++) {

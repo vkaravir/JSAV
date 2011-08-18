@@ -18,12 +18,12 @@
     }
     var opts = $.extend({color: "black", preserve: false}, options);
     if (this.output) {
-      if (this.output.hasClass("line") && opts.preserve) {
+      if (this.output.hasClass("jsavline") && opts.preserve) {
         this.output.find("div:last").append("<span style='color:" + opts.color + ";'>" + msg + "</span>");
-      } else if (this.output.hasClass("line")) {
+      } else if (this.output.hasClass("jsavline")) {
         this.output.html("<div style='color:" + opts.color + ";'>" + msg + "</div>");
-      //} else if (this.output.hasClass("scroll")) {
-      } else { // e.g. "scroll", which is default
+      //} else if (this.output.hasClass("jsavscroll")) {
+      } else { // e.g. "jsavscroll", which is default
         this.output.append("<div style='color:" + opts.color + ";'>" + msg + "</div>");
         this.output[0].scrollTop = this.output[0].scrollHeight;
       }      
@@ -52,7 +52,7 @@
   };
   
   JSAV.init(function(options) {
-    var output = $(this.container).find(".output");
+    var output = $(this.container).find(".jsavoutput");
     this._msg = new MessageHandler(this, output);
   });
 }(jQuery));

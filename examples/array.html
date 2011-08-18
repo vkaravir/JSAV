@@ -6,8 +6,8 @@
   </head>
   <body>
   <div id="container">
-    <div class="controls"></div>
-    <p class="output line"></p>
+    <div class="jsavcontrols"></div>
+    <p class="jsavoutput jsavline"></p>
   </div>
     <script src="http://code.jquery.com/jquery-1.6.1.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/jquery-ui.min.js"></script>
@@ -19,9 +19,9 @@
     var arr = av.ds.array([30, 34, 27, 90, 12, 11, 56, 89], {indexed: false, layout: "bar"});
     jQuery.fx.off = false;
     $(function() { 
-      $(".index").click(function() {
+      $(".jsavindex").click(function() {
         //find the index of the clicked item
-        var pos = $(this).parent().find(".index").index(this);
+        var pos = $(this).parent().find(".jsavindex").index(this);
         if (!c1 && c1 !== 0) { // if first click
           c1 = pos
         } else { // second click will swap

@@ -114,8 +114,8 @@
   function setHighlight(indices, mode) {
     var testDiv = $('<ol class="' + this.element[0].className + 
         '" style="position:absolute;left:-10000px">' + 
-        '<li class="node index highlight"></li><li class="node index" ></li></li></ol>'),
-  	  styleDiv = (mode && mode === "add" ? testDiv.find(".node").filter(".highlight"):testDiv.find(".node").not(".highlight"));
+        '<li class="jsavnode jsavindex jsavhighlight"></li><li class="jsavnode jsavindex" ></li></li></ol>'),
+  	  styleDiv = (mode && mode === "add" ? testDiv.find(".jsavnode").filter(".jsavhighlight"):testDiv.find(".jsavnode").not(".jsavhighlight"));
   	// TODO: general way to get styles for the whole av system
   	$("body").append(testDiv);
     this.css(indices, {color: styleDiv.css("color"), "background-color": styleDiv.css("background-color")});
@@ -134,9 +134,9 @@
     var $elems = getIndices($(this.element).find("li"), indices);
     if (!this.jsav.RECORD || !$.fx.off) { // only animate when playing, not when recording
       // also animate the values due to a bug in webkit based browsers with inherited bg color not changing
-      $elems.animate(cssprop, this.jsav.SPEED).find("span.value").animate(cssprop, this.jsav.SPEED);
+      $elems.animate(cssprop, this.jsav.SPEED).find("span.jsavvalue").animate(cssprop, this.jsav.SPEED);
     } else {
-      $elems.css(cssprop).find("span.value").css(cssprop);
+      $elems.css(cssprop).find("span.jsavvalue").css(cssprop);
     }
     return this;
   });
@@ -159,8 +159,8 @@
   function realSwap(index1, index2, options) {
     var $pi1 = $(this.element).find("li:eq(" + index1 + ")"), // index
       $pi2 = $(this.element).find("li:eq(" + index2 + ")"),
-      $i1 = $pi1.find("span.value"),
-      $i2 = $pi2.find("span.value"),
+      $i1 = $pi1.find("span.jsavvalue"),
+      $i2 = $pi2.find("span.jsavvalue"),
       posdiff = JSAV.position($i1).left - JSAV.position($i2).left,
       indices = $($pi1).add($pi2),
       i1prevStyle = $pi1.getstyles("color", "background-color"),
@@ -172,12 +172,12 @@
     $pi1.html($pi2.html());
     $pi2.html(tmp);
     // .. get the value elements again since the content swap lost the nodes ..
-    $i1 = $pi1.find("span.value");
-    $i2 = $pi2.find("span.value");
+    $i1 = $pi1.find("span.jsavvalue");
+    $i2 = $pi2.find("span.jsavvalue");
     // .. change back the index labels ..
     if (this.options.indexed) {
-      $ind1label = $pi1.find("span.indexlabel");
-      $ind2label = $pi2.find("span.indexlabel");
+      $ind1label = $pi1.find("span.jsavindexlabel");
+      $ind2label = $pi2.find("span.jsavindexlabel");
       tmp = $ind1label.html();
       $ind1label.html($ind2label.html());
       $ind2label.html(tmp);
@@ -226,12 +226,12 @@
     return oldVal;
   });
   arrproto.initialize = function(data) {
-    var el = $("<ol class='array' />"),
+    var el = $("<ol class='jsavarray' />"),
       liel;
     this.options = jQuery.extend({display: true}, this.options);
     this._arr = data.slice(0); // create a copy
     $.each(data, function(index, item) {
-      el.append("<li class='node index'><span class='value'>" + item + "</span></li>");
+      el.append("<li class='jsavnode jsavindex'><span class='jsavvalue'>" + item + "</span></li>");
     });
     $(this.jsav.container).append(el);
     this.element = el;
@@ -252,18 +252,18 @@
     var that = this,
       $elem = this.element,
       $elems = $elem.find("li");
-    $elem.addClass("array");
+    $elem.addClass("jsavarray");
     this._arr = this._arr || [];
     this._arr.length = $elems.size();
     $elems.each(function(index, item) {
       that._arr[index] = parseInt($(this).html(), 10);
-      $(this).addClass("node index").html("<span class='value'>" + $(this).html() + "</span>");     
+      $(this).addClass("jsavnode jsavindex").html("<span class='jsavvalue'>" + $(this).html() + "</span>");     
     });
     this.layout();
   };
   arrproto.layout = function() {
     var layoutAlg = this.options.layout || "_default";
-    this.element.removeClass("bararray");
+    this.element.removeClass("jsavbararray");
     this.jsav.layout.array[layoutAlg](this);
   };
   arrproto.state = function(newstate) {

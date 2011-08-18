@@ -15,7 +15,7 @@
     }
     this._redo.unshift(ops);
     // trigger an event on the container to update the counter
-    this.container.trigger("updatecounter");
+    this.container.trigger("jsav-updatecounter");
   }
 
   function forward() {
@@ -37,7 +37,7 @@
     }
     this._undo.push(ops);
     // trigger an event on the container to update the counter
-    this.container.trigger("updatecounter");
+    this.container.trigger("jsav-updatecounter");
   }
 
   function begin() {
@@ -64,7 +64,7 @@
     this._redo = []; // stack for operations to redo
     this._undo = []; // stack for operations to undo
     var that = this,
-      $controls = $(".controls", this.container),
+      $controls = $(".jsavcontrols", this.container),
       playingCl = "jsavplaying"; // class used to mark controls when playing
     if ($controls.size() === 0) {
       return; // no controls, no need to proceed
@@ -118,21 +118,21 @@
       that.end();
       clearPlaying();
     };
-    $("<a class='begin' href='#' title='Begin'>Begin</a>").click(beginHandler).appendTo($controls);
-    $("<a class='backward' href='#' title='Backward'>Backward</a>").click(backwardHandler).appendTo($controls);
-    $("<a class='forward' href='#' title='Forward'>Forward</a>").click(forwardHandler).appendTo($controls);
-    $("<a class='end' href='#' title='End'>End</a>").click(endHandler).appendTo($controls);
+    $("<a class='jsavbegin' href='#' title='Begin'>Begin</a>").click(beginHandler).appendTo($controls);
+    $("<a class='jsavbackward' href='#' title='Backward'>Backward</a>").click(backwardHandler).appendTo($controls);
+    $("<a class='jsavforward' href='#' title='Forward'>Forward</a>").click(forwardHandler).appendTo($controls);
+    $("<a class='jsavend' href='#' title='End'>End</a>").click(endHandler).appendTo($controls);
     // bind the handlers to events to enable control by triggering events
-    this.container.bind({ "forward": forwardHandler, 
-                          "backward": backwardHandler,
-                          "begin": beginHandler,
-                          "end": endHandler });
+    this.container.bind({ "jsav-forward": forwardHandler, 
+                          "jsav-backward": backwardHandler,
+                          "jsav-begin": beginHandler,
+                          "jsav-end": endHandler });
                           
     // add slideshow counter if an element with class counter exists
-    var counter = $(".counter", this.container);
+    var counter = $(".jsavcounter", this.container);
     // register an event to be triggered on container to update the counter
     if (counter.size() > 0) {
-      this.container.bind("updatecounter", function() { 
+      this.container.bind("jsav-updatecounter", function() { 
         counter.text(that.currentStep() + 1 + " / " + (that.totalSteps() + 1));
       });
     }

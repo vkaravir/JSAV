@@ -105,21 +105,21 @@ The HTML section typical includes something like this:
 
 <pre>
   &lt;div id="container">
-  &lt;div class="controls">&lt;/div>
-  &lt;p class="output line">&lt;/p>
+  &lt;div class="jsavcontrols">&lt;/div>
+  &lt;p class="jsavoutput jsavline">&lt;/p>
   &lt;/div>
 </pre>
 <dl>
   <dt><code>container</code></dt>
   <dd>This is the container element for the visualization</dd>
-  <dt><code>controls</code></dt>
+  <dt><code>jsavcontrols</code></dt>
   <dd>The library will generate slideshow controls inside this
   element if your visualization uses the slideshow API</dd>
-  <dt><code>output</code></dt>
+  <dt><code>jsavoutput</code></dt>
   <dd>The area where the messages from the
       visualization will be displayed to the user.
       Type can further be specified using either
-      class <code>line</code> or <code>scroll</code>.
+      class <code>jsavline</code> or <code>jsavscroll</code>.
       See the Messages API for more details.</dd>
 </dl>
 
@@ -178,10 +178,10 @@ It can help a developer to optimize the complexity of the slideshow.
 <h3>The <code>counter</code> element</h3>
 <p>
 A slideshow counter showing the position in slideshow (e.g. 2/120) can
-be added by including a DOM element with class <code>counter</code>
+be added by including a DOM element with class <code>jsavcounter</code>
 inside the <code>container</code>.
 For example, you can add
-<code>&lt;span class="counter">&lt;/span></code> to some DOM element
+<code>&lt;span class="jsavcounter">&lt;/span></code> to some DOM element
 to attach the counter.
 </p>
 
@@ -195,14 +195,14 @@ visualization or for providing directions.</p>
 <p>
 The output buffer will have been specified in the HTML section of the
 document. It is defined as an empty paragraph of class
-<code>output</code>, with one of the following class options.
+<code>jsavoutput</code>, with one of the following class options.
 </p>
 <p>
-<code>class="output line"</code> indicates a small "line-style"
+<code>class="jsavoutput jsavline"</code> indicates a small "line-style"
 message buffer where typically each line overwrites the previous one.
 </p>
 <p>
-<code>class="output scroll"</code> indicates a visible textbox with a
+<code>class="jsavoutput jsavscroll"</code> indicates a visible textbox with a
 scrollbar. The textbox is only cleared when explicitly directed by a
 <code>.clearumsg()</code> call.
 Since this acts as a normal HTML paragraph,
@@ -311,8 +311,8 @@ Make the array invisible.
 <p>
 Call to <code>highlight</code> without any parameters will highlight
 all elements in the array.
-Note that this will only apply the CSS class <code>highlight</code> to
-the array elements.
+Note that this will only apply the color and background-color of CSS class 
+<code>jsavhighlight</code> to the array elements.
 It is up to the author to make sure the loaded CSS files include such
 styling.
 </p>
@@ -386,7 +386,7 @@ Controls the width of a bar or array element.
 Example:
 
 <pre>
-.array .index {
+.jsavarray .jsavindex {
   width: 20px;
 }
 </pre>

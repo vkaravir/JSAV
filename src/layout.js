@@ -11,7 +11,7 @@
       maxHeight = -1,
       indexed = !!array.options.indexed;
     if (indexed) {
-      $arr.addClass("indexed");
+      $arr.addClass("jsavindexed");
     }
     $items.each(function(index, item) {
       var $i = $(this),
@@ -19,10 +19,10 @@
       $i.css({"left": pos.left - index, "top": pos.top});
       maxHeight = Math.max(maxHeight, $i.outerHeight());
       if (indexed) {
-        var $indexLabel = $i.find(".indexlabel");
+        var $indexLabel = $i.find(".jsavindexlabel");
         if ($indexLabel.size() === 0) {
-          $i.append('<span class="indexlabel">' + index + '</span>');
-          $indexLabel = $i.find(".indexlabel");
+          $i.append('<span class="jsavindexlabel">' + index + '</span>');
+          $indexLabel = $i.find(".jsavindexlabel");
         }
       }
     });
@@ -31,12 +31,12 @@
     $arr.height(maxHeight + (indexed?30:0));
   }
   function barArray(array) {
-    var $arr = $(array.element).addClass("bararray"),
+    var $arr = $(array.element).addClass("jsavbararray"),
       $items = $arr.find("li").css({"float": "left", "position":"static"}), 
       maxValue = Number.MIN_VALUE,
       indexed = !!array.options.indexed;
     if (indexed) {
-      $arr.addClass("indexed");
+      $arr.addClass("jsavindexed");
     }
       
     for (var i = 0; i < array._arr.length; i++) {
@@ -47,19 +47,19 @@
       var $i = $(this),
         pos = $i.position();
       $i.css({"left": pos.left - index, "top": pos.top});
-      var $valueBar = $i.find(".valuebar");
+      var $valueBar = $i.find(".jsavvaluebar");
       if ($valueBar.size() === 0) {
-        $i.append('<span class="valuebar" />');
-        $valueBar = $i.find(".valuebar");
+        $i.append('<span class="jsavvaluebar" />');
+        $valueBar = $i.find(".jsavvaluebar");
       }
       $valueBar.css({"height": "100%"});
-      $i.find(".value").css("height", (100.0*array.value(index) / maxValue) + 15 + "%")
-        .html('<span>' + $i.find(".value").text() + '</span>');
+      $i.find(".jsavvalue").css("height", (100.0*array.value(index) / maxValue) + 15 + "%")
+        .html('<span>' + $i.find(".jsavvalue").text() + '</span>');
       if (indexed) {
-        var $indexLabel = $i.find(".indexlabel");
+        var $indexLabel = $i.find(".jsavindexlabel");
         if ($indexLabel.size() === 0) {
-          $i.append('<span class="indexlabel">' + index + '</span>');
-          $indexLabel = $i.find(".indexlabel");
+          $i.append('<span class="jsavindexlabel">' + index + '</span>');
+          $indexLabel = $i.find(".jsavindexlabel");
         }
       }
     });

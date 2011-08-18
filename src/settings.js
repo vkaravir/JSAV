@@ -12,7 +12,7 @@
       // add explanation if using range slider, help text otherwise
       var $elem = $('<div class="jsavspeed">Animation speed' + (rangeSupported?' (slow - fast)':'') + 
           ': <input type="range" min="1" max="10" step="1" size="30"/> ' +
-          (rangeSupported?'':'<span class="help">Value between 1 (Slow) and 10 (Fast).</span>') + 
+          (rangeSupported?'':'<span class="jsavhelp">Value between 1 (Slow) and 10 (Fast).</span>') + 
           '</div>');
       // get the closest speed choice to the current speed
       var curval = speedChoices.length - 1;
