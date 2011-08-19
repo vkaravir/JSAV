@@ -146,14 +146,14 @@ input {font-size: 0.7em; }
   height:220px;
 }
 .jsavoutput.jsavline {
-  overflow: hidden;
+  overflow: visible;
   border: none;
   background-color: inherit;
   height:50px;
 }
 .jsavoutput .jsavtitle {
   display:block;
-  margin-top:35px;
+  margin-top:2.5em;
   font-size:300%;
   text-align:center;
 }
