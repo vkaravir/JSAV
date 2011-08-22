@@ -178,23 +178,29 @@ div h1 {
 
   // Process Done Selecting button: change the message, array status
   function Selecting() {
-    var mystring = "Done Selecting not yet implemented";
-    alert(mystring);
+    // TODO: Save the current list of highlighted elements to the answer state
+    Tell("Click on two array elements to swap them. Swap elements in the sublist until it is sorted.");
   }
 
   // Process Done Sorting Sublist button: change the message, array status
   function Sorting() {
-    var mystring = "Done Sorting Sublist not yet implemented";
-    alert(mystring);
+    // TODO: Save the current array elements to the answer state
+    Tell("Click on array elements to highlight those that make up the next sublist. If you have already sorted the last sublist for this increment, then click the 'Done Increment' button. Do not bother to process sublists with only one element.");
   }
 
   // Process Done Increment button: change the message, array status
   function Incrementing() {
-    var mystring = "Done Increment not yet implemented";
-    alert(mystring);
+    // TODO: Bump the current increment counter
+    // TODO: if (not last increment)
+    // TODO: Tell him what increment to use
+    Tell("Click on array elements to highlight those that make up the first sublist.");
+    // TODO: else Tell("Exercise is done, check your grade.");
   }
 
-  Tell("Let's get started");
+  // TODO: Depending on how it is implemented, might want to call function
+  //       Incrementing here instead of making this "Tell"
+  // TODO: Tell him what increment to use
+  Tell("Click on array elements to highlight those that make up the first sublist.");
 
 })(jQuery);
 </script>
