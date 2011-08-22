@@ -106,7 +106,6 @@
   /* Array data structure for JSAV library. */
   var AVArray = function(jsav, element, options) {
     this.jsav = jsav;
-    this._arr = [];
     initDs(this, element, options);
   };
   var arrproto = AVArray.prototype;
@@ -171,6 +170,10 @@
     // first swap the contents of the elements..
     $pi1.html($pi2.html());
     $pi2.html(tmp);
+    // swap the actual values in the array
+    tmp = $pi1.attr("data-value");
+    $pi1.attr("data-value", $pi2.attr("data-value"));
+    $pi2.attr("data-value", tmp);
     // .. get the value elements again since the content swap lost the nodes ..
     $i1 = $pi1.find("span.jsavvalue");
     $i2 = $pi2.find("span.jsavvalue");
@@ -198,10 +201,6 @@
         });
       });
     }
-    // swap the actual values in the array
-    tmp = this._arr[index1];
-    this._arr[index1] = this._arr[index2];
-    this._arr[index2] = tmp;
   }
   arrproto.swap = JSAV.anim(function(index1, index2, options) {
     realSwap.apply(this, arguments);
@@ -209,29 +208,38 @@
   }, realSwap
   );
   arrproto.clone = function() { 
-    return new AVArray(this.jsav, this._arr.slice(0), $.extend(true, {}, this.options, {display: false})); 
+    // fetch all values
+    var size = this.size(),
+      vals = [];
+    for (var i=0; i < size; i++) {
+      vals[i] = this.value(i);
+    }
+    return new AVArray(this.jsav, vals, $.extend(true, {}, this.options, {display: false})); 
   };
-  arrproto.size = function() { return this._arr.length; };
+  arrproto.size = function() { return this.element.find("li").size(); };
   arrproto.value = function(index, newValue) {
     if (!newValue) {
-      return this._arr[index];
+      return this.element.find("li:eq(" + index + ")").attr("data-value");
     } else {
       return this.setvalue(index, newValue);
     }
   };
   arrproto.setvalue = JSAV.anim(function(index, newValue) {
-    var oldVal = this._arr[index] || undefined;
-    this._arr[index] = newValue;
-    $(this.element).find("li:eq(" + index + ")").html("" + newValue);
+    var $index = this.element.find("li:eq(" + index + ")");
+    var oldVal = $index.attr("data-value") || undefined;  
+    $index.attr("data-value", newValue);
+    $index.find(".jsavvalue").html("" + newValue);
     return oldVal;
   });
   arrproto.initialize = function(data) {
     var el = $("<ol class='jsavarray' />"),
       liel;
     this.options = jQuery.extend({display: true}, this.options);
-    this._arr = data.slice(0); // create a copy
     $.each(data, function(index, item) {
-      el.append("<li class='jsavnode jsavindex'><span class='jsavvalue'>" + item + "</span></li>");
+      liel = $("<li class='jsavnode jsavindex'><span class='jsavvalue'>" + item + "</span></li>");
+      // set the data attribute for the index
+      liel.attr("data-value", item);
+      el.append(liel);
     });
     $(this.jsav.container).append(el);
     this.element = el;
@@ -249,15 +257,15 @@
   arrproto.initializeFromElement = function() {
     // TODO: handle settings from data-attributes
     if (!this.element) { return; }
-    var that = this,
-      $elem = this.element,
+    var $elem = this.element,
       $elems = $elem.find("li");
     $elem.addClass("jsavarray");
-    this._arr = this._arr || [];
-    this._arr.length = $elems.size();
     $elems.each(function(index, item) {
-      that._arr[index] = parseInt($(this).html(), 10);
-      $(this).addClass("jsavnode jsavindex").html("<span class='jsavvalue'>" + $(this).html() + "</span>");     
+      var $this = $(this);
+      if (!$this.attr("data-value")) {
+        $this.attr("data-value", parseInt($this.html(), 10));
+      }
+      $this.addClass("jsavnode jsavindex").html("<span class='jsavvalue'>" + $this.html() + "</span>");     
     });
     this.layout();
   };
@@ -269,11 +277,9 @@
   arrproto.state = function(newstate) {
     if (newstate) {
       $(this.element).html(newstate.html);
-      this._arr = newstate.values;
     } else {
       var sta = {
-        html: $(this.element).html(),
-        values: [].concat(this._arr)
+        html: $(this.element).html()
       };
       return sta;
     }
