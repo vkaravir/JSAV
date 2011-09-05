@@ -49,11 +49,10 @@
       $items = $arr.find("li").css({"float": "left", "position":"static"}), 
       maxValue = Number.MIN_VALUE,
       indexed = !!array.options.indexed,
-      size = $arr.size();
+      size = array.size();
     if (indexed) {
       $arr.addClass("jsavindexed");
     }
-      
     for (var i = 0; i < size; i++) {
       maxValue = Math.max(maxValue, array.value(i));
     }
