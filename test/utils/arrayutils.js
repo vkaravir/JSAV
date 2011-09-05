@@ -6,7 +6,6 @@ var arrayUtils = {
       hlDiv = testDiv.find(".jsavnode").filter(".jsavhighlight"),
       unhlDiv = testDiv.find(".jsavnode").not(".jsavhighlight");
     $("#qunit-fixture").append(testDiv);
-    console.log("HL", arr.element[0].className, hlDiv.css("background-color"), hlDiv.size(), hlDiv.css("color"));
     for (var i= 0; i < arr.size(); i++) {
       var el = hlIndices[i]?hlDiv:unhlDiv,
         hlText = hlIndices[i]?"highlighted":"not highlighted";
