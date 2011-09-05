@@ -14,12 +14,14 @@
 	<script src="../src/core.js"></script>
 	<script src="../src/anim.js"></script>
 	<script src="../src/messages.js"></script>
+	<script src="../src/utils.js"></script>
 	<script src="../src/graphicals.js"></script>
 	<script src="../src/datastructures.js"></script>
 	<script src="../src/layout.js"></script>
+	<script src="../src/settings.js"></script>
 
 	<script src="utils/qunit.js"></script>
-	<script src="data/testrunner.js"></script>
+<!--	<script src="data/testrunner.js"></script>-->
 	<script src="utils/arrayutils.js"></script>
 
 	<script src="unit/core.js"></script>
@@ -28,7 +30,7 @@
 </head>
 
 <body id="body">
-	<h1 id="qunit-header"><a href="/jquery/test/index.html">JSAV Test Suite</a></h1>
+	<h1 id="qunit-header"><a href="index.html">JSAV Test Suite</a></h1>
 	<h2 id="qunit-banner"></h2>
 	<div id="qunit-testrunner-toolbar"></div>
 	<h2 id="qunit-userAgent"></h2>
@@ -36,9 +38,9 @@
 
 	<div id="qunit-fixture">
 	  <div id="arraycontainer">
-      <div class="controls"></div>
-      <div class="counter"></div>
-      <p class="output line"></p>
+      <div class="jsavcontrols"></div>
+      <div class="jsavcounter"></div>
+      <p class="jsavoutput jsavline"></p>
       <ol id="array">
         <li>12</li>
         <li>22</li>

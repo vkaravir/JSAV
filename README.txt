@@ -23,12 +23,10 @@ developers who want to use the Github working version of JSAV:
    to do to set things up right to be able to push changes, talk to us
    about it.)
 * Go to the JSAV folder or directory that you just created and run:
-    make setup
-  This will download all of the various standard development libraries
-  needed by JSAV (but which are not stored in the repository), and
-  "compiles" the pieces together for you. At this point, you are ready
-  to try out the examples or invoke your copy of JSAV in your own
-  development projects.
+    make
+  This will "compile" the pieces together for you. At this point, you
+  are ready to try out the examples or invoke your copy of JSAV in
+  your own development projects.
 
 For SVN users new to git:
 * To "checkout" a new copy of the library, use "git clone".

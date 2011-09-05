@@ -5,13 +5,13 @@
     var av = new JSAV("arraycontainer"),
       arr = av.ds.array($("#array")),
       i = 0,
-      counter = $("#arraycontainer .counter");
+      counter = $("#arraycontainer .jsavcounter");
     arr.highlight(0);
     av.step();
     arr.highlight(1);
     av.recorded(); // will rewind it
     // bind listener to test event firing as well
-    av.container.bind("updatecounter", function(e) { i++; });
+    av.container.bind("jsav-updatecounter", function(e) { i++; });
     equals("1 / 3", counter.text(), "Testing counter text");
     av.forward();
     equals("2 / 3", counter.text(), "Testing counter text");
@@ -47,15 +47,15 @@
     av.recorded(); // will rewind it
     jQuery.fx.off = true; // turn off smooth animation
     arrayUtils.testArrayHighlights(arr, [0, 0, 0, 0], props);
-    av.container.trigger("end"); // apply all highlights
+    av.container.trigger("jsav-end"); // apply all highlights
     arrayUtils.testArrayHighlights(arr, [1, 1, 1, 0], props);
-    av.container.trigger("begin"); // undo everything
+    av.container.trigger("jsav-begin"); // undo everything
     arrayUtils.testArrayHighlights(arr, [0, 0, 0, 0], props);
-    av.container.trigger("forward");
+    av.container.trigger("jsav-forward");
     arrayUtils.testArrayHighlights(arr, [1, 0, 0, 0], props);
-    av.container.trigger("forward"); // second highlight
+    av.container.trigger("jsav-forward"); // second highlight
     arrayUtils.testArrayHighlights(arr, [1, 1, 0, 0], props);
-    av.container.trigger("backward"); // undo second highlight
+    av.container.trigger("jsav-backward"); // undo second highlight
     arrayUtils.testArrayHighlights(arr, [1, 0, 0, 0], props);
   });
 })();

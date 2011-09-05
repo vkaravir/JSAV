@@ -31,7 +31,7 @@ if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
   var Label = function(jsav, text, options) {
     this.jsav = jsav;
     this.options = $.extend({display: true}, options);
-    this.element = $('<div class="label" style="display:none;">' + text + '</div>');
+    this.element = $('<div class="jsavlabel" style="display:none;">' + text + '</div>');
     if (this.options.before) {
       this.element.insertBefore(this.options.before.element);
     } else if (this.options.after) {

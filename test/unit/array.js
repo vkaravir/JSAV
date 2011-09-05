@@ -165,15 +165,15 @@ test("Swaps with indices", function() {
     ind2;
   arr.swap(0, 2);
   av.recorded();
-  ind0 = $($(".indexed li")[0]);
-  ind2 = $($(".indexed li")[2]);
+  ind0 = $($(".jsavindexed li")[0]);
+  ind2 = $($(".jsavindexed li")[2]);
   // indices in the beginning should be 0 and 2
-  equals(ind0.find(".indexlabel").text(), "0");
-  equals(ind2.find(".indexlabel").text(), "2");
+  equals(ind0.find(".jsavindexlabel").text(), "0");
+  equals(ind2.find(".jsavindexlabel").text(), "2");
   av.forward();
   // .. as they should after the swap
-  equals(ind0.find(".indexlabel").text(), "0");
-  equals(ind2.find(".indexlabel").text(), "2");
+  equals(ind0.find(".jsavindexlabel").text(), "0");
+  equals(ind2.find(".jsavindexlabel").text(), "2");
   
 });
 })();

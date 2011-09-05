@@ -1,3 +1,47 @@
+/** Relevant parts of Meyer's CSS Reset 
+(http://meyerweb.com/eric/tools/css/reset/) */
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+body {
+	line-height: 1;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+/** End Meyer's stuff **/
+
+/******* GENERAL DEFAULTS *****/
+h1 { font-size: 2em; }
+h2 { font-size: 1.5em; margin: 0.83em 0;}
+h3 { font-size: 1.17em; margin: 1em 0;}
+h1, h2, h3, h4, h5, h6 { font-weight: bold;}
+p { font-size: 1em; }
+input {font-size: 0.7em; }
+/******* END GENERAL DEFAULTS *****/
+
 .jsavcontainer {
   overflow:hidden;
   width: 100%;
@@ -7,19 +51,21 @@
 }
 
 /***** STYLING OF THE ARRAY DATA STRUCTURE *****/
-.array {
+.jsavarray {
   position: relative;
   list-style: none;
   overflow: hidden;
+  min-height: 50px;
+  padding: 0;
 }
-.array.indexed {
+.jsavarray.jsavindexed {
   margin-bottom: 0;
 }
-.array:after {
+.jsavarray:after {
   content: "";
   clear: both;
 }
-.array .index {
+.jsavarray .jsavindex {
   width: 45px;
   height: 45px;
   text-align: center;
@@ -30,80 +76,88 @@
   color: black;
   opacity: 1;
 }
-.indexlabel {
+.jsavindexlabel {
   display: inline-block;
-  width: 45px;
+  width: inherit;
   height: 20px;
   line-height: 20px;
   top: 50px;
   color: black;
 }
-.array .index span {
+.jsavarray .jsavindex span {
   z-index: 99;
 }
-.array .index.highlight, .array.bararray .index.highlight {
+.jsavarray .jsavindex.jsavhighlight, .jsavarray.jsavbararray .jsavindex.jsavhighlight {
   background-color: yellow;
 }
 
-.array.bararray {
+.jsavarray.jsavbararray {
   height: 150px;
   overflow: visible;
 }
-.array.bararray .index {
+.jsavarray.jsavbararray .jsavindex {
   height: 100%;
   vertical-align: bottom;
   border: none;
   background-color: #eee;
   margin-left: 2px;
 }
-.bararray .index .value {
+.jsavbararray .jsavindex .jsavvalue {
   z-index: 100;
   bottom: 0;
   background-color: inherit;
 }
-.bararray .index .value span {
+.jsavbararray .jsavindex .jsavvalue span {
   position: absolute;
   width: inherit;
   display: inline-block;
   bottom: 0;
 }
-.bararray .index .value, .bararray .index .valuebar {
+.jsavbararray .jsavindex .jsavvalue, .jsavbararray .jsavindex .jsavvaluebar {
   display: inline-block;
   line-height: 20px;
   padding: 0;
   position: absolute;
   width: inherit;
 }
-.bararray .index .valuebar {
+.jsavbararray .jsavindex .jsavvaluebar {
   top: 0;
   background-color: #fff;
 }
-.bararray.indexed {
+.jsavbararray.jsavindexed {
   margin-bottom: 25px;
 }
-.bararray .indexlabel {
+.jsavbararray .jsavindexlabel {
   font-size: 90%;
   position: relative;
   top: 95%;
+	vertical-align: middle;
 }
 /***** END STYLING OF THE ARRAY DATA STRUCTURE *****/
 
 /*** OUTPUT STYLING ***/
-.output {
+.jsavoutput {
   width:100%;
 }
-.output.scroll {
+.jsavoutput.jsavscroll {
   overflow: auto; 
   background-color: white; 
   border: 1px solid black;
   height:220px;
 }
-.output.line {
-  overflow: hidden;
+.jsavoutput.jsavline {
+  overflow: visible;
   border: none;
   background-color: inherit;
   height:50px;
 }
+.jsavoutput .jsavtitle {
+  display:block;
+  margin-top:2.5em;
+  font-size:300%;
+  text-align:center;
+}
+
 /**** END OUTPUT STYLING ***/
 
 svg {
@@ -112,10 +166,10 @@ svg {
 }
 
 /**** STYLING THE CONTROLS ****/
-.controls {
+.jsavcontrols {
   text-align: center;
 }
-.controls a {
+.jsavcontrols a {
   display: inline-block;
   color: transparent;
   width: 45px;
@@ -131,16 +185,70 @@ svg {
   background-repeat:no-repeat;
   background-position:50% 50%;
 }
-.controls .begin {
+.jsavcontrols .jsavbegin {
   background-image: url(images/begin.png);
 }
-.controls .end {
+.jsavcontrols .jsavend {
   background-image: url(images/end.png);
 }
-.controls .backward {
+.jsavcontrols .jsavbackward {
   background-image: url(images/backward.png);
 }
-.controls .forward {
+.jsavcontrols .jsavforward {
   background-image: url(images/forward.png);
 }
 /**** END STYLING THE CONTROLS ****/
+
+/**** STYLING THE DIALOG ****/
+.jsavdialog {
+  border: 1px solid black;
+  background-color: #fff;
+  z-index: 1000;
+  position: absolute;
+  top: 0; 
+  left: 0;
+}
+.jsavmodal {
+  z-index: 999;
+  background-color: (120, 120, 120);
+  background-color: rgba(0, 0, 0, 0.2);
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+.jsavdialog h2 {
+  background-color: #eee;
+  border-bottom: 1px dashed black;
+  margin: 0;
+  padding: 5px;
+}
+.jsavsettings {
+  padding: 15px;
+}
+a.jsavsettings {
+  background-image: url(images/settings.png);
+  width: 20px;
+  height: 20px;
+  background-position: 50% 50%;
+  background-repeat: no-repeat;
+  background-color: #aaa;
+  text-indent: -9000px;
+  padding: 2px;
+  border: 1px solid black;
+  border-radius: 3px;
+  box-shadow: 1px 1px 1px #eee;
+  float:right; 
+  margin-right:10px; 
+  display:none;
+  white-space: nowrap;
+  overflow: hidden;
+  color: rgba(0, 0, 0, 0);
+}
+.jsavsettings .jsavhelp {
+  font-size: 80%;
+  margin-left: 40px;
+}
+.jsavrow {
+  margin: 15px 8px 4px 8px;
+}
+/**** END STYLING THE DIALOG ****/

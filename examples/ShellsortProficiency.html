@@ -1,0 +1,208 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<title>ShellSort Proficiency Exercise</title>
+<link href="AeBookAV.css" title="CSS" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="../css/JSAV.css" type="text/css" />
+<style>
+
+#container {
+  width: 800px;
+  height: 435px;
+  border: 1px solid black;
+  background-color: #efe;
+  padding: 10px;
+  overflow: hidden;
+}
+
+#container .jsavarray {
+   left: -10px;
+}
+
+div h1 {
+  background-color: #efe;
+}
+.jsavcontainer {
+  background-color: #efe;
+}
+
+  p.jsavoutput.jsavline {
+    height: 40px;
+    border: 1px;
+  }
+
+</style>
+</head>
+
+<body>
+<div id="container">
+  <table id=tableT>
+  <tr>
+  <td width=125px>&nbsp;</td>
+  <td width=550px align="center">
+    <p align="center">
+      <input type="button" name="reset" value="Reset" />
+      <input type="button" name="answer" value="Model Answer" />
+      <input type="button" name="grade" value="Grade" />
+    </p>
+  </td>
+  <td width=125px align="right">
+    <p align="right">
+      <input type="button" name="help" value="Help" />
+      <input type="button" name="about" value="About" />
+    </p>
+  </td>
+  </tr>
+  </table>
+  <form style="border: 0px" id="ssproficiency">
+    <p style="margin-top:-5px">Instructions:</p>
+    <p style="margin-top: -15px; padding: 10px; 10px; margin-right: 10px; border: 1px solid black">
+       For each increment, you will need to process each
+       sublist in turn. For each sublist, click on its entries in the
+       Input array to highlight them. Once you have the sublist
+       selected, click "Done Selecting". Next, drag and drop the items
+       to sort them. Then click "Done Sorting Sublist" to go on to the next
+       sublist. When you have processed all of the sublists for a given
+       increment, click "Done Increment".
+    </p>
+
+    Increments to use: <input type="text" readonly="readonly" name="incrField" id="incrField" width="50">
+
+    <p><b>Input:</b></p>
+
+    <ol id="profArray"></ol>
+
+    <input type="button" name="selecting" value="Done Selecting" />
+    <input type="button" name="sorting" value="Done Sorting Sublist" />
+    <input type="button" name="incrementing" value="Done Increment" />
+
+    <p class="jsavoutput jsavline"></p>
+  </form>
+</div> <!-- container -->
+
+<script
+   src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js">
+</script>
+
+<script src="../build/JSAV-min.js"></script>
+
+
+<script>
+(function($) {
+  /* **************************************************************
+  *  This first section is generic initialization that all AVs    *
+  *  will need, including initialization for the OpenDSA library  *
+  *  The first line you need to set to use your form's name       *
+  ************************************************************** */
+  // Define the local context (from form name)
+  var context = $("#ssproficiency");
+  //containing HTML element with id ssproficiency.
+  // We turn off slideshow mode, since this is a "static"
+  // form-based activity
+  var av = new JSAV("ssproficiency", {'animationMode': 'none'});
+  // Set up an output message buffer object,
+  // and create a convenience function named Tell
+  var Tell = function(msg, color) { av.umsg(msg, {color: color}); };
+
+  /* **************************************************************
+  *        Everything below this is specific to this AV           *
+  ************************************************************** */
+
+  /* **************************************************************
+  *  This section connects the action callbacks to the            *
+  *  form entities.                                               *
+  ************************************************************** */
+  $('input[name="reset"]').click(Reset);
+  $('input[name="answer"]').click(Answer);
+  $('input[name="grade"]').click(Grade);
+  $('input[name="help"]').click(Help);
+  $('input[name="about"]').click(About);
+
+  $('input[name="selecting"]', context).click(Selecting);
+  $('input[name="sorting"]', context).click(Sorting);
+  $('input[name="incrementing"]', context).click(Incrementing);
+
+  var incrs = []; // The array of increments
+  var $theArray = $("#profArray"),
+    initialArray = []; // needed for model answer
+  Reset();
+
+  // Generate a random (but constrained) set of four increments
+  function generateIncrements() {
+    incrs[0] = Math.floor(Math.random()*3) + 6; // incrs[0]: 6 to 9
+    incrs[2] = Math.floor(Math.random()*3) + 2; // incrs[2]: 2 to 4
+    // incrs[1] is something between incrs[0] and incrs[2]
+    incrs[1] = Math.floor(Math.random()*(incrs[0]-incrs[2]-1)) + incrs[2] + 1;
+    incrs[3] = 1; // Always end in 1
+  }
+
+  // Process Reset button: Re-initialize everything, including the increments
+  function Reset() {
+    generateIncrements();
+    document.forms['ssproficiency'].elements['incrField'].value = incrs;
+  
+    htmldata = "";
+    for (var i=16; i>0; i--) {
+      var randomVal = Math.floor(Math.random()*100);
+      htmldata += "<li>" + randomVal + "</li>";
+      initialArray[16-i] = randomVal;
+    }
+    $theArray.html(htmldata);
+
+    av.ds.array($theArray);
+  }
+
+  // Process Answer button: Show the model answer slideshow
+  function Answer() {
+    window.open('shellsort-av.html?array=' + encodeURIComponent(initialArray.join(' ')) + 
+      '&increments=' + encodeURIComponent(incrs.join(' ')));
+  }
+
+  // Process Grade button: Show the current grade status
+  function Grade() {
+    var mystring = "Grade not yet implemented";
+    alert(mystring);
+  }
+
+  // Process Help button: Give a full help page for this activity
+  // We might give them another HTML page to look at.
+  function Help() {
+    myRef = window.open("http://algoviz.org/OpenDSA/trunk/AV/SSprofHelp.html", 'helpwindow');
+  }
+
+  // Process About button: Pop up a message with an Alert
+  function About() {
+    var mystring = "Shellsort Proficiency Exercise\nWritten by Cliff Shaffer and Ville Karavirta\nCreated as part of the OpenDSA hypertextbook project.\nFor more information, see http://algoviz.org/eBook\nWritten during August, 2011\nLast update: August 6, 2011\nJSAV library version " + JSAV.version();
+    alert(mystring);
+  }
+
+  // Process Done Selecting button: change the message, array status
+  function Selecting() {
+    // TODO: Save the current list of highlighted elements to the answer state
+    Tell("Click on two array elements to swap them. Swap elements in the sublist until it is sorted.");
+  }
+
+  // Process Done Sorting Sublist button: change the message, array status
+  function Sorting() {
+    // TODO: Save the current array elements to the answer state
+    Tell("Click on array elements to highlight those that make up the next sublist. If you have already sorted the last sublist for this increment, then click the 'Done Increment' button. Do not bother to process sublists with only one element.");
+  }
+
+  // Process Done Increment button: change the message, array status
+  function Incrementing() {
+    // TODO: Bump the current increment counter
+    // TODO: if (not last increment)
+    // TODO: Tell him what increment to use
+    Tell("Click on array elements to highlight those that make up the first sublist.");
+    // TODO: else Tell("Exercise is done, check your grade.");
+  }
+
+  // TODO: Depending on how it is implemented, might want to call function
+  //       Incrementing here instead of making this "Tell"
+  // TODO: Tell him what increment to use
+  Tell("Click on array elements to highlight those that make up the first sublist.");
+
+})(jQuery);
+</script>
+</body>
+</html>
