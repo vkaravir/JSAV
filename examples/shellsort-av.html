@@ -111,27 +111,11 @@ margin-left: 10px;
     $('#arrayValues').val(params["array"]).prop("disabled", true);
   }
   
-  var arrayLayout = "bar"; // user preference of array layout
-  // a function to use on settings panel for selecting array layout
-  var layoutSetting = function() {
-    // create an element for selecting the layout
-    var $elem = $("<div class='jsavrow'><label for='arraylayout'>Array layout: </label><select name='arraylayout'>" +
-      "<option value='bar'>Bar</option><option value='array'>Array</option></select></div>" +
-      "<div class='jsavhelp' style='display:none;'>Rerun for the change to take effect.</div>");
-    // initialize the selection and register a change event listener
-    $elem.find("select").val(arrayLayout).change(function() {
-      // set the user preference
-      arrayLayout = $(this).val();
-      // show a note that the AV need to be regenerated
-      $elem.next(".jsavhelp").show();
-    });
-    return $elem;
-  };
   // create a new settings panel and specify the link to show it
   var settings = new JSAV.utils.Settings($(".jsavsettings"));
   // add the layout setting preference
-  settings.add(layoutSetting);
-
+  var arrayLayout = settings.add("layout", {"type": "select", "options": {"bar": "Bar", "array": "Array"}, "label":"Array layout: ", "value": "bar"});
+  
   var context = $("#ssperform");
   var emptyContent = $("#avcontainer").html();
   var av, // for JSAV av
@@ -295,7 +279,7 @@ margin-left: 10px;
       reset(true); // Reset any previous visualization
       av = new JSAV("avcontainer"); // initialize JSAV ..
       // .. and the array. use the layout the user has selected
-      arr = av.ds.array(theArray, {indexed: true, layout: arrayLayout});
+      arr = av.ds.array(theArray, {indexed: true, layout: arrayLayout.val()});
       var i, incr;
       for (i=0; i<incrs.length; i+=1) {
         if (incrs[i] < theArray.length) {

@@ -34,6 +34,54 @@
     };
   };
   
+  /* Creates an input component to be used in the settings panel. varname should be unique
+    within the document. Options can specify the label of the component, in which case
+    a label element is created. Option value specifies the default value of the element.
+    Every other option will be set as an attribute of the input element. */
+  var createInputComponent = function(varname, options) {
+    var label,
+        opts = $.extend({"type": "text"}, options),
+        input = $('<input id="jsavsettings-' + varname + '" type="' +
+          opts.type + '"/>');
+    if ('label' in opts) {
+      label = $('<label for="jsavsettings-' + varname + '">' + opts.label + "</label>");
+    }
+    if ('value' in opts) {
+      input.val(opts.value);
+    }
+    for (var attr in opts) {
+      if (['label', 'value', 'type'].indexOf(attr) === -1) {
+        input.attr(attr, opts[attr]);
+      }
+    }
+    return $('<div class="jsavrow"/>').append(label).append(input);
+  };
+  
+  /* Creates a select component to be used in the settings panel. varname should be unique
+    within the document. Options can specify the label of the component, in which case
+    a label element is created. Option value specifies the default value of the element.
+    Option options should be a map where every key-value pair will make for an option element
+    in the form. Every other option will be set as an attribute of the input element. */
+  var createSelectComponent = function(varname, options) {
+    var label, 
+        select = $('<select id="jsavsettings-' + varname + '" />');
+    if ('label' in options) {
+      label = $('<label for="jsavsettings-' + varname + '">' + options.label + "</label>");
+    }
+    for (var key in options.options) {
+      select.append('<option value="' + key + '">' + options.options[key] + '</option>');
+    }
+    if ('value' in options) {
+      select.val(options.value);
+    }
+    for (var attr in options) {
+      if (['label', 'value', 'options', 'type'].indexOf(attr) === -1) {
+        input.attr(attr, options[attr]);
+      }
+    }
+    return $('<div class="jsavrow"/>').append(label).append(select);
+  };
+  
   var Settings = function(elem) {
       this.components = [];
       this.add(speedSetting());
@@ -65,9 +113,28 @@
       this.dialog.close();
     }
   };
-  sproto.add = function(create) {
-    // create should be a function that returns a DOM Element or jQuery object or HTML string
-    this.components.push(create);
+  sproto.add = function(create, options) {
+    if ($.isFunction(create)) {
+      // create is a function that returns a DOM Element or jQuery object or HTML string
+      this.components.push(create);
+    } else {
+      // create is a name of a variable
+      if (!'type' in options) {
+        return;
+      }
+      var elem, func;
+      switch (options.type) {
+        case 'select':
+          func = createSelectComponent;
+          break;
+        default:
+          func = createInputComponent;
+          break;
+      }
+      elem = func(create, options);
+      this.components.push(elem);
+      return elem.find("input, select");
+    }
   };
   JSAV.utils.Settings = Settings;
   JSAV.init(function() {
