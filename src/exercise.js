@@ -7,7 +7,8 @@
   
   var Exercise = function(jsav, options) {
     this.jsav = jsav;
-    this.options = jQuery.extend({}, options, {});
+    this.options = jQuery.extend({}, {reset: function() { }}, options);
+    this.reset = this.options.reset;
   };
   var exerproto = Exercise.prototype;
   exerproto.grade = function() {
@@ -26,7 +27,8 @@
     if ($.isFunction(model)) {
       // behavior in a nutshell:
       // 1. create a new JSAV (and the HTML required for it)
-      var modelav = undefined;
+      var modelav = new JSAV();
+      console.log(modelav);
       // 2. run the model function on it
       model(modelav);
     } else if (typeof model === "string") {
@@ -45,4 +47,4 @@
     //  - pointScale: single number for max points OR array of min and max range OR
     //                a function that is given the correct states and total states
   };
-})();
+})(jQuery);
