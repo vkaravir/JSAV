@@ -42,8 +42,7 @@
     if (!this.modelav) {
       this.modelanswer();
     }
-    //var modelStructures = this.modelanswer();
-    // this.modelav.begin();
+    this.modelav.begin();
     $.fx.off = true;
     var totalSteps = 0;
     var correct = 0,
@@ -67,7 +66,7 @@
     this.modelav.begin();
     $.fx.off = false;
     
-    alert(correct + " / " + totalSteps);
+    alert("Your score: " + correct + " / " + totalSteps);
   };
   exerproto.modelanswer = function() {
     var model = this.options.model;
@@ -81,7 +80,7 @@
       this.modelav.begin();
       this.modelStructures = str;
     } else if (typeof model === "string") {
-      // TODO: implement this
+      // TODO: implement this (?)
       // if a string, assume it is a URL of an AV
       // behavior in a nutshell:
       // 1. complete the URL with initial data configuration as query params
