@@ -254,9 +254,7 @@ a.jsavsettings {
 /**** END STYLING THE DIALOG ****/
 
 /**** MODEL ANSWER ********/
-.jsavmodelanswer {
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  width: 90%;
+.jsavmodelanswer.jsavcontainer {
+  padding: 0;
+  background-color: white;
 }

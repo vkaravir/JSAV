@@ -32,25 +32,24 @@
     // behavior in a nutshell:
     // 1. get the student's solution
     // 2. get the model answer
-    // 3. get the selector for the structures to compare
-    // 4. rewind both
-    // 5. compare the states in the visualizations
-    // 6. scale the points
-    // 7. show result to student
-    // 8. show comparison of own and model side by side (??)
+    // 3. rewind both
+    // 4. compare the states in the visualizations
+    // 5. TODO: scale the points
+    // 6. show result to student
+    // 7. TODO: show comparison of own and model side by side (??)
     this.jsav.begin();
     if (!this.modelav) {
       this.modelanswer();
     }
     this.modelav.begin();
     $.fx.off = true;
-    var totalSteps = 0;
-    var correct = 0,
-        filter = function(step) { return step.options.grade; };
+    var totalSteps = 0,
+        correct = 0,
+        gradeStepFunction = function(step) { return step.options.grade; };
     while (this.modelav.currentStep() < this.modelav.totalSteps() && 
            this.jsav.currentStep() < this.jsav.totalSteps()) {
-      this.jsav.forward(filter);
-      this.modelav.forward(filter);
+      this.jsav.forward(gradeStepFunction);
+      this.modelav.forward(gradeStepFunction);
       totalSteps++;
       if (this.modelStructures.compare(this.initialStructures, this.options.compare)) {
         correct++;
@@ -60,7 +59,7 @@
     }
     // figure out the total number of steps in model answer
     while (this.modelav.currentStep() < this.modelav.totalSteps()) {
-      this.modelav.forward(filter);
+      this.modelav.forward(gradeStepFunction);
       totalSteps++;
     }
     this.modelav.begin();
@@ -74,8 +73,8 @@
       // behavior in a nutshell:
       // 1. create a new JSAV (and the HTML required for it)
       this.modelav = new JSAV($("<div><div class='jsavcontrols'/><span class='jsavcounter'></div>").addClass("jsavmodelanswer"));
-      this.modelav.container.appendTo($("body")).show();
       // 2. run the model function on it
+      JSAV.utils.dialog(this.modelav.container, {'title': 'Model Answer'});
       var str = model(this.modelav);
       this.modelav.begin();
       this.modelStructures = str;
