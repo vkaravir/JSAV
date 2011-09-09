@@ -125,7 +125,7 @@ div h1 {
       initialArray = [], // needed for model answer
       theArray,
       mode = "SELECTING",
-      incr;
+      currIncrIndex; // The index for the student's current increment
     
     // Partial Shellsort. Sweep with the given increment
     function sweep(incr, arr, jsav) {
@@ -202,7 +202,7 @@ div h1 {
     $theArray.html(htmldata);
 
     theArray = av.ds.array($theArray, {indexed: true});
-    incr = 0;
+    currIncrIndex = 0;
     return theArray;
   }
 
@@ -237,14 +237,15 @@ div h1 {
 
   // Process Done Increment button: change the message, array status
   function incrementing() {
-    if (incr < 3) {
-      Tell("Click on array elements to highlight those that make up the first sublist. Use increment " + incrs[incr]);
+    if (currIncrIndex < 3) {
       theArray.unhighlight();
       av.forward();
       if (mode === "SORTING") { // so student is not forced to click sorted
         av.setStepOption("grade", true);
       }
-      incr++;
+      currIncrIndex++;
+      Tell("Click on array elements to highlight those that make up the first sublist. Use increment " + incrs[currIncrIndex]);
+console.log(currIncrIndex + "; " + incrs);
     } else {
       Tell("Exercise is done, check your grade.");
     }
@@ -256,7 +257,7 @@ div h1 {
                           controls: $('.jsavexercisecontrols')});
   exer.reset();
   
-  Tell("Click on array elements to highlight those that make up the first sublist.");
+  Tell("Click on array elements to highlight those that make up the first sublist. Use increment " + incrs[currIncrIndex]);
   av.forward();
   var swapIndex = null;
   // register click handlers for the array indices
