@@ -25,7 +25,9 @@
       //} else if (this.output.hasClass("jsavscroll")) {
       } else { // e.g. "jsavscroll", which is default
         this.output.append("<div style='color:" + opts.color + ";'>" + msg + "</div>");
-        this.output[0].scrollTop = this.output[0].scrollHeight;
+        if (this.output[0]) {
+          this.output[0].scrollTop = this.output[0].scrollHeight;
+        }
       }      
     }
     return this;

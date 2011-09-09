@@ -5,22 +5,37 @@
 (function($) {
   if (typeof JSAV === "undefined") { return; }
 
-  function backward() {
+  var AnimStep = function(options) {
+    this.operations = [];
+    this.options = options || {};
+  };
+  AnimStep.prototype.add = function(oper) {
+    this.operations.push(oper);
+  };
+
+  function backward(filter) {
     if (this._undo.length === 0) { return; }
-    var ops = this._undo.pop(); // get the operations in the step we're about to undo
+    var step = this._undo.pop();
+    var ops = step.operations; // get the operations in the step we're about to undo
     for (var i = ops.length - 1; i >= 0; i--) { // iterate the operations
       // operation contains: [target object, effect function, arguments, undo function]
       var prev = ops[i];
       prev[3].apply(prev[0], prev[2]);
     }
-    this._redo.unshift(ops);
+    this._redo.unshift(step);
+    // if a filter function is given, check if this step matches
+    // if not, continue moving backward
+    if (filter && $.isFunction(filter) && !filter(step)) {
+      this.backward(filter);
+    }
     // trigger an event on the container to update the counter
     this.container.trigger("jsav-updatecounter");
   }
 
-  function forward() {
+  function forward(filter) {
     if (this._redo.length === 0) { return; }
-    var ops = this._redo.shift(); // get the operations in the step we're about to undo
+    var step = this._redo.shift();
+    var ops = step.operations; // get the operations in the step we're about to undo
     for (var i = 0; i < ops.length; i++) {
       // operation contains: [target object, effect function, arguments, undo function]
       var next = ops[i];
@@ -35,7 +50,10 @@
       } 
       next[1].apply(next[0], next[2]);
     }
-    this._undo.push(ops);
+    this._undo.push(step);
+    if (filter && $.isFunction(filter) && !filter(step)) {
+      this.forward(filter);
+    }
     // trigger an event on the container to update the counter
     this.container.trigger("jsav-updatecounter");
   }
@@ -66,9 +84,6 @@
     var that = this,
       $controls = $(".jsavcontrols", this.container),
       playingCl = "jsavplaying"; // class used to mark controls when playing
-    if ($controls.size() === 0) {
-      return; // no controls, no need to proceed
-    }
 
     // function for clearing the playing flag
     function clearPlaying() {
@@ -118,10 +133,12 @@
       that.end();
       clearPlaying();
     };
-    $("<a class='jsavbegin' href='#' title='Begin'>Begin</a>").click(beginHandler).appendTo($controls);
-    $("<a class='jsavbackward' href='#' title='Backward'>Backward</a>").click(backwardHandler).appendTo($controls);
-    $("<a class='jsavforward' href='#' title='Forward'>Forward</a>").click(forwardHandler).appendTo($controls);
-    $("<a class='jsavend' href='#' title='End'>End</a>").click(endHandler).appendTo($controls);
+    if ($controls.size() !== 0) {
+      $("<a class='jsavbegin' href='#' title='Begin'>Begin</a>").click(beginHandler).appendTo($controls);
+      $("<a class='jsavbackward' href='#' title='Backward'>Backward</a>").click(backwardHandler).appendTo($controls);
+      $("<a class='jsavforward' href='#' title='Forward'>Forward</a>").click(forwardHandler).appendTo($controls);
+      $("<a class='jsavend' href='#' title='End'>End</a>").click(endHandler).appendTo($controls);
+    }
     // bind the handlers to events to enable control by triggering events
     this.container.bind({ "jsav-forward": forwardHandler, 
                           "jsav-backward": backwardHandler,
@@ -151,16 +168,16 @@
     return function() {
       var jsav = this; // this points to the objects whose function was decorated
       if (!jsav.hasOwnProperty("_redo")) { jsav = this.jsav; }
-      var stackTop = jsav._redo[0];
-      if (!stackTop) {
-        stackTop = [];
-        jsav._redo.push(stackTop);
-      }
       if (jsav.options.animationMode == 'none') { // if not recording, apply immediately
         effect.apply(this, arguments);
       } else {
+        var stackTop = jsav._redo[0];
+        if (!stackTop) {
+          stackTop = new AnimStep();
+          jsav._redo.push(stackTop);
+        }
         // add to stack: [target object, effect function, arguments, undo function]
-        stackTop.push([this, effect, arguments, undo]);
+        stackTop.add([this, effect, arguments, undo]);
       }
       return this;
     };
@@ -194,11 +211,11 @@
     return info;
   };
   JSAV.ext.step = function(options) {
-    if (this._redo.length === 0 || this._redo[0].length === 0) { // ignore step if no operations in it
+    if (this._redo.length === 0 || this._redo[0].operations.length === 0) { // ignore step if no operations in it
       return this;
     }
     this.forward();
-    this._redo.push([]); // add new empty step to oper. stack
+    this._redo.push(new AnimStep(options)); // add new empty step to oper. stack
     if (options && this.message && options.message) {
       this.message(options.message);
     }
@@ -209,6 +226,12 @@
     return this.step(options);
   };
   JSAV.ext.stepdone = function() {return this;};
+  JSAV.ext.setStepOption = function(name, value) {
+    var step = this._undo[this._undo.length-1];
+    if (step) {
+      step.options[name] = value;
+    }
+  };
   JSAV.ext.recorded = function() {
     this.forward(); // apply the last steps
     this.begin();

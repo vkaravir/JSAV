@@ -252,3 +252,11 @@ a.jsavsettings {
   margin: 15px 8px 4px 8px;
 }
 /**** END STYLING THE DIALOG ****/
+
+/**** MODEL ANSWER ********/
+.jsavmodelanswer {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 90%;
+}
