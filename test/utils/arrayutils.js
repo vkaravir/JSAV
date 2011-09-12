@@ -1,7 +1,6 @@
 var arrayUtils = {
 
   testArrayHighlights: function(arr, hlIndices, props) {
-    console.log(arr.element[0].className);
     var testDiv= $('<ol class="' + arr.element[0].className + '"><li class="jsavnode jsavindex jsavhighlight"></li><li class="jsavnode jsavindex" ></li></ol>'),
       hlDiv = testDiv.find(".jsavnode").filter(".jsavhighlight"),
       unhlDiv = testDiv.find(".jsavnode").not(".jsavhighlight");
