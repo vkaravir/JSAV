@@ -46,11 +46,13 @@
     arr.highlight(2);
     av.recorded(); // will rewind it
     jQuery.fx.off = true; // turn off smooth animation
+    av.RECORD = true; // fake to not animate the properties 
     arrayUtils.testArrayHighlights(arr, [0, 0, 0, 0], props);
     av.container.trigger("jsav-end"); // apply all highlights
     arrayUtils.testArrayHighlights(arr, [1, 1, 1, 0], props);
     av.container.trigger("jsav-begin"); // undo everything
     arrayUtils.testArrayHighlights(arr, [0, 0, 0, 0], props);
+    jQuery.fx.off = true; // turn off smooth animation
     av.container.trigger("jsav-forward");
     arrayUtils.testArrayHighlights(arr, [1, 0, 0, 0], props);
     av.container.trigger("jsav-forward"); // second highlight
