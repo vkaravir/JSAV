@@ -74,7 +74,7 @@
       // 1. create a new JSAV (and the HTML required for it)
       this.modelav = new JSAV($("<div><div class='jsavcontrols'/><span class='jsavcounter'></div>").addClass("jsavmodelanswer"));
       // 2. run the model function on it
-      JSAV.utils.dialog(this.modelav.container, {'title': 'Model Answer'});
+      JSAV.utils.dialog(this.modelav.container, {'title': 'Model Answer', 'closeText': "Close"});
       var str = model(this.modelav);
       this.modelav.begin();
       this.modelStructures = str;
