@@ -182,25 +182,25 @@ test("Comparing arrays", function() {
     arr2 = av.ds.array([10, 30, 20, 40]),
     arr3 = av.ds.array([10, 30, 20, 40]),
     arr4 = av.ds.array([10, 30, 20, 40, 50]);
-  equals(arr1.compare([10, 20, 30, 40, 50]), false, "Different lengths should not match");
-  equals(arr1.compare([10, 20, 30, 40]), true, "Equal arrays");
-  equals(arr1.compare(arr2), false, "Arrays with different values");
-  equals(arr2.compare(arr3), true, "Equal JSAV arrays");
-  equals(arr3.compare(arr4), false, "Different lengths should not match"); 
-  equals(arr2.compare(arr3, {'css': 'background-color'}), true, "Equals values and background-colors");
-  equals(arr2.compare(arr3, {'css': ['color', 'background-color']}), true, "Equal values, background-colors and colors");
-  equals(arr1.compare(arr2, {'css': 'background-color', 'value': false}), true, "Ignoring values, equal background-colors");
+  equals(arr1.equals([10, 20, 30, 40, 50]), false, "Different lengths should not match");
+  equals(arr1.equals([10, 20, 30, 40]), true, "Equal arrays");
+  equals(arr1.equals(arr2), false, "Arrays with different values");
+  equals(arr2.equals(arr3), true, "Equal JSAV arrays");
+  equals(arr3.equals(arr4), false, "Different lengths should not match"); 
+  equals(arr2.equals(arr3, {'css': 'background-color'}), true, "Equals values and background-colors");
+  equals(arr2.equals(arr3, {'css': ['color', 'background-color']}), true, "Equal values, background-colors and colors");
+  equals(arr1.equals(arr2, {'css': 'background-color', 'value': false}), true, "Ignoring values, equal background-colors");
   arr2.highlight(2);
   av.step();
-  equals(arr2.compare(arr3, {'css': 'background-color'}), false, "Unequal background-colors");
+  equals(arr2.equals(arr3, {'css': 'background-color'}), false, "Unequal background-colors");
 
-  equals(arr2.compare(arr3, {'css': ['color', 'background-color']}), false, "Unequal background-colors and colors");
+  equals(arr2.equals(arr3, {'css': ['color', 'background-color']}), false, "Unequal background-colors and colors");
   
   var testDiv= $('<ol class="' + arr1.element[0].className + '"><li class="jsavnode jsavindex jsavhighlight"></li><li class="jsavnode jsavindex" ></li></ol>'),
     hlDiv = testDiv.find(".jsavnode").filter(".jsavhighlight"),
     unhlDiv = testDiv.find(".jsavnode").not(".jsavhighlight"),
     hlBg = hlDiv.css("background-color"),
     unhlBg = unhlDiv.css("background-color");
-  equals(arr2.compare([unhlBg, unhlBg, hlBg, unhlBg], {'css': 'background-color'}), true, "Equal background-colors as array.");
+  equals(arr2.equals([unhlBg, unhlBg, hlBg, unhlBg], {'css': 'background-color'}), true, "Equal background-colors as array.");
 });
 })();

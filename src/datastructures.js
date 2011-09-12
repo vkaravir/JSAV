@@ -284,7 +284,7 @@
       return sta;
     }
   };
-  arrproto.compare = function(otherArray, options) {
+  arrproto.equals = function(otherArray, options) {
     var opts = options || {},
       i, j,
       equal,

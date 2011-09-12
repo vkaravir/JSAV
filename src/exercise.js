@@ -51,7 +51,7 @@
       this.jsav.forward(gradeStepFunction);
       this.modelav.forward(gradeStepFunction);
       totalSteps++;
-      if (this.modelStructures.compare(this.initialStructures, this.options.compare)) {
+      if (this.modelStructures.equals(this.initialStructures, this.options.compare)) {
         correct++;
       } else {
         break;
