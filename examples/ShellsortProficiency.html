@@ -96,10 +96,8 @@ div h1 {
   // Define the local context (from form name)
   var context = $("#ssproficiency");
   //containing HTML element with id ssproficiency.
-  // We turn off slideshow mode, since this is a "static"
-  // form-based activity
-  var av = new JSAV("ssproficiency");//, {'animationMode': 'none'});
-  jQuery.fx.off = false;
+  var av = new JSAV(context);
+
   av.recorded();
   // Set up an output message buffer object,
   // and create a convenience function named Tell
@@ -262,10 +260,14 @@ div h1 {
   
   var swapIndex = null;
   // register click handlers for the array indices
-  $(".jsavindex").live("click", function() {
+  $("#profArray .jsavindex").live("click", function() {
     var index = $(this).parent(".jsavarray").find(".jsavindex").index(this);
     if (mode === "SELECTING") { // in selecting mode, highlight index
-      theArray.highlight(index);
+      if (theArray.css(index, "background-color") === "rgb(255, 255, 255)") {
+        theArray.highlight(index);
+      } else {
+        theArray.unhighlight(index);
+      }
       av.step();
     } else if (mode === "SORTING") { // in sorting mode
       if (!swapIndex && swapIndex !== 0) { // if first click
@@ -278,7 +280,6 @@ div h1 {
         theArray.css([swapIndex, index], {"font-size": "100%"});
         av.forward();
         av.setStepOption("grade", true);
-        //av.forward();
         swapIndex = null;
       }
     }
