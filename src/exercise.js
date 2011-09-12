@@ -87,6 +87,7 @@
     }
   };
   exerproto.reset = function() {
+    this.jsav.clear();
     this.initialStructures = this.options.reset();
     if (this.modelav) {
       this.modelav.container.remove();

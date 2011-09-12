@@ -221,6 +221,15 @@
     }
     return this;
   };
+  JSAV.ext.clear = function(options) {
+    var opts = $.extend({undo: true, redo: true}, options);
+    if (opts.undo) {
+      this._undo = [];
+    }
+    if (opts.redo) {
+      this._redo = [];
+    }
+  }
   JSAV.ext.substep = function(options) {
     // TODO: implement substep
     return this.step(options);
