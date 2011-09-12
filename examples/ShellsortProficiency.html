@@ -83,7 +83,7 @@ div h1 {
 <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/jquery-ui.min.js"></script>
 <script src="../lib/jquery.transform.light.js"></script>
 
-<script src="../build/JSAV-min.js"></script>
+<script src="../build/JSAV.js"></script>
 
 
 <script>
@@ -124,7 +124,8 @@ div h1 {
       initialArray = [], // needed for model answer
       theArray,
       mode = "SELECTING",
-      currIncrIndex; // The index for the student's current increment
+      currIncrIndex, // The index for the student's current increment
+      currSublist = 0; // the current sublist number
     
     // Partial Shellsort. Sweep with the given increment
     function sweep(incr, arr, jsav) {
@@ -201,6 +202,8 @@ div h1 {
 
     theArray = av.ds.array($theArray, {indexed: true});
     currIncrIndex = 0;
+    currSublist = 0;
+    theArray.toggleArrow(currSublist);
     Tell("To start the exercise: Click on array elements to highlight those that make up the first sublist. Use increment " + incrs[currIncrIndex]);
     av.forward();
     return theArray;
@@ -231,6 +234,9 @@ div h1 {
     mode = "SELECTING";
     Tell("Click on array elements to highlight those that make up the next sublist. If you have already sorted the last sublist for this increment, then click the 'Done Increment' button. Do not bother to process sublists with only one element.");
     theArray.unhighlight();
+    theArray.toggleArrow(currSublist);
+    theArray.toggleArrow(++currSublist);
+    
     av.forward();
     av.setStepOption("grade", true);
   }
@@ -243,6 +249,10 @@ div h1 {
         av.setStepOption("grade", true);
       }
       currIncrIndex++;
+      theArray.toggleArrow(currSublist);
+      currSublist = 0;
+      theArray.toggleArrow(currSublist);
+      
       Tell("Click on array elements to highlight those that make up the first sublist. Use increment " + incrs[currIncrIndex]);
     } else {
       Tell("Exercise is done, check your grade.");

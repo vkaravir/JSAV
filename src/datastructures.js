@@ -219,7 +219,7 @@
   arrproto.size = function() { return this.element.find("li").size(); };
   arrproto.value = function(index, newValue) {
     if (!newValue) {
-      return this.element.find("li:eq(" + index + ")").attr("data-value");
+      return parseInt(this.element.find("li:eq(" + index + ")").attr("data-value"), 10);
     } else {
       return this.setvalue(index, newValue);
     }
@@ -346,6 +346,11 @@
     return false;
   };
  
+  arrproto.toggleArrow = JSAV.anim(function(indices) {
+    var $elems = getIndices($(this.element).find("li"), indices);
+    $elems.toggleClass("jsavarrow");
+  });
+  
   function addCommonProperties(dsPrototype, commonProps) {
     if (!commonProps) { commonProps = common; }
     for (var prop in commonProps) {

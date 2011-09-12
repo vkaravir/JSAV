@@ -54,7 +54,6 @@ input {font-size: 0.7em; }
 .jsavarray {
   position: relative;
   list-style: none;
-  overflow: hidden;
   min-height: 50px;
   padding: 0;
 }
@@ -156,6 +155,18 @@ input {font-size: 0.7em; }
   margin-top:2.5em;
   font-size:300%;
   text-align:center;
+}
+
+.jsavindex.jsavarrow:before {
+  content: "";
+  background-color: transparent;
+  position: absolute;
+  width: 0;
+  height: 0;
+  border: 6px solid transparent;
+  border-top: 6px solid black;
+  top: -10px;
+  left: 17px;
 }
 
 /**** END OUTPUT STYLING ***/
