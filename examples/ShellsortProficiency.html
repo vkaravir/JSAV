@@ -203,7 +203,6 @@ div h1 {
     theArray = av.ds.array($theArray, {indexed: true});
     currIncrIndex = 0;
     currSublist = 0;
-    theArray.toggleArrow(currSublist);
     Tell("To start the exercise: Click on array elements to highlight those that make up the first sublist. Use increment " + incrs[currIncrIndex]);
     av.forward();
     return theArray;
@@ -234,7 +233,9 @@ div h1 {
     mode = "SELECTING";
     Tell("Click on array elements to highlight those that make up the next sublist. If you have already sorted the last sublist for this increment, then click the 'Done Increment' button. Do not bother to process sublists with only one element.");
     theArray.unhighlight();
-    theArray.toggleArrow(currSublist);
+    if (currSublist > 0) {
+      theArray.toggleArrow(currSublist);
+    }
     theArray.toggleArrow(++currSublist);
     
     av.forward();
@@ -251,7 +252,6 @@ div h1 {
       currIncrIndex++;
       theArray.toggleArrow(currSublist);
       currSublist = 0;
-      theArray.toggleArrow(currSublist);
       
       Tell("Click on array elements to highlight those that make up the first sublist. Use increment " + incrs[currIncrIndex]);
     } else {
