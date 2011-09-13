@@ -37,6 +37,7 @@
     // 5. TODO: scale the points
     // 6. show result to student
     // 7. TODO: show comparison of own and model side by side (??)
+    var origStep = this.jsav.currentStep();
     this.jsav.begin();
     if (!this.modelav) {
       this.modelanswer();
@@ -63,6 +64,7 @@
       totalSteps++;
     }
     this.modelav.begin();
+    this.jsav.jumpToStep(origStep);
     $.fx.off = false;
     
     alert("Your score: " + correct + " / " + totalSteps);

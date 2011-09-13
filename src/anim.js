@@ -229,7 +229,24 @@
     if (opts.redo) {
       this._redo = [];
     }
-  }
+  };
+  /** Jumps to step number step. */
+  JSAV.ext.jumpToStep = function(step) {
+    var stepCount = this.totalSteps(),
+        jsav = this,
+        stepFunction = function(stp) {
+          return jsav.currentStep() === step;
+        };
+    if (step >= stepCount) {
+      this.end();
+    } else if (step < 0) {
+      this.begin();
+    } else if (step < this.currentStep()) {
+      this.backward(stepFunction);
+    } else {
+      this.forward(stepFunction);
+    }
+  };
   JSAV.ext.substep = function(options) {
     // TODO: implement substep
     return this.step(options);
