@@ -125,7 +125,8 @@ div h1 {
       theArray,
       mode = "SELECTING",
       currIncrIndex, // The index for the student's current increment
-      currSublist = 0; // the current sublist number
+      currSublist = 0, // the current sublist number
+      currStep = 0; // for step-by-step grading
     
     // Partial Shellsort. Sweep with the given increment
     function sweep(incr, arr, jsav) {
@@ -203,6 +204,8 @@ div h1 {
     theArray = av.ds.array($theArray, {indexed: true});
     currIncrIndex = 0;
     currSublist = 0;
+    currStep = 0;
+    mode = "SELECTING",
     Tell("To start the exercise: Click on array elements to highlight those that make up the first sublist. Use increment " + incrs[currIncrIndex]);
     av.forward();
     return theArray;
@@ -226,6 +229,7 @@ div h1 {
     av.setStepOption("grade", true);
     Tell("Click on two array elements to swap them. Swap elements in the sublist until it is sorted.");
     av.forward();
+    console.log(++currStep, exer.grade().correct, (exer.grade().correct === currStep)?"CORRECT":"INCORRECT");
   }
 
   // Process Done sorting Sublist button: change the message, array status
@@ -240,6 +244,7 @@ div h1 {
     
     av.forward();
     av.setStepOption("grade", true);
+    console.log(++currStep, exer.grade().correct, (exer.grade().correct === currStep)?"CORRECT":"INCORRECT");
   }
 
   // Process Done Increment button: change the message, array status
@@ -290,6 +295,7 @@ div h1 {
         theArray.css([swapIndex, index], {"font-size": "100%"});
         av.forward();
         av.setStepOption("grade", true);
+        console.log(++currStep, exer.grade().correct, (exer.grade().correct === currStep)?"CORRECT":"INCORRECT");
         swapIndex = null;
       }
     }
