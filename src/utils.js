@@ -44,10 +44,10 @@
     //  - closeText
     //  - dialogClass
     //  - title
-    options = $.extend({}, options, {modal: true});
+    options = $.extend({}, {modal: true, closeOnClick: true}, options);
     var d = {
       },
-      modal = options.modal || true,
+      modal = options.modal,
       $dialog = $(dialogBase);
     if (typeof html === "string") {
       $dialog.html(html);
@@ -82,27 +82,31 @@
       if (e) { // if used as an event handler, prevent default behavior
         e.preventDefault();
       }
-      $modalElem.detach();
+      if ($modalElem) {
+        $modalElem.detach();
+      }
       $dialog.remove();
     };
     if (modal) {
       $modalElem = $modalElem || $('<div class="jsavmodal" />');
       $modalElem.css({width: docWidth, height: docHeight});
       $modalElem.appendTo($("body"));
-      $modalElem.click(close);
+      if (options.closeOnClick) {
+        $modalElem.click(close);
+      }
     }
     if ("closeText" in options) {
       var closeButton = $('<button type="button" class="jsavrow">' + options.closeText + '</button>')
         .click(close);
       $dialog.append(closeButton);
     }
-    $dialog.appendTo($("body"));
     $dialog.css({
         top: scrollTop + (winHeight - $dialog.outerHeight())/2,
         left: scrollLeft + (winWidth - $dialog.outerWidth())/2
     });
-    $dialog.close = close;
-    return $dialog;
+    var $dial = $dialog.appendTo($("body")).add($modalElem);
+    $dial.close = close;
+    return $dial;
   };
   
 })(jQuery);

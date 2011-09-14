@@ -18,11 +18,11 @@
             }),
           $model = $('<input type="button" name="answer" value="Model Answer" />').click(
             function() {
-              self.modelanswer();
+              self.showModelanswer();
             }),
           $grade = $('<input type="button" name="grade" value="Grade" />').click(
             function() {
-              self.grade();
+              self.showGrade();
             });
       cont.append($reset, $model, $grade);
     }
@@ -35,7 +35,7 @@
     // 3. rewind both
     // 4. compare the states in the visualizations
     // 5. TODO: scale the points
-    // 6. show result to student
+    // 6. return result
     // 7. TODO: show comparison of own and model side by side (??)
     var origStep = this.jsav.currentStep();
     this.jsav.begin();
@@ -66,8 +66,12 @@
     this.modelav.begin();
     this.jsav.jumpToStep(origStep);
     $.fx.off = false;
-    
-    alert("Your score: " + correct + " / " + totalSteps);
+    return {correct: correct, total: totalSteps};
+  };
+  exerproto.showGrade = function() {
+    // shows an alert box of the grade
+    var grade = this.grade();
+    alert("Your score: " + grade.correct + " / " + grade.total);
   };
   exerproto.modelanswer = function() {
     var model = this.options.model;
@@ -75,11 +79,12 @@
       // behavior in a nutshell:
       // 1. create a new JSAV (and the HTML required for it)
       this.modelav = new JSAV($("<div><div class='jsavcontrols'/><span class='jsavcounter'></div>").addClass("jsavmodelanswer"));
-      // 2. run the model function on it
-      JSAV.utils.dialog(this.modelav.container, {'title': 'Model Answer', 'closeText': "Close"});
+      this.modelDialog = JSAV.utils.dialog(this.modelav.container, 
+                {'title': 'Model Answer', 'closeText': "Close", "closeOnClick": false});
       var str = model(this.modelav);
       this.modelav.begin();
       this.modelStructures = str;
+      this.modelDialog.hide();
     } else if (typeof model === "string") {
       // TODO: implement this (?)
       // if a string, assume it is a URL of an AV
@@ -87,6 +92,11 @@
       // 1. complete the URL with initial data configuration as query params
       // 2. open a new window for the model answer
     }
+  };
+  exerproto.showModelanswer = function() {
+    this.modelanswer();
+    // 2. run the model function on it
+    this.modelDialog.show();
   };
   exerproto.reset = function() {
     this.jsav.clear();
