@@ -159,7 +159,6 @@ div h1 {
           if (parseInt(arr.value(j), 10) < parseInt(arr.value(j-incr), 10)) {
             arr.swap(j, j-incr); // swap the two indices
             jsav.step();
-            jsav.setStepOption("grade", true);
   	      } else {
             break; // Done pushing element, leave for loop
           }
@@ -174,6 +173,9 @@ div h1 {
       if (incrs[i] < modelarr.size()) {
         sweep(incrs[i], modelarr, jsav); // run the sweep to create the AV
       }
+      modelarr.unhighlight();
+      jsav.step();
+      jsav.setStepOption("grade", true);      
     }
     return modelarr;
   }
@@ -251,9 +253,9 @@ div h1 {
   function incrementing() {
     if (currIncrIndex < 3) {
       theArray.unhighlight();
-      if (mode === "SORTING") { // so student is not forced to click sorted
+      /*if (mode === "SORTING") { // so student is not forced to click sorted
         av.setStepOption("grade", true);
-      }
+      }*/
       currIncrIndex++;
       theArray.toggleArrow(currSublist);
       currSublist = 0;
@@ -263,6 +265,8 @@ div h1 {
       Tell("Exercise is done, check your grade.");
     }
     av.forward();
+    av.setStepOption("grade", true);
+    console.log(++currStep, exer.grade().correct, (exer.grade().correct === currStep)?"CORRECT":"INCORRECT");
     mode = "SELECTING";
   }
 
@@ -294,8 +298,6 @@ div h1 {
         theArray.swap(swapIndex, index, {});
         theArray.css([swapIndex, index], {"font-size": "100%"});
         av.forward();
-        av.setStepOption("grade", true);
-        console.log(++currStep, exer.grade().correct, (exer.grade().correct === currStep)?"CORRECT":"INCORRECT");
         swapIndex = null;
       }
     }
