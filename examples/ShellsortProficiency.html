@@ -31,13 +31,18 @@ div h1 {
     height: 40px;
     border: 1px;
   }
+a.jsavsettings {
+display: block;
+margin-top: 10px;
+margin-left: 10px;
+}
 
 </style>
 </head>
 
 <body>
 <div id="container">
-  <table id=tableT>
+<table id=tableT style="margin-top: -20px">
   <tr>
   <td width=125px>&nbsp;</td>
   <td width=550px align="center">
@@ -47,34 +52,35 @@ div h1 {
     <p align="right">
       <input type="button" name="help" value="Help" />
       <input type="button" name="about" value="About" />
+      <a class="jsavsettings" href="#">Settings</a>
     </p>
   </td>
   </tr>
-  </table>
-  <form style="border: 0px" id="ssproficiency">
-    <p style="margin-top:-5px">Instructions:</p>
-    <p style="margin-top: -15px; padding: 10px; 10px; margin-right: 10px; border: 1px solid black">
-       For each increment, you will need to process each
-       sublist in turn. For each sublist, click on its entries in the
-       Input array to highlight them. Once you have the sublist
-       selected, click "Done Selecting". Next, drag and drop the items
-       to sort them. Then click "Done Sorting Sublist" to go on to the next
-       sublist. When you have processed all of the sublists for a given
-       increment, click "Done Increment".
-    </p>
+</table>
+<form style="border: 0px" id="ssproficiency">
+  <p style="margin-top:-5px">Instructions:</p>
+  <p style="margin-top: -15px; padding: 10px; 10px; margin-right: 10px; border: 1px solid black">
+     For each increment, you will need to process each
+     sublist in turn. For each sublist, click on its entries in the
+     Input array to highlight them. Once you have the sublist
+     selected, click "Done Selecting". Next, drag and drop the items
+     to sort them. Then click "Done Sorting Sublist" to go on to the next
+     sublist. When you have processed all of the sublists for a given
+     increment, click "Done Increment".
+  </p>
 
-    Increments to use: <input type="text" readonly="readonly" name="incrField" id="incrField" width="50">
+  Increments to use: <input type="text" readonly="readonly" name="incrField" id="incrField" width="50">
 
-    <p><b>Input:</b></p>
+  <p><b>Input:</b></p>
 
-    <ol id="profArray"></ol>
+  <ol id="profArray" style="margin-top: -15px; margin-bottom: 40px"></ol>
 
-    <input type="button" name="selecting" value="Done Selecting" />
-    <input type="button" name="sorting" value="Done Sorting Sublist" />
-    <input type="button" name="incrementing" value="Done Increment" />
+  <input type="button" name="selecting" value="Done Selecting" />
+  <input type="button" name="sorting" value="Done Sorting Sublist" />
+  <input type="button" name="incrementing" value="Done Increment" />
 
-    <p class="jsavoutput jsavline"></p>
-  </form>
+  <p class="jsavoutput jsavline"></p>
+</form>
 </div> <!-- container -->
 
 <script
@@ -97,6 +103,11 @@ div h1 {
   var context = $("#ssproficiency");
   //containing HTML element with id ssproficiency.
   var av = new JSAV(context);
+
+  var settings = new JSAV.utils.Settings($(".jsavsettings"));
+  // add the layout setting preference
+  var arrayLayout = settings.add("layout", {"type": "select", "options": {"bar": "Bar", "array": "Array"}, "label":"Array layout: ", "value": "array"});
+  var feedback = settings.add("feedbck", {"type": "select", "options": {"continuous": "Continuous", "atend": "At end"}, "label":"Grade Feedback: ", "value": "At end"});
 
   av.recorded();
   // Set up an output message buffer object,
@@ -128,46 +139,47 @@ div h1 {
       currSublist = 0, // the current sublist number
       currStep = 0; // for step-by-step grading
     
-    // Partial Shellsort. Sweep with the given increment
-    function sweep(incr, arr, jsav) {
-      var j = 0,
-          numElem = 0,
-          highlightFunction = function(index) { return index%incr == j;};
-      for (j=0; j<incr; j++) {         // Sort each sublist
-        // Highlight the sublist
-        numElem = Math.ceil(arr.size()/incr);
-        if(j+(incr*(numElem-1))>=arr.size()) numElem = numElem-1;
-        if (numElem == 1) {
-          return;
-        } else {
-          arr.highlight(highlightFunction);
-          jsav.step();
-          jsav.setStepOption("grade", true);
-        }
-        inssort(j, incr, arr, jsav);
-        arr.unhighlight(highlightFunction);
+  // Partial Shellsort. Sweep with the given increment
+  function sweep(incr, arr, jsav) {
+    var j = 0,
+        numElem = 0,
+        highlightFunction = function(index) { return index%incr == j;};
+    for (j=0; j<incr; j++) {         // Sort each sublist
+      // Highlight the sublist
+      numElem = Math.ceil(arr.size()/incr);
+      if(j+(incr*(numElem-1))>=arr.size()) numElem = numElem-1;
+      if (numElem == 1) {
+        return;
+      } else {
+        arr.highlight(highlightFunction);
         jsav.step();
         jsav.setStepOption("grade", true);
       }
+      inssort(j, incr, arr, jsav);
+      arr.unhighlight(highlightFunction);
+      jsav.step();
+      jsav.setStepOption("grade", true);
     }
+  }
 
-    // Insertion sort using increments
-    function inssort(start, incr, arr, jsav) {
-      var i, j;
-      for (i=start+incr; i<arr.size(); i+=incr) {
-        for (j=i; j>=incr; j-=incr) {
-          if (parseInt(arr.value(j), 10) < parseInt(arr.value(j-incr), 10)) {
-            arr.swap(j, j-incr); // swap the two indices
-            jsav.step();
-  	      } else {
-            break; // Done pushing element, leave for loop
-          }
+  // Insertion sort using increments
+  function inssort(start, incr, arr, jsav) {
+    var i, j;
+    for (i=start+incr; i<arr.size(); i+=incr) {
+      for (j=i; j>=incr; j-=incr) {
+        if (parseInt(arr.value(j), 10) < parseInt(arr.value(j-incr), 10)) {
+          arr.swap(j, j-incr); // swap the two indices
+          jsav.step();
+        } else {
+          break; // Done pushing element, leave for loop
         }
       }
     }
+  }
+
   // generates the model answer; calls sweep above
   function shellsort(jsav) {
-    var modelarr = jsav.ds.array(initialArray, {indexed: true});
+    var modelarr = jsav.ds.array(initialArray, {indexed: true, layout: arrayLayout.val()});
     var i;
     for (i=0; i<incrs.length; i+=1) {
       if (incrs[i] < modelarr.size()) {
@@ -192,6 +204,7 @@ div h1 {
   
   // Process reset button: Re-initialize everything, including the increments
   function initialize() {
+console.log("Feedback:" + feedback.val());
     generateIncrements();
     document.forms['ssproficiency'].elements['incrField'].value = incrs;
   
@@ -203,7 +216,7 @@ div h1 {
     }
     $theArray.html(htmldata);
 
-    theArray = av.ds.array($theArray, {indexed: true});
+    theArray = av.ds.array($theArray, {indexed: true, layout: arrayLayout.val()});
     currIncrIndex = 0;
     currSublist = 0;
     currStep = 0;
@@ -273,7 +286,9 @@ div h1 {
   // Initialize the exercise
   // Defines the function to call on reset (initialize()), and the
   //  function to call to generate the model answer (shellsort())
-  var exer = av.exercise({reset: initialize, model: shellsort, compare: {css: "background-color"},
+  var exer = av.exercise({reset: initialize,
+                          model: shellsort,
+                          compare: {css: "background-color"},
                           controls: $('.jsavexercisecontrols')});
   exer.reset();
   
