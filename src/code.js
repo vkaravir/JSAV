@@ -6,7 +6,7 @@
   if (typeof JSAV === "undefined") { return; }
   var Variable = function(jsav, value, options) {
     this.jsav = jsav;
-    this.options = $.extend({display: false}, options);
+    this.options = $.extend({display: false, type: typeof value}, options);
     this.element = $('<div class="jsavvariable" style="display:none;">' +
                       '<span class="jsavvarname"></span><span class="jsavvalue jsavvarvalue">' + 
                       value + '</span></div>');
@@ -42,7 +42,14 @@
   );
   varproto.value = function(newValue) {
     if (typeof newValue === "undefined") {
-      return this.element.find(".jsavvarvalue").attr("data-value");
+      var val = this.element.find(".jsavvarvalue").attr("data-value");
+      if (this.options.type === "number") {
+        return Number(val);
+      } else if (this.options.type === "boolean") {
+        return !!val;
+      } else {
+        return val;
+      }
     } else {
       this._setValue(newValue);
       return this;
