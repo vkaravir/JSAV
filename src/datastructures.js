@@ -1,6 +1,6 @@
 /**
 * Module that contains the data structure implementations.
-* Depends on core.js
+* Depends on core.js, anim.js
 */
 (function($) {
   if (typeof JSAV === "undefined") { return; }
