@@ -32,7 +32,7 @@
     this.container.trigger("jsav-updatecounter");
   }
 
-  function forward(filter) {
+  function forward() {
     if (this._redo.length === 0) { return; }
     var step = this._redo.shift();
     var ops = step.operations; // get the operations in the step we're about to undo
@@ -51,11 +51,9 @@
       next[1].apply(next[0], next[2]);
     }
     this._undo.push(step);
-    if (filter && $.isFunction(filter) && !filter(step)) {
-      this.forward(filter);
-    }
     // trigger an event on the container to update the counter
     this.container.trigger("jsav-updatecounter");
+    return step; // return the just applied step
   }
 
   function begin() {
@@ -182,13 +180,40 @@
       return this;
     };
   }
- 
+  function moveWrapper(func, filter) {
+    var origStep = this.currentStep(),
+      step = func.call(this);
+    if (!step) {
+      return false;
+    }
+    if (filter) {
+      if ($.isFunction(filter)) {
+        var filterMatch = filter(step),
+          matched = filterMatch;
+        while (!filterMatch && this.currentStep() < this.totalSteps()) {
+          step = func.call(this);
+          if (!step) { break; }
+          filterMatch = filter(step);
+          matched = matched || filterMatch;
+        }
+        if (!matched) {
+          this.jumpToStep(origStep);
+          return false;
+        }
+      }
+    }
+    return true;
+  };
   JSAV.anim = anim;
   JSAV.ext.SPEED = 400;
   JSAV.ext.begin = begin;
   JSAV.ext.end = end;
-  JSAV.ext.forward = forward;
-  JSAV.ext.backward = backward;
+  JSAV.ext.forward = function(filter) {
+    return moveWrapper.call(this, forward, filter);
+  };
+  JSAV.ext.backward = function(filter) {
+    return moveWrapper.call(this, backward, filter);
+  };
   JSAV.ext.currentStep = function() {
     return this._undo.length;
   };
