@@ -60,4 +60,47 @@
     av.container.trigger("jsav-backward"); // undo second highlight
     arrayUtils.testArrayHighlights(arr, [1, 0, 0, 0], props);
   });
+  
+  test("backward/forward filters", function() {
+    var av = new JSAV("emptycontainer"),
+      arr = av.ds.array([10, 20, 30, 40]),
+  	  props = ["color", "background-color"];
+    arr.highlight(0);
+    av.stepOption("stop0", true);
+    av.step();
+    arr.highlight(1);
+    av.stepOption("stop1", true);
+    av.step();
+    arr.highlight(2);
+    av.step();
+    av.stepOption("stop2", true);
+    arr.highlight(3);
+    av.recorded(); // will rewind it
+    arrayUtils.testArrayHighlights(arr, [0, 0, 0, 0], props);
+    av.end();
+    arrayUtils.testArrayHighlights(arr, [1, 1, 1, 1], props);
+    
+    av.backward(function(step) { return step.options.stop0; }); // should go to beginning
+    equals(av.currentStep(), 0);
+    arrayUtils.testArrayHighlights(arr, [0, 0, 0, 0], props);
+
+    av.end();
+    jQuery.fx.off = true; // turn off smooth animation
+    av.backward(function(step) { return step.options.stop1; }); // should go to step 1
+    arrayUtils.testArrayHighlights(arr, [1, 0, 0, 0], props);
+    equals(av.currentStep(), 1);
+    av.begin();
+    jQuery.fx.off = true; // turn off smooth animation
+    
+    av.forward(function(step) { return step.options.stop2; }); // end
+    arrayUtils.testArrayHighlights(arr, [1, 1, 1, 1], props);
+    equals(av.currentStep(), 4);
+    av.begin();
+    jQuery.fx.off = true; // turn off smooth animation
+    
+    av.forward(function(step) { return step.options.stop1; }); // step 2
+    arrayUtils.testArrayHighlights(arr, [1, 1, 0, 0], props);
+    equals(av.currentStep(), 2);
+    
+  });
 })();
