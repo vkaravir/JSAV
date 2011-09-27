@@ -30,6 +30,7 @@
     }
     // trigger an event on the container to update the counter
     this.container.trigger("jsav-updatecounter");
+    return step;
   }
 
   function forward() {
@@ -277,10 +278,24 @@
     return this.step(options);
   };
   JSAV.ext.stepdone = function() {return this;};
-  JSAV.ext.setStepOption = function(name, value) {
-    var step = this._undo[this._undo.length-1];
-    if (step) {
-      step.options[name] = value;
+  JSAV.ext.stepOption = function(name, value) {
+    var step = this._redo[0];
+    if (value) { // set named property
+      if (step) {
+        step.options[name] = value;
+      }
+    } else if (typeof name === "string") { // get named property
+      if (step) {
+        return step.options[name];
+      } else {
+        return undefined;
+      }
+    } else { // assume an object
+      for (var item in name) {
+        if (name.hasOwnProperty(item)) {
+          this.stepOption(item, name[item]);
+        }
+      }
     }
   };
   JSAV.ext.recorded = function() {
