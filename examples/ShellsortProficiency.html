@@ -2,7 +2,7 @@
 <html>
 <head>
 <title>ShellSort Proficiency Exercise</title>
-<link href="AeBookAV.css" title="CSS" rel="stylesheet" type="text/css" />
+<link href="AeBookAV.css" rel="stylesheet" type="text/css" />
 <link rel="stylesheet" href="../css/JSAV.css" type="text/css" />
 <style>
 
@@ -293,11 +293,14 @@ console.log("Feedback:" + feedback.val());
   exer.reset();
   
   var swapIndex = null;
+  // background colors used for the different layouts, used to check if index is highlighted
+  var BGCOLORS = { "array": "rgb(255, 255, 255)", 
+                   "bar": "rgb(238, 238, 238)"};
   // register click handlers for the array indices
   $("#profArray .jsavindex").live("click", function() {
     var index = $(this).parent(".jsavarray").find(".jsavindex").index(this);
     if (mode === "SELECTING") { // in selecting mode, highlight index
-      if (theArray.css(index, "background-color") === "rgb(255, 255, 255)") {
+      if (theArray.css(index, "background-color") === BGCOLORS[arrayLayout.val()]) {
         theArray.highlight(index);
       } else {
         theArray.unhighlight(index);
