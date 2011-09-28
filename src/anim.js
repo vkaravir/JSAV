@@ -280,7 +280,7 @@
   JSAV.ext.stepdone = function() {return this;};
   JSAV.ext.stepOption = function(name, value) {
     var step = this._redo[0];
-    if (value) { // set named property
+    if (value !== undefined) { // set named property
       if (step) {
         step.options[name] = value;
       }
