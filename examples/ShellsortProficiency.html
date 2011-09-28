@@ -294,15 +294,12 @@ margin-left: 10px;
   exer.reset();
   
   var swapIndex = null;
-  // background colors used for the different layouts, used to check if index is highlighted
-  var BGCOLORS = { "array": "rgb(255, 255, 255)", 
-                   "bar": "rgb(238, 238, 238)"};
   // register click handlers for the array indices
   $("#profArray .jsavindex").live("click", function() {
     var index = $(this).parent(".jsavarray").find(".jsavindex").index(this);
     av._redo = []; // clear the forward stack, should add a method for this in lib
     if (mode.value() === "SELECTING") { // in selecting mode, highlight index
-      if (theArray.css(index, "background-color") === BGCOLORS[arrayLayout.val()]) {
+      if (!theArray.isHighlight(index)) {
         theArray.highlight(index);
       } else {
         theArray.unhighlight(index);
