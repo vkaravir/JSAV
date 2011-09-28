@@ -9,8 +9,8 @@
   
   var Exercise = function(jsav, options) {
     this.jsav = jsav;
-    this.options = jQuery.extend({reset: function() { }, controls: null, feedback: "continuous",
-                                  feedbackSelectable: true, fixmode: "fix",
+    this.options = jQuery.extend({reset: function() { }, controls: null, feedback: "atend",
+                                  feedbackSelectable: true, fixmode: "undo",
                                   fixmodeSelectable: true}, options);
     // initialize controls
     var cont = $(this.options.controls) || this.jsav.container.find(".jsavexercisecontrols"),
