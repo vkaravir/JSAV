@@ -36,10 +36,6 @@ display: block;
 margin-top: 10px;
 margin-left: 10px;
 }
-.jsavcontrols a {
-  margin: 0 5px; 
-  height: 20px;
-}
 </style>
 </head>
 
@@ -72,7 +68,7 @@ margin-left: 10px;
      increment, click "Done Increment".
   </p>
 
-  Increments to use: <input type="text" readonly="readonly" name="incrField" id="incrField" width="50"> <span class="jsavcontrols"></span>
+  Increments to use: <input type="text" readonly="readonly" name="incrField" id="incrField" width="50">
 
   <p><b>Input:</b></p>
 
@@ -222,6 +218,7 @@ margin-left: 10px;
     currIncrIndex = av.variable(0);
     currSublist = av.variable(0);
     mode = av.variable("SELECTING");
+    swapIndex = av.variable(-1, {display: true});
     Tell("To start the exercise: Click on array elements to highlight those that make up the first sublist. Use increment " + incrs[currIncrIndex.value()]);
     av.forward();
     av._undo = [];
@@ -304,7 +301,7 @@ margin-left: 10px;
                           fix: fixState});
   exer.reset();
   
-  var swapIndex = null;
+  var swapIndex;
   // register click handlers for the array indices
   $("#profArray .jsavindex").live("click", function() {
     var index = $(this).parent(".jsavarray").find(".jsavindex").index(this);
@@ -317,15 +314,16 @@ margin-left: 10px;
       }
       av.step();
     } else if (mode.value() === "SORTING") { // in sorting mode
-      if (!swapIndex && swapIndex !== 0) { // if first click
+      var sIndex = swapIndex.value();
+      if (sIndex === -1) { // if first click
         theArray.css(index, {"font-size": "130%"});
-        swapIndex = index;
+        swapIndex.value(index);
         av.forward();
       } else { // second click will swap
-        theArray.swap(swapIndex, index, {});
-        theArray.css([swapIndex, index], {"font-size": "100%"});
+        theArray.swap(sIndex, index, {});
+        theArray.css([sIndex, index], {"font-size": "100%"});
+        swapIndex.value(-1);
         av.forward();
-        swapIndex = null;
       }
     }
   });
