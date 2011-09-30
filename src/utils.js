@@ -100,11 +100,11 @@
         .click(close);
       $dialog.append(closeButton);
     }
+    var $dial = $dialog.appendTo($("body")).add($modalElem);
     $dialog.css({
         top: scrollTop + (winHeight - $dialog.outerHeight())/2,
         left: scrollLeft + (winWidth - $dialog.outerWidth())/2
     });
-    var $dial = $dialog.appendTo($("body")).add($modalElem);
     $dial.close = close;
     return $dial;
   };
