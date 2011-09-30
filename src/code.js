@@ -7,8 +7,8 @@
   var Variable = function(jsav, value, options) {
     this.jsav = jsav;
     this.options = $.extend({display: false, type: typeof value}, options);
-    this.element = $('<div class="jsavvariable" style="display:none;">' +
-                      '<span class="jsavvarname"></span><span class="jsavvalue jsavvarvalue">' + 
+    this.element = $('<div class="jsavvariable">' +
+                      '<span class="jsavvarlabel"></span> <span class="jsavvalue jsavvarvalue">' + 
                       value + '</span></div>');
     this.element.find(".jsavvarvalue").attr("data-value", value);
     if (this.options.before) {
@@ -18,11 +18,14 @@
     } else {
       $(this.jsav.container).append(this.element);
     }
-    if (this.options.name) {
-      this.element.find(".jsavvarname").html(this.options.name);
+    if (this.options.label) {
+      this.element.find(".jsavvarlabel").html(this.options.label);
     }
-    if (this.options.display) {
-      this.show();
+    if (this.options.name) {
+      this.element.attr("data-varname", this.options.name);
+    }
+    if (!this.options.display) {
+      this.element.css("display", "none");
     }    
   };
   var varproto = Variable.prototype;
