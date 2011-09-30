@@ -113,7 +113,7 @@
       // 1. create a new JSAV (and the HTML required for it)
       this.modelav = new JSAV($("<div><div class='jsavcontrols'/><span class='jsavcounter'></div>").addClass("jsavmodelanswer"));
       this.modelDialog = JSAV.utils.dialog(this.modelav.container, 
-                {'title': 'Model Answer', 'closeText': "Close", "closeOnClick": false});
+                {'title': 'Model Answer', 'closeText': "Close", "closeOnClick": false, "modal": false});
       var str = model(this.modelav);
       this.modelav.begin();
       this.modelStructures = str;
@@ -127,9 +127,7 @@
     }
   };
   exerproto.showModelanswer = function() {
-    if (!this.modelav) {
-      this.modelanswer();
-    }
+    this.modelanswer();
     this.modelav.begin();
     this.modelDialog.show();
   };
@@ -141,6 +139,21 @@
       this.modelav = undefined;
       this.modelStructures = undefined;
     }
+  };
+  var undo = function() {
+    $.fx.off = true;
+    // undo last step
+    this.jsav.backward();
+    // undo until the previous graded step
+    if (this.jsav.backward(gradeStepFunction)) {
+      // if such step was found, redo it
+      this.jsav.forward();
+    } else {
+      // ..if not, the first student step was incorrent and we can rewind to beginning
+      this.jsav.begin();
+    }
+    this.jsav._redo = [];
+    $.fx.off = false;
   };
   exerproto.gradeableStep = function() {
     this.jsav.stepOption("grade", true);
@@ -164,21 +177,11 @@
         $.fx.off = false;
         alert("Your last step was incorrect but it has been fixed");
       } else if (fixmode === "fix") {
-        alert("Your last step was incorrect and I should fix your solution, but don't know how");
+        undo.call(this); // no fix function but mode is fix, let's just undo
+        alert("Your last step was incorrect and I should fix your solution, but don't know how. So it was undone.");
       } else {
-        $.fx.off = true;
-        // undo last step
-        this.jsav.backward();
-        // undo until the previous graded step
-        if (this.jsav.backward(gradeStepFunction)) {
-          // if such step was found, redo it
-          this.jsav.forward();
-        } else {
-          // ..if not, the first student step was incorrent and we can rewind to beginning
-          this.jsav.begin();
-        }
-        this.jsav._redo = [];
-        $.fx.off = false;
+        // undo until last graded step
+        undo.call(this);
         alert("Your last step was incorrect and it has been undone");
       }
     }
