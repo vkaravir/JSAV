@@ -51,7 +51,7 @@
   </head>
 
 <body>
-<h1>Documentation for the JavaScript Algorithm Visualization API (JSAV) Version 0.1.2</h1>
+<h1>Documentation for the JavaScript Algorithm Visualization API (JSAV) Version 0.3</h1>
 
 <p class="note">
 This documentation reflects the current status of the library.
@@ -489,7 +489,7 @@ out, this method will return the current text of the label.
   option for the constructor. For example, <code>var av = 
   new JSAV(jQuery("#container"), {"settings": settings});</code>. If no custom settings
   are given, JSAV will automatically create a default settings panel and attach it to
-  <code>a</code> element with class <code>jsavsettings</code> inside the container. No
+  any element with class <code>jsavsettings</code> inside the container. No
   matter how the settings is initialized, it can be accessed through <code>av.settings</code>
   field.</p>
 
@@ -501,10 +501,34 @@ out, this method will return the current text of the label.
 <h3 class="apimethod">settings.close()</h3>
 <p>Closes the settings dialog.</p>
 
+<h3 class="apimethod">settings.add(varname, options)</h3>
+<p>Adds a component to the settings dialog. The parameter <code>varname</code> is the unique
+  name of the variable for this setting which can be used later to get the value of the setting.
+  Parameter <code>options</code> is an object used to specify the properties of the settings
+  variable. The following options can be set:</p>
+  
+  <ul>
+    <li>type: Type of the HTML element used for this setting. Choices are <code>select</code> and
+      valid values for the text attribute of an HTML input element (such as text, email, range).</li>
+    <li>label: Label shown next to the form element of this setting.</li>
+    <li>value: The initial value of the setting.</li>
+    <li>options: Select options for the type select. This should be an object representing key-value pairs.
+      For example, <code>"options": {"bar": "Bar layout", "array", "Array layout"}</code> would add
+      two choices Bar layout and Array layout.</li>
+  </ul>
+  <p>In addition to these options, when using an input element (text, email) to represent the setting,
+    any additional options will be set as attributes of the <code>input</code> element. For example:</p>
+    <pre>settings.add("speed", {"type": "range", "value": "7", "min": 1, "max": 10, "step": 1});</pre>
+  <p>Would create <code>&lt;input type="range" value="7" min="1" max="10" step="1" /></code>. For an  
+    select example, see file examples/shellsort-av.html and search for <code>layoutSetting</code>.</p>
+    
+  <p>The <code>add</code> function returns a reference to the setting. The function <code>val()</code> 
+    returns the value of the setting.</p>
+    
+
 <h3 class="apimethod">settings.add(function)</h3>
-<p>Adds a component to the settings dialog. The parameter should be a function
-  that returns a DOM element or a jQuery object. For an example, see file examples/shellsort-av.html
-  and search for <code>layoutSetting</code>.</p>
+<p>Adds a more customizable component to the settings dialog. The parameter should be a function
+  that returns a DOM element or a jQuery object.</p>
 
 
 <h2>Utility Functions</h2>
