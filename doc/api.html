@@ -461,6 +461,9 @@ out, this method will return the current text of the label.
     <li> <code>{label: &lt;string>}</code> Label for the variable. Will be shown 
       before the variable value. For example, label "Count =" would end up the
       variable looking like "Count = 3" in the HTML.</li>
+    <li> <code>{type: &lt;string>}</code> Type of the variable. Can be boolean,
+      number, or string. By default, the type is decided based on the type of the
+      initial value.</li>
     </ul>
 
     <h3 class="apimethod">.hide()</h3>
@@ -476,7 +479,8 @@ out, this method will return the current text of the label.
     <h3 class="apimethod">.value([val])</h3>
     <p>
     Set the value of the variable. If the <code>val</code> parameter is left
-    out, this method will return the current value of the variable.
+    out, this method will return the current value of the variable. The value is
+    converted to the type specified when initializing the variable.
     </p>
 
 <h2>Settings Dialog for AV</h2>
