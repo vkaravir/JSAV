@@ -414,11 +414,11 @@ Paramter <code>options</code> include the following:
 </p>
 <ul>
 <li> <code>{before: &lt;UI element>}</code> Set the label before element
-<code>UI element</code>
+<code>UI element</code></li>
 <li> <code>{after: &lt;UI element>}</code> Set the label after element
-<code>UI element</code>
+<code>UI element</code></li>
 <li> <code>{display: &lt;boolean>}</code> Determine whether the label
-is visible on creation.
+is visible on creation. Defaults to true.</li>
 </ul>
 
 <h3 class="apimethod">.hide()</h3>
@@ -436,6 +436,48 @@ Make the label visible.
 Set the text for the label. If the <code>msg</code> parameter is left
 out, this method will return the current text of the label.
 </p>
+
+    <h2>Variable API</h2>
+
+    Variables can be used to present undo/redo capable variables.
+
+    <h3 class="apimethod">.variable(value, [options])</h3>
+    <p>
+    This is a method of the AV object.
+    It creates a variable that can be associated with some UI element.
+    Parameter <code>value</code> is the
+    (initial) value for the variable.
+    Parameter <code>options</code> include the following:
+    </p>
+    <ul>
+    <li> <code>{before: &lt;UI element>}</code> Add the variable before element
+    <code>UI element</code></li>
+    <li> <code>{after: &lt;UI element>}</code> Add the variable after element
+    <code>UI element</code></li>
+    <li> <code>{display: &lt;boolean>}</code> Determine whether the label
+    is visible on creation. Defaults to false.</li>
+    <li> <code>{name: &lt;string>}</code> Name of the variable. Can be used to 
+      fetch the variable value later. </li>
+    <li> <code>{label: &lt;string>}</code> Label for the variable. Will be shown 
+      before the variable value. For example, label "Count =" would end up the
+      variable looking like "Count = 3" in the HTML.</li>
+    </ul>
+
+    <h3 class="apimethod">.hide()</h3>
+    <p>
+    Make the variable invisible.
+    </p>
+
+    <h3 class="apimethod">.show()</h3>
+    <p>
+    Make the variable visible.
+    </p>
+
+    <h3 class="apimethod">.value([val])</h3>
+    <p>
+    Set the value of the variable. If the <code>val</code> parameter is left
+    out, this method will return the current value of the variable.
+    </p>
 
 <h2>Settings Dialog for AV</h2>
 <p>There is a configurable settings dialog class in JSAV.utils.Settings.
