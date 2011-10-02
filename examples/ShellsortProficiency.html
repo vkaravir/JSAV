@@ -218,7 +218,7 @@ margin-left: 10px;
     currIncrIndex = av.variable(0);
     currSublist = av.variable(0);
     mode = av.variable("SELECTING");
-    swapIndex = av.variable(-1, {display: true});
+    swapIndex = av.variable(-1);
     Tell("To start the exercise: Click on array elements to highlight those that make up the first sublist. Use increment " + incrs[currIncrIndex.value()]);
     av.forward();
     av._undo = [];
