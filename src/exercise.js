@@ -175,14 +175,14 @@
         this.jsav.stepOption("grade", true);
         this.jsav.forward();
         $.fx.off = false;
-        alert("Your last step was incorrect but it has been fixed");
+        alert("Your last step was incorrect. Your work has been replaced with the correct step so that you can continue on.");
       } else if (fixmode === "fix") {
         undo.call(this); // no fix function but mode is fix, let's just undo
-        alert("Your last step was incorrect and I should fix your solution, but don't know how. So it was undone.");
+        alert("Your last step was incorrect and I should fix your solution, but don't know how. So it was undone and you can try again.");
       } else {
         // undo until last graded step
         undo.call(this);
-        alert("Your last step was incorrect and it has been undone");
+        alert("Your last step was incorrect. Things are reset to the beginning of the step so that you can try again.");
       }
     }
   };

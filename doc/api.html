@@ -138,8 +138,10 @@ var av = new JSAV(jQuery("#container"));</pre>
   supported:</p>
 <dl>
   <dt><code>title</code></dt>
-  <dd>Title of the AV which will be shown as the first slide of the
-    slideshow.</dd>
+  <dd>Title of the AV. This will be shown as the first slide of the
+    slideshow.</dd><br/>
+  <dt><code>animationMode</code></dt>
+  <dd>Use "None" to turn off animation (slideshow) mode.</dd>
 </dl>
     
 <h2>Slideshow Support</h2>
@@ -493,8 +495,9 @@ out, this method will return the current text of the label.
   option for the constructor. For example, <code>var av = 
   new JSAV(jQuery("#container"), {"settings": settings});</code>. If no custom settings
   are given, JSAV will automatically create a default settings panel and attach it to
-  any element with class <code>jsavsettings</code> inside the container. No
-  matter how the settings is initialized, it can be accessed through <code>av.settings</code>
+  any element with class <code>jsavsettings</code> inside the container.
+  No matter how the settings object is initialized,
+  it can be accessed through the <code>av.settings</code>
   field.</p>
 
 <p>A settings instance has the following functions.</p>
@@ -506,7 +509,7 @@ out, this method will return the current text of the label.
 <p>Closes the settings dialog.</p>
 
 <h3 class="apimethod">settings.add(varname, options)</h3>
-<p>Adds a component to the settings dialog. The parameter <code>varname</code> is the unique
+<p>Adds a component to the settings dialog. Parameter <code>varname</code> is the unique
   name of the variable for this setting which can be used later to get the value of the setting.
   Parameter <code>options</code> is an object used to specify the properties of the settings
   variable. The following options can be set:</p>
@@ -514,13 +517,13 @@ out, this method will return the current text of the label.
   <ul>
     <li>type: Type of the HTML element used for this setting. Choices are <code>select</code> and
       valid values for the text attribute of an HTML input element (such as text, email, range).</li>
-    <li>label: Label shown next to the form element of this setting.</li>
+    <li>label: The label displayed next to the form element of this setting.</li>
     <li>value: The initial value of the setting.</li>
     <li>options: Select options for the type select. This should be an object representing key-value pairs.
       For example, <code>"options": {"bar": "Bar layout", "array", "Array layout"}</code> would add
-      two choices Bar layout and Array layout.</li>
+      two choices: Bar layout and Array layout.</li>
   </ul>
-  <p>In addition to these options, when using an input element (text, email) to represent the setting,
+  <p>In addition to these options, when using an HTML input element (text, email) to represent the setting,
     any additional options will be set as attributes of the <code>input</code> element. For example:</p>
     <pre>settings.add("speed", {"type": "range", "value": "7", "min": 1, "max": 10, "step": 1});</pre>
   <p>Would create <code>&lt;input type="range" value="7" min="1" max="10" step="1" /></code>. For an  
@@ -565,18 +568,17 @@ out, this method will return the current text of the label.
 
 <p>
 When you create a visualization, you might want to make it easy for
-other people to use.
-Some simple steps will make it easy for others to include your
-visualization within their own HTML pages using a
-simple <code>iframe</code> tag.
+other people to reuse via embedding within their own pages.
+Some simple steps will make this easier for them
+when using a simple <code>iframe</code> tag.
 The library is set up to make it natural for your visualization to
 reside within the <code>container</code> element.
 There is no margin or padding around the <code>container</code>, and
 it has a one-pixel-wide black border.
 So long as you stay within this, an <code>iframe</code> can include
 your whole visualization without any disruption to the user's page.
-If you would like to support mobiles, you will probably want to keep
-the full size of your <code>container</code> at most 800 by 435 pixels.
+If you would like to support mobiles, you will probably want to restrict
+the full size of your <code>container</code> to at most 800 by 435 pixels.
 A visualization can then be embedded with a call such as:
 </p>
 

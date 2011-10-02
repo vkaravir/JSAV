@@ -239,6 +239,8 @@ margin-left: 10px;
 
   // Process Done selecting button: change the message, array status
   function selecting() {
+    // Don't do anything if user not in SELECTING mode
+    if (mode.value() !== "SELECTING") {return;}
     mode.value("SORTING");
     Tell("Click on two array elements to swap them. Swap elements in the sublist until it is sorted.");
     exer.gradeableStep(); // mark this as a gradeable step; also handles continuous feedback
@@ -246,8 +248,10 @@ margin-left: 10px;
 
   // Process Done sorting Sublist button: change the message, array status
   function sorting() {
+    // Don't do anything if user not in SORTING mode
+    if (mode.value() !== "SORTING") {return;}
     mode.value("SELECTING");
-    Tell("Click on array elements to highlight those that make up the next sublist. If you have already sorted the last sublist for this increment, then click the 'Done Increment' button. Do not bother to process sublists with only one element.");
+    Tell("Current increment is " + incrs[currIncrIndex.value()] + ". Click on array elements to highlight those that make up the next sublist. If you have already sorted the last sublist for this increment, then click the 'Done Increment' button. Do not bother to process sublists with only one element.");
     theArray.unhighlight();
     if (currSublist.value() > 0) {
       theArray.toggleArrow(currSublist.value());
@@ -276,7 +280,7 @@ margin-left: 10px;
   }
 
   // function that will be called by the exercise if continuous feedback mode
-  // is used and the fix errors mode. 
+  // is used and the fix errors mode is on.
   function fixState(modelArray) {
     var size = modelArray.size();
     for (var i = 0; i < size; i++) {
