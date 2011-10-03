@@ -67,12 +67,12 @@
     alert(mystring);
   }
 
-  av.umsg("Shellsort provides a huge improvement over O(n<sup>2</sup>) sorts sorts like Insertion Sort. It works by taking advantage of the fact that Insertion Sort works very well (in linear time) when the list is nearly sorted. Shellsort works by performing a series of Insertion Sorts on carefully selected sublists, first on small sublists and then on increasingly large sublists.");
+  av.umsg("Shellsort provides a huge improvement over O(<i>n</i><sup>2</sup>) sorts sorts like Insertion Sort. It works by taking advantage of the fact that Insertion Sort works very well (in linear time) when the list is nearly sorted. Shellsort works by performing a series of Insertion Sorts on carefully selected sublists, first on small sublists and then on increasingly large sublists.");
 
   // create a new step to the visualization, a given message
   av.step().umsg("During each iteration, Shellsort breaks the list into disjoint sublists so that each element in a sublist is a fixed number of positions apart. For example, let us assume for convenience that n, the number of values to be sorted, is a power of two.");
 
-  av.step().umsg("One possible implementation of Shellsort will begin by breaking the list into n/2 sublists of 2 elements each, where the array index of the 2 elements in each sublist differs by n/2. We say that the increment is n/2. If there are 16 elements in the array indexed from 0 to 15, there would initially be 8 sublists of 2 elements each.");
+  av.step().umsg("One possible implementation of Shellsort will begin by breaking the list into <i>n</i>/2 sublists of 2 elements each, where the array index of the 2 elements in each sublist differs by <i>n</i>/2. We say that the increment is <i>n</i>/2. If there are 16 elements in the array indexed from 0 to 15, there would initially be 8 sublists of 2 elements each.");
 
   // Create an array object under control of JSAV library
   var arr = av.ds.array([20, 30, 12, 54, 55, 11, 78, 14, 13, 79, 44,
