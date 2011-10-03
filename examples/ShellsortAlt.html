@@ -143,16 +143,16 @@ to 15, there would initially be 8 sublists of 2 elements each.
   // Will be shown later to compare against progress made by the algorithm
   origarr = arr.clone();
 
-  av.step().umsg(" The first sublist would be the elements in positions 0 and 8...", {preserve: true});
+  av.umsg(" The first sublist would be the elements in positions 0 and 8...");
 
   // set color to LIGHT for the whole array, then highlight indices 0 and 8
   arr.css(function(index)
     { return index%8 != 0;}, {"color": LIGHT}).highlight([0, 8]);
   // another way to specify a message for a step
-  av.step().umsg("... the second in positions 1 and 9...");
+  av.step().umsg("... the second in positions 1 and 9...", {preserve: true});
   arr.unhighlight([0, 8]).css([0, 8], {"color": LIGHT}).highlight([1, 9]);
   
-  av.step().umsg("... and so on ...");
+  av.step().umsg("... and so on ...", {preserve: true});
   for (var i=2; i<8; i++) { // loop through the rest of the array sublists
     av.step();
     arr.unhighlight([i-1, i+7]).css([i-1, i+7], {"color": LIGHT}).highlight([i, i+8]);
@@ -241,13 +241,6 @@ to 15, there would initially be 8 sublists of 2 elements each.
   av.step().umsg("Finally, the array is sorted.");
   arr.unhighlight();
   av.recorded();
-
-  $("#forward").click(function() {
-    $("#container").trigger("forward");
-  });
-  $("#backward").click(function() {
-    $("#container").trigger("backward");
-  });
 
   // Partial Shellsort. Sweep with the given increment
   function sweep(myarr, incr) {

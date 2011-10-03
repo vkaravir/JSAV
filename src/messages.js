@@ -19,7 +19,13 @@
     var opts = $.extend({color: "black", preserve: false}, options);
     if (this.output) {
       if (this.output.hasClass("jsavline") && opts.preserve) {
-        this.output.find("div:last").append("<span style='color:" + opts.color + ";'>" + msg + "</span>");
+        var el = this.output.find("div:last"),
+          newmsg = "<span style='color:" + opts.color + ";'>" + msg + "</span>";
+        if (el.size() > 0) { // existing content in message output
+          el.append(newmsg);
+        } else { // first message
+          this.output.html("<div style='color:" + opts.color + ";'>" + msg + "</div>");
+        }
       } else if (this.output.hasClass("jsavline")) {
         this.output.html("<div style='color:" + opts.color + ";'>" + msg + "</div>");
       //} else if (this.output.hasClass("jsavscroll")) {
