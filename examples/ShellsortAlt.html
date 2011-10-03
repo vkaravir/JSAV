@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Shellsort Presentation Slideshow v0.3.0</title>
+  <title>Shellsort Presentation v0.3.0: Alternate Version</title>
   <meta charset="utf-8" />
   <link href="AeBookAV.css" title="CSS" rel="stylesheet" type="text/css" />
   <link rel="stylesheet" href="../css/JSAV.css" media="screen" />
@@ -22,21 +22,6 @@
     margin: 10px, 0px;
   }
 </style>
-<div id="container">
-  <table id=tableT style="margin-top:-15px; margin-bottom:-15px">
-    <tr>
-      <td width=100><span class="jsavcounter"></span></td>
-      <td width=650px>
-    	<div class="jsavcontrols"></div>
-      </td>
-      <td>
-    	<input type="button" name="about" value="About"/>
-      <a class="jsavsettings" href="#">Settings</a>
-      </td>
-    </tr>
-  </table>
-  <p class="jsavoutput jsavline"></p>
-</div>
 
 <script src="http://code.jquery.com/jquery-1.6.1.js"></script>
 <script
@@ -45,18 +30,11 @@
 <script src="../lib/jquery.transform.light.js"></script>
 <script src="../build/JSAV-min.js"></script>
 
+<input type="button" name="about" value="About"/>
+
 <script>
-(function($) {
   var LIGHT = "rgb(215, 215, 215)";  // For "greying out" array elements
   var DARK = "black";                // Make array elements dark again
-  // Convenience function for setting another type of highlight
-  // (will be used for showing which elements will be compared during sort)
-  var setBlue = function(index) {
-    arr.css(index, {"background-color": "#ddf" });
-  };
-
-  var av = new JSAV("container", {"title": "Shellsort Algorithm Presentation"}); //containing HTML element with id container
-  av.SPEED = 200; // Set the animation speed base
 
   // Connect action callbacks to the HTML entities
   $('input[name="about"]').click(about);
@@ -66,13 +44,91 @@
     var mystring = "Shellsort Explanation Slideshow\nWritten by Cliff Shaffer and Ville Karavirta\nCreated as part of the OpenDSA hypertextbook project.\nFor more information, see http://algoviz.org/eBook\nWritten during June, 2011\nLast update: August 14, 2011\nJSAV library version " + JSAV.version();
     alert(mystring);
   }
+</script>
 
-  av.umsg("Shellsort provides a huge improvement over O(n<sup>2</sup>) sorts sorts like Insertion Sort. It works by taking advantage of the fact that Insertion Sort works very well (in linear time) when the list is nearly sorted. Shellsort works by performing a series of Insertion Sorts on carefully selected sublists, first on small sublists and then on increasingly large sublists.");
+<div id="content">
+<h1>Shellsort Tutorial</h1>
+</div>
 
-  // create a new step to the visualization, a given message
-  av.step().umsg("During each iteration, Shellsort breaks the list into disjoint sublists so that each element in a sublist is a fixed number of positions apart. For example, let us assume for convenience that n, the number of values to be sorted, is a power of two.");
+<p>
+Shellsort was named after its inventor, D.L. Shell.
+It is also sometimes called the <b>diminishing increment</b> sort.
+Unlike Insertion Sort and Selection Sort, there is no real-life
+intuitive equivalent for Shellsort.
+Unlike the exchange sorts, Shellsort makes comparisons and
+swaps between non-adjacent elements.
+Shellsort also exploits the best-case performance of Insertion Sort.
+Shellsort's strategy is to quickly make the list ``mostly sorted''
+so that a final Insertion Sort can finish the job.
+When properly implemented, Shellsort will give
+substantially better performance than &theta;(n<sup>2</sup>)
+in the worst case.
 
-  av.step().umsg("One possible implementation of Shellsort will begin by breaking the list into n/2 sublists of 2 elements each, where the array index of the 2 elements in each sublist differs by n/2. We say that the increment is n/2. If there are 16 elements in the array indexed from 0 to 15, there would initially be 8 sublists of 2 elements each.");
+<p>
+Shellsort uses a process that forms the basis for many of the sorts
+presented in the following sections: Break the list into sublists,
+sort them, then recombine the sublists.
+Shellsort does this in an unusual way, breaking its input
+into ``virtual'' sublists.
+Each sublist is sorted using an Insertion Sort.
+Another group of sublists is then chosen and sorted, and so on.
+</p>
+
+<p>
+Shellsort provides a huge improvement over O(n<sup>2</sup>) sorts
+sorts like Insertion Sort.
+It works by taking advantage of the fact that Insertion Sort works
+very well (in linear time) when the list is nearly sorted.
+Shellsort works by performing a series of Insertion Sorts on carefully
+selected sublists, first on small sublists and then on increasingly
+large sublists.
+</p>
+
+<p>
+During each iteration, Shellsort breaks the list into disjoint
+sublists so that each element in a sublist is a fixed number of
+positions apart.
+For example, let us assume for convenience that <i>n</i>,
+the number of values to be sorted, is a power of two.
+</p>
+
+<p>
+One possible implementation of Shellsort will begin by breaking the
+list into <i>n</i>/2 sublists of 2 elements each, where the array
+index of the 2 elements in each sublist differs by <i>n</i>/2.
+We say that the increment is <i>n</i>/2.
+If there are 16 elements in the array indexed from 0
+to 15, there would initially be 8 sublists of 2 elements each.
+</p>
+
+<center>
+<div id="container">
+  <table id=tableT style="margin-top:-15px; margin-bottom:-15px">
+    <tr>
+      <td width=100><span class="jsavcounter"></span></td>
+      <td width=650px>
+    	<div class="jsavcontrols"></div>
+      </td>
+      <td>
+      <a class="jsavsettings" href="#">Settings</a>
+      </td>
+    </tr>
+  </table>
+  <p class="jsavoutput jsavline"></p>
+</div>
+</center>
+
+<script>
+(function($) {
+  // Convenience function for setting another type of highlight
+  // (will be used for showing which elements will be compared during sort)
+  var setBlue = function(index) {
+    arr.css(index, {"background-color": "#ddf" });
+  };
+
+  var av = new JSAV("container"); //containing HTML element with id container
+  av.SPEED = 200; // Set the animation speed base
+
 
   // Create an array object under control of JSAV library
   var arr = av.ds.array([20, 30, 12, 54, 55, 11, 78, 14, 13, 79, 44,
@@ -229,5 +285,65 @@
   }
 })(jQuery);
 </script>
+
+<p>
+Next, you can try running Shellsort on an array of your chosen size,
+with either random data or data that you select.
+You can also set the increment series.
+</p>
+
+<center>
+ <iframe src="shellsort-av.html"
+	 type="text/javascript" width="800" height="490"
+	 frameborder="0" marginwidth="0" marginheight="0"
+	 scrolling="no">
+</iframe>
+</center>
+
+<p>
+Now test yourself to see how well you understand Shellsort.
+</p>
+
+<center>
+ <iframe src="ShellsortProficiency.html"
+	 type="text/javascript" width="842" height="480"
+	 frameborder="0" marginwidth="0" marginheight="0"
+	 scrolling="no">
+</iframe>
+</center>
+
+<p>
+Some choices for the series of increments will make Shellsort
+run more efficiently than others.
+In particular, the choice of increments described above (2<sup>k</sup>,
+2<sup>k-1</sup>, ..., 4, 2, 1) turns out to be relatively inefficient.
+A better choice is the following series based on "division by three":
+(..., 121, 40, 13, 4, 1).
+</p>
+
+<center>
+ <iframe src="ShellsortPerformance.html"
+	 type="text/javascript" width="842" height="410"
+	 frameborder="0" marginwidth="0" marginheight="0"
+	 scrolling="no">
+</iframe>
+</center>
+
+<p>
+The analysis of Shellsort is difficult, so we must accept without
+proof that the average-case performance of Shellsort (for ``divisions
+by three'' increments) is O(n&radic;n).
+Other choices for the increment
+series can reduce this upper bound somewhat.
+Thus, Shellsort is substantially better than Insertion Sort,
+or any of the other &theta;(n<sup>2</sup>) sorts presented earlier.
+In fact, Shellsort is not so much worse than the
+asymptotically better sorts to be presented whenever <i>n</i> is of medium
+size (thought is tends to be a little slower than these other
+algorithms when they are well implemented).
+Shellsort illustrates how we can sometimes exploit the special properties
+of an algorithm (in this case Insertion Sort) even if in general that
+algorithm is unacceptably slow.
+</p>
 </body>
 </html>
