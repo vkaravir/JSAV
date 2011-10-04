@@ -170,7 +170,7 @@
       this.modelStructures = undefined;
     }
   };
-  var undo = function() {
+  exerproto.undo = function() {
     $.fx.off = true;
     // undo last step
     this.jsav.backward();
@@ -195,7 +195,7 @@
       }
       var fixmode = this.fixmode.val();
       // undo until last graded step
-      undo.call(this);
+      this.undo();
       if (fixmode === "fix" && $.isFunction(this.options.fix)) {
         $.fx.off = true;
         this.fix(this.modelStructures);

@@ -77,6 +77,7 @@ margin-left: 10px;
   <input type="button" name="selecting" value="Done Selecting" />
   <input type="button" name="sorting" value="Done Sorting Sublist" />
   <input type="button" name="incrementing" value="Done Increment" />
+  <input type="button" id="backup" value="Undo" />
 
   <p class="jsavoutput jsavline"></p>
 </form>
@@ -126,9 +127,12 @@ margin-left: 10px;
   $('input[name="help"]').click(help);
   $('input[name="about"]').click(about);
 
-  var $selecting = $('input[name="selecting"]', context).click(selecting),
-      $sorting = $('input[name="sorting"]', context).click(sorting),
-      $incrementing = $('input[name="incrementing"]', context).click(incrementing);
+  $('input[name="selecting"]', context).click(selecting);
+  $('input[name="sorting"]', context).click(sorting);
+  $('input[name="incrementing"]', context).click(incrementing);
+  $("#backup").click(function() {
+    exer.undo();
+  });
 
   var incrs = [], // The array of increments
       $theArray = $("#profArray"),
