@@ -65,6 +65,10 @@
       return this.element.html();
     }
   };
+  varproto.equals = function(otherVariable) {
+    if (!otherVariable || typeof otherVariable !== "Object") { return false; }
+    return this.value() == otherVariable.value;
+  };
   
   JSAV.ext.variable = function(value, options) {
     return new Variable(this, value, options);
