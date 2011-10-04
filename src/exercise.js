@@ -30,14 +30,21 @@
             });
       cont.append($reset, $model, $grade);
     }
+    // if feedbacktype can be selected, add settings for it
     if (this.options.feedbackSelectable) {
-      this.feedback = this.jsav.settings.add("feedbck", {"type": "select", "options": {"continuous": "Continuous", "atend": "At end"}, 
+      this.feedback = this.jsav.settings.add("feedback", {"type": "select", "options": {"continuous": "Continuous", "atend": "At end"}, 
               "label":"Grade Feedback: ", "value": this.options.feedback});
     }
+    // if fixmode can be selected, add settings for it
     if (this.options.fixmodeSelectable) {
       this.fixmode = settings.add("fixmode", {"type": "select", "options": {"undo": "Undo incorrect step", "fix": "Fix incorrect step"}, 
               "label": "Continuous feedback behaviour", "value": this.options.fixmode});
-    }    
+    }
+    
+    // if custom showGrade function is given
+    if (this.options.showGrade && $.isFunction(this.options.showGrade)) {
+      this.showGrade = this.options.showGrade;
+    }
   };
   var exerproto = Exercise.prototype;
   exerproto.grade = function() {
@@ -54,29 +61,41 @@
     if (!this.modelav) {
       this.modelanswer();
     }
+    // TODO: check types and sizes of initial and model structures
     this.modelav.begin();
     $.fx.off = true;
     var totalSteps = 0,
         studentSteps = 0,
-        correct = 0,
+        correct = true,
         forwStudent = true,
         forwModel = true,
         modelTotal = this.modelav.totalSteps(), // "cache" the size
         studentTotal = this.jsav.totalSteps(); // "cache" the size
-    while (forwStudent && forwModel && this.modelav.currentStep() < modelTotal && 
+
+    this.score.correct = 0;
+    this.score.student = 0;
+    
+    while (correct && forwStudent && forwModel && this.modelav.currentStep() < modelTotal && 
            this.jsav.currentStep() < studentTotal) {
       forwStudent = this.jsav.forward(gradeStepFunction);
       forwModel = this.modelav.forward(gradeStepFunction);
       if (forwStudent) { studentSteps++; }
+      correct = false;
       if (forwModel) {
         totalSteps++;
-        if (forwModel && forwStudent && this.modelStructures.equals(this.initialStructures, this.options.compare)) {
-          correct++;
-        } else {
-          break;
+        if (forwModel && forwStudent) {
+          if ($.isArray(this.initialStructures)) {
+            for (var i = 0; i < this.initialStructures.length; i++) {
+              if (this.modelStructures[i].equals(this.initialStructures[i], this.options.compare[i])) {
+                this.score.correct++;
+                correct = true;
+              }
+            }
+          } else if (this.modelStructures.equals(this.initialStructures, this.options.compare)) {
+            this.score.correct++;
+            correct = true;
+          }
         }
-      } else {
-        break;
       }
     }
     var currModelStep = this.modelav.currentStep();
@@ -99,12 +118,19 @@
     this.modelav.jumpToStep(currModelStep);
     this.jsav.jumpToStep(origStep);
     $.fx.off = false;
-    return {correct: correct, total: totalSteps, student: studentSteps};
+    this.score.total = totalSteps;
+    this.score.student = studentSteps;
+    return this.score;
   };
   exerproto.showGrade = function() {
     // shows an alert box of the grade
-    var grade = this.grade();
-    alert("Your score: " + grade.correct + " / " + grade.total);
+    this.grade();
+    var grade = this.score,
+      msg = "Your score: " + (grade.correct-grade.fix) + " / " + grade.total;
+    if (grade.fix > 0) {
+      msg += "\nFixed incorrect steps: " + grade.fix;
+    }
+    alert(msg);
   };
   exerproto.modelanswer = function() {
     var model = this.options.model;
@@ -112,9 +138,12 @@
       // behavior in a nutshell:
       // 1. create a new JSAV (and the HTML required for it)
       this.modelav = new JSAV($("<div><div class='jsavcontrols'/><span class='jsavcounter'></div>").addClass("jsavmodelanswer"));
+      // 2. create a dialog for the model answer
       this.modelDialog = JSAV.utils.dialog(this.modelav.container, 
                 {'title': 'Model Answer', 'closeText': "Close", "closeOnClick": false, "modal": false});
+      // 3. generate the model structures and the state sequence
       var str = model(this.modelav);
+      // 4. rewind the model answer and hide the dialog
       this.modelav.begin();
       this.modelStructures = str;
       this.modelDialog.hide();
@@ -133,6 +162,7 @@
   };
   exerproto.reset = function() {
     this.jsav.clear();
+    this.score = {total: 0, correct: 0, undo: 0, fix: 0, student: 0};
     this.initialStructures = this.options.reset();
     if (this.modelav) {
       this.modelav.container.remove();
@@ -164,24 +194,19 @@
         return;
       }
       var fixmode = this.fixmode.val();
+      // undo until last graded step
+      undo.call(this);
       if (fixmode === "fix" && $.isFunction(this.options.fix)) {
         $.fx.off = true;
-        this.jsav.backward();
-        this.jsav.stepOption("grade", false);
-        this.jsav.forward();
-        // call function to fix last step
         this.fix(this.modelStructures);
-        // set the last step to be graded
-        this.jsav.stepOption("grade", true);
-        this.jsav.forward();
         $.fx.off = false;
+        this.score.fix++;
         alert("Your last step was incorrect. Your work has been replaced with the correct step so that you can continue on.");
       } else if (fixmode === "fix") {
-        undo.call(this); // no fix function but mode is fix, let's just undo
+        this.score.undo++;
         alert("Your last step was incorrect and I should fix your solution, but don't know how. So it was undone and you can try again.");
       } else {
-        // undo until last graded step
-        undo.call(this);
+        this.score.undo++;
         alert("Your last step was incorrect. Things are reset to the beginning of the step so that you can try again.");
       }
     }

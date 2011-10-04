@@ -139,7 +139,7 @@ margin-left: 10px;
       currSublist = 0; // the current sublist number
     
   // Partial Shellsort. Sweep with the given increment
-  function sweep(incr, arr, jsav) {
+  function sweep(incr, arr, jsav, modelmode) {
     var j = 0,
         numElem = 0,
         highlightFunction = function(index) { return index%incr == j;};
@@ -151,11 +151,13 @@ margin-left: 10px;
         return;
       } else {
         arr.highlight(highlightFunction);
+        modelmode.value("SORTING");
         jsav.stepOption("grade", true);
         jsav.step();
       }
       inssort(j, incr, arr, jsav);
       arr.unhighlight(highlightFunction);
+      modelmode.value("SELECTING");
       jsav.stepOption("grade", true);
       jsav.step();
     }
@@ -178,17 +180,19 @@ margin-left: 10px;
 
   // generates the model answer; calls sweep above
   function shellsort(jsav) {
-    var modelarr = jsav.ds.array(initialArray, {indexed: true, layout: arrayLayout.val()});
+    var modelarr = jsav.ds.array(initialArray, {indexed: true, layout: arrayLayout.val()}),
+      modelmode = jsav.variable("SORTING");
     var i;
     for (i=0; i<incrs.length; i+=1) {
       if (incrs[i] < modelarr.size()) {
-        sweep(incrs[i], modelarr, jsav); // run the sweep to create the AV
+        sweep(incrs[i], modelarr, jsav, modelmode); // run the sweep to create the AV
       }
+      modelmode.value("FIRSTSELECTING");
       modelarr.unhighlight();
       jsav.stepOption("grade", true);      
       jsav.step();
     }
-    return modelarr;
+    return [modelarr, modelmode];
   }
     
   // Generate a random (but constrained) set of four increments
@@ -222,7 +226,7 @@ margin-left: 10px;
     Tell("To start the exercise: Click on array elements to highlight those that make up the first sublist. Use increment " + incrs[currIncrIndex.value()]);
     av.forward();
     av._undo = [];
-    return theArray;
+    return [theArray, mode];
   }
 
   // Process help button: Give a full help page for this activity
@@ -240,7 +244,7 @@ margin-left: 10px;
   // Process Done selecting button: change the message, array status
   function selecting() {
     // Don't do anything if user not in SELECTING mode
-    if (mode.value() !== "SELECTING") {return;}
+    if (mode.value() !== "SELECTING" && mode.value() !== "FIRSTSELECTING") {return;}
     mode.value("SORTING");
     Tell("Click on two array elements to swap them. Swap elements in the sublist until it is sorted.");
     exer.gradeableStep(); // mark this as a gradeable step; also handles continuous feedback
@@ -264,6 +268,8 @@ margin-left: 10px;
 
   // Process Done Increment button: change the message, array status
   function incrementing() {
+    // Don't do anything if user not in SELECTING mode
+    if (mode.value() !== "SELECTING") {return;}
     var currIndex = currIncrIndex.value();
     if (currIndex < 3) {
       theArray.unhighlight();
@@ -275,14 +281,16 @@ margin-left: 10px;
     } else {
       Tell("Exercise is done, check your grade.");
     }
-    mode.value("SELECTING");
+    mode.value("FIRSTSELECTING");
     exer.gradeableStep(); // mark this as a gradeable step; also handles continuous feedback
   }
 
   // function that will be called by the exercise if continuous feedback mode
   // is used and the fix errors mode is on.
-  function fixState(modelArray) {
-    var size = modelArray.size();
+  function fixState(modelState) {
+    var modelArray = modelState[0],
+        size = modelArray.size(),
+        modelMode = modelState[1];
     for (var i = 0; i < size; i++) {
       var val = modelArray.value(i),
           hl = modelArray.isHighlight(i);
@@ -293,6 +301,19 @@ margin-left: 10px;
         theArray.value(i, val);
       }
     }
+    var modelModeVal = modelMode.value();
+    // every gradable step changes the mode, so we can use it to deduce the 
+    // action we should take. this will set the state of the exercise correctly
+    if (modelModeVal === "SORTING") {
+      // if the mode in model answer is sorting, we should call selecting
+      // since after selecting(), the mode will be sorting
+      selecting();
+    } else if (modelModeVal === "SELECTING") {
+      sorting();
+    } else if (modelModeVal === "FIRSTSELECTING") {
+      incrementing();
+    }
+    
   }
 
   // Initialize the exercise
@@ -300,7 +321,7 @@ margin-left: 10px;
   //  function to call to generate the model answer (shellsort())
   var exer = av.exercise({reset: initialize,
                           model: shellsort,
-                          compare: {css: "background-color"},
+                          compare: [{css: "background-color"}, {}],
                           controls: $('.jsavexercisecontrols'),
                           fix: fixState});
   exer.reset();
@@ -310,7 +331,7 @@ margin-left: 10px;
   $("#profArray .jsavindex").live("click", function() {
     var index = $(this).parent(".jsavarray").find(".jsavindex").index(this);
     av._redo = []; // clear the forward stack, should add a method for this in lib
-    if (mode.value() === "SELECTING") { // in selecting mode, highlight index
+    if (mode.value() === "SELECTING" || mode.value() === "FIRSTSELECTING") { // in selecting mode, highlight index
       if (!theArray.isHighlight(index)) {
         theArray.highlight(index);
       } else {
