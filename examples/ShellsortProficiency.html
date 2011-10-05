@@ -327,7 +327,9 @@ margin-left: 10px;
                           model: shellsort,
                           compare: [{css: "background-color"}, {}],
                           controls: $('.jsavexercisecontrols'),
-                          fix: fixState});
+                          fix: fixState,
+			  feedback: "continuous",
+			  fixmode: "undo"});
   exer.reset();
   
   var swapIndex;
