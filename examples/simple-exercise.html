@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>ShellSort Proficiency Exercise</title>
+<link href="AeBookAV.css" rel="stylesheet" type="text/css" />
+<link rel="stylesheet" href="../css/JSAV.css" type="text/css" />
+</head>
+
+<body>
+  <div id="jsavcontainer">
+    <a class="jsavsettings" href="#">Settings</a>
+    <p class="jsavexercisecontrols"></p>
+    <ol id="exerArray"></ol>
+  </div>
+    <script
+       src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.3/jquery.min.js">
+    </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/jquery-ui.min.js"></script>
+    <script src="../lib/jquery.transform.light.js"></script>
+
+    <script src="../build/JSAV.js"></script>
+
+
+    <script>
+    var arraySize = 8,
+        initialArray = [],
+        jsavArray,
+        $array = $("#exerArray"),
+        av = new JSAV($("#jsavcontainer"));
+    av.recorded(); // we are not recording an AV with an algorithm
+    
+    function initialize() {
+      var htmldata = "";
+      for (var i = arraySize; i > 0; i--) {
+        var randomVal = Math.floor(Math.random()*100);
+        htmldata += "<li>" + randomVal + "</li>";
+        initialArray[arraySize-i] = randomVal;
+      }
+      $array.html(htmldata);
+
+      jsavArray = av.ds.array($array, {indexed: true});
+      return jsavArray;
+    }
+    
+    function modelSolution(jsav) {
+      var modelArray = jsav.ds.array(initialArray);
+      for (var i = 0; i < arraySize; i++) {
+        modelArray.highlight(i);
+        jsav.stepOption("grade", true);
+        jsav.step();
+      }
+      return modelArray;
+    }
+    
+    var exercise = av.exercise({model: modelSolution, reset: initialize, compare: {css: "background-color"}});
+    exercise.reset();
+
+    // we already have reference to the ol element, find its li children 
+    // and bind a function to handle all click events
+    $array.find("li").live("click", function() {
+      // find the index of the clicked (variable this) element within its' parent
+      var index = $array.find("li").index(this);
+      // highlight the index
+      jsavArray.highlight(index);
+      // mark this as a gradeable step; also handles continuous feedback
+      exercise.gradeableStep();
+    });
+    </script>
+</body>
+</html>

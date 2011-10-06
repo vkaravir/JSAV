@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Creating an Exercise with JavaScript Algorithm Visualization API (JSAV) Version 0.3</title>
+    <style>
+    .todo, .note {
+      border: 2px solid red;
+      border-radius: 4px;
+      padding: 10px;
+      background-color: #eee;
+      font-weight: bold;
+    }
+    .note {
+      border-color: green;
+    }
+    .todo:before, .note:before {
+      content: "TODO: ";
+      color: red;
+      padding-right: 20px;
+    }
+    .note:before {
+      content: "NOTE: ";
+      color: green;
+    }
+    h2 {
+      border-bottom: 1px dashed #bbb;
+    }
+    h3 {
+      border-left: 3px solid #bbb;
+      padding-left: 5px;
+    }
+    h3.apimethod {
+      font-family: monospace;
+    }
+    body {
+      margin: 20px;
+    }
+    p, ul, ol, dl {
+      margin-left: 10px;
+    }
+    pre {
+      margin-left: 20px ;
+    }
+    pre, code {
+      background-color: #eee;
+      padding: 3px;
+      border: 1px dashed #bbb;
+      border-radius: 3px;
+    }
+    </style>
+  </head>
+
+<body>
+<h1>Creating an Exercise with JavaScript Algorithm Visualization API (JSAV) Version 0.3</h1>
+
+<p class="note">
+This documentation reflects the current status of the library.
+It is a work-in-progress and subject to change!
+</p>
+
+<p>In this tutorial, we'll create a simple exercise where student is supposed to click array
+  indices from left to right to highlight them. For the final version, see the file [JSAV]/examples/simple-exercise.html.</p>
+
+<h2>Setting Up</h2>
+<p>
+Read the <a href="api.html">API docs</a> for documentation on the required files 
+and the HTML needed for a JSAV visualization. Also follow the instructions on how to 
+initialize the JSAV visualization. The following documentation assumes you used name
+<code>av</code> for the variable storing the reference to it. The HTML assumed in this tutorial:
+</p>
+<pre>
+  &lt;div id="jsavcontainer">
+    &lt;a class="jsavsettings" href="#">Settings&lt;/a>
+    &lt;p class="jsavexercisecontrols">&lt;/p>
+    &lt;ol id="exerArray">&lt;/ol>
+  &lt;/div>
+</pre>
+<p>The JavaScript setup and variable definitions:</p>
+<pre>
+  var arraySize = 8,
+      initialArray = [],
+      jsavArray,
+      $array = $("#exerArray"),
+      av = new JSAV($("#jsavcontainer"));
+</pre>
+
+<h2>Write an Initialization Function</h2>
+<p>The first step in creating an exercise is to write a function that initializes the 
+  exercise. Below is an extremely simplified example from the examples/ShellsortProficiency.html
+  file.</p>
+  
+<pre>
+  function initialize() {
+    var htmldata = "";
+    for (var i = arraySize; i > 0; i--) {
+      var randomVal = Math.floor(Math.random()*100);
+      htmldata += "&lt;li>" + randomVal + "&lt;/li>";
+      initialArray[arraySize-i] = randomVal;
+    }
+    $array.html(htmldata);
+
+    jsavArray = av.ds.array($array, {indexed: true});
+    return jsavArray;
+  }
+</pre>
+<p>What the <code>initialize()</code> function should do is to clear the previous visualization
+and initialize a new one. It should also return the structures that will be used in grading to
+compare with the model answer. Note, that the name of the function does not have to be initialize.</p>
+<p>So above, the code generates random numbers and changes the content
+of an existing HTML element. In the HTML, there is an element <code>&lt;ol id="exerArray">&lt;/ol></code>
+and the <code>$theArray</code> variable is a jQuery object that refers to that element (<code>var $theArray = $("#exerArray")</code>). The <code>$theArray.html(..)</code> function call replaces the existing array contents with the new data. The call to <code>av.ds.array</code> initializes a new JSAV array from
+the given jQuery object and the given options. Finally, the function returns the JSAV array.</p>
+
+<h2>Write the Model Answer Function</h2>
+<p>To be able to grade the student's solution, the exercise will need to have a model solution. This
+  will be used by both to show the correct solution as an AV to student as well as to compare it for
+  correctness. Below is a simple model answer function where the correct solution is to highlight the
+  array indices from left (index 0) to right.
+<pre>
+  function modelSolution(jsav) {
+    var modelArray = jsav.ds.array(initialArray);
+    for (var i = 0; i &lt; arraySize; i++) {
+      modelArray.highlight(i);
+      jsav.stepOption("grade", true);
+      jsav.step();
+    }
+    return modelArray;
+  }
+</pre>
+<p>The function will get a single parameter (<code>jsav</code> above) that is a reference to the JSAV
+  animation of the model answer. Like the initialization function, the model solution function should 
+  return the structures used in comparing the model solution with student's solution</p>
+<p>The function above first creates a JSAV array using the data stored in variable <code>initialArray</code> in the initialization function. It then goes through all indices and highlights the index. It also sets
+  a step option for the current collection of effects and calls <code>jsav.step()</code>. The step option
+  <code>grade</code> is used to mark states in the model solution that should be used in grading. Thus, the
+  model solution can contain an AV with explanations and other structures, but only the returned structures at steps where grade is set to true, are graded. The call to <code>jsav.step()</code> notifies the AV that 
+  a new step should be started.</p>
+
+<h2>Creating the actual exercise</h2>
+<p>The actual exercise can be initialized with a call to <code>av.exercise()</code>. The function can also take several options, some of which are required. The options are:</p>
+<ul>
+  <li><code>{model: &lt;function>}</code> The function to generate the model solution. <strong>Required.</strong></li>
+  <li><code>{reset: &lt;function>}</code> The initialization function that resets the exercise. <strong>Required.</strong></li>
+  <li><code>{compare: &lt;Object or Array>}</code> Specifies which properties to compare for the structures. In the example below, we set the comparison to be css property background-color, since that is changed when highlighting indices.</li>
+  <li><code>{feedback: &lt;string>}</code> Will change the feedback mode, possible values continuous and atend (default). See Continuous feedback below.</li>
+  <li><code>{fixmode: &lt;string>}</code> Change the behavior in continuous mode, possible values are undo and fix. The default is undo.</li>
+  <li><code>{feedbackSelectable: &lt;>boolean}</code> The settings dialog will, by default, allow student to change the feedback mode. Setting this option to false disables this choice.</li>
+  <li><code>{fixmodeSelectable: &lt;>boolean}</code> The settings dialog will, by default, allow student to change the behavior in continuous feedback mode. Setting this option to false disables this choice.</li>
+</ul>
+<p>So, given our <code>initialize</code> and <code>modelSolution</code> functions above, we can initialize an exercise with the following:</p>
+<pre>var exercise = av.exercise({model: modelSolution, 
+                                 reset: initialize,
+                                 compare: {css: "background-color"}});
+exercise.reset();</pre>
+<p>At this point, the exercise can be graded and model solution shown. It is, however, lacking any way for the student to construct her solution.</p>
+
+<h2>Adding Student Interaction</h2>
+<p>The basic idea of the JSAV library is to represent all the data structures using HTML elements. It is simple to attach listeners for user actions (like mouse click) to these elements. So, looking at the HTML generated by initializing the array, we see that it is an <code>ol</code> element with several <code>li</code> elements inside. And since the exercise was to click the indices, we will register a click event handler to these <code>li</code> elements. It's actually easier than it sounds:</p>
+<pre>
+  // we already have reference to the ol element, find its li children 
+  // and bind a function to handle all click events
+  $array.find("li").live("click", function() {
+    // find the index of the clicked (variable this) element within its' parent
+    var index = $array.find("li").index(this);
+    // highlight the index
+    jsavArray.highlight(index);
+    // mark this as a gradeable step; also handles continuous feedback
+    exercise.gradeableStep();
+  });
+</pre>
+<p>Now, the exercise should be interactive and ready for use!</p>
+
+<h2>More Advanced Topics</h2>
+<p class="todo">
+Document these more advanced features.
+</p> 
+<h3>Continuous Feedback Mode</h3>
+<h3>Track State with JSAV Variables</h3>  
+<h3>Customize the Scoring</h3>
+</body>
+</html>
