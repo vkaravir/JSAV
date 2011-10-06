@@ -13,8 +13,11 @@
                                   feedbackSelectable: true, fixmode: "undo",
                                   fixmodeSelectable: true}, options);
     // initialize controls
-    var cont = $(this.options.controls) || this.jsav.container.find(".jsavexercisecontrols"),
+    var cont = $(this.options.controls),
         self = this;
+    if (cont.size() == 0) {
+       cont = this.jsav.container.find(".jsavexercisecontrols");
+    }
     if (cont.size()) {
       var $reset = $('<input type="button" name="reset" value="Reset" />').click(
             function() {
@@ -37,7 +40,7 @@
     }
     // if fixmode can be selected, add settings for it
     if (this.options.fixmodeSelectable) {
-      this.fixmode = settings.add("fixmode", {"type": "select", "options": {"undo": "Undo incorrect step", "fix": "Fix incorrect step"}, 
+      this.fixmode = this.jsav.settings.add("fixmode", {"type": "select", "options": {"undo": "Undo incorrect step", "fix": "Fix incorrect step"}, 
               "label": "Continuous feedback behaviour", "value": this.options.fixmode});
     }
     
@@ -227,7 +230,5 @@
     //           compare in grading
     //  - controls: a DOM/jQuery element or a selector for the element where the exercise
     //              controls (reset, model, grade) are to be added
-    //  - pointScale: single number for max points OR array of min and max range OR
-    //                a function that is given the correct states and total states
   };
 })(jQuery);
