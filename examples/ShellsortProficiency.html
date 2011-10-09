@@ -23,18 +23,19 @@
 div h1 {
   background-color: #efe;
 }
+
 .jsavcontainer {
   background-color: #efe;
 }
 
-  p.jsavoutput.jsavline {
-    height: 40px;
-    border: 1px;
-  }
+p.jsavoutput.jsavline {
+  height: 40px;
+}
+
 a.jsavsettings {
-display: block;
-margin-top: 10px;
-margin-left: 10px;
+  display: block;
+  margin-top: 10px;
+  margin-left: 10px;
 }
 </style>
 </head>
@@ -111,9 +112,10 @@ margin-left: 10px;
   var av = new JSAV(context, {settings: settings});
   av.recorded();
 
-  // Set up an output message buffer object,
-  // and create a convenience function named Tell
+  // Create a convenience function named Tell for writing to the
+  // output buffer
   var Tell = function(msg, color) { av.umsg(msg, {color: color}); };
+
   var ArraySize = 10; // Size of the exercise array
 
   /* **************************************************************

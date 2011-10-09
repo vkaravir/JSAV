@@ -73,7 +73,7 @@ the various library APIs.
 
 <p>
 First, like any HTML file we need a header to define the document
-type, title, and any CSS files to be used.
+type, title, and the CSS files to be used.
 </p>
 
 <pre>
@@ -92,25 +92,62 @@ CSS file used by OpenDSA textbook components (AeBookAV.css).
 </p>
 
 <p>
+Next come the style elements.
+</p>
+
+<pre>
+&lt;style>
+  #jsavcontainer {
+    width: 500px;
+    height: 150px;
+    background-color: #efe;
+  }
+  p.jsavoutput.jsavline {
+    height: 40px;
+  }
+&lt;/style>
+</pre>
+
+<p>
+Here we first define the style for <code>jsavcontainer</code>,
+which holds the visualization.
+We define the dimensions and give it a pale green background color.
+<code>jsavoutput</code> is where messages can be written by the
+visualization.
+In this example it will hold the directions for what to do.
+We will define the output field to be of type <code>jsavline</code>,
+which is one of the style options provided by the API.
+We define its height to be 40 pixels.
+</p>
+
+<p>
 Next, we will define the various DOM elements on the HTML page.
 </p>
 
 <pre>
   &lt;div id="jsavcontainer">
     &lt;a class="jsavsettings" href="#">Settings&lt;/a>
-    &lt;p class="jsavexercisecontrols">&lt;/p>
+    &lt;p align="center" class="jsavexercisecontrols"></p>
     &lt;ol id="exerArray">&lt;/ol>
+    &lt;p class="jsavoutput jsavline"></p>
   &lt;/div>
 </pre>
 
 <p>
-Here we have create two standard elements that typically appear in a
+<code>jsavcontainer</code> holds the AV itself.
+We have given it two standard elements that typically appear in a
 JSAV exercise: the options (or "settings") panel, and the exercise
 standard controls.
-These include the ability to regenerate a new instance of the exercise
-("reset"), a slideshow showing the "model answer", and information
-about the grade received on the exercise.
-We also created a placeholder for what will be the displayed array.
+The settings panel is accessed by clicking on the settings button,
+which in this example is in the upper right corner and looks like a
+pair of gears.
+The standard exercise controls include the ability to regenerate a new
+instance of the exercise ("reset"), a slideshow showing the "model
+answer", and information about the grade received on the exercise.
+We create a placeholder for what will be the displayed array.
+Note that the DOM type is just a numbered list.
+Finally, we position the message output, which is merely a special
+type of paragraph.
 </p>
 
 <p>
@@ -132,8 +169,7 @@ library.
 </p>
 
 <p>
-Next comes JavaScript setup and variable definitions specific to
-the exercise.
+Next we make variable definitions specific to the exercise.
 </p>
 
 <pre>
@@ -145,7 +181,16 @@ the exercise.
 </pre>
 
 <p>
-<b>TODO: Explain the variables here.</b>
+<code>arraySize</code> defines the array to be of size 8.
+<code>initialArray</code> will hold the array values.
+This placeholder is needed since JSAV will have to maintain two
+versions of the array object: The one that the user works on, and the
+copy displayed when the model answer is presented.
+<b>TODO: Explain jsavArray.</b>
+<b>TODO: Explain the line "$array = $("#exerArray)".</b>
+<code>av</code> is the visualization object itself.
+We pass in <code>jsavcontainer</code> to bind the position of the
+visualization to this DOM element.
 </p>
 
 <p>
@@ -153,15 +198,25 @@ the exercise.
 </p>
 <pre>
     av.recorded(); // we are not recording an AV with an algorithm
+    av.umsg("Directions: Click on all array elements from left to right to highlight them. Then click on the first and last elements to swap them."); 
+    av.forward();
 </pre>
 
 <p>
-<b>TODO: I do not know why this is needed.</b>
+<b>TODO: I do not know what the "recorded" line actually does.</b>
+The call to "av.umsg" provides the text of the message that give
+directions to the user, and "av.forward()" causes the message to be
+displayed on the screen.
 </p>
 
 <h2>Write an Initialization Function</h2>
 
-<p>The first step in creating an exercise is to write a function that
+<p>
+We are now ready to specify the pieces to the exercise itself.
+</p>
+
+<p>
+The first step in creating an exercise is to write a function that
 initializes the exercise.
 This method will be called both on startup, and by the "reset"
 button.
@@ -170,10 +225,9 @@ visualization (if there was one) and initialize a new one.
 It should also return the structures that will be used in grading to
 compare with the model answer. 
 The name of the function does not have to be "initialize", as
-it will be bound in the initializer method for the exercise object,
+its name will be bound when we create the exercise object,
 as shown later in the tutorial.
 </p>
-
 
 <pre>
   function initialize() {
@@ -198,7 +252,7 @@ of an existing HTML element.
 In the HTML, there is an element <code>&lt;ol id="exerArray">&lt;/ol></code>
 and the <code>$theArray</code> variable is a jQuery object that refers
 to that element (<code>var $theArray = $("#exerArray")</code>).
-The <code>$theArray.html(..)</code> function call replaces the existing
+The <code>$array.html(htmldata);</code> function call replaces the existing
 array contents with new data.
 The call to <code>av.ds.array</code> initializes a new JSAV array from 
 the given jQuery object and the given options. Finally, the function
@@ -295,7 +349,7 @@ The design of the JSAV library allows the developer to represent all
 data structures using HTML elements.
 It is simple to attach listeners for user actions (like mouse clicks)
 to these elements using standard HTML.
-looking at the HTML generated to initialize the array,
+Looking at the HTML generated to initialize the array,
 <b>[TODO: Explain what generated this. It is not so obvious.]</b>
 we see that it is an <code>ol</code> element with several
 <code>li</code> elements inside.
@@ -318,13 +372,7 @@ This is easier than it sounds.
 </pre>
 
 <p>
-ow, the exercise should be interactive and ready for use!
-</p>
-
-<p>
-<b>[TODO: I took out the pointers to more advanced topics. The
-documentation for these should go into the API docs, and this file
-should only contain what relates to the actual example code.]</b>
+Now, the exercise should be interactive and ready for use!
 </p>
 
 </body>

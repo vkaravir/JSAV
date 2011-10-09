@@ -7,11 +7,24 @@
 </head>
 
 <body>
+<style>
+  #jsavcontainer {
+    width: 500px;
+    height: 200px;
+    background-color: #efe;
+  }
+  p.jsavoutput.jsavline {
+    height: 40px;
+  }
+</style>
+
   <div id="jsavcontainer">
     <a class="jsavsettings" href="#">Settings</a>
-    <p class="jsavexercisecontrols"></p>
+    <p align="center" class="jsavexercisecontrols"></p>
     <ol id="exerArray"></ol>
+    <p class="jsavoutput jsavline"></p>
   </div>
+
     <script
        src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.3/jquery.min.js">
     </script>
@@ -20,13 +33,17 @@
     <script src="../build/JSAV.js"></script>
 
     <script>
+
     var arraySize = 8,
         initialArray = [],
         jsavArray,
         $array = $("#exerArray"),
         av = new JSAV($("#jsavcontainer"));
+
     av.recorded(); // we are not recording an AV with an algorithm
-    
+    av.umsg("Directions: Click on all array elements from left to right to highlight them. Then click on the first and last elements to swap them."); 
+    av.forward();
+
     function initialize() {
       var htmldata = "";
       for (var i = arraySize; i > 0; i--) {
