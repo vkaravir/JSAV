@@ -17,9 +17,7 @@
     </script>
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/jquery-ui.min.js"></script>
     <script src="../lib/jquery.transform.light.js"></script>
-
     <script src="../build/JSAV.js"></script>
-
 
     <script>
     var arraySize = 8,
@@ -52,7 +50,9 @@
       return modelArray;
     }
     
-    var exercise = av.exercise({model: modelSolution, reset: initialize, compare: {css: "background-color"}});
+    var exercise = av.exercise({model: modelSolution,
+                                reset: initialize,
+                                compare: {css: "background-color"}});
     exercise.reset();
 
     // we already have reference to the ol element, find its li children 

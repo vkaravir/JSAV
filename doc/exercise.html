@@ -53,21 +53,48 @@
 <body>
 <h1>Creating an Exercise with JavaScript Algorithm Visualization API (JSAV) Version 0.3</h1>
 
-<p class="note">
-This documentation reflects the current status of the library.
-It is a work-in-progress and subject to change!
-</p>
+<p>This tutorial will walk you through the code needed to create a
+simple exercise.
+The user of the exercise is supposed to click array positions in order
+from left to right to highlight each cell.
+A point is scored for each correctly selected cell.
+The options panel lets the user choose from various standard settings
+for controlling the exercise, including whether feedback for incorrect
+steps should be given, and whether such incorrect steps should be
+corrected or not.
+For the final code version,
+see the file [JSAV]/examples/simple-exercise.html.</p> 
 
-<p>In this tutorial, we'll create a simple exercise where student is supposed to click array
-  indices from left to right to highlight them. For the final version, see the file [JSAV]/examples/simple-exercise.html.</p>
+<p>
+The <a href="api.html">API docs</a> provide complete documentation for
+the various library APIs.
 
 <h2>Setting Up</h2>
+
 <p>
-Read the <a href="api.html">API docs</a> for documentation on the required files 
-and the HTML needed for a JSAV visualization. Also follow the instructions on how to 
-initialize the JSAV visualization. The following documentation assumes you used name
-<code>av</code> for the variable storing the reference to it. The HTML assumed in this tutorial:
+First, like any HTML file we need a header to define the document
+type, title, and any CSS files to be used.
 </p>
+
+<pre>
+&lt;!DOCTYPE html>
+&lt;html>
+&lt;head>
+&lt;title>ShellSort Proficiency Exercise</title>
+&lt;link href="AeBookAV.css" rel="stylesheet" type="text/css" />
+&lt;link rel="stylesheet" href="../css/JSAV.css" type="text/css" />
+&lt;/head>
+</pre>
+
+<p>
+In this case, we included the standard JSAV.css file, as well as the
+CSS file used by OpenDSA textbook components (AeBookAV.css).
+</p>
+
+<p>
+Next, we will define the various DOM elements on the HTML page.
+</p>
+
 <pre>
   &lt;div id="jsavcontainer">
     &lt;a class="jsavsettings" href="#">Settings&lt;/a>
@@ -75,7 +102,40 @@ initialize the JSAV visualization. The following documentation assumes you used 
     &lt;ol id="exerArray">&lt;/ol>
   &lt;/div>
 </pre>
-<p>The JavaScript setup and variable definitions:</p>
+
+<p>
+Here we have create two standard elements that typically appear in a
+JSAV exercise: the options (or "settings") panel, and the exercise
+standard controls.
+These include the ability to regenerate a new instance of the exercise
+("reset"), a slideshow showing the "model answer", and information
+about the grade received on the exercise.
+We also created a placeholder for what will be the displayed array.
+</p>
+
+<p>
+Next we load in the various libraries.
+</p>
+
+<pre>
+    &lt;script
+       src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.3/jquery.min.js">
+    &lt;/script>
+    &lt;script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.13/jquery-ui.min.js">&lt;/script>
+    &lt;script src="../lib/jquery.transform.light.js">&lt;/script>
+    &lt;script src="../build/JSAV.js">&lt;/script>
+</pre>
+
+<p>
+We use the standard jquery libraries, and we also load the JSAV
+library.
+</p>
+
+<p>
+Next comes JavaScript setup and variable definitions specific to
+the exercise.
+</p>
+
 <pre>
   var arraySize = 8,
       initialArray = [],
@@ -84,11 +144,37 @@ initialize the JSAV visualization. The following documentation assumes you used 
       av = new JSAV($("#jsavcontainer"));
 </pre>
 
+<p>
+<b>TODO: Explain the variables here.</b>
+</p>
+
+<p>
+<b>TODO: Next comes something odd.</b>
+</p>
+<pre>
+    av.recorded(); // we are not recording an AV with an algorithm
+</pre>
+
+<p>
+<b>TODO: I do not know why this is needed.</b>
+</p>
+
 <h2>Write an Initialization Function</h2>
-<p>The first step in creating an exercise is to write a function that initializes the 
-  exercise. Below is an extremely simplified example from the examples/ShellsortProficiency.html
-  file.</p>
-  
+
+<p>The first step in creating an exercise is to write a function that
+initializes the exercise.
+This method will be called both on startup, and by the "reset"
+button.
+The <code>initialize()</code> function should clear the previous
+visualization (if there was one) and initialize a new one.
+It should also return the structures that will be used in grading to
+compare with the model answer. 
+The name of the function does not have to be "initialize", as
+it will be bound in the initializer method for the exercise object,
+as shown later in the tutorial.
+</p>
+
+
 <pre>
   function initialize() {
     var htmldata = "";
@@ -103,19 +189,32 @@ initialize the JSAV visualization. The following documentation assumes you used 
     return jsavArray;
   }
 </pre>
-<p>What the <code>initialize()</code> function should do is to clear the previous visualization
-and initialize a new one. It should also return the structures that will be used in grading to
-compare with the model answer. Note, that the name of the function does not have to be initialize.</p>
-<p>So above, the code generates random numbers and changes the content
-of an existing HTML element. In the HTML, there is an element <code>&lt;ol id="exerArray">&lt;/ol></code>
-and the <code>$theArray</code> variable is a jQuery object that refers to that element (<code>var $theArray = $("#exerArray")</code>). The <code>$theArray.html(..)</code> function call replaces the existing array contents with the new data. The call to <code>av.ds.array</code> initializes a new JSAV array from
-the given jQuery object and the given options. Finally, the function returns the JSAV array.</p>
+
+<p>
+Our example here is a simplified version of the one used by
+the Shellsort Proficiency Exercise.
+This code generates random numbers and changes the content
+of an existing HTML element.
+In the HTML, there is an element <code>&lt;ol id="exerArray">&lt;/ol></code>
+and the <code>$theArray</code> variable is a jQuery object that refers
+to that element (<code>var $theArray = $("#exerArray")</code>).
+The <code>$theArray.html(..)</code> function call replaces the existing
+array contents with new data.
+The call to <code>av.ds.array</code> initializes a new JSAV array from 
+the given jQuery object and the given options. Finally, the function
+returns the JSAV array.
+</p>
 
 <h2>Write the Model Answer Function</h2>
-<p>To be able to grade the student's solution, the exercise will need to have a model solution. This
-  will be used by both to show the correct solution as an AV to student as well as to compare it for
-  correctness. Below is a simple model answer function where the correct solution is to highlight the
-  array indices from left (index 0) to right.
+<p>To be able to grade the student's solution, the exercise will need
+to have a model solution.
+This will be used both to show the correct solution (as an AV shown to
+the student through the "Model Answer" button) and to compare to the
+student's answer to judge correctness.
+Below is a simple model answer function where the correct solution is
+to highlight the array indices from left (index 0) to right
+(index arraySize-1).
+
 <pre>
   function modelSolution(jsav) {
     var modelArray = jsav.ds.array(initialArray);
@@ -127,17 +226,40 @@ the given jQuery object and the given options. Finally, the function returns the
     return modelArray;
   }
 </pre>
-<p>The function will get a single parameter (<code>jsav</code> above) that is a reference to the JSAV
-  animation of the model answer. Like the initialization function, the model solution function should 
-  return the structures used in comparing the model solution with student's solution</p>
-<p>The function above first creates a JSAV array using the data stored in variable <code>initialArray</code> in the initialization function. It then goes through all indices and highlights the index. It also sets
-  a step option for the current collection of effects and calls <code>jsav.step()</code>. The step option
-  <code>grade</code> is used to mark states in the model solution that should be used in grading. Thus, the
-  model solution can contain an AV with explanations and other structures, but only the returned structures at steps where grade is set to true, are graded. The call to <code>jsav.step()</code> notifies the AV that 
-  a new step should be started.</p>
 
-<h2>Creating the actual exercise</h2>
-<p>The actual exercise can be initialized with a call to <code>av.exercise()</code>. The function can also take several options, some of which are required. The options are:</p>
+<p>
+The function takes a single parameter (<code>jsav</code> above) that
+is a reference to the JSAV animation of the model answer.
+Like the initialization function, the model solution function should 
+return the structures used in comparing the model solution with
+student's solution
+</p>
+
+<p>The function above first creates a JSAV array using the data stored
+in variable <code>initialArray</code> in the initialization
+function.
+It then goes through all indices in turn and highlights the current
+index.
+It also sets a step option for the current collection of effects and
+calls <code>jsav.step()</code>.
+The step option <code>grade</code> is used to mark states in the model
+solution that should be used in grading.
+Thus, the model solution can contain an AV with explanations and other
+structures, but only the returned structures at steps where grade is
+set to true, are graded.
+The call to <code>jsav.step()</code> notifies the AV that  
+a new step should be started.
+</p>
+
+<h2>Creating the exercise</h2>
+
+<p>
+The exercise is initialized with a call to <code>av.exercise()</code>.
+The function can also take several options, some of which are
+required.
+<b>[TODO: The following list should be moved to the documentation, this
+example should only show what is done.]</b>
+The full set of options are:</p> 
 <ul>
   <li><code>{model: &lt;function>}</code> The function to generate the model solution. <strong>Required.</strong></li>
   <li><code>{reset: &lt;function>}</code> The initialization function that resets the exercise. <strong>Required.</strong></li>
@@ -147,15 +269,41 @@ the given jQuery object and the given options. Finally, the function returns the
   <li><code>{feedbackSelectable: &lt;>boolean}</code> The settings dialog will, by default, allow student to change the feedback mode. Setting this option to false disables this choice.</li>
   <li><code>{fixmodeSelectable: &lt;>boolean}</code> The settings dialog will, by default, allow student to change the behavior in continuous feedback mode. Setting this option to false disables this choice.</li>
 </ul>
-<p>So, given our <code>initialize</code> and <code>modelSolution</code> functions above, we can initialize an exercise with the following:</p>
-<pre>var exercise = av.exercise({model: modelSolution, 
-                                 reset: initialize,
-                                 compare: {css: "background-color"}});
-exercise.reset();</pre>
-<p>At this point, the exercise can be graded and model solution shown. It is, however, lacking any way for the student to construct her solution.</p>
+
+<p>
+Given our <code>initialize</code> and <code>modelSolution</code>
+functions, we initialize an exercise as follows.
+</p>
+
+<pre>
+var exercise = av.exercise({model: modelSolution, 
+                            reset: initialize,
+                            compare: {css: "background-color"}});
+exercise.reset();
+</pre>
+
+<p>
+At this point, the exercise can be graded and model solution shown.
+It now remains to write the code that allows the student to construct
+her solution.
+</p> 
 
 <h2>Adding Student Interaction</h2>
-<p>The basic idea of the JSAV library is to represent all the data structures using HTML elements. It is simple to attach listeners for user actions (like mouse click) to these elements. So, looking at the HTML generated by initializing the array, we see that it is an <code>ol</code> element with several <code>li</code> elements inside. And since the exercise was to click the indices, we will register a click event handler to these <code>li</code> elements. It's actually easier than it sounds:</p>
+
+<p>
+The design of the JSAV library allows the developer to represent all
+data structures using HTML elements.
+It is simple to attach listeners for user actions (like mouse clicks)
+to these elements using standard HTML.
+looking at the HTML generated to initialize the array,
+<b>[TODO: Explain what generated this. It is not so obvious.]</b>
+we see that it is an <code>ol</code> element with several
+<code>li</code> elements inside.
+And since the exercise was to click the indices, we will
+register a click event handler to these <code>li</code> elements.
+This is easier than it sounds.
+</p>
+
 <pre>
   // we already have reference to the ol element, find its li children 
   // and bind a function to handle all click events
@@ -168,14 +316,16 @@ exercise.reset();</pre>
     exercise.gradeableStep();
   });
 </pre>
-<p>Now, the exercise should be interactive and ready for use!</p>
 
-<h2>More Advanced Topics</h2>
-<p class="todo">
-Document these more advanced features.
-</p> 
-<h3>Continuous Feedback Mode</h3>
-<h3>Track State with JSAV Variables</h3>  
-<h3>Customize the Scoring</h3>
+<p>
+ow, the exercise should be interactive and ready for use!
+</p>
+
+<p>
+<b>[TODO: I took out the pointers to more advanced topics. The
+documentation for these should go into the API docs, and this file
+should only contain what relates to the actual example code.]</b>
+</p>
+
 </body>
 </html>
