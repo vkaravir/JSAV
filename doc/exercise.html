@@ -195,7 +195,7 @@ visualization to this DOM element.
 </p>
 
 <p>
-<b>TODO: Next comes something odd.</b>
+Next we deal with giving instructions to the user.
 </p>
 <pre>
     av.recorded(); // we are not recording an AV with an algorithm
@@ -204,14 +204,18 @@ visualization to this DOM element.
 </pre>
 
 <p>
-By default, when a JSAV visualization is initialized, it is expecting a 
-series of effects to be recorded by running an algorithm. In this mode,
-the effects are only recorded and not visualized/animated. In the exercise,
-we want to animate the user operations as soon as they are performed. Thus,
-we call <code>av.recorded()</code> to end the "recording" mode. Note, that the 
-state changes are still stored in the animation state sequence.
-The call to "av.umsg" provides the text of the message that give
-directions to the user, and "av.forward()" causes the message to be
+By default, when a JSAV visualization is initialized it is expecting a 
+series of effects to be recorded by running an algorithm.
+In this mode, the effects are only recorded and not
+visualized/animated.
+When making an exercise, we want to animate user operations as soon as
+they are performed.
+Thus, we call <code>av.recorded()</code> to end the "recording" mode.
+Note that animation state changes are still stored in JSAV's internal
+animation state sequence array.
+The call to <code>av.umsg()</code> provides the text of the message
+that give directions to the user,
+and <code>av.forward()</code> causes the message to be
 displayed on the screen.
 </p>
 
@@ -326,13 +330,21 @@ var exercise = av.exercise({model: modelSolution,
                             compare: {css: "background-color"}});
 exercise.reset();
 </pre>
-<p>The options we are passing:</p>
+<p>The options that we pass:</p>
 <ul>
-  <li><code>{model: &lt;function>}</code> The function to generate the model solution. <strong>Required.</strong></li>
-  <li><code>{reset: &lt;function>}</code> The initialization function that resets the exercise. <strong>Required.</strong></li>
-  <li><code>{compare: &lt;Object or Array>}</code> Specifies which properties to compare for the structures. In the example below, we set the comparison to be CSS property background-color, since that is changed when highlighting indices. <strong>Required.</strong></li>
+  <li><code>{model: &lt;function>}</code> The function to generate the
+  model solution. <strong>Required.</strong></li>
+  <li><code>{reset: &lt;function>}</code> The initialization function
+  that resets the exercise. <strong>Required.</strong></li>
+  <li><code>{compare: &lt;Object or Array>}</code> Specifies which
+  properties to compare for the structures. In the example below, we
+  set the comparison to be the CSS property <code>background-color</code>,
+  since that is changed when highlighting indices. <strong>Required.</strong></li>
 </ul>
-<p>The full set of options can be found from the <a href="api.html">API documentation</a>.</p> 
+<p>
+The full set of options can be found in the
+<a href="api.html">API documentation</a>.
+</p>
 
 <p>
 At this point, the exercise can be graded and model solution shown.
@@ -343,7 +355,7 @@ her solution.
 <h2>Adding Student Interaction</h2>
 
 <p>
-The design of the JSAV library allows the developer to represent all
+The JSAV library design allows developers to represent all
 data structures using HTML elements.
 It is simple to attach listeners for user actions (like mouse clicks)
 to these elements using standard HTML.
