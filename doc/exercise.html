@@ -186,8 +186,9 @@ Next we make variable definitions specific to the exercise.
 This placeholder is needed since JSAV will have to maintain two
 versions of the array object: The one that the user works on, and the
 copy displayed when the model answer is presented.
-<b>TODO: Explain jsavArray.</b>
-<b>TODO: Explain the line "$array = $("#exerArray)".</b>
+<code>jsavArray</code> will hold a reference to the JSAV array the student is working on.</b>
+<code>$array</code> will store a reference to the <code>ol</code> DOM element used later to 
+generate the HTML for the array.
 <code>av</code> is the visualization object itself.
 We pass in <code>jsavcontainer</code> to bind the position of the
 visualization to this DOM element.
@@ -203,7 +204,12 @@ visualization to this DOM element.
 </pre>
 
 <p>
-<b>TODO: I do not know what the "recorded" line actually does.</b>
+By default, when a JSAV visualization is initialized, it is expecting a 
+series of effects to be recorded by running an algorithm. In this mode,
+the effects are only recorded and not visualized/animated. In the exercise,
+we want to animate the user operations as soon as they are performed. Thus,
+we call <code>av.recorded()</code> to end the "recording" mode. Note, that the 
+state changes are still stored in the animation state sequence.
 The call to "av.umsg" provides the text of the message that give
 directions to the user, and "av.forward()" causes the message to be
 displayed on the screen.
@@ -310,22 +316,7 @@ a new step should be started.
 <p>
 The exercise is initialized with a call to <code>av.exercise()</code>.
 The function can also take several options, some of which are
-required.
-<b>[TODO: The following list should be moved to the documentation, this
-example should only show what is done.]</b>
-The full set of options are:</p> 
-<ul>
-  <li><code>{model: &lt;function>}</code> The function to generate the model solution. <strong>Required.</strong></li>
-  <li><code>{reset: &lt;function>}</code> The initialization function that resets the exercise. <strong>Required.</strong></li>
-  <li><code>{compare: &lt;Object or Array>}</code> Specifies which properties to compare for the structures. In the example below, we set the comparison to be css property background-color, since that is changed when highlighting indices.</li>
-  <li><code>{feedback: &lt;string>}</code> Will change the feedback mode, possible values continuous and atend (default). See Continuous feedback below.</li>
-  <li><code>{fixmode: &lt;string>}</code> Change the behavior in continuous mode, possible values are undo and fix. The default is undo.</li>
-  <li><code>{feedbackSelectable: &lt;>boolean}</code> The settings dialog will, by default, allow student to change the feedback mode. Setting this option to false disables this choice.</li>
-  <li><code>{fixmodeSelectable: &lt;>boolean}</code> The settings dialog will, by default, allow student to change the behavior in continuous feedback mode. Setting this option to false disables this choice.</li>
-</ul>
-
-<p>
-Given our <code>initialize</code> and <code>modelSolution</code>
+required. Given our <code>initialize</code> and <code>modelSolution</code>
 functions, we initialize an exercise as follows.
 </p>
 
@@ -335,6 +326,13 @@ var exercise = av.exercise({model: modelSolution,
                             compare: {css: "background-color"}});
 exercise.reset();
 </pre>
+<p>The options we are passing:</p>
+<ul>
+  <li><code>{model: &lt;function>}</code> The function to generate the model solution. <strong>Required.</strong></li>
+  <li><code>{reset: &lt;function>}</code> The initialization function that resets the exercise. <strong>Required.</strong></li>
+  <li><code>{compare: &lt;Object or Array>}</code> Specifies which properties to compare for the structures. In the example below, we set the comparison to be CSS property background-color, since that is changed when highlighting indices. <strong>Required.</strong></li>
+</ul>
+<p>The full set of options can be found from the <a href="api.html">API documentation</a>.</p> 
 
 <p>
 At this point, the exercise can be graded and model solution shown.
@@ -349,8 +347,7 @@ The design of the JSAV library allows the developer to represent all
 data structures using HTML elements.
 It is simple to attach listeners for user actions (like mouse clicks)
 to these elements using standard HTML.
-Looking at the HTML generated to initialize the array,
-<b>[TODO: Explain what generated this. It is not so obvious.]</b>
+Looking at the initial HTML and the HTML generated to initialize the array (inside the loop in the <code>initialize</code> function),
 we see that it is an <code>ol</code> element with several
 <code>li</code> elements inside.
 And since the exercise was to click the indices, we will
