@@ -14,9 +14,11 @@
     height: 400px;
     background-color: #efe;
   }
+
   #container .jsavarray {
      left: -10px;
   }
+
   p.jsavoutput.jsavline {
     height: 80px;
     margin: 10px, 0px;
@@ -101,7 +103,63 @@ If there are 16 elements in the array indexed from 0
 to 15, there would initially be 8 sublists of 2 elements each.
 </p>
 
+
+<p>
+The first sublist would be the elements in positions 0 and 8.
+The second is in positions 1 and 9, and so on.
+
+<style>
+  #container1 {
+    width: 760px;
+    height: 135px;
+    background-color: #efe;
+  }
+</style>
+
 <center>
+<div id="container1">
+  <table id=tableT1 style="margin-top:-15px; margin-bottom:-15px">
+    <tr>
+      <td width=100><span class="jsavcounter"></span></td>
+      <td width=650px>
+    	<div class="jsavcontrols"></div>
+      </td>
+    </tr>
+  </table>
+</div>
+</center>
+
+<script>
+(function($) {
+  var av1 = new JSAV("container1"); //containing HTML element with id container
+  av1.SPEED = 150; // Set the animation speed base
+
+  // Create an array object under control of JSAV library
+  var arr1 = av1.ds.array([20, 30, 12, 54, 55, 11, 78, 14, 13, 79, 44,
+      98, 76, 45, 32, 11], {indexed: true});
+
+  // set color to LIGHT for the whole array, then highlight indices 0 and 8
+  arr1.css(function(index)
+    { return index%8 != 0;}, {"color": LIGHT}).highlight([0, 8]);
+  // another way to specify a message for a step
+  av1.step();
+  arr1.unhighlight([0, 8]).css([0, 8], {"color": LIGHT}).highlight([1, 9]);
+  
+  av1.step();
+  for (var i=2; i<8; i++) { // loop through the rest of the array sublists
+    av1.step();
+    arr1.unhighlight([i-1, i+7]).css([i-1, i+7], {"color": LIGHT}).highlight([i, i+8]);
+  }
+
+  av1.recorded();
+})(jQuery);
+</script>
+
+<p>
+Each of these sublists of length two is sorted using Insertion Sort.
+(The blue elements are being compared. The are swapped if appropriate.)
+</p>
+
 <div id="container">
   <table id=tableT style="margin-top:-15px; margin-bottom:-15px">
     <tr>
@@ -110,25 +168,66 @@ to 15, there would initially be 8 sublists of 2 elements each.
     	<div class="jsavcontrols"></div>
       </td>
       <td>
-      <a class="jsavsettings" href="#">Settings</a>
+        <a class="jsavsettings" href="#">Settings</a>
       </td>
     </tr>
   </table>
   <p class="jsavoutput jsavline"></p>
 </div>
-</center>
 
 <script>
-(function($) {
+  // Various functions that will be used by all of the following
+  // sections of the tutorial.
+
   // Convenience function for setting another type of highlight
   // (will be used for showing which elements will be compared during sort)
-  var setBlue = function(index) {
+  var setBlue = function(arr, index) {
     arr.css(index, {"background-color": "#ddf" });
   };
 
-  var av = new JSAV("container"); //containing HTML element with id container
-  av.SPEED = 200; // Set the animation speed base
+  // Partial Shellsort. Sweep with the given increment
+  function sweep(av, myarr, incr) {
+    var j = 0;
+    highlightFunction = function(index) { return index%incr == j;};
+    for (j=0; j<incr; j++) {         // Sort each sublist
+      // Highlight the sublist
+      myarr.highlight(highlightFunction);
+      av.step();
+      inssort(av, myarr, j, incr);
+      myarr.unhighlight(highlightFunction);
+    }
+  }
 
+  // Insertion sort using increments
+  function inssort(av, arr, start, incr) {
+    var i, j;
+    for (i=start+incr; i<arr.size(); i+=incr) {
+      setBlue(arr, i);
+      for (j=i; j>=incr; j-=incr) {
+        setBlue(arr, j-incr);
+	av.step();
+        if (arr.value(j) < arr.value(j-incr)) {
+          arr.swap(j, j-incr); // swap the two indices
+          av.step();
+	}
+        else {
+  	  arr.highlight([j-incr, j]);
+          break; // Done pushing element, leave for loop
+        }
+	arr.highlight(j);
+      }
+      arr.highlight(j);
+    }
+  }
+</script>
+
+<script>
+(function($) {
+  var LIGHT = "rgb(215, 215, 215)";  // For "greying out" array elements
+  var DARK = "black";                // Make array elements dark again
+
+  var av = new JSAV("container");
+  av.SPEED = 200; // Set the animation speed base
 
   // Create an array object under control of JSAV library
   var arr = av.ds.array([20, 30, 12, 54, 55, 11, 78, 14, 13, 79, 44,
@@ -143,26 +242,10 @@ to 15, there would initially be 8 sublists of 2 elements each.
   // Will be shown later to compare against progress made by the algorithm
   origarr = arr.clone();
 
-  av.umsg(" The first sublist would be the elements in positions 0 and 8...");
-
-  // set color to LIGHT for the whole array, then highlight indices 0 and 8
-  arr.css(function(index)
-    { return index%8 != 0;}, {"color": LIGHT}).highlight([0, 8]);
-  // another way to specify a message for a step
-  av.step().umsg("... the second in positions 1 and 9...", {preserve: true});
-  arr.unhighlight([0, 8]).css([0, 8], {"color": LIGHT}).highlight([1, 9]);
-  
-  av.step().umsg("... and so on ...", {preserve: true});
-  for (var i=2; i<8; i++) { // loop through the rest of the array sublists
-    av.step();
-    arr.unhighlight([i-1, i+7]).css([i-1, i+7], {"color": LIGHT}).highlight([i, i+8]);
-  }
-
-  av.step().umsg("Each of these sublists of length two is sorted using Insertion Sort. (The blue elements are being compared and swapped if appropriate)");
   arr.unhighlight(); // unhighlight seems to have the side effect of
                      // making the cell dark.
 
-  sweep(arr, 8); // first sweep with increment 8
+  sweep(av, arr, 8); // first sweep with increment 8
 
   av.step().umsg('At the end of the first pass, the resulting array is "a little better sorted".');
 
@@ -197,7 +280,7 @@ to 15, there would initially be 8 sublists of 2 elements each.
 
   arr.unhighlight();
 
-  sweep(arr, 4); // second sweep with increment 4
+  sweep(av, arr, 4); // second sweep with increment 4
 
   av.step().umsg("At the end of processing sublists with increment 4, the array is \"even more sorted\".");
 
@@ -226,7 +309,7 @@ to 15, there would initially be 8 sublists of 2 elements each.
   av.step();
   arr.unhighlight();
 
-  sweep(arr, 2);
+  sweep(av, arr, 2);
 
   av.step().umsg("And here is the result of the third pass. The list is getting even more sorted!");
   arr.unhighlight();
@@ -236,46 +319,12 @@ to 15, there would initially be 8 sublists of 2 elements each.
   arr.highlight();
   av.step();
 
-  inssort(arr, 0, 1);
+  inssort(av, arr, 0, 1);
 
   av.step().umsg("Finally, the array is sorted.");
   arr.unhighlight();
   av.recorded();
 
-  // Partial Shellsort. Sweep with the given increment
-  function sweep(myarr, incr) {
-    var j = 0;
-    highlightFunction = function(index) { return index%incr == j;};
-    for (j=0; j<incr; j++) {         // Sort each sublist
-      // Highlight the sublist
-      myarr.highlight(highlightFunction);
-      av.step();
-      inssort(myarr, j, incr);
-      myarr.unhighlight(highlightFunction);
-    }
-  }
-
-  // Insertion sort using increments
-  function inssort(A, start, incr) {
-    var i, j;
-    for (i=start+incr; i<arr.size(); i+=incr) {
-      setBlue(i);
-      for (j=i; j>=incr; j-=incr) {
-        setBlue(j-incr);
-	av.step();
-        if (arr.value(j) < arr.value(j-incr)) {
-          arr.swap(j, j-incr); // swap the two indices
-          av.step();
-	}
-        else {
-  	  arr.highlight([j-incr, j]);
-          break; // Done pushing element, leave for loop
-        }
-	arr.highlight(j);
-      }
-      arr.highlight(j);
-    }
-  }
 })(jQuery);
 </script>
 

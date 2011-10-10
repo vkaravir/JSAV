@@ -202,22 +202,22 @@
   // Insertion sort using increments
   function inssort(A, start, incr) {
     var i, j;
-    for (i=start+incr; i<arr.size(); i+=incr) {
+    for (i=start+incr; i<A.size(); i+=incr) {
       setBlue(i);
       for (j=i; j>=incr; j-=incr) {
         setBlue(j-incr);
 	av.step();
-        if (arr.value(j) < arr.value(j-incr)) {
-          arr.swap(j, j-incr); // swap the two indices
+        if (A.value(j) < A.value(j-incr)) {
+          A.swap(j, j-incr); // swap the two indices
           av.step();
 	}
         else {
-  	  arr.highlight([j-incr, j]);
+  	  A.highlight([j-incr, j]);
           break; // Done pushing element, leave for loop
         }
-	arr.highlight(j);
+	A.highlight(j);
       }
-      arr.highlight(j);
+      A.highlight(j);
     }
   }
 })(jQuery);
