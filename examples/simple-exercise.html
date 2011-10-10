@@ -67,9 +67,7 @@
       return modelArray;
     }
     
-    var exercise = av.exercise({model: modelSolution,
-                                reset: initialize,
-                                compare: {css: "background-color"}});
+    var exercise = av.exercise(modelSolution, initialize, {css: "background-color"});
     exercise.reset();
 
     // we already have reference to the ol element, find its li children 

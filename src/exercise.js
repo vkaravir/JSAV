@@ -221,8 +221,9 @@
     };
   };
   
-  JSAV.ext.exercise = function(options) {
-    return new Exercise(this, options);
+  JSAV.ext.exercise = function(model, reset, compare, options) {
+    var opts = $.extend({model: model, reset: reset, compare:compare}, options)
+    return new Exercise(this, opts);
     // options:
     //  - reset: a function that initializes the exercise and returns the structure(s) to 
     //           compare in grading
