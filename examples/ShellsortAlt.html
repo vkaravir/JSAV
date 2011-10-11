@@ -266,7 +266,7 @@ sorted".
 
   var origarr = av.ds.array([20, 30, 12, 54, 55, 11, 78, 14, 13, 79, 44,
       98, 76, 45, 32, 11], {indexed: true});
-  var origlabel = av.label("Original Array:", {before: origarr});
+  var origlabel = av.label("Original Array", {before: origarr});
 
   var arr = av.ds.array([13, 30, 12, 54, 55, 11, 32, 11, 20, 79, 44,
       98, 76, 45, 78, 14], {indexed: true});
@@ -403,17 +403,16 @@ At the end of processing sublists with increment 4, the array is
 
   var origarr = av.ds.array([20, 30, 12, 54, 55, 11, 78, 14, 13, 79, 44,
       98, 76, 45, 32, 11], {indexed: true});
-  var origlabel = av.label("Original Array:", {before: origarr});
+  var origlabel = av.label("Original Array", {before: origarr});
 
   var arr = av.ds.array([13, 11, 12, 11, 20, 30, 32, 14, 55, 45, 44,
       54, 76, 79, 78, 98], {indexed: true});
-  var arrlabel = av.label("Values in <b style='color:#0f0;'>green</b> were swapped during this pass", {before: arr});
+  var arrlabel = av.label("Values in <b style='color:#0f0;'>green</b> have changed from their original positions", {before: arr});
 
   arr.css(function(index)
     { return arr.value(index) !== origarr.value(index); }, {"color": "#0f0"});
 })(jQuery);
 </script>
-
 
 <p>
 The third pass would be made on sublists with increment 2.
@@ -451,8 +450,8 @@ As usual, we sort the sublists using Insertion Sort.
   av.SPEED = 150; // Set the animation speed base
 
   // Create an array object under control of JSAV library
-  var arr = av.ds.array([13, 30, 12, 54, 55, 11, 32, 11, 20, 79, 44,
-      98, 76, 45, 78, 14], {indexed: true});
+  var arr = av.ds.array([13, 11, 12, 11, 20, 30, 32, 14, 55, 45, 44,
+      54, 76, 79, 78, 98], {indexed: true});
   av.step();
   arr.unhighlight(); // unhighlight seems to have the side effect of
                      // making the cell dark.
@@ -462,8 +461,7 @@ As usual, we sort the sublists using Insertion Sort.
 </script>
 
 <p>
-The culminating pass in this example would be a "normal" Insertion
-Sort of all elements.
+At this point, we are getting close to sorted.
 </p>
 
 <style>
@@ -475,6 +473,40 @@ Sort of all elements.
 
 <center>
 <div id="container8">
+</div>
+</center>
+
+<script>
+(function($) {
+  var av = new JSAV("container8", {"animationMode": "none"});
+
+  var origarr = av.ds.array([20, 30, 12, 54, 55, 11, 78, 14, 13, 79, 44,
+      98, 76, 45, 32, 11], {indexed: true});
+  var origlabel = av.label("Original Array", {before: origarr});
+
+  var arr = av.ds.array([12, 11, 13, 11, 20, 14, 32, 30, 44, 45, 55,
+      54, 76, 79, 78, 98], {indexed: true});
+  var arrlabel = av.label("Values in <b style='color:#0f0;'>green</b> have changed from their original positions", {before: arr});
+
+  arr.css(function(index)
+    { return arr.value(index) !== origarr.value(index); }, {"color": "#0f0"});
+})(jQuery);
+</script>
+
+<p>
+The culminating pass in this example would be a "normal" Insertion
+Sort of all elements.
+</p>
+
+<style>
+  #container9 {
+    width: 760px;
+    background-color: #efe;
+  }
+</style>
+
+<center>
+<div id="container9">
   <table id=tableT style="margin-top:-15px; margin-bottom:-15px">
     <tr>
       <td width=100><span class="jsavcounter"></span></td>
@@ -491,11 +523,11 @@ Sort of all elements.
 
 <script>
 (function($) {
-  var av = new JSAV("container8");
+  var av = new JSAV("container9");
   av.SPEED = 150; // Set the animation speed base
 
   // Create an array object under control of JSAV library
-  var arr = av.ds.array([13, 11, 12, 11, 20, 30, 32, 14, 55, 45, 44,
+  var arr = av.ds.array([12, 11, 13, 11, 20, 14, 32, 30, 44, 45, 55,
       54, 76, 79, 78, 98], {indexed: true});
 
   arr.highlight();
