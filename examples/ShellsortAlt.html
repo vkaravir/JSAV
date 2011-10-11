@@ -17,6 +17,31 @@
     height: 80px;
     margin: 10px, 0px;
   }
+  .jsavcontainer {
+    width: 760px;
+    background-color: #efe;
+    margin: 0 auto;
+  }
+  .jsavcounter {
+    float: left;
+    width: 100px;
+    margin-top: 15px;
+  }
+  .jsavsettings {
+    float: right;
+  }
+  .jsavsettings:after {
+    clear: both;
+    display: block;
+    content: "";
+  }
+  .jsavcontrols {
+    width: 650px;
+  }
+  .jsavcontrols a {
+    margin: 0 40px;
+  }
+  
 </style>
 
 <script src="http://code.jquery.com/jquery-1.6.1.js"></script>
@@ -102,28 +127,11 @@ to 15, there would initially be 8 sublists of 2 elements each.
 The first sublist would be the elements in positions 0 and 8.
 The second is in positions 1 and 9, and so on.
 
-<style>
-  #container1 {
-    width: 760px;
-    background-color: #efe;
-  }
-</style>
-
-<center>
 <div id="container1">
-  <table id=tableT1 style="margin-top:-15px; margin-bottom:-15px">
-    <tr>
-      <td width=100><span class="jsavcounter"></span></td>
-      <td width=650px>
-    	<div class="jsavcontrols"></div>
-      </td>
-      <td>
-        <a class="jsavsettings" href="#">Settings</a>
-      </td>
-    </tr>
-  </table>
+  <span class="jsavcounter"></span>
+  <a class="jsavsettings" href="#">Settings</a>
+  <div class="jsavcontrols"></div>
 </div>
-</center>
 
 <script>
 (function($) {
@@ -203,28 +211,11 @@ Each of these sublists of length two is sorted using Insertion Sort.
   }
 </script>
 
-<style>
-  #container2 {
-    width: 760px;
-    background-color: #efe;
-  }
-</style>
-
-<center>
 <div id="container2">
-  <table id=tableT style="margin-top:-15px; margin-bottom:-15px">
-    <tr>
-      <td width=100><span class="jsavcounter"></span></td>
-      <td width=650px>
-    	<div class="jsavcontrols"></div>
-      </td>
-      <td>
-        <a class="jsavsettings" href="#">Settings</a>
-      </td>
-    </tr>
-  </table>
+  <span class="jsavcounter"></span>
+  <a class="jsavsettings" href="#">Settings</a>
+	<div class="jsavcontrols"></div>
 </div>
-</center>
 
 <script>
 (function($) {
@@ -248,17 +239,8 @@ At the end of the first pass, the resulting array is "a little better
 sorted".
 </p>
 
-<style>
-  #container3 {
-    width: 760px;
-    background-color: #efe;
-  }
-</style>
-
-<center>
 <div id="container3">
 </div>
-</center>
 
 <script>
 (function($) {
@@ -288,28 +270,11 @@ The second sublist would have elements in positions 1, 5, 9, and 13,
 and so on.
 </p>
 
-<style>
-  #container4 {
-    width: 760px;
-    background-color: #efe;
-  }
-</style>
-
-<center>
 <div id="container4">
-  <table id=tableT1 style="margin-top:-15px; margin-bottom:-15px">
-    <tr>
-      <td width=100><span class="jsavcounter"></span></td>
-      <td width=650px>
-    	<div class="jsavcontrols"></div>
-      </td>
-      <td>
-        <a class="jsavsettings" href="#">Settings</a>
-      </td>
-    </tr>
-  </table>
+  <span class="jsavcounter"></span>
+  <a class="jsavsettings" href="#">Settings</a>
+	<div class="jsavcontrols"></div>
 </div>
-</center>
 
 <script>
 (function($) {
@@ -331,7 +296,6 @@ and so on.
   av.step();
   arr.unhighlight([2, 6, 10, 14]).css([2, 6, 10, 14], {"color": LIGHT}).highlight([3, 7, 11, 15]);
 
-  av.step();
   av.recorded();
 })(jQuery);
 </script>
@@ -341,28 +305,11 @@ Each sublist of four elements would also be sorted using an Insertion
 Sort.
 </p>
 
-<style>
-  #container5 {
-    width: 760px;
-    background-color: #efe;
-  }
-</style>
-
-<center>
 <div id="container5">
-  <table id=tableT style="margin-top:-15px; margin-bottom:-15px">
-    <tr>
-      <td width=100><span class="jsavcounter"></span></td>
-      <td width=650px>
-    	<div class="jsavcontrols"></div>
-      </td>
-      <td>
-        <a class="jsavsettings" href="#">Settings</a>
-      </td>
-    </tr>
-  </table>
+  <span class="jsavcounter"></span>
+  <a class="jsavsettings" href="#">Settings</a>
+	<div class="jsavcontrols"></div>
 </div>
-</center>
 
 <script>
 (function($) {
@@ -385,17 +332,8 @@ At the end of processing sublists with increment 4, the array is
 "even more sorted".
 </p>
 
-<style>
-  #container6 {
-    width: 760px;
-    background-color: #efe;
-  }
-</style>
-
-<center>
 <div id="container6">
 </div>
-</center>
 
 <script>
 (function($) {
@@ -421,28 +359,11 @@ and the other consisting of the even positions.
 As usual, we sort the sublists using Insertion Sort.
 </p>
 
-<style>
-  #container7 {
-    width: 760px;
-    background-color: #efe;
-  }
-</style>
-
-<center>
 <div id="container7">
-  <table id=tableT style="margin-top:-15px; margin-bottom:-15px">
-    <tr>
-      <td width=100><span class="jsavcounter"></span></td>
-      <td width=650px>
-    	<div class="jsavcontrols"></div>
-      </td>
-      <td>
-        <a class="jsavsettings" href="#">Settings</a>
-      </td>
-    </tr>
-  </table>
+  <span class="jsavcounter"></span>
+  <a class="jsavsettings" href="#">Settings</a>
+	<div class="jsavcontrols"></div>
 </div>
-</center>
 
 <script>
 (function($) {
@@ -464,17 +385,8 @@ As usual, we sort the sublists using Insertion Sort.
 At this point, we are getting close to sorted.
 </p>
 
-<style>
-  #container8 {
-    width: 760px;
-    background-color: #efe;
-  }
-</style>
-
-<center>
 <div id="container8">
 </div>
-</center>
 
 <script>
 (function($) {
@@ -498,28 +410,11 @@ The culminating pass in this example would be a "normal" Insertion
 Sort of all elements.
 </p>
 
-<style>
-  #container9 {
-    width: 760px;
-    background-color: #efe;
-  }
-</style>
-
-<center>
 <div id="container9">
-  <table id=tableT style="margin-top:-15px; margin-bottom:-15px">
-    <tr>
-      <td width=100><span class="jsavcounter"></span></td>
-      <td width=650px>
-    	<div class="jsavcontrols"></div>
-      </td>
-      <td>
-        <a class="jsavsettings" href="#">Settings</a>
-      </td>
-    </tr>
-  </table>
+  <span class="jsavcounter"></span>
+  <a class="jsavsettings" href="#">Settings</a>
+	<div class="jsavcontrols"></div>
 </div>
-</center>
 
 <script>
 (function($) {
