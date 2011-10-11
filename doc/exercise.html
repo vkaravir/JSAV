@@ -199,8 +199,6 @@ Next we deal with giving instructions to the user.
 </p>
 <pre>
     av.recorded(); // we are not recording an AV with an algorithm
-    av.umsg("Directions: Click on all array elements from left to right to highlight them. Then click on the first and last elements to swap them."); 
-    av.forward();
 </pre>
 
 <p>
@@ -213,10 +211,6 @@ they are performed.
 Thus, we call <code>av.recorded()</code> to end the "recording" mode.
 Note that animation state changes are still stored in JSAV's internal
 animation state sequence array.
-The call to <code>av.umsg()</code> provides the text of the message
-that give directions to the user,
-and <code>av.forward()</code> causes the message to be
-displayed on the screen.
 </p>
 
 <h2>Write an Initialization Function</h2>
@@ -250,6 +244,10 @@ as shown later in the tutorial.
     $array.html(htmldata);
 
     jsavArray = av.ds.array($array, {indexed: true});
+    swapIndex = av.variable(-1);
+    
+    av.umsg("Directions: Click on all array elements from left to right to highlight them. Then click on the first and last elements to swap them."); 
+    av.forward();
     return jsavArray;
   }
 </pre>
@@ -265,7 +263,13 @@ to that element (<code>var $theArray = $("#exerArray")</code>).
 The <code>$array.html(htmldata);</code> function call replaces the existing
 array contents with new data.
 The call to <code>av.ds.array</code> initializes a new JSAV array from 
-the given jQuery object and the given options. Finally, the function
+the given jQuery object and the given options. The call to <code>av.variable</code> initializes a new
+variable that can be used to store value changes in the animation sequence. See
+section "Adding Student Interaction" below for explanation why we need this.
+The call to <code>av.umsg()</code> provides the text of the message
+that give directions to the user,
+and <code>av.forward()</code> causes the message to be
+displayed on the screen. Finally, the function
 returns the JSAV array.
 </p>
 
@@ -277,7 +281,7 @@ the student through the "Model Answer" button) and to compare to the
 student's answer to judge correctness.
 Below is a simple model answer function where the correct solution is
 to highlight the array indices from left (index 0) to right
-(index arraySize-1).
+(index arraySize-1) and then swap first and last element.
 
 <pre>
   function modelSolution(jsav) {
@@ -287,6 +291,9 @@ to highlight the array indices from left (index 0) to right
       jsav.stepOption("grade", true);
       jsav.step();
     }
+    // swap the first and last element
+    modelArray.swap(0, arraySize - 1);
+    jsav.stepOption("grade", true);
     return modelArray;
   }
 </pre>
@@ -325,9 +332,7 @@ functions, we initialize an exercise as follows.
 </p>
 
 <pre>
-var exercise = av.exercise({model: modelSolution, 
-                            reset: initialize,
-                            compare: {css: "background-color"}});
+var exercise = av.exercise(modelSolution, initialize, {css: "background-color"});
 exercise.reset();
 </pre>
 <p>The options that we pass:</p>
@@ -364,22 +369,46 @@ we see that it is an <code>ol</code> element with several
 <code>li</code> elements inside.
 And since the exercise was to click the indices, we will
 register a click event handler to these <code>li</code> elements.
-This is easier than it sounds.
+Inside the handler, we need to first decide if we are in "swap mode" or not. This
+is done based on whether the last index is highlighted or not.
 </p>
 
 <pre>
-  // we already have reference to the ol element, find its li children 
-  // and bind a function to handle all click events
-  $array.find("li").live("click", function() {
-    // find the index of the clicked (variable this) element within its' parent
-    var index = $array.find("li").index(this);
+// we already have reference to the ol element, find its li children 
+// and bind a function to handle all click events
+$array.find("li").live("click", function() {
+  // find the index of the clicked (variable this) element within its' parent
+  var index = $array.find("li").index(this);
+  
+  // if last index is highlighted, we are in "swap mode"
+  if (jsavArray.isHighlight(arraySize - 1)) {
+    // when in swap mode, first click on index will store that index
+    // and change the font size on the value
+    if (swapIndex.value() == -1) {
+      swapIndex.value(index);
+      // apply the CSS property change to index
+      jsavArray.css(index, {"font-size": "130%"});
+      av.step(); // add a step to the animation
+    } else {
+      // the second click (swapIndex has some value) will cause
+      // the swap of indices index and stored swapIndex
+      jsavArray.swap(index, swapIndex.value());
+      swapIndex.value(-1);
+      exercise.gradeableStep(); // this step will be graded
+    }
+  } else { // we are in highlight mode
     // highlight the index
     jsavArray.highlight(index);
+    if (index == (arraySize - 1)) {
+      av.umsg("Good, now swap the first and last index");
+    }
     // mark this as a gradeable step; also handles continuous feedback
     exercise.gradeableStep();
-  });
+  }
+});
 </pre>
-
+<p>If we are in  swap mode, we need to check if this is the first or second index for the swap. On the first click, we need to store that index to be used when second click occurs. Normally we could store the value in plain JavaScript variable. However, a student can undo a step, which should also reset the swapIndex value. For this, we have defined swapIndex as a JSAV variable. It has functions <code>value()</code> that will return the current value and <code>value(newVal)</code> that will set the value.</p>
+  
 <p>
 Now, the exercise should be interactive and ready for use!</p>
 

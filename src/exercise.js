@@ -176,6 +176,7 @@
       this.modelav = undefined;
       this.modelStructures = undefined;
     }
+    this.jsav._undo = [];
   };
   exerproto.undo = function() {
     $.fx.off = true;
