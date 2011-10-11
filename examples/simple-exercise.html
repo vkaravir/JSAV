@@ -20,7 +20,7 @@
 
   <div id="jsavcontainer">
     <a class="jsavsettings" href="#">Settings</a>
-    <p align="center" class="jsavexercisecontrols">  <input type="button" id="undo" value="Undo" /></p>
+    <p align="center" class="jsavexercisecontrols"></p>
     <ol id="exerArray"></ol>
     <p class="jsavoutput jsavline"></p>
   </div>
@@ -79,10 +79,6 @@
       jsavArray.highlight(index);
       // mark this as a gradeable step; also handles continuous feedback
       exercise.gradeableStep();
-    });
-    
-    $("#undo").click(function() {
-      exercise.undo();
     });
     </script>
 </body>

@@ -30,8 +30,12 @@
           $grade = $('<input type="button" name="grade" value="Grade" />').click(
             function() {
               self.showGrade();
+            }),
+          $undo = $('<input type="button" name="undo" value="Undo" />"').click(
+            function() {
+              self.undo();
             });
-      cont.append($reset, $model, $grade);
+      cont.append($undo, $reset, $model, $grade);
     }
     // if feedbacktype can be selected, add settings for it
     if (this.options.feedbackSelectable) {
