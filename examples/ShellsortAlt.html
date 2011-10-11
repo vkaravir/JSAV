@@ -55,14 +55,89 @@
 <input type="button" name="about" value="About"/>
 
 <script>
+  // Various functions and variables that will be used by all of the
+  // following sections of the tutorial.
+
+  var speed = 150; // Animation default speed
+  // The various arrays to start sweeps with or display
+  var theArray = [20, 30, 12, 54, 55, 11, 78, 14, 13, 79, 44, 98, 76, 45, 32, 11];
+  var theArray2 = [13, 30, 12, 54, 55, 11, 32, 11, 20, 79, 44, 98, 76, 45, 78, 14];
+  var theArray3 = [13, 11, 12, 11, 20, 30, 32, 14, 55, 45, 44, 54, 76, 79, 78, 98];
+  var theArray4 = [12, 11, 13, 11, 20, 14, 32, 30, 44, 45, 55, 54, 76, 79, 78, 98];
+ 
   var LIGHT = "rgb(215, 215, 215)";  // For "greying out" array elements
   var DARK = "black";                // Make array elements dark again
 
-  // Connect action callbacks to the HTML entities
-  $('input[name="about"]').click(about);
+  // Convenience function for setting another type of highlight
+  // (will be used for showing which elements will be compared during sort)
+  var setBlue = function(arr, index) {
+    arr.css(index, {"background-color": "#ddf" });
+  };
 
-  // Process About button: Pop up a message with an Alert
-  function about() {
+  // Partial Shellsort. Sweep with the given increment
+  function sweep(av, myarr, incr) {
+    var j = 0;
+    highlightFunction = function(index) { return index%incr == j;};
+    for (j=0; j<incr; j++) {         // Sort each sublist
+      // Highlight the sublist
+      myarr.highlight(highlightFunction);
+      av.step();
+      inssort(av, myarr, j, incr);
+      myarr.unhighlight(highlightFunction);
+    }
+  }
+
+  // Insertion sort using increments
+  function inssort(av, arr, start, incr) {
+    var i, j;
+    for (i=start+incr; i<arr.size(); i+=incr) {
+      setBlue(arr, i);
+      for (j=i; j>=incr; j-=incr) {
+        setBlue(arr, j-incr);
+	av.step();
+        if (arr.value(j) < arr.value(j-incr)) {
+          arr.swap(j, j-incr); // swap the two indices
+          av.step();
+	}
+        else {
+  	  arr.highlight([j-incr, j]);
+          break; // Done pushing element, leave for loop
+        }
+	arr.highlight(j);
+      }
+      arr.highlight(j);
+    }
+  }
+
+  // Display a slideshow for a sweep of "increment" steps on array "inArr"
+  function DoSweep(container, inArr, increment) {
+    var av = new JSAV(container);
+    av.SPEED = speed; // Set the animation speed base
+    // Create an array object under control of JSAV library
+    var arr = av.ds.array(inArr, {indexed: true});
+    av.step();
+    arr.unhighlight(); // unhighlight seems to have the side effect of
+                       // making the cell dark.
+    sweep(av, arr, increment); // first sweep with increment 8
+    av.recorded();
+  }
+
+  // Show the differences between the original array and given array "a"
+  function ShowDifference(container, a) {
+    var av = new JSAV(container, {"animationMode": "none"});
+    var origarr = av.ds.array(theArray, {indexed: true});
+    var origlabel = av.label("Original Array", {before: origarr});
+    var arr = av.ds.array(a, {indexed: true});
+    var arrlabel = av.label("Values in <b style='color:#0f0;'>green</b> have changed from their original positions", {before: arr});
+    arr.css(function(index)
+      { return arr.value(index) !== origarr.value(index); }, {"color": "#0f0"});
+  }
+</script>
+
+<script>
+  // Support for "About" button
+  $('input[name="about"]').click(about); // Set callback action
+  function about() { // This is what we pop up
     var mystring = "Shellsort Explanation Slideshow\nWritten by Cliff Shaffer and Ville Karavirta\nCreated as part of the OpenDSA hypertextbook project.\nFor more information, see http://algoviz.org/eBook\nWritten during June, 2011\nLast update: August 14, 2011\nJSAV library version " + JSAV.version();
     alert(mystring);
   }
@@ -137,10 +212,9 @@ The second is in positions 1 and 9, and so on.
 <script>
 (function($) {
   var av = new JSAV("container1");
-  av.SPEED = 150; // Set the animation speed base
+  av.SPEED = speed; // Set the animation speed base
   // Create an array object under control of JSAV library
-  var arr = av.ds.array([20, 30, 12, 54, 55, 11, 78, 14, 13, 79, 44,
-      98, 76, 45, 32, 11], {indexed: true});
+  var arr = av.ds.array(theArray, {indexed: true});
 
   // set color to LIGHT for the whole array, then highlight indices 0 and 8
   arr.css(function(index)
@@ -163,55 +237,6 @@ Each of these sublists of length two is sorted using Insertion Sort.
 (The blue elements are being compared. The are swapped if appropriate.)
 </p>
 
-<script>
-  // Various functions that will be used by all of the following
-  // sections of the tutorial.
-
-  var LIGHT = "rgb(215, 215, 215)";  // For "greying out" array elements
-  var DARK = "black";                // Make array elements dark again
-
-  // Convenience function for setting another type of highlight
-  // (will be used for showing which elements will be compared during sort)
-  var setBlue = function(arr, index) {
-    arr.css(index, {"background-color": "#ddf" });
-  };
-
-  // Partial Shellsort. Sweep with the given increment
-  function sweep(av, myarr, incr) {
-    var j = 0;
-    highlightFunction = function(index) { return index%incr == j;};
-    for (j=0; j<incr; j++) {         // Sort each sublist
-      // Highlight the sublist
-      myarr.highlight(highlightFunction);
-      av.step();
-      inssort(av, myarr, j, incr);
-      myarr.unhighlight(highlightFunction);
-    }
-  }
-
-  // Insertion sort using increments
-  function inssort(av, arr, start, incr) {
-    var i, j;
-    for (i=start+incr; i<arr.size(); i+=incr) {
-      setBlue(arr, i);
-      for (j=i; j>=incr; j-=incr) {
-        setBlue(arr, j-incr);
-	av.step();
-        if (arr.value(j) < arr.value(j-incr)) {
-          arr.swap(j, j-incr); // swap the two indices
-          av.step();
-	}
-        else {
-  	  arr.highlight([j-incr, j]);
-          break; // Done pushing element, leave for loop
-        }
-	arr.highlight(j);
-      }
-      arr.highlight(j);
-    }
-  }
-</script>
-
 <div id="container2">
   <span class="jsavcounter"></span>
   <a class="jsavsettings" href="#">Settings</a>
@@ -220,17 +245,8 @@ Each of these sublists of length two is sorted using Insertion Sort.
 
 <script>
 (function($) {
-  var av = new JSAV("container2");
-  av.SPEED = 150; // Set the animation speed base
-
-  // Create an array object under control of JSAV library
-  var arr = av.ds.array([20, 30, 12, 54, 55, 11, 78, 14, 13, 79, 44,
-      98, 76, 45, 32, 11], {indexed: true});
-  av.step();
-  arr.unhighlight(); // unhighlight seems to have the side effect of
-                     // making the cell dark.
-  sweep(av, arr, 8); // first sweep with increment 8
-  av.recorded();
+  var arr = theArray;
+  DoSweep("container2", arr, 8);
 })(jQuery);
 </script>
 
@@ -245,21 +261,10 @@ sorted".
 
 <script>
 (function($) {
-  var av = new JSAV("container3", {"animationMode": "none"});
-
-  var origarr = av.ds.array([20, 30, 12, 54, 55, 11, 78, 14, 13, 79, 44,
-      98, 76, 45, 32, 11], {indexed: true});
-  var origlabel = av.label("Original Array", {before: origarr});
-
-  var arr = av.ds.array([13, 30, 12, 54, 55, 11, 32, 11, 20, 79, 44,
-      98, 76, 45, 78, 14], {indexed: true});
-  var arrlabel = av.label("Values in <b style='color:#0f0;'>green</b> were swapped during this pass", {before: arr});
-
-  arr.css(function(index)
-    { return arr.value(index) !== origarr.value(index); }, {"color": "#0f0"});
+  var arr = theArray2;
+  ShowDifference("container3", arr);
 })(jQuery);
 </script>
-
 
 <p>
 The second pass of Shellsort looks at fewer, bigger lists.
@@ -279,11 +284,10 @@ and so on.
 
 <script>
 (function($) {
-  var av = new JSAV("container4"); //containing HTML element with id container
-  av.SPEED = 150; // Set the animation speed base
+  var av = new JSAV("container4");
+  av.SPEED = speed; // Set the animation speed base
 
-  var arr = av.ds.array([13, 30, 12, 54, 55, 11, 32, 11, 20, 79, 44,
-      98, 76, 45, 78, 14], {indexed: true});
+  var arr = av.ds.array(theArray2, {indexed: true});
 
   arr.css(function(index)
     { return index%4 != 0;}, {"color": LIGHT}).highlight([0, 4, 8, 12]);
@@ -314,17 +318,8 @@ Sort.
 
 <script>
 (function($) {
-  var av = new JSAV("container5");
-  av.SPEED = 150; // Set the animation speed base
-
-  // Create an array object under control of JSAV library
-  var arr = av.ds.array([13, 30, 12, 54, 55, 11, 32, 11, 20, 79, 44,
-      98, 76, 45, 78, 14], {indexed: true});
-  av.step();
-  arr.unhighlight(); // unhighlight seems to have the side effect of
-                     // making the cell dark.
-  sweep(av, arr, 4); // Next sweep with increment4
-  av.recorded();
+  var arr = theArray2;
+  DoSweep("container5", arr, 4);
 })(jQuery);
 </script>
 
@@ -338,18 +333,8 @@ At the end of processing sublists with increment 4, the array is
 
 <script>
 (function($) {
-  var av = new JSAV("container6", {"animationMode": "none"});
-
-  var origarr = av.ds.array([20, 30, 12, 54, 55, 11, 78, 14, 13, 79, 44,
-      98, 76, 45, 32, 11], {indexed: true});
-  var origlabel = av.label("Original Array", {before: origarr});
-
-  var arr = av.ds.array([13, 11, 12, 11, 20, 30, 32, 14, 55, 45, 44,
-      54, 76, 79, 78, 98], {indexed: true});
-  var arrlabel = av.label("Values in <b style='color:#0f0;'>green</b> have changed from their original positions", {before: arr});
-
-  arr.css(function(index)
-    { return arr.value(index) !== origarr.value(index); }, {"color": "#0f0"});
+  var arr = theArray3;
+  ShowDifference("container6", arr);
 })(jQuery);
 </script>
 
@@ -368,17 +353,8 @@ As usual, we sort the sublists using Insertion Sort.
 
 <script>
 (function($) {
-  var av = new JSAV("container7");
-  av.SPEED = 150; // Set the animation speed base
-
-  // Create an array object under control of JSAV library
-  var arr = av.ds.array([13, 11, 12, 11, 20, 30, 32, 14, 55, 45, 44,
-      54, 76, 79, 78, 98], {indexed: true});
-  av.step();
-  arr.unhighlight(); // unhighlight seems to have the side effect of
-                     // making the cell dark.
-  sweep(av, arr, 2); // Next sweep with increment4
-  av.recorded();
+  var arr = theArray3;
+  DoSweep("container7", arr, 2);
 })(jQuery);
 </script>
 
@@ -391,18 +367,8 @@ At this point, we are getting close to sorted.
 
 <script>
 (function($) {
-  var av = new JSAV("container8", {"animationMode": "none"});
-
-  var origarr = av.ds.array([20, 30, 12, 54, 55, 11, 78, 14, 13, 79, 44,
-      98, 76, 45, 32, 11], {indexed: true});
-  var origlabel = av.label("Original Array", {before: origarr});
-
-  var arr = av.ds.array([12, 11, 13, 11, 20, 14, 32, 30, 44, 45, 55,
-      54, 76, 79, 78, 98], {indexed: true});
-  var arrlabel = av.label("Values in <b style='color:#0f0;'>green</b> have changed from their original positions", {before: arr});
-
-  arr.css(function(index)
-    { return arr.value(index) !== origarr.value(index); }, {"color": "#0f0"});
+  var arr = theArray4;
+  ShowDifference("container8", arr);
 })(jQuery);
 </script>
 
@@ -419,20 +385,8 @@ Sort of all elements.
 
 <script>
 (function($) {
-  var av = new JSAV("container9");
-  av.SPEED = 150; // Set the animation speed base
-
-  // Create an array object under control of JSAV library
-  var arr = av.ds.array([12, 11, 13, 11, 20, 14, 32, 30, 44, 45, 55,
-      54, 76, 79, 78, 98], {indexed: true});
-
-  arr.highlight();
-  av.step();
-
-  inssort(av, arr, 0, 1);
-
-  arr.unhighlight();
-  av.recorded();
+  var arr = theArray4;
+  DoSweep("container9", arr, 1);
 })(jQuery);
 </script>
 
