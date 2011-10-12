@@ -127,7 +127,10 @@
         '<li class="jsavnode jsavindex jsavhighlight"></li><li class="jsavnode jsavindex" ></li></li></ol>'),
   	  styleDiv = testDiv.find(".jsavnode").filter(".jsavhighlight");
   	// TODO: general way to get styles for the whole av system
-  	return getIndices($(this.element).find("li"), index).css("background-color") == styleDiv.css("background-color");
+  	$("body").append(testDiv);
+  	var isHl = getIndices($(this.element).find("li"), index).css("background-color") == styleDiv.css("background-color");
+  	testDiv.remove();
+  	return isHl;
   };
   
   arrproto.highlight = function(indices, options) {

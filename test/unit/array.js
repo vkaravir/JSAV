@@ -116,6 +116,20 @@ test("Highlight without parameters", function() {
 	arrayUtils.testArrayHighlights(arr, [1, 1, 1, 1, 1], props);
 });
 
+test("Test isHighlight", function() {
+	var av = new JSAV("arraycontainer"),
+	  arr = av.ds.array($("#array")),
+	  props = ["color", "background-color"];
+	arr.highlight([0, 3]);
+	av.recorded();
+	av.end();
+	console.log(arr.css(0, "background-color"));
+	ok(arr.isHighlight(0));
+	ok(!arr.isHighlight(1));
+	ok(!arr.isHighlight(2));
+	ok(arr.isHighlight(3));
+});
+
 test("Simple swaps", function() {
   var av = new JSAV("emptycontainer"),
     arr = av.ds.array([10, 20, 30, 40]);
