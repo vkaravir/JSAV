@@ -96,6 +96,8 @@
           // the second click (swapIndex has some value) will cause
           // the swap of indices index and stored swapIndex
           jsavArray.swap(index, swapIndex.value());
+          // change the font-size back to normal
+          jsavArray.css([swapIndex.value(), index], {"font-size": "100%"});
           swapIndex.value(-1);
           exercise.gradeableStep(); // this step will be graded
         }
