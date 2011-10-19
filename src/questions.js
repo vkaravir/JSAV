@@ -6,11 +6,10 @@
   var BLOCKED_ATTRIBUTES = ['correct', 'comment', 'points'];
   var createUUID = JSAV.utils.createUUID;
   
-  var createInputComponent = function(label, itemtype, value, options) {
+  var createInputComponent = function(label, itemtype, options) {
     var labelElem = $('<label for="' + options.id + '">' + label + "</label>"),
       input = $('<input id="' + options.id + '" type="' +
         itemtype + '"/>');
-    input.val(value);
     $.each(options, function(key, value) {
       if (BLOCKED_ATTRIBUTES.indexOf(key) == -1) {
         input.attr(key, value);
@@ -18,7 +17,7 @@
     });
     return $('<div class="jsavrow"/>').append(input).append(labelElem);
   };
-  var fbf = function($elems) {
+  var feedbackFunction = function($elems) {
     var cbs = $elems.find('[type="checkbox"]'),
       that = this,
       correct = true;
@@ -43,11 +42,12 @@
   };
   
   var qTypes = {};
-  qTypes.TF = {
+  qTypes.TF = { // True-False type question
     init: function() {
-      // render a True-False type question
-      this.choices[0] = new QuestionItem("False", "checkbox", false, {});
-      this.choices[1] = new QuestionItem("True", "checkbox", true, {});
+      this.choices[0] = new QuestionItem(this.options.falseLabel || "False", 
+                                        "checkbox", {correct: !this.options.correct});
+      this.choices[1] = new QuestionItem(this.options.trueLabel || "True", 
+                                        "checkbox", {correct: !!this.options.correct});
       this.correctChoice = function(correctVal) {
         if (correctVal) {
           this.choices[1].correct = true;
@@ -56,35 +56,27 @@
         }
       };
     },
-    addChoice: function(label, value, options) {
-      if (!!value) {
-        this.choices[1] = new QuestionItem(label, "checkbox", true, options);
-      } else {
-        this.choices[0] = new QuestionItem(label, "checkbox", false, options);
-      }
-    },
-    feedback: fbf
+    feedback: feedbackFunction
   };
   qTypes.MC = {
     init: function() {
       this.name = createUUID();
     },
     addChoice: function(label, options) {
-      this.choices.push(new QuestionItem(label, "radio", null, $.extend({name: this.name}, options)));
+      this.choices.push(new QuestionItem(label, "radio", $.extend({name: this.name}, options)));
     },
-    feedback: fbf
+    feedback: feedbackFunction
   };
   qTypes.MS = {
     addChoice: function(label, options) {
-      this.choices.push(new QuestionItem(label, "checkbox", null, $.extend({}, options)));
+      this.choices.push(new QuestionItem(label, "checkbox", $.extend({}, options)));
     },
-    feedback: fbf
+    feedback: feedbackFunction
   };
   
-  var QuestionItem = function(label, itemtype, value, options) {
+  var QuestionItem = function(label, itemtype, options) {
     this.label = label;
     this.itemtype = itemtype;
-    this.value = value;
     this.options = $.extend({}, options);
     if (!("id" in this.options)) {
       this.options.id = createUUID();
@@ -92,20 +84,21 @@
     this.correct = this.options.correct || false;
   };
   QuestionItem.prototype.elem = function() {
-    return createInputComponent(this.label, this.itemtype, this.value, this.options);
+    return createInputComponent(this.label, this.itemtype, this.options);
   };
   
   
-  var Question = function(jsav, qtype, options) {
+  var Question = function(jsav, qtype, questionText, options) {
     // options: mustBeAsked, useCheckboxes
     // valid types: tf, fib, mc, ms (in the future: remote)
     this.jsav = jsav;
     this.asked = false;
     this.choices = [];
-    this.questionText = options.questionText || "";
+    this.questionText = questionText;
     this.maxPoints = 1;
     this.achievedPoints = -1;
     this.qtype = qtype.toUpperCase();
+    this.options = options;
     var funcs = qTypes[this.qtype];
     var that = this;
     $.each(funcs, function(fName, f) {
@@ -121,26 +114,33 @@
       return this.id;
     }
   };
-  qproto.show = function() {
+  qproto.show = JSAV.anim(function() {
+     // once asked, ignore; when recording, ignore
+    if (this.asked || this.jsav.RECORD || $.fx.off) { return; }
+    this.asked = true; // mark asked
     var $elems = $(),
         that = this;
     for (var i=0; i < this.choices.length; i++) {
       $elems = $elems.add(this.choices[i].elem());
     }
+    // add feedback element
     $elems = $elems.add($('<div class="jsavfeedback" > </div>'));
+    // ... and close button
     var close = $('<input type="button" value="Close" />').click(
       function() {
         that.dialog.close();
     });
     $elems = $elems.add(close);
+    // .. and submit button
     var submit = $('<input type="submit" value="Submit" />').click(
       function() {
         that.feedback($elems);
       });
     $elems = $elems.add(submit);
+    // .. and finally create a dialog to show the question
     this.dialog = JSAV.utils.dialog($elems, {title: this.questionText});
     return $elems;
-  };
+  });
   qproto.choiceById = function(qiId) {
     for (var i = this.choices.length; i--; ) {
       if (this.choices[i].options.id === qiId) {
@@ -149,13 +149,18 @@
     }
     return null;
   };
+  
+  // dummy function for the animation, there is no need to change the state
+  // when moving in animation; once shown, the question is not shown again
+  qproto.state = function() {}; 
+  
   // add dummy function for the stuff that question types need to overwrite
   var noop = function() {};
   $.each(['init', 'feedback', 'addChoice'], function(index, val) {
     qproto[val] = noop;
   });
   
-  JSAV.ext.question = function(qtype, options) {
-    return new Question(this, qtype, $.extend({}, options));
+  JSAV.ext.question = function(qtype, questionText, options) {
+    return new Question(this, qtype, questionText, $.extend({}, options));
   };
 })(jQuery);
