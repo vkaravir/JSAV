@@ -29,7 +29,7 @@
       this.backward(filter);
     }
     // trigger an event on the container to update the counter
-    this.container.trigger("jsav-updatecounter");
+    this.container.trigger("jsav-updatecounter", [this.currentStep() + 1, this.totalSteps() + 1]);
     return step;
   }
 
@@ -53,7 +53,7 @@
     }
     this._undo.push(step);
     // trigger an event on the container to update the counter
-    this.container.trigger("jsav-updatecounter");
+    this.container.trigger("jsav-updatecounter", [this.currentStep() + 1, this.totalSteps() + 1]);
     return step; // return the just applied step
   }
 
@@ -148,8 +148,8 @@
     var counter = $(".jsavcounter", this.container);
     // register an event to be triggered on container to update the counter
     if (counter.size() > 0) {
-      this.container.bind("jsav-updatecounter", function() { 
-        counter.text(that.currentStep() + 1 + " / " + (that.totalSteps() + 1));
+      this.container.bind("jsav-updatecounter", function(evet, current, total) { 
+        counter.text(current + " / " + total);
       });
     }
     
