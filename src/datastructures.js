@@ -245,8 +245,9 @@
     return oldVal;
   });
   arrproto.initialize = function(data) {
-    var el = $("<ol class='jsavarray' />"),
+    var el = this.options.element || $("<ol/>"),
       liel;
+    el.addClass("jsavarray");
     this.options = jQuery.extend({display: true}, this.options);
     $.each(data, function(index, item) {
       liel = $("<li class='jsavnode jsavindex'><span class='jsavvalue'>" + item + "</span></li>");
@@ -254,10 +255,12 @@
       liel.attr("data-value", item);
       el.append(liel);
     });
-    $(this.jsav.container).append(el);
+    if (!this.options.element) {
+      $(this.jsav.container).append(el);
+    }
     this.element = el;
     this.layout();
-    el.css("display", "none");
+    el.css("display", "hidden");
     var visible = (typeof this.options.display === "boolean" && this.options.display === true);
     if (visible) {
       if (this.jsav.currentStep() === 0) { // at beginning, just make it visible
