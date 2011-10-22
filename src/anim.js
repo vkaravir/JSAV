@@ -263,6 +263,7 @@
         stepFunction = function(stp) {
           return jsav.currentStep() === step;
         };
+    $.fx.off = true;
     if (step >= stepCount) {
       this.end();
     } else if (step < 0) {
@@ -272,6 +273,8 @@
     } else {
       this.forward(stepFunction);
     }
+    $.fx.off = false;
+    return this;
   };
   JSAV.ext.substep = function(options) {
     // TODO: implement substep
