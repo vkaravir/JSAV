@@ -441,7 +441,7 @@ out, this method will return the current text of the label.
 
     <h2>Variable API</h2>
 
-    Variables can be used to present undo/redo capable variables.
+    <p>Variables can be used to present undo/redo capable variables.</p>
 
     <h3 class="apimethod">.variable(value, [options])</h3>
     <p>
@@ -484,6 +484,42 @@ out, this method will return the current text of the label.
     out, this method will return the current value of the variable. The value is
     converted to the type specified when initializing the variable.
     </p>
+    
+    <h2>Questions API</h2>
+    <p>Interactive questions can be initialized with the <code>question</code>
+      function of a JSAV instance.</p>
+    <h3 class="apimethod">.question(qtype, questionText, [options])</h3>
+    <p>This is a method of the AV object. It initializes an interactive question
+      of the given type (<code>qtype</code>). The type can be:</p>
+    <ul>
+      <li><code>TF</code> for a true-false type question</li>
+      <li><code>MC</code> for a multiple-choice question where only one answer can be selected</li>
+      <li><code>MS</code> for a multiple-select question where multiple answers can be selected and be correct</li>
+    </ul>
+    <p>The <code>questionText</code> parameter is the actual question shown to a student. For the question type TF, <code>options</code> parameter can contain following options.</p>
+    <ul>
+      <li><code>{trueLabel: &lt;string>}</code> The label shown for true option. Only for type TF. Default value True.</li>
+      <li><code>{falseLabel: &lt;string>}</code> The label shown for false option. Only for type TF. Default value False.</li>
+      <li><code>{correct: &lt;boolean>}</code> The correct answer, true or false.</li>
+    </ul>
+    <p>An example of initializing a true-false question is below.</p>
+    <pre>var q = av.question("TF", "JSAV supports questions now?", {correct: true, falseLabel: "No", trueLabel: "Yes"});</pre>
+    
+    <p>The function returns an instance of a question. Answer choices can be added
+      to this instance using the following methods.</p>
+ 
+    <h3 class="apimethod">q.addChoice(label, [options])</h3>
+    <p>This adds an answer choice to question <code>q</code>. Parameter <code>label</code> is the label shown for this answer choice. The only option at the moment is <code>correct</code> which indicates the correctness of this choice. Default value for it is false. Note, that this method does nothing for the true-false type question.</p>
+
+    <h3 class="apimethod">q.show()</h3>
+    <p>This function will show the question in the current step in the algorithm. This way, the initialization, addition of answers, and displaying the question can happen in different steps in the animation. It helps when the goal is to show students questions that require prediction of the algorithm's behavior.</p>
+    <p>A complete example of a multiple-select question:</p>
+    <pre>var q = av.question("MS", "Life is good?");
+q.addChoice("Of course", {correct: true});
+q.addChoice("Certainly", {correct: true});
+q.addChoice("No way!");
+q.show();</pre>
+    
 
 <h2>Settings Dialog for AV</h2>
 <p>There is a configurable settings dialog class in JSAV.utils.Settings.

@@ -13,7 +13,7 @@
   var jsavproto = JSAV.prototype;
   jsavproto.getSvg = function() {
     if (!this.svg) { // lazily create the SVG overlay only when needed
-      this.svg = Raphael(this.container);
+      this.svg = Raphael(this.container[0]);
       // TODO: create a new SVG element and a Raphael paper
       // TODO: set pointer event handling for SVG
     }

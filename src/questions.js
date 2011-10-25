@@ -39,6 +39,7 @@
       cbs.prop("disabled", true);
       $elems.filter('[type="submit"]').remove();
     }
+    // TODO: add support for points, feedback comments etc.
   };
   
   var qTypes = {};
@@ -89,7 +90,7 @@
   
   
   var Question = function(jsav, qtype, questionText, options) {
-    // options: mustBeAsked, useCheckboxes
+    // TODO: support for options: mustBeAsked, maxPoints
     // valid types: tf, fib, mc, ms (in the future: remote)
     this.jsav = jsav;
     this.asked = false;
