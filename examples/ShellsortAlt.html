@@ -151,20 +151,20 @@
 Shellsort was named after its inventor, D.L. Shell.
 It is also sometimes called the <b>diminishing increment</b> sort.
 Unlike Insertion Sort and Selection Sort, there is no real-life
-intuitive equivalent for Shellsort.
-Unlike the exchange sorts, Shellsort makes comparisons and
-swaps between non-adjacent elements.
+intuition to inspire Shellsort - nobody will use Shellsort to
+sort their Bridge hand or organize their bills.
+But when properly implemented, Shellsort will give
+substantially better performance than any of the &theta;(n<sup>2</sup>) 
+sorts.
+Unlike the exchange sorts (Insertion Sort and Bubble Sort),
+Shellsort makes comparisons and swaps between non-adjacent elements.
 Shellsort also exploits the best-case performance of Insertion Sort.
 Shellsort's strategy is to quickly make the list ``mostly sorted''
 so that a final Insertion Sort can finish the job.
-When properly implemented, Shellsort will give
-substantially better performance than &theta;(n<sup>2</sup>)
-in the worst case.
 
 <p>
-Shellsort uses a process that forms the basis for many of the sorts
-presented in the following sections: Break the list into sublists,
-sort them, then recombine the sublists.
+Shellsort uses a process that forms the basis most good sorts:
+Break the list into sublists, sort them, then recombine the sublists.
 Shellsort does this in an unusual way, breaking its input
 into ``virtual'' sublists.
 Each sublist is sorted using an Insertion Sort.
@@ -172,20 +172,21 @@ Another group of sublists is then chosen and sorted, and so on.
 </p>
 
 <p>
-Shellsort provides a huge improvement over O(<i>n</i><sup>2</sup>)
-sorts like Insertion Sort.
-It works by taking advantage of the fact that Insertion Sort works
-very well (in linear time) when the list is nearly sorted.
+Shellsort's driving inspiration is to take advantage of the fact that
+Insertion Sort works very well when the list is nearly sorted.
+(When the list is nearly sorted, Insertion sort works in linear time.)
 Shellsort works by performing a series of Insertion Sorts on carefully
 selected sublists, first on small sublists and then on increasingly
 large sublists.
 </p>
 
 <p>
-During each iteration, Shellsort breaks the list into disjoint
-sublists so that each element in a sublist is a fixed number of
-positions apart.
-For example, let us assume for convenience that <i>n</i>,
+Shellsort breaks the list into disjoint sublists, where a sublist
+is defined by an "increment."
+Each element in a sublist is "increment" positions apart.
+For example, if the increment were 4, then each element in the sublist
+would be 4 positions apart.
+In our examples, we assume for convenience that <i>n</i>,
 the number of values to be sorted, is a power of two.
 </p>
 
@@ -193,15 +194,15 @@ the number of values to be sorted, is a power of two.
 One possible implementation of Shellsort will begin by breaking the
 list into <i>n</i>/2 sublists of 2 elements each, where the array
 index of the 2 elements in each sublist differs by <i>n</i>/2.
-We say that the increment is <i>n</i>/2.
+That is, the increment is <i>n</i>/2.
 If there are 16 elements in the array indexed from 0
-to 15, there would initially be 8 sublists of 2 elements each.
-</p>
-
-
-<p>
+to 15, there would initially be 8 sublists of 2 elements each, with
+each element in the sublist being 8 positions apart.
 The first sublist would be the elements in positions 0 and 8.
 The second is in positions 1 and 9, and so on.
+Click on the slideshow buttons to see the series of sublists of size
+two.
+</p>
 
 <div id="container1">
   <span class="jsavcounter"></span>
@@ -233,8 +234,12 @@ The second is in positions 1 and 9, and so on.
 </script>
 
 <p>
-Each of these sublists of length two is sorted using Insertion Sort.
-(The blue elements are being compared. The are swapped if appropriate.)
+Now, each of these sublists of length two gets sorted using Insertion
+Sort.
+As you click through the slideshow, you will first see the current
+sublist highlighted in yellow.
+Then a pair of elements to be compared will be shown in blue.
+They are swapped if necessary to put them in sort order.
 </p>
 
 <div id="container2">
@@ -274,6 +279,8 @@ Thus, the second pass would have as its first
 sublist the 4 elements in positions 0, 4, 8, and 12.
 The second sublist would have elements in positions 1, 5, 9, and 13,
 and so on.
+As you click through the slides, you will see the sublists for
+increment 4.
 </p>
 
 <div id="container4">
@@ -307,7 +314,7 @@ and so on.
 
 <p>
 Each sublist of four elements would also be sorted using an Insertion
-Sort.
+Sort, as shown next.
 </p>
 
 <div id="container5">
