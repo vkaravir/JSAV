@@ -5,6 +5,44 @@
 (function($) {
   if (typeof JSAV === "undefined") { return; }
 
+  var AnimatableOperation = function(opts) {
+    this.obj = opts.obj;
+    this.effect = opts.effect;
+    this.args = opts.args;
+    this.undoeffect = opts.undo;
+    this.undoargs = opts.undoargs;
+    console.log(this);
+  };
+  AnimatableOperation.prototype.apply = function() {
+    var undoFunction = undefined,
+        self = this;
+    if (typeof this.undoeffect === "undefined" || !$.isFunction(this.undoeffect)) { // if no undo function
+      undoFunction = function() {
+        var obj = self.obj,
+          state = obj.state();
+        return function() { // we create one that will set the state of obj to its current state
+          obj.state(state);
+        };
+      }();
+    } 
+    var retVal = this.effect.apply(this.obj, this.args);
+    if (typeof retVal === "undefined" || retVal === this.obj) {
+      if (typeof this.undoeffect === "undefined" || !$.isFunction(this.undoeffect)) {
+        this.undoeffect = undoFunction;
+      }
+    } else {
+      this.undoArgs = retVal;
+    }
+  };
+  AnimatableOperation.prototype.undo = function() {
+    if (typeof this.undoArgs === "undefined") {
+      this.undoeffect.apply(this.obj, this.args);
+    } else {
+      console.log("applying undoArgs", this.undoArgs);
+      this.effect.apply(this.obj, this.undoArgs);
+    }
+  };
+
   var AnimStep = function(options) {
     this.operations = [];
     this.options = options || {};
@@ -20,7 +58,7 @@
     for (var i = ops.length - 1; i >= 0; i--) { // iterate the operations
       // operation contains: [target object, effect function, arguments, undo function]
       var prev = ops[i];
-      prev[3].apply(prev[0], prev[2]);
+      prev.undo();
     }
     this._redo.unshift(step);
     // if a filter function is given, check if this step matches
@@ -38,18 +76,8 @@
     var step = this._redo.shift();
     var ops = step.operations; // get the operations in the step we're about to undo
     for (var i = 0; i < ops.length; i++) {
-      // operation contains: [target object, effect function, arguments, undo function]
       var next = ops[i];
-      if (typeof next[3] === "undefined" || !$.isFunction(next[3])) { // if no undo function
-        next[3] = function() {
-          var obj = next[0],
-            state = obj.state();
-          return function() { // we create one that will set the state of obj to its current state
-            obj.state(state);
-          };
-        }();
-      } 
-      next[1].apply(next[0], next[2]);
+      next.apply();
     }
     this._undo.push(step);
     // trigger an event on the container to update the counter
@@ -176,7 +204,8 @@
           jsav._redo.push(stackTop);
         }
         // add to stack: [target object, effect function, arguments, undo function]
-        stackTop.add([this, effect, arguments, undo]);
+        stackTop.add(new AnimatableOperation({obj: this, effect: effect, 
+          args: arguments, undo: undo}));
       }
       return this;
     };
