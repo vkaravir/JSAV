@@ -347,8 +347,8 @@ At the end of processing sublists with increment 4, the array is
 
 <p>
 The third pass would be made on sublists with increment 2.
-This means we process two lists, one consisting of the odd positions
-and the other consisting of the even positions.
+The effect is that we process two lists, one consisting of the odd
+positions and the other consisting of the even positions.
 As usual, we sort the sublists using Insertion Sort.
 </p>
 
@@ -380,8 +380,8 @@ At this point, we are getting close to sorted.
 </script>
 
 <p>
-The culminating pass in this example would be a "normal" Insertion
-Sort of all elements.
+The culminating pass for Shellsort will always use an increment of 1,
+which means a "normal" Insertion Sort of all elements.
 </p>
 
 <div id="container9">
@@ -401,10 +401,58 @@ Sort of all elements.
 Finally, the array is sorted.
 </p>
 
+<input type="button" name="ex1" value="Exercise 1"
+style="background-color:#f00;"/>
+
+<script>
+  // Support for "Exercise 1" button
+  $('input[name="ex1"]').click(ex1); // Set callback action
+  function ex1() { // This is what we pop up
+    var mystring = "Given a random array of size n, a random increment size I <= n/2, and a random start location S, 0<=S<I (with an arrow over position S), click to highlight the array elements that should be in this sublist. Solve this exercise 10 times in a row to get credit";
+    alert(mystring);
+    this.style.background='#0f0';
+  }
+</script>
+
 <p>
-Next, you can try running Shellsort on an array of your chosen size,
-with either random data or data that you select.
+Some choices for the series of increments will make Shellsort
+run more efficiently than others.
+In particular, the choice of increments described above (2<sup>k</sup>,
+2<sup>k-1</sup>, ..., 4, 2, 1) turns out to be relatively inefficient.
+You should notice for example that all elements in a given 8 increment
+sublist are also part of some 4 increment sublist, which are all in turn
+elements of the same 2 increment sublist.
+So there is no "crossover" between sublists as the increments
+reduce.
+A better choice is the following series based on "3<i>n</i>+1":
+(..., 121, 40, 13, 4, 1).
+Another approach is to make sure that the various increments are
+relatively prime.
+The series (..., 11, 7, 3, 1) would be an example.
+In this case, there is a lot of "crossover" between the lists at the
+various increment sizes.
+At the end of this unit is a tool that lets you see how much
+difference in cost results when you change the increment series.
+</p>
+
+<input type="button" name="ex2" value="Exercise 2"
+style="background-color:#f00;"/>
+
+<script>
+  // Support for "Exercise 2" button
+  $('input[name="ex2"]').click(ex2); // Set callback action
+  function ex2() { // This is what we pop up
+    var mystring = "A proposed increment series is generated and displayed. TRUE or FALSE: This is a legal series of increments for Shellsort. The exercise must be solved correctly 10 times in a row to get credit.";
+    alert(mystring);
+    this.style.background='#0f0';
+  }
+</script>
+
+<p>
+At this point, try running Shellsort on an array of your chosen size,
+with either random values or values that you select.
 You can also set the increment series.
+Use this tool to make sure that you understand how Shellsort works.
 </p>
 
 <center>
@@ -417,6 +465,7 @@ You can also set the increment series.
 
 <p>
 Now test yourself to see how well you understand Shellsort.
+Can you reproduce its behavior?
 </p>
 
 <center>
@@ -428,12 +477,8 @@ Now test yourself to see how well you understand Shellsort.
 </center>
 
 <p>
-Some choices for the series of increments will make Shellsort
-run more efficiently than others.
-In particular, the choice of increments described above (2<sup>k</sup>,
-2<sup>k-1</sup>, ..., 4, 2, 1) turns out to be relatively inefficient.
-A better choice is the following series based on "division by three":
-(..., 121, 40, 13, 4, 1).
+Now you are ready to try out some different increment series to see
+how they affect the cost of Shellsort.
 </p>
 
 <center>
@@ -445,9 +490,10 @@ A better choice is the following series based on "division by three":
 </center>
 
 <p>
-The analysis of Shellsort is difficult, so we must accept without
-proof that the average-case performance of Shellsort (for ``divisions
-by three'' increments) is O(n&radic;n).
+A theoretical analysis of Shellsort is difficult, so we must accept
+without proof that the average-case performance of Shellsort
+(for the ``3<i>n</i>+1''increment series such as ..., 13, 4, 1)
+is O(n&radic;n).
 Other choices for the increment
 series can reduce this upper bound somewhat.
 Thus, Shellsort is substantially better than Insertion Sort,
@@ -460,5 +506,20 @@ Shellsort illustrates how we can sometimes exploit the special properties
 of an algorithm (in this case Insertion Sort) even if in general that
 algorithm is unacceptably slow.
 </p>
+
+
+<input type="button" name="ex3" value="Exercise 3"
+style="background-color:#f00;"/>
+
+<script>
+  // Support for "Exercise 3" button
+  $('input[name="ex3"]').click(ex3); // Set callback action
+  function ex3() { // This is what we pop up
+    var mystring = "Catch-all Summery Exercise: A bank of 20-30 questions is created, varying between multiple choice, T/F, or answer string (number, etc.). On each attempt, one is selected at random. Student must answer 10 in a row correctly to receive credit.";
+    alert(mystring);
+    this.style.background='#0f0';
+  }
+</script>
+
 </body>
 </html>
