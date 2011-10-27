@@ -14,7 +14,10 @@
   jsavproto.getSvg = function() {
     if (!this.svg) { // lazily create the SVG overlay only when needed
       this.svg = Raphael(this.container[0]);
-      // TODO: create a new SVG element and a Raphael paper
+      var style = this.svg.canvas.style;
+      style.position = "absolute";
+      style.top = this.container.position().top + "px";
+      style.left = this.container.position().left + "px";
       // TODO: set pointer event handling for SVG
     }
     return this.svg;

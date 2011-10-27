@@ -6,31 +6,71 @@ if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
   (function($, R) {
     if (typeof JSAV === "undefined") { return; }
     var common = {
-      rotate: function(deg, cx, cy) {
-        var centerX = cx || "",
-            centerY = cy || "";
-        this.rObj.animate({ rotation: deg + " " + centerX + " " + centerY }, this.jsav.SPEED);
-        return this;
+      transform: function(transform) {
+        var oldTrans = this.rObj.transform();
+        if (!this.jsav.RECORD || !$.fx.off) { // only animate when playing, not when recording
+          this.rObj.animate( { transform: transform }, this.jsav.SPEED);
+        } else {
+          this.rObj.transform(transform);
+        }
+        return oldTrans;
       },
-      scale: function(sx, sy) {
-        this.rObj.animate({ scale: sx + " " + sy }, this.jsav.SPEED);
-        return this;
-      },
+      rotate: JSAV.anim(function(deg) {
+        this.transform("...r" + deg);
+        return [0 - deg];
+      }),
+      scale: JSAV.anim(function(sx, sy) {
+        this.transform("...S" + sx + "," + sy);
+        return [1.0/sx, 1.0/sy];
+      }),
       scaleX: function(sx) {
-        return this.scale(sx, 0);
+        return this.scale(sx, 1);
       },
       scaleY: function(sy) {
-        return this.scale(0, sy);
+        return this.scale(1, sy);
       },
-      translate: function(dx, dy) {
-        this.rObj.animate({ translation: dx + " " + dy }, this.jsav.SPEED);
-        return this;        
-      },
+      translate: JSAV.anim(function(dx, dy) {
+        this.transform("...T" + dx + "," + dy);
+        return [0-dx, 0-dy];
+      }),
       translateX: function(dx) {
         return this.translate(dx, 0);
       },
       translateY: function(dy) {
         return this.translate(0, dy);
+      },
+      _setattrs: JSAV.anim(function(props) {
+        var oldProps = $.extend(true, {}, props);
+        for (var i in props) {
+          oldProps[i] = this.rObj.attr(i);
+        }
+        console.log("oldprops", oldProps, "setattrs", props);
+        if (!this.jsav.RECORD || !$.fx.off) { // only animate when playing, not when recording
+          this.rObj.animate( props, this.jsav.SPEED);
+        } else {
+          this.rObj.attrs(props);
+        }
+        return oldProps;
+      }),
+      css: function(props) {
+        console.log(this.rObj);
+        if (typeof props === "string") {
+          return this.rObj.attr(props);
+        } else {
+          return this._setattrs(props);
+        }
+      },
+      state: function(newState) {
+        if (typeof newState !== "undefined") {
+          for (var i in newState) {
+            this.rObj.attr(i, newState[i]);
+          }
+          return this;
+        } else {
+          var attrs = $.extend(true, {}, this.rObj.attrs);
+          console.log(attrs);
+          return attrs;
+        }
       }
     };
     var copyCommon = function(proto) {
