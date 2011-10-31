@@ -46,9 +46,10 @@
   }
   function barArray(array) {
     var $arr = $(array.element).addClass("jsavbararray"),
-      $items = $arr.find("li").css({"float": "left", "position":"static"}), 
+      $items = $arr.find("li").css({"position":"relative", "float": "left"}), 
       maxValue = Number.MIN_VALUE,
       indexed = !!array.options.indexed,
+      width = $items.first().outerWidth();
       size = array.size();
     if (indexed) {
       $arr.addClass("jsavindexed");
@@ -58,12 +59,10 @@
     }
     maxValue *= 1.15;
     $items.each(function(index, item) {
-      var $i = $(this),
-        pos = $i.position();
-      $i.css({"left": pos.left - index, "top": pos.top});
+      var $i = $(this);
       var $valueBar = $i.find(".jsavvaluebar");
       if ($valueBar.size() === 0) {
-        $i.append('<span class="jsavvaluebar" />');
+        $i.prepend('<span class="jsavvaluebar" />');
         $valueBar = $i.find(".jsavvaluebar");
       }
       $valueBar.css({"height": "100%"});
@@ -77,7 +76,6 @@
         }
       }
     });
-    $items.css({"float": "none", "position": "absolute"});
     centerArray(array, $items.last());
   }
   var layouts = {};

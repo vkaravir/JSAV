@@ -74,8 +74,9 @@
     if ('value' in options) {
       select.val(options.value);
     }
+    var toCheck = ['label', 'value', 'options', 'type'];
     for (var attr in options) {
-      if (['label', 'value', 'options', 'type'].indexOf(attr) === -1) {
+      if ($.inArray(attr, toCheck) === -1) {
         input.attr(attr, options[attr]);
       }
     }

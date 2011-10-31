@@ -41,6 +41,7 @@
 }
 .jsavarray .jsavindex span {
   z-index: 99;
+  display: block;
 }
 .jsavarray .jsavindex.jsavhighlight, .jsavarray.jsavbararray .jsavindex.jsavhighlight {
   background-color: yellow;
@@ -65,11 +66,10 @@
 .jsavbararray .jsavindex .jsavvalue span {
   position: absolute;
   width: inherit;
-  display: inline-block;
   bottom: 0;
 }
 .jsavbararray .jsavindex .jsavvalue, .jsavbararray .jsavindex .jsavvaluebar {
-  display: inline-block;
+  display: block;
   line-height: 20px;
   padding: 0;
   position: absolute;
@@ -85,7 +85,7 @@
 .jsavbararray .jsavindexlabel {
   font-size: 90%;
   position: relative;
-  top: 95%;
+  top: 100%;
 	vertical-align: middle;
 }
 /***** END STYLING OF THE ARRAY DATA STRUCTURE *****/
@@ -139,6 +139,7 @@ svg {
 .jsavcontrols a {
   display: inline-block;
   color: transparent;
+  text-indent: 9999px;
   width: 45px;
   height: 45px;
   margin-top: 15px;
@@ -148,6 +149,7 @@ svg {
   background-color: #aaa;
   -moz-border-radius: 20px;
   -webkit-border-radius: 20px;
+  -ms-border-radius: 20px;
   border-radius: 20px;
   background-repeat:no-repeat;
   background-position:50% 50%;
@@ -199,14 +201,13 @@ a.jsavsettings {
   background-position: 50% 50%;
   background-repeat: no-repeat;
   background-color: #aaa;
-  text-indent: -9000px;
+  text-indent: 9000px;
   padding: 2px;
   border: 1px solid black;
   border-radius: 3px;
-  box-shadow: 1px 1px 1px #eee;
   float:right; 
   margin-right:10px; 
-  display:none;
+  display:block;
   white-space: nowrap;
   overflow: hidden;
   color: rgba(0, 0, 0, 0);

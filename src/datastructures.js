@@ -246,15 +246,16 @@
   });
   arrproto.initialize = function(data) {
     var el = this.options.element || $("<ol/>"),
-      liel;
+      liel, liels = $();
     el.addClass("jsavarray");
     this.options = jQuery.extend({display: true}, this.options);
     $.each(data, function(index, item) {
       liel = $("<li class='jsavnode jsavindex'><span class='jsavvalue'>" + item + "</span></li>");
       // set the data attribute for the index
       liel.attr("data-value", item);
-      el.append(liel);
+      liels = liels.add(liel);
     });
+    el.append(liels);
     if (!this.options.element) {
       $(this.jsav.container).append(el);
     }

@@ -17,34 +17,42 @@
 
 div h1 {
   background-color: #efe;
+  margin: 5px;
 }
 .jsavcontainer {
   background-color: #efe;
   border: none;
+}
+.jsavcounter {
+  float: left;
+  width: 100px;
 }
 .jsavarray {
   padding-left:0;
 }
 p.jsavoutput.jsavline {
   height: 30px;
+  margin: 0;
+}
+#about {
+  float: right;
 }
 a.jsavsettings {
 display: block;
 margin-top: 10px;
 margin-left: 10px;
 }
+form {
+  clear: both;
+}
 </style>
 </head>
 
 <body>
 <div id="container">
-  <table id="Table1">
-    <td width="770px" align="right">
-      <input type="button" name="about" value="About" style="margin-top:10px;"/>
-      <a class="jsavsettings" href="#">Settings</a>
-    </td>
-  </table>
-  <h1 style="margin-top:-25px">Shellsort Visualization</h1>
+  <input type="button" id="about" name="about" value="About" style="margin-top:10px;"/>
+  <a class="jsavsettings" href="#">Settings</a>
+  <h1 style="">Shellsort Visualization</h1>
 
   <form id="ssperform">
     <p><label for="increments">Increments: Type your increment
@@ -74,14 +82,8 @@ margin-left: 10px;
     </p>
   </form>
   <div id="avcontainer">
-    <table id=tableT style="margin-top:-15px; margin-bottom:-15px">
-    <tr>
-      <td width=100><span class="jsavcounter"></span></td>
-      <td width=520px>
-        <div class="jsavcontrols"></div>
-      </td>
-    </tr>
-    </table>
+    <span class="jsavcounter"></span>
+    <div class="jsavcontrols"></div>
     <p class="jsavoutput jsavline" readonly="readonly"></p>
   </div> <!--avcontainer-->
 </div> <!--container-->
