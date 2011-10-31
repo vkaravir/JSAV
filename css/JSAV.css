@@ -24,7 +24,7 @@
   width: 45px;
   height: 45px;
   text-align: center;
-  line-height: 40px;
+  line-height: 45px;
   border: 1px solid black;
   border-color: black;
   background-color: white;
@@ -32,14 +32,12 @@
   opacity: 1;
 }
 .jsavindexlabel {
-  display: inline-block;
   width: inherit;
   height: 20px;
   line-height: 20px;
-  top: 50px;
   color: black;
 }
-.jsavarray .jsavindex span {
+.jsavindex span {
   z-index: 99;
   display: block;
 }
