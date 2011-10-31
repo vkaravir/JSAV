@@ -11,7 +11,6 @@
     this.args = opts.args;
     this.undoeffect = opts.undo;
     this.undoargs = opts.undoargs;
-    console.log(this);
   };
   AnimatableOperation.prototype.apply = function() {
     var undoFunction = undefined,
@@ -38,7 +37,6 @@
     if (typeof this.undoArgs === "undefined") {
       this.undoeffect.apply(this.obj, this.args);
     } else {
-      console.log("applying undoArgs", this.undoArgs);
       this.effect.apply(this.obj, this.undoArgs);
     }
   };
