@@ -18,7 +18,6 @@
       style.position = "absolute";
       style.top = this.container.position().top + "px";
       style.left = this.container.position().left + "px";
-      // TODO: set pointer event handling for SVG
     }
     return this.svg;
   };

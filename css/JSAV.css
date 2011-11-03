@@ -224,3 +224,6 @@ a.jsavsettings {
   padding: 0;
   background-color: white;
 }
+.jsavcontainer svg {
+  pointer-events: none;
+}

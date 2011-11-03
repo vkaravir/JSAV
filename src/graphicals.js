@@ -5,6 +5,11 @@
 if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
   (function($, R) {
     if (typeof JSAV === "undefined") { return; }
+    
+    var defaultVals = {
+      "stroke-width": "1"
+    };
+    
     var common = {
       transform: function(transform) {
         var oldTrans = this.rObj.transform();
@@ -42,18 +47,18 @@ if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
       _setattrs: JSAV.anim(function(props) {
         var oldProps = $.extend(true, {}, props);
         for (var i in props) {
-          oldProps[i] = this.rObj.attr(i);
+          oldProps[i] = this.rObj.attr(i) || defaultVals[i];
         }
-        console.log("oldprops", oldProps, "setattrs", props);
         if (!this.jsav.RECORD || !$.fx.off) { // only animate when playing, not when recording
           this.rObj.animate( props, this.jsav.SPEED);
         } else {
-          this.rObj.attrs(props);
+          for (var i in props) {
+            this.rObj.attr(i, props[i]);
+          }
         }
-        return oldProps;
+        return [oldProps];
       }),
       css: function(props) {
-        console.log(this.rObj);
         if (typeof props === "string") {
           return this.rObj.attr(props);
         } else {
@@ -68,7 +73,6 @@ if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
           return this;
         } else {
           var attrs = $.extend(true, {}, this.rObj.attrs);
-          console.log(attrs);
           return attrs;
         }
       }
@@ -170,5 +174,4 @@ if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
   JSAV.ext.label = function(text, options) {
     return new Label(this, text, options);
   };
-  
 })(jQuery);
