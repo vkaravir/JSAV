@@ -75,7 +75,7 @@ if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
           var attrs = $.extend(true, {}, this.rObj.attrs);
           return attrs;
         }
-      }
+      },
     };
     var copyCommon = function(proto) {
       for (var prop in common) {
@@ -83,41 +83,100 @@ if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
           proto[prop] = common[prop];
         }
       }    
+    }, 
+    init = function(obj, jsav, props) {
+      obj.jsav = jsav;
+      obj.elem = $(obj.rObj.node).data("svgelem", obj.rObj);
+      for (var i in props) {
+        if (props.hasOwnProperty(i)) {
+          obj.rObj.attr(i, props[i]);
+        }
+      }
+    };
+
+    var translatePoint  = function(point, dx, dy) {
+      var currPath = this.rObj.attrs.path,
+          newPath = "",
+          pathElem;
+      if (point > currPath.length) { return this; }
+      for (var i=0, l=currPath.length; i < l; i++) {
+        pathElem = currPath[i];
+        if (i === point) {
+          newPath += pathElem[0] + " " + (+pathElem[1] + dx) + " " +
+                    (+pathElem[2] + dy);
+        } else {
+          newPath += pathElem.join();
+        }
+      }
+      this.rObj.animate({"path": newPath}, this.jsav.SPEED);
+      return [point, 0-dx, 0-dy];
     };
     
-    var Circle = function(jsav, raphael, x, y, r) {
-      this.jsav = jsav;
+    var Circle = function(jsav, raphael, x, y, r, props) {
       this.rObj = raphael.circle(x, y, r);
-      this.elem = $(this.rObj.node).data("svgelem", this.rObj);
+      init(this, jsav, props);
       return this;
     };
     copyCommon(Circle.prototype);
  
-    var Rect = function(jsav, raphael, x, y, w, h, r) {
-      this.jsav = jsav;
+    var Rect = function(jsav, raphael, x, y, w, h, r, props) {
       this.rObj = raphael.rect(x, y, w, h, r);
-      this.elem = $(this.rObj.node).data("svgelem", this.rObj);
+      init(this, jsav, props);
       return this;
     };
     copyCommon(Rect.prototype);
  
-    var Line = function(jsav, raphael, x1, y1, x2, y2) {
-      this.jsav = jsav;
-      this.rObj = raphael.path("M" + x1 + ","+ y1 + "L" + x2 + "," + y2);
-      this.elem = $(this.rObj.node).data("svgelem", this.rObj);
+    var Line = function(jsav, raphael, x1, y1, x2, y2, props) {
+      this.rObj = raphael.path("M" + x1 + " "+ y1 + "L" + x2 + " " + y2);
+      init(this, jsav, props);
       return this;
     };
     copyCommon(Line.prototype);
+    Line.prototype.translatePoint = JSAV.anim(translatePoint);
+
+    var Ellipse = function(jsav, raphael, x, y, rx, ry, props) {
+      this.rObj = raphael.ellipse(x, y, rx, ry);
+      init(this, jsav, props);
+      return this;
+    };
+    copyCommon(Ellipse.prototype);
  
+    var Polyline = function(jsav, raphael, points, close, props) {
+      var path = "M ";
+      for (var i=0, l=points.length; i < l; i++) {
+        if (i) { path += "L";}
+        path += points[i][0] + " " + points[i][1];
+      }
+      if (close) {
+        path += "Z";
+      }
+      this.rObj = raphael.path(path);
+      init(this, jsav, props);
+      return this;
+    };
+    copyCommon(Polyline.prototype);
+
+    Polyline.prototype.translatePoint = JSAV.anim(translatePoint);
+
+
     JSAV.ext.g = {
-      circle: function(x, y, r) {
-        return new Circle(this, this.getSvg(), x, y, r);
+      circle: function(x, y, r, props) {
+        return new Circle(this, this.getSvg(), x, y, r, props);
       },
-      rect: function(x, y, w, h, r) {
-        return new Rect(this, this.getSvg(), x, y, w, h, r);
+      rect: function(x, y, w, h, r, props) {
+        return new Rect(this, this.getSvg(), x, y, w, h, r, props);
       },
-      line: function(x1, y1, x2, y2) {
-        return new Line(this, this.getSvg(), x1, y1, x2, y2);
+      line: function(x1, y1, x2, y2, props) {
+        return new Line(this, this.getSvg(), x1, y1, x2, y2, props);
+      },
+      ellipse: function(x, y, rx, ry, props) {
+        return new Ellipse(this, this.getSvg(), x, y, rx, ry, props);
+      },
+      polyline: function(points, props) {
+        return new Polyline(this, this.getSvg(), points, false, props);
+      },
+      polygon: function(points, props) {
+        return new Polyline(this, this.getSvg(), points, true, props);
       }
     };
   })(jQuery, Raphael);
