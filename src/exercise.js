@@ -151,7 +151,7 @@
       // 3. generate the model structures and the state sequence
       var str = model(this.modelav);
       // 4. rewind the model answer and hide the dialog
-      this.modelav.begin();
+      this.modelav.recorded();
       this.modelStructures = str;
       this.modelDialog.hide();
     } else if (typeof model === "string") {
