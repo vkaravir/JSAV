@@ -21,6 +21,7 @@
     }
     return this.svg;
   };
+  JSAV._types = {} // for exposing types of JSAV for customization
   JSAV.ext = {}; // for extensions
   JSAV.init = function(f) { // for initialization functions
     JSAV.init.functions.push(f);
