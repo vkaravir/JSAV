@@ -49,6 +49,11 @@
       if (this.options.type === "number") {
         return Number(val);
       } else if (this.options.type === "boolean") {
+        if (typeof(val) === "boolean") {
+          return val;
+        } else if (typeof(val) === "string") {
+          return val === "true";
+        }
         return !!val;
       } else {
         return val;

@@ -29,7 +29,7 @@
     strictEqual(num.value(), 8);
     strictEqual(str.value(), "jj");
     strictEqual(bool.value(), true);
-    strictEqual(bool.value(), false);
+    strictEqual(boolFalse.value(), false);
     
     var strNum = av.variable(8, {"type": "string"});
     strictEqual(strNum.value(), "8");
