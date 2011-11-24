@@ -6,14 +6,19 @@ if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
   (function($, R) {
     if (typeof JSAV === "undefined") { return; }
     
-    var defaultVals = {
-      "stroke-width": "1"
-    };
-    
     var common = {
+      // utility function that actually implements hide
+      // animated show function
+      show: function() {
+        this.css({"opacity": 1});
+      },
+      // animated hide function
+      hide: function() { 
+        this.css({"opacity": 0});
+      },
       transform: function(transform) {
         var oldTrans = this.rObj.transform();
-        if (!this.jsav.RECORD || !$.fx.off) { // only animate when playing, not when recording
+        if (!this.jsav.RECORD && !$.fx.off) { // only animate when playing, not when recording
           this.rObj.animate( { transform: transform }, this.jsav.SPEED);
         } else {
           this.rObj.transform(transform);
@@ -47,9 +52,9 @@ if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
       _setattrs: JSAV.anim(function(props) {
         var oldProps = $.extend(true, {}, props);
         for (var i in props) {
-          oldProps[i] = this.rObj.attr(i) || defaultVals[i];
+          oldProps[i] = this.rObj.attr(i);
         }
-        if (!this.jsav.RECORD || !$.fx.off) { // only animate when playing, not when recording
+        if (!this.jsav.RECORD && !$.fx.off) { // only animate when playing, not when recording
           this.rObj.animate( props, this.jsav.SPEED);
         } else {
           for (var i in props) {
@@ -75,16 +80,9 @@ if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
           var attrs = $.extend(true, {}, this.rObj.attrs);
           return attrs;
         }
-      },
+      }
     };
-    var copyCommon = function(proto) {
-      for (var prop in common) {
-        if (common.hasOwnProperty(prop)) {
-          proto[prop] = common[prop];
-        }
-      }    
-    }, 
-    init = function(obj, jsav, props) {
+    var init = function(obj, jsav, props) {
       obj.jsav = jsav;
       obj.elem = $(obj.rObj.node).data("svgelem", obj.rObj);
       for (var i in props) {
@@ -108,8 +106,26 @@ if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
           newPath += pathElem.join();
         }
       }
-      this.rObj.animate({"path": newPath}, this.jsav.SPEED);
-      return [point, 0-dx, 0-dy];
+      this._setattrs({"path": newPath});
+      return this;
+    };
+
+    var movePoints  = function(points) {
+      var currPath = this.rObj.attrs.path,
+          newPath = currPath.slice(),
+          pathElem;
+      for (var i=0, l=points.length; i < l; i++) {
+        var p = points[i];
+        pathElem = currPath[p[0]];
+        newPath[p[0]] = [pathElem[0], + p[1], p[2]];
+      }
+      var np = "";
+      for (var i=0, l=newPath.length; i < l; i++) {
+        pathElem = newPath[i];
+        np += pathElem.join();
+      }
+      this._setattrs({"path": np});
+      return this;
     };
     
     var Circle = function(jsav, raphael, x, y, r, props) {
@@ -117,29 +133,67 @@ if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
       init(this, jsav, props);
       return this;
     };
-    copyCommon(Circle.prototype);
+    var cproto = Circle.prototype;
+    $.extend(cproto, common);
+    cproto.center = function(x, y) {
+      if (typeof x === "undefined") { // getting center
+        return this.rObj.attr(["cx", "cy"]);
+      } else if ($.isArray(x) && x.length == 2) {
+        this._setattrs({"cx": x[0], "cy": x[1]});
+      } else if (typeof y !== "undefined") {
+        this._setattrs({"cx": x, "cy": y});
+      } else if ("cx" in x && "cy" in x) {
+        this._setattrs(x)
+      }
+      return this;
+    };
+    cproto.radius = function(r) {
+      if (typeof r === "undefined") {
+        return this.rObj.attr("r");
+      } else {
+        this._setattrs({"r": r});
+        return this;
+      }
+    }
  
     var Rect = function(jsav, raphael, x, y, w, h, r, props) {
       this.rObj = raphael.rect(x, y, w, h, r);
       init(this, jsav, props);
       return this;
     };
-    copyCommon(Rect.prototype);
+    $.extend(Rect.prototype, common);
  
     var Line = function(jsav, raphael, x1, y1, x2, y2, props) {
       this.rObj = raphael.path("M" + x1 + " "+ y1 + "L" + x2 + " " + y2);
       init(this, jsav, props);
       return this;
     };
-    copyCommon(Line.prototype);
-    Line.prototype.translatePoint = JSAV.anim(translatePoint);
+    $.extend(Line.prototype, common);
+
+    Line.prototype.translatePoint = translatePoint;
+    Line.prototype.movePoints = movePoints;
 
     var Ellipse = function(jsav, raphael, x, y, rx, ry, props) {
       this.rObj = raphael.ellipse(x, y, rx, ry);
       init(this, jsav, props);
       return this;
     };
-    copyCommon(Ellipse.prototype);
+    var ellproto = Ellipse.prototype;
+    $.extend(ellproto, common);
+    ellproto.center = cproto.center;
+    ellproto.radius = function(x, y) {
+      if (typeof x === "undefined") { // getting center
+        return this.rObj.attr(["rx", "ry"]);
+      } else if ($.isArray(x) && x.length == 2) {
+        this._setattrs({"rx": x[0], "ry": x[1]});
+      } else if (typeof y !== "undefined") {
+        this._setattrs({"rx": x, "ry": y});
+      } else if ("rx" in x && "ry" in x) {
+        this._setattrs(x)
+      }
+      return this;
+    };
+    
  
     var Polyline = function(jsav, raphael, points, close, props) {
       var path = "M ";
@@ -154,9 +208,10 @@ if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
       init(this, jsav, props);
       return this;
     };
-    copyCommon(Polyline.prototype);
+    $.extend(Polyline.prototype, common);
 
-    Polyline.prototype.translatePoint = JSAV.anim(translatePoint);
+    Polyline.prototype.translatePoint = translatePoint;
+    Polyline.prototype.movePoints = movePoints;
 
 
     JSAV.ext.g = {
