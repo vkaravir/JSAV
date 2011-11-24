@@ -182,4 +182,98 @@
     
     ok(!av.forward()); // no more steps
   });
+
+
+  module("graphicals.rect", {  });
+
+  test("Testing Rectangle", function() {
+	  var av = new JSAV("emptycontainer");
+	  
+    var r = av.g.rect(70, 60, 50, 40);
+    ok(r, "rect created");
+    equals(r.width(), 50, "rectangle width");
+    equals(r.height(), 40, "rectangle height");
+    equals(r.css("stroke"), "#000", "rectangle stroke color");
+    equals(r.css("stroke-width"), 1, "rectangle stroke width");
+    equals(r.css("fill"), "none", "rectangle fill");
+    equals(r.css("opacity"), 1, "rectangle opacity");
+    var origBB = $.extend(true, {}, r.rObj.getBBox());
+    av.step();
+    r.width(80);
+    av.step();
+    r.height(30);
+    av.step();
+    r.translate(30, 40);
+    av.step();
+    r.scale(2);
+    av.step();
+    r.css({"stroke-width": 4, "stroke": "red", "fill": "rgb(120,120,120)"});
+    av.step();
+    r.hide();
+    av.step();
+    r.show();
+    av.recorded();
+
+    equals(r.width(), 50, "rectangle width");
+    equals(r.height(), 40, "rectangle height");
+    equals(r.css("stroke"), "#000", "rectangle stroke color");
+    equals(r.css("stroke-width"), 1, "rectangle stroke width");
+    equals(r.css("fill"), "none", "rectangle fill");
+    equals(r.css("opacity"), 1, "rectangle opacity");
+
+    av.end();
+    av.begin();
+
+    var currBB = r.rObj.getBBox();
+    equals(Math.round(currBB.x), Math.round(origBB.x));
+    equals(Math.round(currBB.y), Math.round(origBB.y));
+    equals(Math.round(currBB.width), Math.round(origBB.width), "horizontal scale undone correctly");
+    equals(Math.round(currBB.height), Math.round(origBB.height), "vertical scale undone correctly");
+
+    $.fx.off = true;
+    
+    av.forward(); // apply width
+    equals(r.width(), 80, "rectangle width");
+    equals(r.height(), 40, "rectangle height");
+    currBB = r.rObj.getBBox();
+    equals(Math.round(currBB.x), Math.round(origBB.x));
+    equals(Math.round(currBB.y), Math.round(origBB.y));
+    equals(Math.round(currBB.width), Math.round(origBB.width) + 30);
+    equals(Math.round(currBB.height), Math.round(origBB.height));
+    
+    av.forward(); // apply height
+    equals(r.width(), 80, "rectangle width");
+    equals(r.height(), 30, "rectangle height");
+    currBB = r.rObj.getBBox();
+    equals(Math.round(currBB.x), Math.round(origBB.x));
+    equals(Math.round(currBB.y), Math.round(origBB.y));
+    equals(Math.round(currBB.width), Math.round(origBB.width) + 30);
+    equals(Math.round(currBB.height), Math.round(origBB.height) - 10);
+    
+    av.forward(); // apply translate
+    currBB = r.rObj.getBBox();
+    equals(Math.round(currBB.x - origBB.x), 30);
+    equals(Math.round(currBB.y - origBB.y), 40);
+    
+    av.forward(); // apply scale
+    currBB = r.rObj.getBBox();
+    equals(Math.floor(currBB.width), Math.round((origBB.width+30)*2), "hor scale redone correctly");
+    equals(Math.floor(currBB.height), Math.round((origBB.height-10)*2), "vert scale redone correctly");
+    
+    av.forward(); // apply css
+    equals(r.width(), 80, "rectangle width");
+    equals(r.height(), 30, "rectangle height");
+    equals(r.css("stroke"), "red", "rectangle stroke color");
+    equals(r.css("stroke-width"), 4, "rectangle stroke width");
+    equals(r.css("fill"), "rgb(120,120,120)", "rectangle fill");
+    equals(r.css("opacity"), 1, "rectangle opacity");
+    
+    av.forward(); // apply hide
+    equals(r.css("opacity"), 0, "rectangle opacity");
+    
+    av.forward(); // apply show
+    equals(r.css("opacity"), 1, "rectangle opacity");
+    
+    ok(!av.forward()); // no more steps
+  });
 })();

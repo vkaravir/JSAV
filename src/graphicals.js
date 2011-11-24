@@ -161,7 +161,24 @@ if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
       init(this, jsav, props);
       return this;
     };
-    $.extend(Rect.prototype, common);
+    var rectproto = Rect.prototype;
+    $.extend(rectproto, common);
+    rectproto.width = function(w) {
+      if (typeof w === "undefined") {
+        return this.rObj.attr("width");
+      } else {
+        this._setattrs({"width": w});
+        return this;
+      }
+    };
+    rectproto.height = function(h) {
+      if (typeof h === "undefined") {
+        return this.rObj.attr("height");
+      } else {
+        this._setattrs({"height": h});
+        return this;
+      }
+    };
  
     var Line = function(jsav, raphael, x1, y1, x2, y2, props) {
       this.rObj = raphael.path("M" + x1 + " "+ y1 + "L" + x2 + " " + y2);
