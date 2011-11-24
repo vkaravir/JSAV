@@ -46,6 +46,9 @@
           this._id = newId;
           return this;
         } else {
+          if (!(this.hasOwnProperty("_id")) || typeof this._id === "undefined") {
+            this._id = JSAV.utils.createUUID();
+          }
           return this._id; 
         }
       },
@@ -144,7 +147,7 @@
   };
   arrproto._setcss = JSAV.anim(function(indices, cssprop) {
     var $elems = getIndices($(this.element).find("li"), indices);
-    if (!this.jsav.RECORD || !$.fx.off) { // only animate when playing, not when recording
+    if (!this.jsav.RECORD && !$.fx.off) { // only animate when playing, not when recording
       // also animate the values due to a bug in webkit based browsers with inherited bg color not changing
       $elems.animate(cssprop, this.jsav.SPEED).find("span.jsavvalue").animate(cssprop, this.jsav.SPEED);
     } else {
@@ -198,7 +201,7 @@
       $ind1label.html($ind2label.html());
       $ind2label.html(tmp);
     }
-    if (!this.jsav.RECORD || !$.fx.off) {  // only animate when playing, not when recording
+    if (!this.jsav.RECORD && !$.fx.off) {  // only animate when playing, not when recording
       // .. then set the position so that the array appears unchanged..
       $i2.css({"transform": "translateX(" + (posdiff) + "px)"});
       $i1.css({"transform": "translateX(" + (-posdiff) + "px)"});
@@ -377,10 +380,19 @@
     }
   }
  
+  JSAV._types.ds = {
+	AVArray: AVArray.prototype
+  };
   // expose the data structures for the JSAV
   JSAV.ext.ds = {
     array: function(element, options) {
       return new AVArray(this, element, options);
+    },
+    extend: function(strName, strPrototype) {
+      // copies properties for strName into strPrototype
+      if (strName === "common") {
+        addCommonProperties(strPrototype);
+      }
     }
   };
 })(jQuery);

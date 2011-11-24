@@ -123,7 +123,6 @@ test("Test isHighlight", function() {
 	arr.highlight([0, 3]);
 	av.recorded();
 	av.end();
-	console.log(arr.css(0, "background-color"));
 	ok(arr.isHighlight(0));
 	ok(!arr.isHighlight(1));
 	ok(!arr.isHighlight(2));
@@ -179,6 +178,7 @@ test("Swaps with indices", function() {
     ind2;
   arr.swap(0, 2);
   av.recorded();
+  $.fx.off = true;
   ind0 = $($(".jsavindexed li")[0]);
   ind2 = $($(".jsavindexed li")[2]);
   // indices in the beginning should be 0 and 2
