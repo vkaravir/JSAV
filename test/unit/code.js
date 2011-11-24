@@ -13,10 +13,31 @@
 	  av.recorded(); // rewinds to beginning
 	  jQuery.fx.off = true;
 
-	  equals(variable.value(), 0);
+	  equal(variable.value(), 0);
 	  for (var i = 0; i < values.length; i++) {
   	  av.forward();
-  	  equals(variable.value(), values[i], "Testing changing of value");
+  	  equal(variable.value(), values[i], "Testing changing of value");
 	  }
+  });
+  
+  test("Variable types", function() {
+    var av = new JSAV("emptycontainer"),
+        num = av.variable(8),
+        str = av.variable("jj"),
+        bool = av.variable(true),
+        boolFalse = av.variable(false);
+    strictEqual(num.value(), 8);
+    strictEqual(str.value(), "jj");
+    strictEqual(bool.value(), true);
+    strictEqual(bool.value(), false);
+    
+    var strNum = av.variable(8, {"type": "string"});
+    strictEqual(strNum.value(), "8");
+    
+    var strBool = av.variable(false, {"type": "string"});
+    strictEqual(strBool.value(), "false");
+    
+    var numStr = av.variable("42", {"type": "number"});
+    strictEqual(numStr.value(), 42);
   });
 })();
