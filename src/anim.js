@@ -16,18 +16,17 @@
     var undoFunction = undefined,
         self = this;
     if (typeof this.undoeffect === "undefined" || !$.isFunction(this.undoeffect)) { // if no undo function
-      undoFunction = function() {
-        var obj = self.obj,
-          state = obj.state();
-        return function() { // we create one that will set the state of obj to its current state
-          obj.state(state);
-        };
-      }();
     } 
+    var obj = self.obj,
+      state = obj.state();
     var retVal = this.effect.apply(this.obj, this.args);
     if (typeof retVal === "undefined" || retVal === this.obj) {
       if (typeof this.undoeffect === "undefined" || !$.isFunction(this.undoeffect)) {
-        this.undoeffect = undoFunction;
+        this.undoeffect = function() {
+          return function() { // we create one that will set the state of obj to its current state
+            obj.state(state);
+          };
+        }();
       }
     } else {
       this.undoArgs = retVal;
@@ -264,7 +263,8 @@
     return info;
   };
   JSAV.ext.step = function(options) {
-    if (this._redo.length === 0 || this._redo[0].operations.length === 0) { // ignore step if no operations in it
+    if (this._undo.length > 0 && 
+        (this._redo.length === 0 || this._redo[0].operations.length === 0)) { // ignore step if no operations in it
       return this;
     }
     this.forward();
@@ -303,11 +303,6 @@
     $.fx.off = false;
     return this;
   };
-  JSAV.ext.substep = function(options) {
-    // TODO: implement substep
-    return this.step(options);
-  };
-  JSAV.ext.stepdone = function() {return this;};
   JSAV.ext.stepOption = function(name, value) {
     var step = this._redo[0];
     if (value !== undefined) { // set named property
@@ -334,3 +329,16 @@
     this.RECORD = false;
   };
 })(jQuery);
+
+/** Override the borderWidth/Color CSS getters to return the
+ info for border-top. */
+jQuery.cssHooks["borderColor"] = {
+	get: function(elem) {
+	  return jQuery(elem).css("border-top-color");
+	}
+};
+jQuery.cssHooks["borderWidth"] = {
+	get: function(elem) {
+	  return jQuery(elem).css("border-top-width");
+	}
+};
