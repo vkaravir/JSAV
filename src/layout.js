@@ -87,8 +87,6 @@
   		for (var i = 0; i < ch.length; i++) {
   			if (ch[i]) {
   				calculateLayout(ch[i]);
-  			} else {
-  				//debug("child is null!!");
   			}
   		}
   		results[node.id()] = {
@@ -99,11 +97,12 @@
       calculateContours(node);
   	},
   	calculateContours = function(node) {
-  		var vtcSize = {width: 40, height: 40};
-          var children = node.children();
-          var rootLeft = -vtcSize.width / 2;
-  		var rootRight = vtcSize.width / 2 + (vtcSize.width % 2 === 0 ? 0 : 1);
-  		var rootHeight = vtcSize.height;
+  		var vtcWidth = 40,
+  		  vtcHeight= 40,
+  		  children = node.children(),
+  		  rootLeft = -vtcWidth / 2,
+  		  rootRight = vtcWidth / 2 + (vtcWidth % 2 === 0 ? 0 : 1),
+  		  rootHeight = vtcHeight;
   		if (children.length === 0) {
   			results[node.id()].contours = new TreeContours(rootLeft, rootRight, rootHeight, node.value());
   			translateThisNode(node, -rootLeft, 0);
@@ -133,22 +132,23 @@
   		}
   	},
   	translateThisNode = function(node, x, y) {
-  		results[node.id()].translation.width += x;
-  		results[node.id()].translation.height += y;
-  	},
-  	translateAllNodes = function(node, howMuch) {
-  		if (!results[node.id()].cachedTranslation) {
-  			results[node.id()].cachedTranslation = {width: 0, height: 0};
-  		}
-  		results[node.id()].cachedTranslation.width += howMuch.width;
-  		results[node.id()].cachedTranslation.height += howMuch.height;
+  	  var restrans = results[node.id()].translation;
+  		restrans.width += x;
+  		restrans.height += y;
   	},
   	translateNodes = function(node, x, y) {
-  		translateAllNodes(node, {width: x, height: y});
+  	  var restrans = results[node.id()].cachedTranslation;
+  		if (!restrans) {
+  			restrans = {width: 0, height: 0};
+  			results[node.id()].cachedTranslation = restrans;
+  		}
+  		restrans.width += x;
+  		restrans.height += y;
   	},
   	getXTranslation = function(node) {
+  	  var restrans = results[node.id()].cachedTranslation;
   		return results[node.id()].translation.width +
-  			((!results[node.id()].cachedTranslation) ? 0 : results[node.id()].cachedTranslation.width);
+  			((!restrans) ? 0 : restrans.width);
   	},
   	propagateTranslations = function(node) {
   	  var noderes = results[node.id()];
@@ -156,7 +156,7 @@
   			var ch = node.children();
   			for (var i = 0; i < ch.length; i++) {
   				var child = ch[i];
-  				translateAllNodes(child, noderes.cachedTranslation);
+  				translateNodes(child, noderes.cachedTranslation.width, noderes.cachedTranslation.height);
   				propagateTranslations(child);
   			}
   			noderes.translation.width += noderes.cachedTranslation.width;
@@ -165,8 +165,9 @@
   		}
   	},
   	calculateFinalLayout = function(node, dx, dy) {
-  	        if (-results[node.id()].contours.cLeftExtent - getXTranslation(node) > 0) {
-  			translate(node, -results[node.id()].contours.cLeftExtent - this.getXTranslation(node), 0);
+  	  var cLeftExtent = results[node.id()].contours.cLeftExtent;
+  	  if (-cLeftExtent - getXTranslation(node) > 0) {
+  			translate(node, -cLeftExtent - this.getXTranslation(node), 0);
   		}
   		translateNodes(node, dx, dy);
   		propagateTranslations(node);
@@ -199,47 +200,51 @@
   
   var edgeLayout = function(edge, start, end) {
     var NODESIZE = edge.startnode.element.outerWidth()/2.0,
-      svgstyle = edge.jsav.getSvg().canvas.style;
+      svgstyle = edge.jsav.getSvg().canvas.style,
+      svgleft = svgstyle.left,
+      svgtop = svgstyle.top,
+      pi = Math.PI;
     var startpos = edge.startnode.element.offset(),
         endpos = edge.endnode.element.offset(),
-        fromX =  Math.round(start.left + NODESIZE - parseInt(svgstyle.left, 10)),
-  	    fromY = Math.round(start.top + NODESIZE - parseInt(svgstyle.top, 10)),
-  	    toX = Math.round(end.left + NODESIZE - parseInt(svgstyle.left, 10)),
-  	    toY = Math.round(end.top + NODESIZE - parseInt(svgstyle.top, 10)),
-  	    fromAngle = normalizeAngle(2*Math.PI - Math.atan2(toY - fromY, toX - fromX)),
-        toAngle = normalizeAngle(2*Math.PI - Math.atan2(fromY - toY, fromX - toX)),
+        fromX =  Math.round(start.left + NODESIZE - parseInt(svgleft, 10)),
+  	    fromY = Math.round(start.top + NODESIZE - parseInt(svgtop, 10)),
+  	    toX = Math.round(end.left + NODESIZE - parseInt(svgleft, 10)),
+  	    toY = Math.round(end.top + NODESIZE - parseInt(svgtop, 10)),
+  	    fromAngle = normalizeAngle(2*pi - Math.atan2(toY - fromY, toX - fromX)),
+        toAngle = normalizeAngle(2*pi - Math.atan2(fromY - toY, fromX - toX)),
         fromPoint = getNodeBorderAtAngle(0, edge.startnode.element, 
                   {width: NODESIZE, height: NODESIZE, x: fromX, y: fromY}, fromAngle),
         toPoint = getNodeBorderAtAngle(1, edge.endnode.element, 
                   {width: NODESIZE, height: NODESIZE, x: toX, y: toY}, toAngle)
     edge.g.movePoints([fromPoint, toPoint]);
-
+    
     function normalizeAngle(angle) {
+      var pi = Math.PI;
     	while (angle < 0)
-        angle += 2 * Math.PI;
-      while (angle >= 2 * Math.PI) 
-        angle -= 2 * Math.PI;
+        angle += 2 * pi;
+      while (angle >= 2 * pi) 
+        angle -= 2 * pi;
       return angle;
     };
     function getNodeBorderAtAngle(pos, node, dim, angle) {
       // dim: x, y coords of center and half of width and height
-    	var x, y,
+    	var x, y, pi = Math.PI,
           urCornerA = Math.atan2(dim.height*2.0, dim.width*2.0),
-          ulCornerA = Math.PI - urCornerA,
-          lrCornerA = 2*Math.PI - urCornerA,
-          llCornerA = urCornerA + Math.PI;
+          ulCornerA = pi - urCornerA,
+          lrCornerA = 2*pi - urCornerA,
+          llCornerA = urCornerA + pi;
 
       if (angle < urCornerA || angle > lrCornerA) { // on right side
         x = dim.x + dim.width;
         y = dim.y - (dim.width) * Math.tan(angle);
       } else if (angle > ulCornerA && angle < llCornerA) { // left
         x = dim.x - dim.width;
-        y = dim.y + (dim.width) * Math.tan(angle - Math.PI);
+        y = dim.y + (dim.width) * Math.tan(angle - pi);
       } else if (angle <= ulCornerA) { // top
         x = dim.x + (dim.height) / Math.tan(angle);
         y = dim.y- dim.height;
       } else { // on bottom side
-        x = dim.x - (dim.height) / Math.tan(angle - Math.PI);
+        x = dim.x - (dim.height) / Math.tan(angle - pi);
         y = dim.y + dim.height;
       }
     	return [pos, Math.round(x), Math.round(y)];
@@ -271,12 +276,6 @@ TreeContours = function(left, right, height, data) {
 		this.cRightExtent = right;
 	};
 TreeContours.prototype = {
-	getHeight: function() {
-		return this.cHeight;
-	},
-	getWidth: function() {
-		return this.cRightExtent - this.cLeftExtent;
-	},
 	addOnTop: function(left, right, height, addHeight, originTrans) {
 	  var lCD = this.leftCDims,
 	      rCD = this.rightCDims;
@@ -398,10 +397,10 @@ TreeContours.prototype = {
 				lCumD.width += ld.width;
 				li--;
 			} else {
-				var ld = lc[li];
-				var rd = rc[ri];
-				var leftNewHeight = lCumD.height;
-				var rightNewHeight = rCumD.height;
+				var ld = lc[li],
+				    rd = rc[ri],
+				    leftNewHeight = lCumD.height,
+				    rightNewHeight = rCumD.height;
 				if (leftNewHeight <= rightNewHeight) {
 					lCumD.height += ld.height;
 					lCumD.width += ld.width;
