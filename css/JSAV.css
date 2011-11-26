@@ -6,6 +6,17 @@
   background-color: white;
 }
 
+.jsavnode {
+  width: 45px;
+  height: 45px;
+  text-align: center;
+  line-height: 45px;
+  border: 1px solid black;
+  background-color: white;
+  color: black;
+  opacity: 1;
+}
+
 /***** STYLING OF THE ARRAY DATA STRUCTURE *****/
 .jsavarray {
   position: relative;
@@ -19,17 +30,6 @@
 .jsavarray:after {
   content: "";
   clear: both;
-}
-.jsavarray .jsavindex {
-  width: 45px;
-  height: 45px;
-  text-align: center;
-  line-height: 45px;
-  border: 1px solid black;
-  border-color: black;
-  background-color: white;
-  color: black;
-  opacity: 1;
 }
 .jsavindexlabel {
   width: inherit;
@@ -226,4 +226,10 @@ a.jsavsettings {
 }
 .jsavcontainer svg {
   pointer-events: none;
+}
+
+/********* TREE DATA STRUCTURE *******/
+.jsavtreenode {
+  border-radius: 25px;
+  position: absolute;
 }
