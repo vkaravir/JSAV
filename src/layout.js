@@ -84,7 +84,7 @@
     var results = {};
     var calculateLayout = function(node) {
   		var ch = node.children();
-  		for (var i = 0; i < ch.length; i++) {
+  		for (var i = 0, l=ch.length; i < l; i++) {
   			if (ch[i]) {
   				calculateLayout(ch[i]);
   			}
@@ -102,32 +102,33 @@
   		  children = node.children(),
   		  rootLeft = -vtcWidth / 2,
   		  rootRight = vtcWidth / 2 + (vtcWidth % 2 === 0 ? 0 : 1),
-  		  rootHeight = vtcHeight;
+  		  rootHeight = vtcHeight,
+  		  resnode = results[node.id()];
   		if (children.length === 0) {
-  			results[node.id()].contours = new TreeContours(rootLeft, rootRight, rootHeight, node.value());
+  			resnode.contours = new TreeContours(rootLeft, rootRight, rootHeight, node.value());
   			translateThisNode(node, -rootLeft, 0);
   		} else {
   			var transSum = 0;
   			var firstChild = children[0];
-  			results[node.id()].contours = results[firstChild.id()].contours;
+  			resnode.contours = results[firstChild.id()].contours;
   			results[firstChild.id()].contours = null;
   			translateNodes(firstChild, 0, NODEGAP + rootHeight);
 
-  			for (var i = 1; i < children.length; i++) {
+  			for (var i = 1, l = children.length; i < l; i++) {
   				var child = children[i];
-  				var childC = results[child.id()].contours;
-  				var trans = results[node.id()].contours.calcTranslation(childC, NODEGAP);
+  				var childC = resnode.contours;
+  				var trans = resnode.contours.calcTranslation(childC, NODEGAP);
   				transSum += trans;
 
   				results[child.id()].contours = null;
-  				results[node.id()].contours.joinWith(childC, trans);
+  				resnode.contours.joinWith(childC, trans);
 
   				translateNodes(child, getXTranslation(firstChild) + trans - getXTranslation(child),
                                   	NODEGAP + rootHeight);
   			}
 
   			var rootTrans = transSum / children.length;
-  			results[node.id()].contours.addOnTop(rootLeft, rootRight, rootHeight, NODEGAP, rootTrans);
+  			resnode.contours.addOnTop(rootLeft, rootRight, rootHeight, NODEGAP, rootTrans);
   			translateThisNode(node, getXTranslation(firstChild) + rootTrans, 0);
   		}
   	},
@@ -154,7 +155,7 @@
   	  var noderes = results[node.id()];
   		if (noderes.cachedTranslation) {
   			var ch = node.children();
-  			for (var i = 0; i < ch.length; i++) {
+  			for (var i = 0, l = ch.length; i < l; i++) {
   				var child = ch[i];
   				translateNodes(child, noderes.cachedTranslation.width, noderes.cachedTranslation.height);
   				propagateTranslations(child);
@@ -344,13 +345,13 @@ TreeContours.prototype = {
 					thisCDisp += item.width;
 				}
 			});
-			for (var i = nextIndex+1;i< this.rightCDims.length;i++) {
+			for (var i = nextIndex + 1, l=this.rightCDims.length; i < l; i++) {
 				this.rightCDims[i] = null;
 			}
 			this.rightCDims = this.rightCDims.compact();
 			var middle = this.rightCDims[nextIndex];
 
-			for (i = 0; i < other.rightCDims.length; i++) {
+			for (i = 0, l=other.rightCDims.length; i < l; i++) {
 				var item = other.rightCDims[i];
 				otherCDisp += item.width;
 				this.rightCDims[this.rightCDims.length] = {width: item.width, height: item.height};
