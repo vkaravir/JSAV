@@ -128,6 +128,37 @@
       this.childnodes[pos] = node;
     }
   };
+  nodeproto.equals = function(otherNode, options) {
+    if (!otherNode || this.value() !== otherNode.value()) {
+      return false;
+    }
+    var cssprop, equal;
+    if (options && 'css' in options) { // if comparing css properties
+      if ($.isArray(options.css)) { // array of property names
+        for (var i = 0; i < options.css.length; i++) {
+          cssprop = opts.css[i];
+          equal = this.css(cssprop) == otherNode.css(cssprop);
+          if (!equal) { return false; }
+        }
+      } else { // if not array, expect it to be a property name string
+        cssprop = opts.css;
+        equal = this.css(cssprop) == otherNode.css(cssprop);
+        if (!equal) { return false; }
+      }
+    }
+    // compare edge style
+    if (this.edgeToParent()) {
+      equal = this.edgeToParent().equals(otherNode.edgeToParent(), options);
+    }
+    // compare children
+    var ch = this.children();
+    for (i = 0, l = ch.length; i < l; i++) {
+      if (!ch[i].equals(otherNode.child(i), options)) {
+        return false;
+      }
+    }
+    return true; // values equal, nothing else to compare
+  };
   nodeproto.children = function() {
     return this.childnodes;
   }
@@ -185,6 +216,32 @@
   };
   edgeproto.weight = function(node) {
     
+  };
+  edgeproto.equals = function(otherEdge, options) {
+    if (!otherEdge || !otherEdge instanceof Edge) {
+      return false;
+    }
+    if (options && !options.checkNodes) {
+      if (!this.startnode.equals(otherEdge.startnode) || 
+        !this.endnode.equals(otherEdge.endnode)) {
+          return false;
+      }
+    }
+    var cssprop, equal;
+    if (options && 'css' in options) { // if comparing css properties
+      if ($.isArray(options.css)) { // array of property names
+        for (var i = 0; i < options.css.length; i++) {
+          cssprop = opts.css[i];
+          equal = this.css(cssprop) == otherEdge.css(cssprop);
+          if (!equal) { return false; }
+        }
+      } else { // if not array, expect it to be a property name string
+        cssprop = opts.css;
+        equal = this.css(cssprop) == otherEdge.css(cssprop);
+        if (!equal) { return false; }
+      }
+    }
+    return true;
   };
   
   var BinaryTree = function(jsav, options) {
@@ -248,6 +305,21 @@
       return [this.rightnode];
     } else {
       return [];
+    }
+  };
+  binnodeproto.child = function(pos, node) {
+    if (typeof node === "undefined") {
+      if (pos === 0) {
+        return this.leftnode;
+      } else if (pos === 1) {
+        return this.rightnode;
+      }
+    } else {
+      if (pos === 0) {
+        this.leftnode = node;
+      } else if (pos === 1) {
+        this.rightnode = node;
+      }
     }
   };
   binnodeproto.left = function(node) {
