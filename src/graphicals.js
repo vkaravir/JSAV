@@ -117,7 +117,7 @@ if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
       for (var i=0, l=points.length; i < l; i++) {
         var p = points[i];
         pathElem = currPath[p[0]];
-        newPath[p[0]] = [pathElem[0], + p[1], p[2]];
+        newPath[p[0]] = [pathElem[0], p[1], p[2]];
       }
       var np = "";
       for (var i=0, l=newPath.length; i < l; i++) {

@@ -276,4 +276,141 @@
     
     ok(!av.forward()); // no more steps
   });
+
+
+  module("graphicals.line", {  });
+
+  test("Testing Line", function() {
+	  var av = new JSAV("emptycontainer");
+	  
+    var l = av.g.line(10, 20, 150, 140);
+    ok(l, "line created");
+    var origBB = $.extend(true, {}, l.rObj.getBBox());
+    equals(origBB.width, 140, "line BB width");
+    equals(origBB.height, 120, "line BB height");
+    equals(l.css("stroke"), "#000", "line stroke color");
+    equals(l.css("stroke-width"), 1, "line stroke width");
+    equals(l.css("fill"), "none", "line fill");
+    equals(l.css("opacity"), 1, "line opacity");
+    av.step();
+    l.translatePoint(0, 20, 10);
+    av.step();
+    l.translatePoint(1, 10, 20);
+    av.step();
+    l.translate(30, 40);
+    av.step();
+    l.scale(2);
+    av.step();
+    l.scale(0.5);
+    av.step();
+    l.movePoints([[0, 10, 20], [1, 150, 140]]);
+    av.step();
+    l.css({"stroke-width": 4, "stroke": "red", "fill": "rgb(120,120,120)"});
+    av.step();
+    l.hide();
+    av.step();
+    l.show();
+    av.recorded();
+
+    $.fx.off = true;
+
+    var currBB = l.rObj.getBBox();
+    equals(Math.round(currBB.x), Math.round(origBB.x));
+    equals(Math.round(currBB.y), Math.round(origBB.y));
+    equals(Math.round(currBB.width), Math.round(origBB.width), "horizontal scale undone correctly");
+    equals(Math.round(currBB.height), Math.round(origBB.height), "vertical scale undone correctly");
+    equals(l.css("stroke"), "#000", "rectangle stroke color");
+    equals(l.css("stroke-width"), 1, "rectangle stroke width");
+    equals(l.css("fill"), "none", "rectangle fill");
+    equals(l.css("opacity"), 1, "rectangle opacity");
+
+    av.end();
+    av.begin();
+
+    currBB = l.rObj.getBBox();
+    equals(Math.round(currBB.x), Math.round(origBB.x));
+    equals(Math.round(currBB.y), Math.round(origBB.y));
+    equals(Math.round(currBB.width), Math.round(origBB.width), "horizontal scale undone correctly");
+    equals(Math.round(currBB.height), Math.round(origBB.height), "vertical scale undone correctly");
+
+    $.fx.off = true;
+    
+    av.forward(); // apply translate point 0
+    currBB = l.rObj.getBBox();
+    equals(Math.round(currBB.x), Math.round(origBB.x) + 20);
+    equals(Math.round(currBB.y), Math.round(origBB.y) + 10);
+    equals(Math.round(currBB.width), Math.round(origBB.width) - 20);
+    equals(Math.round(currBB.height), Math.round(origBB.height) - 10);
+        
+    av.forward(); // apply translate point 1
+    currBB = l.rObj.getBBox();
+    equals(Math.round(currBB.x), Math.round(origBB.x) + 20);
+    equals(Math.round(currBB.y), Math.round(origBB.y) + 10);
+    equals(Math.round(currBB.width), Math.round(origBB.width) - 10);
+    equals(Math.round(currBB.height), Math.round(origBB.height) + 10);
+
+    av.forward(); // apply translate
+    currBB = l.rObj.getBBox();
+    equals(Math.round(currBB.x - origBB.x), 50);
+    equals(Math.round(currBB.y - origBB.y), 50);
+    
+    av.forward(); // apply scale
+    currBB = l.rObj.getBBox();
+    equals(Math.floor(currBB.width), Math.round((origBB.width-10)*2), "hor scale redone correctly");
+    equals(Math.floor(currBB.height), Math.round((origBB.height+10)*2), "vert scale redone correctly");
+
+    av.forward(); // apply scale 0.5
+    currBB = l.rObj.getBBox();
+    equals(Math.round(currBB.x - origBB.x), 50);
+    equals(Math.round(currBB.y - origBB.y), 50);    
+
+    av.forward(); // apply move points
+    currBB = l.rObj.getBBox();
+    equals(Math.round(currBB.x), Math.round(origBB.x) + 30);
+    equals(Math.round(currBB.y), Math.round(origBB.y) + 40);
+    equals(Math.round(currBB.width), Math.round(origBB.width));
+    equals(Math.round(currBB.height), Math.round(origBB.height));
+    
+    av.forward(); // apply css
+    equals(l.css("stroke"), "red", "line stroke color");
+    equals(l.css("stroke-width"), 4, "line stroke width");
+    equals(l.css("fill"), "rgb(120,120,120)", "line fill");
+    equals(l.css("opacity"), 1, "line opacity");
+    
+    av.forward(); // apply hide
+    equals(l.css("opacity"), 0, "line opacity");
+    
+    av.forward(); // apply show
+    equals(l.css("opacity"), 1, "line opacity");
+    
+    ok(!av.forward()); // no more steps
+  });
+  test("Test line movePoints", function() {
+	  var av = new JSAV("emptycontainer");
+	  
+    var l = av.g.line(10, 20, 150, 140);
+    ok(l, "line created");
+    var origBB = $.extend(true, {}, l.rObj.getBBox());
+    av.step();
+    l.movePoints([[0, 10, 20], [1, 150, 140]]);
+    av.step();
+    l.movePoints([[0, 30, 40], [1, 170, 160]]);
+    av.recorded();
+    
+    $.fx.off = true;
+    
+    ok(av.forward());
+    var currBB = $.extend(true, {}, l.rObj.getBBox());
+    equals(Math.round(currBB.x), Math.round(origBB.x));
+    equals(Math.round(currBB.y), Math.round(origBB.y));
+    equals(Math.round(currBB.width), Math.round(origBB.width));
+    equals(Math.round(currBB.height), Math.round(origBB.height));
+    
+    ok(av.forward());
+    var currBB = $.extend(true, {}, l.rObj.getBBox());
+    equals(Math.round(currBB.x), Math.round(origBB.x) + 20);
+    equals(Math.round(currBB.y), Math.round(origBB.y) + 20);
+    equals(Math.round(currBB.width), Math.round(origBB.width));
+    equals(Math.round(currBB.height), Math.round(origBB.height));
+  });
 })();
