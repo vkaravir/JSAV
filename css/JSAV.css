@@ -176,6 +176,7 @@ svg {
   position: absolute;
   top: 0; 
   left: 0;
+  -moz-border-radius: 6px;
 }
 .jsavmodal {
   z-index: 999;
@@ -190,6 +191,7 @@ svg {
   border-bottom: 1px dashed black;
   margin: 0;
   padding: 5px;
+  -moz-border-radius: 6px 6px 0 0;
 }
 .jsavsettings {
   padding: 15px;
@@ -225,9 +227,17 @@ a.jsavsettings {
 .jsavmodelanswer.jsavcontainer {
   padding: 0;
   background-color: white;
+  border-width: 0 0 1px 0;
+  border-style: dashed;
 }
 .jsavcontainer svg {
   pointer-events: none;
+}
+.jsavmodelanswer .jsavcounter {
+  float: left;
+  left: 10px;
+  position: relative;
+  top: 25px;
 }
 
 /********* TREE DATA STRUCTURE *******/

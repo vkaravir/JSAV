@@ -143,7 +143,7 @@
     if ($.isFunction(model)) {
       // behavior in a nutshell:
       // 1. create a new JSAV (and the HTML required for it)
-      this.modelav = new JSAV($("<div><div class='jsavcontrols'/><span class='jsavcounter'></div>").addClass("jsavmodelanswer"));
+      this.modelav = new JSAV($("<div><span class='jsavcounter'/><div class='jsavcontrols'/></div>").addClass("jsavmodelanswer"));
       // 2. create a dialog for the model answer
       this.modelDialog = JSAV.utils.dialog(this.modelav.container, 
                 {'title': 'Model Answer', 'closeText': "Close", "closeOnClick": false, "modal": false});

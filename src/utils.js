@@ -114,10 +114,18 @@
       $dialog.append(closeButton);
     }
     var $dial = $dialog.appendTo($("body")).add($modalElem);
-    $dialog.css({
+    $dial.draggable();
+    var center = function() { 
+      $dialog.css({
         top: scrollTop + (winHeight - $dialog.outerHeight())/2,
         left: scrollLeft + (winWidth - $dialog.outerWidth())/2
-    });
+      });
+    };
+    center();
+    $dial.show = function() {
+      center();
+      $dial.fadeIn();
+    }
     $dial.close = close;
     return $dial;
   };
