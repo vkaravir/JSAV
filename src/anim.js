@@ -195,14 +195,16 @@
       if (jsav.options.animationMode == 'none') { // if not recording, apply immediately
         effect.apply(this, arguments);
       } else {
-        var stackTop = jsav._redo[0];
+        var stackTop = jsav._undo[jsav._undo.length - 1];
         if (!stackTop) {
           stackTop = new AnimStep();
-          jsav._redo.push(stackTop);
+          jsav._undo.push(stackTop);
         }
         // add to stack: [target object, effect function, arguments, undo function]
-        stackTop.add(new AnimatableOperation({obj: this, effect: effect, 
-          args: arguments, undo: undo}));
+        var oper = new AnimatableOperation({obj: this, effect: effect, 
+          args: arguments, undo: undo});
+        stackTop.add(oper);
+        oper.apply();
       }
       return this;
     };
@@ -263,12 +265,12 @@
     return info;
   };
   JSAV.ext.step = function(options) {
-    if (this._undo.length > 0 && 
+    /*if (this._undo.length > 0 && 
         (this._redo.length === 0 || this._redo[0].operations.length === 0)) { // ignore step if no operations in it
       return this;
-    }
-    this.forward();
-    this._redo.push(new AnimStep(options)); // add new empty step to oper. stack
+    }*/
+    //this.forward();
+    this._undo.push(new AnimStep(options)); // add new empty step to oper. stack
     if (options && this.message && options.message) {
       this.message(options.message);
     }
@@ -304,7 +306,7 @@
     return this;
   };
   JSAV.ext.stepOption = function(name, value) {
-    var step = this._redo[0];
+    var step = this._undo[this._undo.length - 1];
     if (value !== undefined) { // set named property
       if (step) {
         step.options[name] = value;
@@ -324,9 +326,9 @@
     }
   };
   JSAV.ext.recorded = function() {
-    this.forward(); // apply the last steps
     this.begin();
     this.RECORD = false;
+    return this;
   };
 })(jQuery);
 

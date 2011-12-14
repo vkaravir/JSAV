@@ -81,7 +81,6 @@
 
     this.score.correct = 0;
     this.score.student = 0;
-    
     while (correct && forwStudent && forwModel && this.modelav.currentStep() < modelTotal && 
            this.jsav.currentStep() < studentTotal) {
       forwStudent = this.jsav.forward(gradeStepFunction);
@@ -181,11 +180,13 @@
   exerproto.undo = function() {
     $.fx.off = true;
     // undo last step
-    this.jsav.backward();
+    this.jsav.backward(); // the empty new step
+    this.jsav.backward(); // the new graded step
     // undo until the previous graded step
     if (this.jsav.backward(gradeStepFunction)) {
       // if such step was found, redo it
       this.jsav.forward();
+      this.jsav.step();
     } else {
       // ..if not, the first student step was incorrent and we can rewind to beginning
       this.jsav.begin();
@@ -195,8 +196,9 @@
   };
   exerproto.gradeableStep = function() {
     this.jsav.stepOption("grade", true);
-    this.jsav.forward();
+    this.jsav.step();
     if (this.feedback && this.feedback.val() == "continuous") {
+      this.jsav.container.find(":animated").stop(false, true);
       var grade = this.grade();
       if (grade.student === grade.correct) { // all student's steps are correct
         return;
