@@ -17,6 +17,12 @@
   opacity: 1;
 }
 
+.jsavhighlight {
+  background-color: yellow;
+  border-width: 4px;
+  font-size: 120%;  
+}
+
 /***** STYLING OF THE ARRAY DATA STRUCTURE *****/
 .jsavarray {
   position: relative;
@@ -41,10 +47,6 @@
   z-index: 99;
   display: block;
 }
-.jsavarray .jsavindex.jsavhighlight, .jsavarray.jsavbararray .jsavindex.jsavhighlight {
-  background-color: yellow;
-}
-
 .jsavarray.jsavbararray {
   height: 150px;
   overflow: visible;
