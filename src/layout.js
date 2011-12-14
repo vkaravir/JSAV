@@ -80,10 +80,17 @@
   }
   
   function treeLayout(tree) {
-	  var NODEGAP = 50;
-    var results = {};
+	  var NODEGAP = 25,
+        NODESIZE = tree.root().element.outerWidth()/2,
+        results = {},
+        rootLeft = -NODESIZE,
+  		  rootRight = NODESIZE + (NODESIZE % 2 === 0 ? 0 : 1),
+  		  rootHeight = NODESIZE * 2;
+    var compactArray = function(arr) {
+          return $.map(arr, function(item) { return item || null; });
+        };
     var calculateLayout = function(node) {
-  		var ch = node.children();
+  		var ch = compactArray(node.children());
   		for (var i = 0, l=ch.length; i < l; i++) {
   			if (ch[i]) {
   				calculateLayout(ch[i]);
@@ -97,12 +104,7 @@
       calculateContours(node);
   	},
   	calculateContours = function(node) {
-  		var vtcWidth = 40,
-  		  vtcHeight= 40,
-  		  children = node.children(),
-  		  rootLeft = -vtcWidth / 2,
-  		  rootRight = vtcWidth / 2 + (vtcWidth % 2 === 0 ? 0 : 1),
-  		  rootHeight = vtcHeight,
+  		var children = compactArray(node.children()),
   		  resnode = results[node.id()];
   		if (children.length === 0) {
   			resnode.contours = new TreeContours(rootLeft, rootRight, rootHeight, node.value());
@@ -116,6 +118,7 @@
 
   			for (var i = 1, l = children.length; i < l; i++) {
   				var child = children[i];
+  				if (!child) { continue; }
   				var childC = resnode.contours;
   				var trans = resnode.contours.calcTranslation(childC, NODEGAP);
   				transSum += trans;
@@ -138,6 +141,7 @@
   		restrans.height += y;
   	},
   	translateNodes = function(node, x, y) {
+  	  if (!node) { return; }
   	  var restrans = results[node.id()].cachedTranslation;
   		if (!restrans) {
   			restrans = {width: 0, height: 0};
@@ -152,9 +156,10 @@
   			((!restrans) ? 0 : restrans.width);
   	},
   	propagateTranslations = function(node) {
+  	  if (!node) { return; }
   	  var noderes = results[node.id()];
   		if (noderes.cachedTranslation) {
-  			var ch = node.children();
+  			var ch = compactArray(node.children());
   			for (var i = 0, l = ch.length; i < l; i++) {
   				var child = ch[i];
   				translateNodes(child, noderes.cachedTranslation.width, noderes.cachedTranslation.height);

@@ -19,7 +19,7 @@
       }
       newprops = cssprop;
     }
-    if (!this.jsav.RECORD && !$.fx.off) { // only animate when playing, not when recording
+    if (!this.jsav.RECORD || !$.fx.off) { // only animate when playing, not when recording
       this.element.animate(newprops, this.jsav.SPEED);
     } else {
       this.element.css(newprops);
@@ -27,24 +27,58 @@
     return [oldProps];
   };
   
+  
   var Tree = function(jsav, options) {
     this.jsav = jsav;
     this.options = options;
-    this.root = null;
+    var el = this.options.element || $("<div/>");
+    el.addClass("jsavtree jsavcommontree");
+    if (!this.options.element) {
+      $(this.jsav.container).append(el);
+    }
+    this.element = el;
+    this.rootnode = this.newNode("", null);
+    //this.layout();
+    el.css("display", "hidden");
+    var visible = (typeof this.options.display === "boolean" && this.options.display === true);
+    if (visible) {
+      if (this.jsav.currentStep() === 0) { // at beginning, just make it visible
+        el.css("display", "block");
+      } else { // add effect to show otherwise
+        this.show();
+      }
+    }
   };
   var treeproto = Tree.prototype;
   JSAV.ext.ds.extend("common", treeproto);
+  treeproto._setrootnode = JSAV.anim(function(node) {
+    var oldroot = this.rootnode;
+    this.rootnode = node;
+    return [oldroot];
+  });
   treeproto.root = function(newRoot) {
     if (typeof newRoot === "undefined") {
       return this.rootnode;
+    } else if (newRoot.constructor === TreeNode) {
+      this._setrootnode(newRoot);
+    } else {
+      if (this.rootnode) {
+        this.rootnode.value(newRoot);
+      } else {
+        this._setrootnode(this.newNode(newRoot, null));
+      }
     }
-    this.rootnode.value(newRoot);
+    return this.rootnode;
   };
-  treeproto.newNode = function(value) {
-    return new TreeNode(this.jsav, value);
+  treeproto.clear = function() {
+    this.root().clear();
+    this.element.remove();
+  };
+  treeproto.newNode = function(value, parent) {
+    return new TreeNode(this, value, parent);
   };
   treeproto.height = function() {
-    return this.root.height();
+    return this.rootnode.height();
   };
   treeproto.layout = function() {
     var layoutAlg = this.options.layout || "_default";
@@ -54,12 +88,12 @@
     if (!otherTree instanceof Tree) {
       return false;
     }
-    return this.rootnode.equals(otherTree.rootnode, options);
+    return this.root().equals(otherTree.root(), options);
   };
   treeproto._setcss = JSAV.anim(_setcss);
   treeproto.css = function(cssprop) {
     if (typeof cssprop === "string") {
-      return $elems.css(cssprop);
+      return this.element.css(cssprop);
     } else {
       return this._setcss(cssprop);
     }
@@ -74,13 +108,13 @@
     this.parentnode = parent;
     this.options = $.extend(true, {display: true}, options);
     var el = $("<div>" + value + "</div>").addClass("jsavnode jsavtreenode jsavbinarynode")
-              .attr("data-value", value);
+              .attr("data-value", value).attr("data-node", this);
     this.element = el;
     this.container.element.append(el);
     el.css("display", "hidden");
     var visible = (typeof this.options.display === "boolean" && this.options.display === true);
     if (visible) {
-      if (jsav.currentStep() === 0) { // at beginning, just make it visible
+      if (this.jsav.currentStep() === 0) { // at beginning, just make it visible
         el.css("display", "block");
       } else { // add effect to show otherwise
         this.show();
@@ -106,8 +140,12 @@
     this.element.text(newValue).attr("data-value", newValue);
     return [oldVal];
   });
-  nodeproto.parent = function() {
-    return this.parentnode;
+  nodeproto.parent = function(newParent) {
+    if (typeof newParent === "undefined") {
+      return this.parentnode;
+    } else {
+      this.parentnode = newParent;
+    }
   };
   nodeproto.edgeToParent = function(edge) {
     if (typeof edge === "undefined") {
@@ -117,16 +155,54 @@
       return this;
     }
   };
+  nodeproto.clear = function() {
+    if (this.edgeToParent()) {
+      this.edgeToParent().clear();
+    }
+    var ch = this.children();
+    for (var i = ch.length; i--; ) {
+      if (ch[i]) {
+        ch[i].clear();
+      }
+    }
+    this.element.remove();
+  };
   nodeproto.addChild = function(node) {
-    this.childnodes.push(node);
+    var pos = this.childnodes.length;
+    this._setchild(pos, node);
     return this;
-  }
+  };
+  nodeproto._setchild = JSAV.anim(function(pos, node) {
+    var oldval = this.childnodes[pos];
+    if (oldval) {
+      oldval.parentnode = undefined;
+    }
+    if (node) {
+      this.childnodes[pos] = node;
+      node.parent(this);
+    } else {
+      delete this.childnodes[pos];
+      this.childnodes = $.map(this.childnodes, function(item) {return item;}); 
+    }
+    return [pos, oldval];
+  });
   nodeproto.child = function(pos, node) {
     if (typeof node === "undefined") {
       return this.childnodes[pos];
     } else {
-      this.childnodes[pos] = node;
+      this._setchild(pos, node);
     }
+  };
+  nodeproto.height = function() {
+    var chs = this.children(),
+      maxheight = 0,
+      max = Math.max;
+    for (var i=0, l=chs.length; i < l; i++) {
+      if (chs[i]) {
+        maxheight = max(maxheight, chs[i].height());
+      }
+    }
+    return maxheight + 1;
   };
   nodeproto.equals = function(otherNode, options) {
     if (!otherNode || this.value() !== otherNode.value()) {
@@ -136,12 +212,12 @@
     if (options && 'css' in options) { // if comparing css properties
       if ($.isArray(options.css)) { // array of property names
         for (var i = 0; i < options.css.length; i++) {
-          cssprop = opts.css[i];
+          cssprop = options.css[i];
           equal = this.css(cssprop) == otherNode.css(cssprop);
           if (!equal) { return false; }
         }
       } else { // if not array, expect it to be a property name string
-        cssprop = opts.css;
+        cssprop = options.css;
         equal = this.css(cssprop) == otherNode.css(cssprop);
         if (!equal) { return false; }
       }
@@ -151,9 +227,13 @@
       equal = this.edgeToParent().equals(otherNode.edgeToParent(), options);
     }
     // compare children
-    var ch = this.children();
-    for (i = 0, l = ch.length; i < l; i++) {
-      if (!ch[i].equals(otherNode.child(i), options)) {
+    var ch = this.children(),
+        och = otherNode.children();
+    if (ch.length !== och.length) {
+      return false;
+    }
+    for (var i = 0, l = ch.length; i < l; i++) {
+      if (ch[i] && och[i] && !ch[i].equals(och[i], options)) {
         return false;
       }
     }
@@ -164,6 +244,28 @@
   }
   nodeproto.state = function() {
     // TODO: Should this be implemented??? Probably..
+  };
+  nodeproto.highlight = function() {
+    var testDiv = $('<div class="' + this.container.element[0].className + 
+        '" style="position:absolute;left:-10000px">' + 
+        '<div class="' + this.element[0].className + ' jsavhighlight"></div><div class="' + this.element[0].className + '" ></div></div>'),
+  	  styleDiv = testDiv.find(".jsavnode").filter(".jsavhighlight");
+  	// TODO: general way to get styles for the whole av system
+  	$("body").append(testDiv);
+    this._setcss({color: styleDiv.css("color"), "background-color": styleDiv.css("background-color")});
+    testDiv.remove();
+  };
+  
+  nodeproto.isHighlight = function() {
+    var testDiv = $('<div class="' + this.container.element[0].className + 
+        '" style="position:absolute;left:-10000px">' + 
+        '<div class="' + this.element[0].className + ' jsavhighlight"></div><div class="' + this.element[0].className + '" ></div></div>'),
+  	  styleDiv = testDiv.find(".jsavnode").filter(".jsavhighlight");
+  	// TODO: general way to get styles for the whole av system
+  	$("body").append(testDiv);
+  	var isHl = this.element.css("background-color") == styleDiv.css("background-color");
+  	testDiv.remove();
+  	return isHl;
   };
   nodeproto._setcss = JSAV.anim(_setcss);
   nodeproto.css = function(cssprop, value) {
@@ -217,6 +319,9 @@
   edgeproto.weight = function(node) {
     
   };
+  edgeproto.clear = function() {
+    this.g.rObj.remove();
+  };
   edgeproto.equals = function(otherEdge, options) {
     if (!otherEdge || !otherEdge instanceof Edge) {
       return false;
@@ -231,16 +336,19 @@
     if (options && 'css' in options) { // if comparing css properties
       if ($.isArray(options.css)) { // array of property names
         for (var i = 0; i < options.css.length; i++) {
-          cssprop = opts.css[i];
+          cssprop = options.css[i];
           equal = this.css(cssprop) == otherEdge.css(cssprop);
           if (!equal) { return false; }
         }
       } else { // if not array, expect it to be a property name string
-        cssprop = opts.css;
+        cssprop = options.css;
         equal = this.css(cssprop) == otherEdge.css(cssprop);
         if (!equal) { return false; }
       }
     }
+    return true;
+  };
+  edgeproto.css = function(cssprop) {
     return true;
   };
   
@@ -268,22 +376,23 @@
   var bintreeproto = BinaryTree.prototype;
   $.extend(bintreeproto, treeproto);
   bintreeproto.newNode = function(value, parent) {
-    return new BinaryTreeNode(this, value, parent || this.rootnode);
+    return new BinaryTreeNode(this, value, parent);
   };
   
   var BinaryTreeNode = function(container, value, parent, options) {
     this.jsav = container.jsav;
     this.container = container;
     this.parentnode = parent;
+    this.childnodes = [];
     this.options = $.extend(true, {display: true}, options);
     var el = $("<div>" + value + "</div>").addClass("jsavnode jsavtreenode jsavbinarynode")
-              .attr("data-value", value);
+              .attr({"data-value": value, "id": this.id() }).data("node", this);
     this.element = el;
     this.container.element.append(el);
     el.css("display", "hidden");
     var visible = (typeof this.options.display === "boolean" && this.options.display === true);
     if (visible) {
-      if (jsav.currentStep() === 0) { // at beginning, just make it visible
+      if (this.jsav.currentStep() === 0) { // at beginning, just make it visible
         el.css("display", "block");
       } else { // add effect to show otherwise
         this.show();
@@ -296,66 +405,85 @@
   var binnodeproto = BinaryTreeNode.prototype;
   $.extend(binnodeproto, nodeproto);
 
-  binnodeproto.children = function() {
-    if (this.leftnode && this.rightnode) {
-      return [this.leftnode, this.rightnode];
-    } else if (this.leftnode) {
-      return [this.leftnode];
-    } else if (this.rightnode) {
-      return [this.rightnode];
-    } else {
-      return [];
-    }
-  };
-  binnodeproto.child = function(pos, node) {
-    if (typeof node === "undefined") {
-      if (pos === 0) {
-        return this.leftnode;
-      } else if (pos === 1) {
-        return this.rightnode;
-      }
-    } else {
-      if (pos === 0) {
-        this.leftnode = node;
-      } else if (pos === 1) {
-        this.rightnode = node;
-      }
-    }
-  };
   binnodeproto.left = function(node) {
     if (typeof node === "undefined") {
-      return this.leftnode;
+      return this.child(0);
     } else if (node.constructor === BinaryTreeNode) {
-      this.leftnode = node;
+      this.child(0, node);
     } else {
-      if (this.leftnode) {
-        this.leftnode.value(node);
+      if (this.child(0)) {
+        this.child(0).value(node);
       } else {
-        this.leftnode = new BinaryTreeNode(this.container, node, this);
-        //this.container.layout();
+        var newNode = this.container.newNode(node, this);
+        this.child(0, newNode);
+        return newNode;
       }
     }
-    return this.leftnode;
+    return this.child(0);
   };
   binnodeproto.right = function(node) {
     if (typeof node === "undefined") {
-      return this.rightnode;
+      return this.child(1);
     } else if (node.constructor === BinaryTreeNode) {
-      this.rightnode = node;
+      this.child(1, node);
     } else {
-      this.rightnode = new BinaryTreeNode(this.container, node, this);
-      //this.container.layout();
+      if (this.child(1)) {
+        this.child(1).value(node);
+      } else {
+        var newNode = this.container.newNode(node, this);
+        this.child(1, newNode);
+        return newNode;
+      }
     }
-    return this.rightnode;
+    return this.child(1);
   };
+  binnodeproto._setcss = JSAV.anim(_setcss);
   
   var BinarySearchTree = function(jsav, options) {
-    this.jsav = jsav;
+   this.jsav = jsav;
+    this.options = options;
+    var el = this.options.element || $("<div/>");
+    el.addClass("jsavtree jsavbinarytree jsavbinarysearchtree");
+    if (!this.options.element) {
+      $(this.jsav.container).append(el);
+    }
+    this.element = el;
+    this.rootnode = this.newNode("", null);
+    //this.layout();
+    el.css("display", "hidden");
+    var visible = (typeof this.options.display === "boolean" && this.options.display === true);
+    if (visible) {
+      if (this.jsav.currentStep() === 0) { // at beginning, just make it visible
+        el.css("display", "block");
+      } else { // add effect to show otherwise
+        this.show();
+      }
+    }
   };
   var bstproto = BinarySearchTree.prototype;
   $.extend(bstproto, bintreeproto);
   bstproto.insert = function(value) {
     // TODO: implement BST insert
+    var ins = function(node) {
+      var val = node.value();
+      if (!val) {
+        node.value(value);
+      } else if (val < value) {
+        if (node.left()) {
+          ins(node.left());
+        } else {
+          node.left(value)
+        }
+      } else {
+        if (node.right()) {
+          ins(node.right());
+        } else {
+          node.right(value);
+        }
+      }
+    }
+    ins(this.root());
+    return this;
   };
   bstproto.remove = function(value) {
     // TODO: implement BST delete
