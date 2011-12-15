@@ -171,6 +171,7 @@
         ch[i].clear();
       }
     }
+    this.childnodes = [];
     this.element.remove();
   };
   nodeproto.addChild = function(node) {
