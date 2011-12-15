@@ -181,6 +181,7 @@
   	
   	calculateLayout(tree.root());
   	calculateFinalLayout(tree.root(), 20, 10+NODEGAP);
+  	var maxX = -1, maxY = -1, max = Math.max;
   	$.each(results, function(key, value) {
   	  var oldPos = value.node.element.position();
   	  if (oldPos.left == 0 && oldPos.top == 0) {
@@ -188,7 +189,19 @@
   	  } else {
     	  value.node.css({left: value.translation.width + "px", top: value.translation.height + "px"});
   	  }
+  	  maxX = max(maxX, value.translation.width + value.node.element.outerWidth());
+  	  maxY = max(maxY, value.translation.height + value.node.element.outerHeight());
   	});
+  	tree.element.width(maxX);
+  	tree.element.height(maxY);
+
+    // center the tree inside its parent container
+    if (tree.options.hasOwnProperty("center") && tree.options.center) {
+      // if options center is set to truthy value, center it
+      containerWidth = $(tree.jsav.container).width();
+      tree.element.css("left", (containerWidth - maxX)/2);
+    }
+
   	var offset = tree.element.position();
   	$.each(results, function(key, value) {
   	  var node = value.node;
