@@ -80,12 +80,8 @@
   }
   
   function treeLayout(tree) {
-	  var NODEGAP = 25,
-        NODESIZE = tree.root().element.outerWidth()/2,
-        results = {},
-        rootLeft = -NODESIZE,
-  		  rootRight = NODESIZE + (NODESIZE % 2 === 0 ? 0 : 1),
-  		  rootHeight = NODESIZE * 2;
+	  var NODEGAP = 40,
+        results = {};
     var compactArray = function(arr) {
           return $.map(arr, function(item) { return item || null; });
         };
@@ -106,20 +102,23 @@
   	calculateContours = function(node) {
   		var children = compactArray(node.children()),
   		  resnode = results[node.id()];
+			var nodeWidth = node.element.outerWidth()/2.0,
+			    nodeHeight = node.element.outerHeight();
   		if (children.length === 0) {
-  			resnode.contours = new TreeContours(rootLeft, rootRight, rootHeight, node.value());
-  			translateThisNode(node, -rootLeft, 0);
+  			resnode.contours = new TreeContours(-nodeWidth, nodeWidth + (nodeWidth % 2 === 0 ? 0 : 1), 
+  			                  nodeHeight, node.value());
+  			translateThisNode(node, -nodeWidth, 0);
   		} else {
   			var transSum = 0;
   			var firstChild = children[0];
   			resnode.contours = results[firstChild.id()].contours;
   			results[firstChild.id()].contours = null;
-  			translateNodes(firstChild, 0, NODEGAP + rootHeight);
+  			translateNodes(firstChild, 0, NODEGAP + nodeHeight);
 
   			for (var i = 1, l = children.length; i < l; i++) {
   				var child = children[i];
   				if (!child) { continue; }
-  				var childC = resnode.contours;
+  				var childC = results[child.id()].contours;
   				var trans = resnode.contours.calcTranslation(childC, NODEGAP);
   				transSum += trans;
 
@@ -127,11 +126,12 @@
   				resnode.contours.joinWith(childC, trans);
 
   				translateNodes(child, getXTranslation(firstChild) + trans - getXTranslation(child),
-                                  	NODEGAP + rootHeight);
+                                  	NODEGAP + nodeHeight);
   			}
 
   			var rootTrans = transSum / children.length;
-  			resnode.contours.addOnTop(rootLeft, rootRight, rootHeight, NODEGAP, rootTrans);
+  			resnode.contours.addOnTop(-nodeWidth, nodeWidth + (nodeWidth % 2 === 0 ? 0 : 1), 
+  			          nodeHeight, NODEGAP, rootTrans);
   			translateThisNode(node, getXTranslation(firstChild) + rootTrans, 0);
   		}
   	},
@@ -173,7 +173,7 @@
   	calculateFinalLayout = function(node, dx, dy) {
   	  var cLeftExtent = results[node.id()].contours.cLeftExtent;
   	  if (-cLeftExtent - getXTranslation(node) > 0) {
-  			translate(node, -cLeftExtent - this.getXTranslation(node), 0);
+  			translateThisNode(node, -cLeftExtent - getXTranslation(node), 0);
   		}
   		translateNodes(node, dx, dy);
   		propagateTranslations(node);
@@ -205,23 +205,28 @@
   }
   
   var edgeLayout = function(edge, start, end) {
-    var NODESIZE = edge.startnode.element.outerWidth()/2.0,
-      svgstyle = edge.jsav.getSvg().canvas.style,
-      svgleft = svgstyle.left,
-      svgtop = svgstyle.top,
-      pi = Math.PI;
-    var startpos = edge.startnode.element.offset(),
-        endpos = edge.endnode.element.offset(),
-        fromX =  Math.round(start.left + NODESIZE - parseInt(svgleft, 10)),
-  	    fromY = Math.round(start.top + NODESIZE - parseInt(svgtop, 10)),
-  	    toX = Math.round(end.left + NODESIZE - parseInt(svgleft, 10)),
-  	    toY = Math.round(end.top + NODESIZE - parseInt(svgtop, 10)),
+    var sElem = edge.startnode.element,
+        eElem = edge.endnode.element,
+        sWidth = sElem.outerWidth()/2.0,
+        eWidth = eElem.outerWidth()/2.0,
+        sHeight = sElem.outerHeight()/2.0,
+        eHeight = eElem.outerHeight()/2.0,
+        svgstyle = edge.jsav.getSvg().canvas.style,
+        svgleft = svgstyle.left,
+        svgtop = svgstyle.top,
+        pi = Math.PI,
+        startpos = sElem.offset(),
+        endpos = eElem.offset(),
+        fromX =  Math.round(start.left + sWidth - parseInt(svgleft, 10)),
+  	    fromY = Math.round(start.top + sHeight - parseInt(svgtop, 10)),
+  	    toX = Math.round(end.left + eWidth - parseInt(svgleft, 10)),
+  	    toY = Math.round(end.top + eHeight - parseInt(svgtop, 10)),
   	    fromAngle = normalizeAngle(2*pi - Math.atan2(toY - fromY, toX - fromX)),
         toAngle = normalizeAngle(2*pi - Math.atan2(fromY - toY, fromX - toX)),
         fromPoint = getNodeBorderAtAngle(0, edge.startnode.element, 
-                  {width: NODESIZE, height: NODESIZE, x: fromX, y: fromY}, fromAngle),
+                  {width: sWidth, height: sHeight, x: fromX, y: fromY}, fromAngle),
         toPoint = getNodeBorderAtAngle(1, edge.endnode.element, 
-                  {width: NODESIZE, height: NODESIZE, x: toX, y: toY}, toAngle)
+                  {width: eWidth, height: eHeight, x: toX, y: toY}, toAngle)
     edge.g.movePoints([fromPoint, toPoint]);
     
     function normalizeAngle(angle) {
@@ -353,7 +358,7 @@ TreeContours.prototype = {
 			for (var i = nextIndex + 1, l=this.rightCDims.length; i < l; i++) {
 				this.rightCDims[i] = null;
 			}
-			this.rightCDims = this.rightCDims.compact();
+			this.rightCDims = $.map(this.rightCDims, function(item) {return item;});
 			var middle = this.rightCDims[nextIndex];
 
 			for (i = 0, l=other.rightCDims.length; i < l; i++) {
