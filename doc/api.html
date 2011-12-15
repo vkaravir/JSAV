@@ -619,6 +619,20 @@ q.show();</pre>
 <p>Returns the value of the query parameter <code>name</code>. If no such
   parameter exists, return <code>undefined</code></p>
 
+<h3 class="apimethod">JSAV.utils.rand.numKey(min, max)</h3>
+<p>Returns a random integer number between <code>min</code> (inclusive) and
+  <code>max</code> (exclusive).</p>
+
+<h3 class="apimethod">JSAV.utils.rand.numKeys(min, max, num, opts)</h3>
+<p>Returns an array of <code>num</code> random integer numbers between 
+  <code>min</code> (inclusive) and <code>max</code> (exclusive). Optional
+  parameter <code>opts</code> is an object that can specify options:</p>
+  <ul>
+    <li><code>sorted</code> If set to true, the array will be sorted.</li>
+    <li><code>sortfunc</code> If sorted is set to true, this option can
+      be used to specify a function for sorting.</li>
+  </ul>  
+
 <h3 class="apimethod">JSAV.utils.dialog(html, options)</h3>
 <p>Shows a pop-up dialog with the given HTML as content. Returns an object
   with function <code>close()</code> that can be used to close the dialog.
