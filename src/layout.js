@@ -228,6 +228,7 @@
         toPoint = getNodeBorderAtAngle(1, edge.endnode.element, 
                   {width: eWidth, height: eHeight, x: toX, y: toY}, toAngle)
     edge.g.movePoints([fromPoint, toPoint]);
+    edge.layout();
     
     function normalizeAngle(angle) {
       var pi = Math.PI;
