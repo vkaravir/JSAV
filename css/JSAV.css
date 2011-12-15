@@ -246,11 +246,12 @@ a.jsavsettings {
   position: absolute;
 }
 .jsavnullnode {
-/*  min-width: 20px;*/
+  min-width: 20px;
   border-color: #eee;
   opacity: 0;
 }
 .jsavnulledge {
+  stroke: white;
   stroke: transparent;
   opacity: 0;
 }
