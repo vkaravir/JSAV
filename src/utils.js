@@ -141,7 +141,7 @@
       for (; num--; ) {
         keys.push(this.numKey(min, max));
       }
-      if (opts.sorted) { keys.sort(opts.sortfunc); }
+      if (opts.sorted) { keys.sort(opts.sortfunc || function(a, b) {return a - b;}); }
       return keys;
     }
   };
