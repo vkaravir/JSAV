@@ -136,11 +136,15 @@
       return Math.floor(this.random()*(max-min) + min);
     },
     numKeys: function(min, max, num, options) {
-      var opts = $.extend(true, {sorted: false}, options);
-      var keys = [];
-      for (; num--; ) {
-        keys.push(this.numKey(min, max));
-      }
+      var opts = $.extend(true, {sorted: false, test: function(dataArr) { return true; },
+                                tries: 10}, options);
+      var keys, tries = opts.tries, size = num;
+      do {
+        keys = [];
+        for (size = num; size--; ) {
+          keys.push(this.numKey(min, max));
+        }
+      } while (tries-- && !opts.test(keys))
       if (opts.sorted) { keys.sort(opts.sortfunc || function(a, b) {return a - b;}); }
       return keys;
     }
@@ -362,5 +366,8 @@ mixkey(math.random(), pool);
   6,    // chunks: at least six RC4 outputs for each double
   52    // significance: there are 52 significant digits in a double
 );
+/*!
+ End seedrandom.js
+ */
 
 })(jQuery);
