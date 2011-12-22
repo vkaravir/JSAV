@@ -381,7 +381,7 @@
   }
  
   JSAV._types.ds = {
-	AVArray: AVArray.prototype
+	AVArray: AVArray
   };
   // expose the data structures for the JSAV
   JSAV.ext.ds = {

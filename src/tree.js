@@ -550,12 +550,12 @@
   };
   
   var dstypes = JSAV._types.ds;
-  dstypes.Tree = Tree.prototype;
-  dstypes.TreeNode = TreeNode.prototype;
-  dstypes.Edge = Edge.prototype;
-  dstypes.BinaryTree = BinaryTree.prototype;
-  dstypes.BinarySearchTree = BinarySearchTree.prototype;
-  dstypes.BinaryTreeNode = BinaryTreeNode.prototype;
+  dstypes.Tree = Tree;
+  dstypes.TreeNode = TreeNode;
+  dstypes.Edge = Edge;
+  dstypes.BinaryTree = BinaryTree;
+  dstypes.BinarySearchTree = BinarySearchTree;
+  dstypes.BinaryTreeNode = BinaryTreeNode;
 
   JSAV.ext.ds.tree = function(options) {
     return new Tree(this, $.extend(true, {}, options));
