@@ -240,22 +240,32 @@
       return this.setvalue(index, newValue);
     }
   };
+  arrproto.newindex = function(value) {
+    var ind = $("<li class='jsavnode jsavindex'><span class='jsavvalue'>" + (value || "") + "</span></li>")
+    ind.attr("data-value", value);
+    return ind;
+  };
   arrproto.setvalue = JSAV.anim(function(index, newValue) {
+    var size = this.size();
+    while (index > size - 1) {
+      var newli = this.newindex();
+      this.element.append(newli);
+      size = this.size();
+    }
     var $index = this.element.find("li:eq(" + index + ")");
     var oldVal = $index.attr("data-value") || undefined;  
     $index.attr("data-value", newValue);
     $index.find(".jsavvalue").html("" + newValue);
-    return oldVal;
+    this.layout();
   });
   arrproto.initialize = function(data) {
     var el = this.options.element || $("<ol/>"),
-      liel, liels = $();
+      liel, liels = $()
+      self = this;
     el.addClass("jsavarray");
     this.options = jQuery.extend({display: true}, this.options);
     $.each(data, function(index, item) {
-      liel = $("<li class='jsavnode jsavindex'><span class='jsavvalue'>" + item + "</span></li>");
-      // set the data attribute for the index
-      liel.attr("data-value", item);
+      liel = self.newindex(item);
       liels = liels.add(liel);
     });
     el.append(liels);
@@ -364,6 +374,9 @@
     
     // default: return false    
     return false;
+  };
+  arrproto.clear = function() {
+    this.element.detach();
   };
  
   arrproto.toggleArrow = JSAV.anim(function(indices) {
