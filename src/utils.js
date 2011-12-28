@@ -117,7 +117,7 @@
     $dial.draggable();
     var center = function() { 
       $dialog.css({
-        top: scrollTop + (winHeight - $dialog.outerHeight())/2,
+        top: Math.max(scrollTop + (winHeight - $dialog.outerHeight())/2, 0),
         left: scrollLeft + (winWidth - $dialog.outerWidth())/2
       });
     };
