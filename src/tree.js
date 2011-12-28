@@ -491,7 +491,7 @@
   binnodeproto._setcss = JSAV.anim(_setcss);
   
   var BinarySearchTree = function(jsav, options) {
-   this.jsav = jsav;
+    this.jsav = jsav;
     this.options = options;
     var el = this.options.element || $("<div/>");
     el.addClass("jsavtree jsavbinarytree jsavbinarysearchtree");
@@ -511,15 +511,19 @@
       }
     }
   };
+  var defaultCompare = function(a, b) {
+    return a - b;
+  };
   var bstproto = BinarySearchTree.prototype;
   $.extend(bstproto, bintreeproto);
   bstproto.insert = function(value) {
+    var comp = this.options.compare;
     // helper function to recursively insert
     var ins = function(node, insval) {
       var val = node.value();
       if (!val || val === "jsavnull") { // no value in node
         node.value(insval);
-      } else if (val < insval) { // go left
+      } else if (comp(val, insval) > 0) { // go left
         if (node.left()) {
           ins(node.left(), insval);
         } else {
@@ -564,7 +568,7 @@
     return new BinaryTree(this, $.extend(true, {}, options));
   };
   JSAV.ext.ds.bst = function(options) {
-    return new BinarySearchTree(this, $.extend(true, {}, options));
+    return new BinarySearchTree(this, $.extend(true, {'compare': defaultCompare}, options));
   };
   JSAV.ext.ds.edge = function(options) {
     return new Edge(this, $.extend(true, {}, options));
