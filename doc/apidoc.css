@@ -36,7 +36,7 @@ p, ul, ol, dl {
 pre {
   margin-left: 20px ;
 }
-pre, code {
+pre, code, var {
   background-color: #eee;
   padding: 3px;
   border: 1px dashed #bbb;

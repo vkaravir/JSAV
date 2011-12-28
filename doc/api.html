@@ -355,7 +355,85 @@ Example:
 Example of extending to provide .opacity(indices, value) function as a
 shortcut to set the opacity of indices.
 </p> 
-    
+
+
+
+<h2>Tree Data Structure API</h2>
+
+<p>
+Currently, JSAV supports tree types of trees: common tree, binary tree, and binary search tree. The structures form a "class" hierarchy: Tree &larr; Binary Tree &larr; Binary Search Tree and TreeNode &larr; BinaryTreeNode.
+</p>
+
+<h3 class="apimethod">.ds.tree([options]) and .ds.bintree([options]) and .ds.bst([options])</h3>
+<p>These functions of a JSAV instance initialize a new tree, binary tree, or binary search tree. The returned tree instance is controlled through a collection of methods explained next.</p>
+
+<p>Options that the optional parameter can specify:</p>
+<ul>
+<li>layout: Defines choices of layout (currently only the default layout is supported).</li>
+<li>visible: Boolean to determine if initially the tree is shown or
+      not. Default true.</li>
+<li>center: Boolean to determine if tree should be automatically centered
+  within its container. Defaults to true.</li>
+</ul>
+
+<h3 class="apimethod">.css(propertyName)</h3>
+<p>Returns the value for the given CSS property. This function exists for all trees, nodes, and edges.</p>
+
+<h3 class="apimethod">.css(propertyName, value)</h3>
+<p>Animates the value of the given CSS property to value. This function exists for all trees, nodes, and edges.</p>
+<h3 class="apimethod">.css({map})</h3>
+<p>Animates values of the CSS properties in the map to the given values. This function exists for all trees, nodes, and edges. For example</p>
+<pre>
+  tree.css({color: "green", "font-size": "20px"});
+</pre>
+<p>would animate the color and font-size properties of the tree.</p>
+
+<h3 class="apimethod">.id([newId])</h3>
+<p>Returns the ID of the structure. If optional parameter <var>newId</var> is given, sets the ID of the structure. The given ID should be unique. This function exists for all trees, nodes, and edges.</p>
+
+<h3 class="apimethod">.root([node])</h3>
+<p>Returns the root of this tree. If the optional <var>node</var> parameter is given, the root of the tree is set. This function exists for all trees.</p>
+
+<h3 class="apimethod">.newNode(value)</h3>
+<p>Creates a new node that can be added to this tree. "Subclasses" override this to create nodes suited for the tree, so this method should be used when creating new nodes. This function exists for all trees.</p>
+
+<h3 class="apimethod">.height()</h3>
+<p>Returns the height of the tree. This function exists for all trees</p>
+
+<h3 class="apimethod">.layout()</h3>
+<p>This function (re)calculates the layout for the tree. Note, that the library does not do this automatically. That means that after changing the tree, you should call this manually at the end of each animation step. This function exists for all trees.</p>
+
+<h3 class="apimethod">.insert(value)</h3>
+<p>For binary search tree, this function inserts the given value to the tree.</p>
+
+<h2>Tree Node API</h2>
+<p>The following functions exist for both tree nodes and binary tree nodes.</p>
+<h3 class="apimethod">.value([newValue])</h3>
+<p>Returns the value stored in this node. If the optional <var>newValue</var> parameter is given, the value is set to the given value.</p>
+<h3 class="apimethod">.parent([newParent])</h3>
+<p>Returns the parent node of this node. If the optional <var>newParent</var> parameter is given, the parent node is set.</p>
+<h3 class="apimethod">.edgeToParent([newEdge])</h3>
+<p>Returns the edge that connects this node to its parent. If the optional <var>newEdge</var> parameter is given, the edge to parent is set.</p>
+<h3 class="apimethod">.child(pos)</h3>
+<p>Returns the <var>pos</var>:th child of this node.</p>
+<h3 class="apimethod">.child(pos, node)</h3>
+<p>Sets the <var>pos</var>:th child to the given value. The <var>node</var> can be a value or a node of correct type to the node.</p>
+<h3 class="apimethod">.child(node)</h3>
+<p>Adds a child node to this node. The <var>node</var> can be a value or a node of correct type to the node.</p>
+
+<h2>Binary Tree Node API</h2>
+<h3 class="apimethod">.left([node])</h3>
+<p>Returns the left child or undefined if node has no left child. If optional parameter <var>node</var> is given, sets the left child. The parameter can be a value or a binary tree node.</p>
+<h3 class="apimethod">.right([node])</h3>
+<p>Returns the right child or undefined if node has no right child. If optional parameter <var>node</var> is given, sets the right child. The parameter can be a value or a binary tree node.</p>
+  
+<h2>Edge structure API</h2>
+<h3 class="apimethod">start([node])</h3>
+<p>Returns the start node of this edge. If the optional <var>node</var> parameter is given, sets the start node of this edge.</p>
+<h3 class="apimethod">end([node])</h3>
+<p>Returns the end node of this edge. If the optional <var>node</var> parameter is given, sets the end node of this edge.</p>
+
+
 <h2>Label API</h2>
 
 UI elements such as arrays can take a label.
