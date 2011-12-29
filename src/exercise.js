@@ -53,6 +53,18 @@
       this.showGrade = this.options.showGrade;
     }
   };
+  var allEqual = function(initial, model, compare) {
+    if ($.isArray(initial)) {
+      for (var i = 0; i < initial.length; i++) {
+        if (!model[i].equals(initial[i], compare[i])) {
+          return false;
+        }
+      }
+      return true;
+    } else {
+      return model.equals(initial, compare);
+    }
+  }
   var exerproto = Exercise.prototype;
   exerproto.grade = function() {
     // behavior in a nutshell:
@@ -68,7 +80,6 @@
     if (!this.modelav) {
       this.modelanswer();
     }
-    // TODO: check types and sizes of initial and model structures
     this.modelav.begin();
     $.fx.off = true;
     var totalSteps = 0,
@@ -90,16 +101,9 @@
       if (forwModel) {
         totalSteps++;
         if (forwModel && forwStudent) {
-          if ($.isArray(this.initialStructures)) {
-            for (var i = 0; i < this.initialStructures.length; i++) {
-              if (this.modelStructures[i].equals(this.initialStructures[i], this.options.compare[i])) {
-                this.score.correct++;
-                correct = true;
-              }
-            }
-          } else if (this.modelStructures.equals(this.initialStructures, this.options.compare)) {
-            this.score.correct++;
+          if (allEqual(this.initialStructures, this.modelStructures, this.options.compare)) {
             correct = true;
+            this.score.correct++;
           }
         }
       }

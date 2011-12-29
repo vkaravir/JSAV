@@ -71,8 +71,8 @@
     }
   };
   varproto.equals = function(otherVariable) {
-    if (!otherVariable || typeof otherVariable !== "Object") { return false; }
-    return this.value() == otherVariable.value;
+    if (!otherVariable || typeof otherVariable !== "object") { return false; }
+    return this.value() == otherVariable.value();
   };
   
   JSAV.ext.variable = function(value, options) {
