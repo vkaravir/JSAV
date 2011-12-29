@@ -49,12 +49,12 @@ if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
       translateY: function(dy) {
         return this.translate(0, dy);
       },
-      _setattrs: JSAV.anim(function(props) {
+      _setattrs: JSAV.anim(function(props, dontAnimate) {
         var oldProps = $.extend(true, {}, props);
         for (var i in props) {
           oldProps[i] = this.rObj.attr(i);
         }
-        if (!this.jsav.RECORD && !$.fx.off) { // only animate when playing, not when recording
+        if (!this.jsav.RECORD && !$.fx.off && !dontAnimate) { // only animate when playing, not when recording
           this.rObj.animate( props, this.jsav.SPEED);
         } else {
           for (var i in props) {
@@ -124,7 +124,7 @@ if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
         pathElem = newPath[i];
         np += pathElem.join();
       }
-      this._setattrs({"path": np});
+      this._setattrs({"path": np}, ("" + currPath) === "M-1,-1L-1,-1");
       return this;
     };
     
@@ -230,6 +230,17 @@ if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
     Polyline.prototype.translatePoint = translatePoint;
     Polyline.prototype.movePoints = movePoints;
 
+    var Set = function(jsav, raphael, props) {
+      this.rObj = raphael.set();
+      init(this, jsav, props);
+      return this;
+    };
+    var setproto = Set.prototype;
+    $.extend(setproto, common);
+    setproto.push = function(g) {
+      this.rObj.push(g.rObj);
+      return this;
+    };
 
     JSAV.ext.g = {
       circle: function(x, y, r, props) {
@@ -249,6 +260,9 @@ if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
       },
       polygon: function(points, props) {
         return new Polyline(this, this.getSvg(), points, true, props);
+      },
+      set: function() {
+        return new Set(this, this.getSvg());
       }
     };
   })(jQuery, Raphael);

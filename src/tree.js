@@ -290,10 +290,17 @@
     this.endnode = end;
     this.options = $.extend(true, {"display": true}, options);
     this.container = start.container;
-    this.g = this.jsav.g.line(start.element.offset().left,
+    var startOffset = start.element.offset(),
+        endOffset = end.element.offset();
+    if (startOffset.left === endOffset.left && startOffset.top === endOffset.top) {
+      // layout not done yet
+      this.g = this.jsav.g.line(-1, -1, -1, -1);
+    } else {
+      this.g = this.jsav.g.line(start.element.offset().left,
                               start.element.offset().top,
                               end.element.offset().left,
                               end.element.offset().top);
+    }
 
     var visible = (typeof this.options.display === "boolean" && this.options.display === true);
     this.g.rObj.attr({"opacity": 0});

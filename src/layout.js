@@ -289,7 +289,6 @@
     "_default": edgeLayout
   };
   JSAV.ext.layout = layouts;
-})();
 
 TreeContours = function(left, right, height, data) {
 		this.cHeight = height;
@@ -444,3 +443,4 @@ TreeContours.prototype = {
 		return displacement;
 	}
 };
+})();
