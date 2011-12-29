@@ -4,7 +4,7 @@
 */
 (function($) {
   var jsanim = JSAV.anim;
-  JSAV.ext.ia = {
+  JSAV.ext.effects = {
     swap: function($str1, $str2, translateY) {
       var $val1 = $str1.find("span.jsavvalue"),
           $val2 = $str2.find("span.jsavvalue"),

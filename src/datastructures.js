@@ -174,7 +174,7 @@
   function realSwap(index1, index2, options) {
     var $pi1 = $(this.element).find("li:eq(" + index1 + ")"), // index
       $pi2 = $(this.element).find("li:eq(" + index2 + ")");
-    this.jsav.ia.swap($pi1, $pi2);
+    this.jsav.effects.swap($pi1, $pi2);
   }
   arrproto.swap = JSAV.anim(function(index1, index2, options) {
     realSwap.apply(this, arguments);
