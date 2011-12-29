@@ -299,7 +299,7 @@
           return true; // if tests passed, arrays are equal
         }
       }
-    } else if (otherArray instanceof AVArray) { // JSAV array
+    } else { // JSAV array
       len = otherArray.size();
       if (this.size() !== len) { // size check
         return false;
