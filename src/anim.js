@@ -131,22 +131,22 @@
       that.begin(); // go to beginning
       clearPlaying(); // clear the flag
     };
-    var backwardHandler = function(e) {
+    var backwardHandler = function(e, filter) {
       e.preventDefault();
       e.stopPropagation();
       e.stopPropagation();
       if ($controls.hasClass(playingCl)) { return; }
       $controls.addClass(playingCl);
-      that.backward();
+      that.backward(filter);
       // clear playing flag after a timeout for animations to end
       setTimeout(clearPlaying, 50);
     };
-    var forwardHandler = function(e) {
+    var forwardHandler = function(e, filter) {
       e.preventDefault();
       e.stopPropagation();
       if ($controls.hasClass(playingCl)) { return; }
       $controls.addClass(playingCl);
-      that.forward();
+      that.forward(filter);
       setTimeout(clearPlaying, 50);
     };
     var endHandler = function(e) {
