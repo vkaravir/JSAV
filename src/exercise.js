@@ -11,7 +11,7 @@
     this.jsav = jsav;
     this.options = jQuery.extend({reset: function() { }, controls: null, feedback: "atend",
                                   feedbackSelectable: true, fixmode: "undo",
-                                  fixmodeSelectable: true}, options);
+                                  fixmodeSelectable: true, grader: "default"}, options);
     // initialize controls
     var cont = $(this.options.controls),
         self = this;
@@ -64,7 +64,90 @@
     } else {
       return model.equals(initial, compare);
     }
-  }
+  };
+  var graders = {
+    "default": function() {
+      var totalSteps = 0,
+          studentSteps = 0,
+          correct = true,
+          forwStudent = true,
+          forwModel = true,
+          modelTotal = this.modelav.totalSteps(), // "cache" the size
+          studentTotal = this.jsav.totalSteps(); // "cache" the size
+
+      this.score.correct = 0;
+      this.score.student = 0;
+      while (correct && forwStudent && forwModel && this.modelav.currentStep() < modelTotal && 
+            this.jsav.currentStep() < studentTotal) {
+        forwStudent = this.jsav.forward(gradeStepFunction);
+        forwModel = this.modelav.forward(gradeStepFunction);
+        if (forwStudent) { studentSteps++; }
+        correct = false;
+        if (forwModel) {
+          totalSteps++;
+          if (forwModel && forwStudent) {
+            if (allEqual(this.initialStructures, this.modelStructures, this.options.compare)) {
+              correct = true;
+              this.score.correct++;
+            }
+          }
+        }
+      }
+      // figure out the total number of graded steps in model answer
+      forwModel = true;
+      while (forwModel && this.modelav.currentStep() < modelTotal) {
+        forwModel = this.modelav.forward(gradeStepFunction);
+        if (forwModel) {
+          totalSteps++;
+        }
+      }
+      // figure out the total number of graded steps in student answer
+      forwStudent = true;
+      while (forwStudent && this.jsav.currentStep() < studentTotal) {
+        forwStudent = this.jsav.forward(gradeStepFunction);
+        if (forwStudent) {
+          studentSteps++;
+        }
+      }
+      this.score.total = totalSteps;
+      this.score.student = studentSteps;
+    },
+    finder: function() {
+      var totalSteps = 0,
+          studentSteps = 0,
+          cont = true,
+          forwStudent = true,
+          forwModel = true,
+          modelTotal = this.modelav.totalSteps(), // "cache" the size
+          studentTotal = this.jsav.totalSteps(); // "cache" the size
+
+      this.score.correct = 0;
+      this.score.student = 0;
+      while (cont && this.modelav.currentStep() < modelTotal && 
+            this.jsav.currentStep() < studentTotal) {
+        this.modelav.forward(gradeStepFunction);
+        totalSteps++;
+        while (!allEqual(this.initialStructures, this.modelStructures, this.options.compare) &&
+          this.jsav.currentStep() < studentTotal) {
+            this.jsav.forward();
+        }
+        if (allEqual(this.initialStructures, this.modelStructures, this.options.compare)) {
+          this.score.correct++;
+        } else {
+          cont = false;
+        }
+      }
+      // figure out the total number of graded steps in model answer
+      forwModel = true;
+      while (forwModel && this.modelav.currentStep() < modelTotal) {
+        forwModel = this.modelav.forward(gradeStepFunction);
+        if (forwModel) {
+          totalSteps++;
+        }
+      }
+      this.score.total = totalSteps;
+    }
+  };
   var exerproto = Exercise.prototype;
   exerproto.grade = function() {
     // behavior in a nutshell:
@@ -82,54 +165,10 @@
     }
     this.modelav.begin();
     $.fx.off = true;
-    var totalSteps = 0,
-        studentSteps = 0,
-        correct = true,
-        forwStudent = true,
-        forwModel = true,
-        modelTotal = this.modelav.totalSteps(), // "cache" the size
-        studentTotal = this.jsav.totalSteps(); // "cache" the size
-
-    this.score.correct = 0;
-    this.score.student = 0;
-    while (correct && forwStudent && forwModel && this.modelav.currentStep() < modelTotal && 
-           this.jsav.currentStep() < studentTotal) {
-      forwStudent = this.jsav.forward(gradeStepFunction);
-      forwModel = this.modelav.forward(gradeStepFunction);
-      if (forwStudent) { studentSteps++; }
-      correct = false;
-      if (forwModel) {
-        totalSteps++;
-        if (forwModel && forwStudent) {
-          if (allEqual(this.initialStructures, this.modelStructures, this.options.compare)) {
-            correct = true;
-            this.score.correct++;
-          }
-        }
-      }
-    }
-    var currModelStep = this.modelav.currentStep();
-    // figure out the total number of graded steps in model answer
-    forwModel = true;
-    while (forwModel && this.modelav.currentStep() < modelTotal) {
-      forwModel = this.modelav.forward(gradeStepFunction);
-      if (forwModel) {
-        totalSteps++;
-      }
-    }
-    // figure out the total number of graded steps in student answer
-    forwStudent = true;
-    while (forwStudent && this.jsav.currentStep() < studentTotal) {
-      forwStudent = this.jsav.forward(gradeStepFunction);
-      if (forwStudent) {
-        studentSteps++;
-      }
-    }
-    this.modelav.jumpToStep(currModelStep);
+    graders[this.options.grader].call(this);
+    this.modelav.begin();
     this.jsav.jumpToStep(origStep);
     $.fx.off = false;
-    this.score.total = totalSteps;
-    this.score.student = studentSteps;
     return this.score;
   };
   exerproto.showGrade = function() {
