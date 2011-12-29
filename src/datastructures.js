@@ -173,50 +173,8 @@
   };
   function realSwap(index1, index2, options) {
     var $pi1 = $(this.element).find("li:eq(" + index1 + ")"), // index
-      $pi2 = $(this.element).find("li:eq(" + index2 + ")"),
-      $i1 = $pi1.find("span.jsavvalue"),
-      $i2 = $pi2.find("span.jsavvalue"),
-      posdiff = JSAV.position($i1).left - JSAV.position($i2).left,
-      indices = $($pi1).add($pi2),
-      i1prevStyle = $pi1.getstyles("color", "background-color"),
-      i2prevStyle = $pi2.getstyles("color", "background-color"),
-      speed = this.jsav.SPEED/5,
-      tmp = $pi1.html(),
-      $ind1label, $ind2label;
-    // first swap the contents of the elements..
-    $pi1.html($pi2.html());
-    $pi2.html(tmp);
-    // swap the actual values in the array
-    tmp = $pi1.attr("data-value");
-    $pi1.attr("data-value", $pi2.attr("data-value"));
-    $pi2.attr("data-value", tmp);
-    // .. get the value elements again since the content swap lost the nodes ..
-    $i1 = $pi1.find("span.jsavvalue");
-    $i2 = $pi2.find("span.jsavvalue");
-    // .. change back the index labels ..
-    if (this.options.indexed) {
-      $ind1label = $pi1.find("span.jsavindexlabel");
-      $ind2label = $pi2.find("span.jsavindexlabel");
-      tmp = $ind1label.html();
-      $ind1label.html($ind2label.html());
-      $ind2label.html(tmp);
-    }
-    if (!this.jsav.RECORD && !$.fx.off) {  // only animate when playing, not when recording
-      // .. then set the position so that the array appears unchanged..
-      $i2.css({"transform": "translateX(" + (posdiff) + "px)"});
-      $i1.css({"transform": "translateX(" + (-posdiff) + "px)"});
-      // .. animate the color ..
-      indices.animate({"color": "red", "background-color": "pink"}, 3*speed, function() {
-        // ..animate the translation to 0, so they'll be in their final positions..
-        $i2.animate({"transform": "translateX(0px)"}, 7*speed, 'linear');
-        $i1.animate({"transform": "translateX(0px)"}, 7*speed, 'linear', 
-          function() {
-            // ..and finally animate to the original styles.
-            $pi1.animate(i1prevStyle, speed);
-            $pi2.animate(i2prevStyle, speed);
-        });
-      });
-    }
+      $pi2 = $(this.element).find("li:eq(" + index2 + ")");
+    this.jsav.ia.swap($pi1, $pi2);
   }
   arrproto.swap = JSAV.anim(function(index1, index2, options) {
     realSwap.apply(this, arguments);
@@ -376,7 +334,7 @@
     return false;
   };
   arrproto.clear = function() {
-    this.element.detach();
+    this.element.remove();
   };
  
   arrproto.toggleArrow = JSAV.anim(function(indices) {

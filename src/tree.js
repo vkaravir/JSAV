@@ -27,10 +27,11 @@
     return [oldProps];
   };
   var valstring = function(value) {
+    var valstr = "<span class='jsavvalue'>";
     if (value === "jsavnull") {
-      return "";
+      return valstr + "</span>";
     }
-    return value;
+    return valstr + value + "</span>";
   };
   
   
@@ -143,7 +144,7 @@
   };
   nodeproto._setvalue = JSAV.anim(function(newValue) {
     var oldVal = this.element.attr("data-value") || "";
-    this.element.text(valstring(newValue)).attr("data-value", newValue);
+    this.element.html(valstring(newValue)).attr("data-value", newValue);
     return [oldVal];
   });
   nodeproto.parent = function(newParent) {
@@ -482,7 +483,7 @@
   binnodeproto._setvalue = JSAV.anim(function(newValue) {
     var oldVal = this.element.removeClass("jsavnullnode")
           .attr("data-value");
-    this.element.text(valstring(newValue)).attr("data-value", newValue);
+    this.element.html(valstring(newValue)).attr("data-value", newValue);
     if (newValue === "jsavnull") {
       this.element.addClass("jsavnullnode");
     }
