@@ -201,7 +201,7 @@
       return this.setvalue(index, newValue);
     }
   };
-  arrproto.newindex = function(value) {
+  arrproto._newindex = function(value) {
     var ind = $("<li class='jsavnode jsavindex'><span class='jsavvalue'>" + (value || "") + "</span></li>")
     ind.attr("data-value", value);
     return ind;
@@ -209,7 +209,7 @@
   arrproto.setvalue = JSAV.anim(function(index, newValue) {
     var size = this.size();
     while (index > size - 1) {
-      var newli = this.newindex();
+      var newli = this._newindex();
       this.element.append(newli);
       size = this.size();
     }
@@ -221,14 +221,13 @@
   });
   arrproto.initialize = function(data) {
     var el = this.options.element || $("<ol/>"),
-      liel, liels = $()
-      self = this;
+      liel, liels = $();
     el.addClass("jsavarray");
     this.options = jQuery.extend({display: true}, this.options);
-    $.each(data, function(index, item) {
-      liel = self.newindex(item);
+    for (var i=0; i < data.length; i++) {
+      liel = this._newindex(data[i]);
       liels = liels.add(liel);
-    });
+    }
     el.append(liels);
     if (!this.options.element) {
       $(this.jsav.container).append(el);
