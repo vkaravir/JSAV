@@ -123,18 +123,21 @@
 
       this.score.correct = 0;
       this.score.student = 0;
-      while (cont && this.modelav.currentStep() < modelTotal && 
+      while (forwModel && cont && this.modelav.currentStep() < modelTotal && 
             this.jsav.currentStep() < studentTotal) {
-        this.modelav.forward(gradeStepFunction);
-        totalSteps++;
-        while (!allEqual(this.initialStructures, this.modelStructures, this.options.compare) &&
-          this.jsav.currentStep() < studentTotal) {
-            this.jsav.forward();
-        }
-        if (allEqual(this.initialStructures, this.modelStructures, this.options.compare)) {
-          this.score.correct++;
-        } else {
-          cont = false;
+        forwModel = this.modelav.forward(gradeStepFunction);
+        if (forwModel) {
+          totalSteps++;
+          forwStudent = true;
+          while (forwStudent && !allEqual(this.initialStructures, this.modelStructures, this.options.compare) &&
+            this.jsav.currentStep() < studentTotal) {
+              forwStudent = this.jsav.forward();
+          }
+          if (allEqual(this.initialStructures, this.modelStructures, this.options.compare)) {
+            this.score.correct++;
+          } else {
+            cont = false;
+          }
         }
       }
       // figure out the total number of graded steps in model answer
