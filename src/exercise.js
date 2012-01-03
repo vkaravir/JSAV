@@ -229,10 +229,12 @@
     this.jsav.backward(); // the empty new step
     this.jsav.backward(); // the new graded step
     // undo until the previous graded step
-    if (this.jsav.backward(gradeStepFunction)) {
+    if (this.options.grader === "default" && this.jsav.backward(gradeStepFunction)) {
       // if such step was found, redo it
       this.jsav.forward();
       this.jsav.step();
+    } else if (this.options.grader !== "default") {
+      // other than default grader, finder grader does not use graded steps
     } else {
       // ..if not, the first student step was incorrent and we can rewind to beginning
       this.jsav.begin();
