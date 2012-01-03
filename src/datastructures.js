@@ -193,7 +193,10 @@
   arrproto.size = function() { return this.element.find("li").size(); };
   arrproto.value = function(index, newValue) {
     if (!newValue) {
-      return parseInt(this.element.find("li:eq(" + index + ")").attr("data-value"), 10);
+      var val = this.element.find("li:eq(" + index + ")").attr("data-value"),
+          intval = parseInt(val, 10);
+      if (isNaN(intval)) { return val || ""; 
+      } else return intval;
     } else {
       return this.setvalue(index, newValue);
     }
