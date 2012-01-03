@@ -157,6 +157,11 @@
     if (typeof newParent === "undefined") {
       return this.parentnode;
     } else {
+      if (!this.edgetoparent) {
+        this.edgetoparent = new Edge(this.jsav, this, newParent);
+      } else {
+        this.edgetoparent.end(newParent);
+      }
       this.parentnode = newParent;
     }
   };
