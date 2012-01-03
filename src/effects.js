@@ -32,13 +32,13 @@
       // ..and finally animate..
       if (!this.RECORD && !$.fx.off) {  // only animate when playing, not when recording
         // .. then set the position so that the array appears unchanged..
-        $val1.css({"transform": "translateX(" + (posdiffX) + "px) translateY(" + (posdiffY) + "px)"});
-        $val2.css({"transform": "translateX(" + (-posdiffX) + "px) translateY(" + (-posdiffY) + "px)"});
+        $val1.css({"transform": "translate(" + (posdiffX) + "px, " + (posdiffY) + "px)"});
+        $val2.css({"transform": "translate(" + (-posdiffX) + "px, " + (-posdiffY) + "px)"});
         // .. animate the color ..
         $both.animate({"color": "red", "background-color": "pink"}, 3*speed, function() {
           // ..animate the translation to 0, so they'll be in their final positions..
-          $val1.animate({"transform": "translateX(0px) translateY(0px)"}, 7*speed, 'linear');
-          $val2.animate({"transform": "translateX(0px) translateY(0px)"}, 7*speed, 'linear', 
+          $val1.animate({"transform": "translate(0, 0)"}, 7*speed, 'linear');
+          $val2.animate({"transform": "translate(0, 0)"}, 7*speed, 'linear', 
             function() {
               // ..and finally animate to the original styles.
               $str1.animate(str1prevStyle, speed);
