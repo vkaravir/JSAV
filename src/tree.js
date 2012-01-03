@@ -36,6 +36,11 @@
   
   
   var Tree = function(jsav, options) {
+    this.init(jsav, options);
+  };
+  var treeproto = Tree.prototype;
+  JSAV.ext.ds.extend("common", treeproto);
+  treeproto.init = function(jsav, options) {
     this.jsav = jsav;
     this.options = options;
     var el = this.options.element || $("<div/>");
@@ -56,8 +61,6 @@
       }
     }
   };
-  var treeproto = Tree.prototype;
-  JSAV.ext.ds.extend("common", treeproto);
   treeproto._setrootnode = JSAV.anim(function(node) {
     var oldroot = this.rootnode;
     this.rootnode = node;
@@ -110,12 +113,17 @@
   };
   
   var TreeNode = function(container, value, parent, options) {
+    this.init(container, value, parent, options);
+  };
+  var nodeproto = TreeNode.prototype;
+  JSAV.ext.ds.extend("common", nodeproto);
+  nodeproto.init = function(container, value, parent, options) {
     this.jsav = container.jsav;
     this.container = container;
     this.parentnode = parent;
     this.options = $.extend(true, {display: true}, options);
-    var el = $("<div>" + valstring(value) + "</div>").addClass("jsavnode jsavtreenode jsavbinarynode")
-              .attr("data-value", value).attr("data-node", this);
+    var el = $("<div>" + valstring(value) + "</div>").addClass("jsavnode jsavtreenode")
+              .attr({"data-value": value, "id": this.id() }).data("node", this);
     this.element = el;
     this.container.element.append(el);
     el.css("display", "hidden");
@@ -132,8 +140,6 @@
     }
     this.childnodes = [];
   };
-  var nodeproto = TreeNode.prototype;
-  JSAV.ext.ds.extend("common", nodeproto);
   nodeproto.value = function(newVal) {
     if (typeof newVal === "undefined") {
       return this.element.attr("data-value");
@@ -385,25 +391,8 @@
   };
   
   var BinaryTree = function(jsav, options) {
-    this.jsav = jsav;
-    this.options = options;
-    var el = this.options.element || $("<div/>");
-    el.addClass("jsavtree jsavbinarytree");
-    if (!this.options.element) {
-      $(this.jsav.container).append(el);
-    }
-    this.element = el;
-    this.rootnode = this.newNode("");
-    //this.layout();
-    el.css("display", "hidden");
-    var visible = (typeof this.options.display === "boolean" && this.options.display === true);
-    if (visible) {
-      if (this.jsav.currentStep() === 0) { // at beginning, just make it visible
-        el.css("display", "block");
-      } else { // add effect to show otherwise
-        this.show();
-      }
-    }
+    this.init(jsav, options);
+    this.element.addClass("jsavbinarytree");
   };
   var bintreeproto = BinaryTree.prototype;
   $.extend(bintreeproto, treeproto);
@@ -412,27 +401,8 @@
   };
   
   var BinaryTreeNode = function(container, value, parent, options) {
-    this.jsav = container.jsav;
-    this.container = container;
-    this.parentnode = parent;
-    this.childnodes = [];
-    this.options = $.extend(true, {display: true}, options);
-    var el = $("<div>" + valstring(value) + "</div>").addClass("jsavnode jsavtreenode jsavbinarynode")
-              .attr({"data-value": value, "id": this.id() }).data("node", this);
-    this.element = el;
-    this.container.element.append(el);
-    el.css("display", "hidden");
-    var visible = (typeof this.options.display === "boolean" && this.options.display === true);
-    if (visible) {
-      if (this.jsav.currentStep() === 0) { // at beginning, just make it visible
-        el.css("display", "block");
-      } else { // add effect to show otherwise
-        this.show();
-      }
-    }
-    if (parent) {
-      this.edgetoparent = new Edge(this.jsav, this, parent);
-    }
+    this.init(container, value, parent, options);
+    this.element.addClass("jsavbinarynode");
   };
   var binnodeproto = BinaryTreeNode.prototype;
   $.extend(binnodeproto, nodeproto);
@@ -499,25 +469,8 @@
   binnodeproto._setcss = JSAV.anim(_setcss);
   
   var BinarySearchTree = function(jsav, options) {
-    this.jsav = jsav;
-    this.options = options;
-    var el = this.options.element || $("<div/>");
-    el.addClass("jsavtree jsavbinarytree jsavbinarysearchtree");
-    if (!this.options.element) {
-      $(this.jsav.container).append(el);
-    }
-    this.element = el;
-    this.rootnode = this.newNode("", null);
-    //this.layout();
-    el.css("display", "hidden");
-    var visible = (typeof this.options.display === "boolean" && this.options.display === true);
-    if (visible) {
-      if (this.jsav.currentStep() === 0) { // at beginning, just make it visible
-        el.css("display", "block");
-      } else { // add effect to show otherwise
-        this.show();
-      }
-    }
+    this.init(jsav, options);
+    this.element.addClass("jsavbinarysearchtree");
   };
   var defaultCompare = function(a, b) {
     return a - b;
