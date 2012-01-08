@@ -17,7 +17,7 @@
   opacity: 1;
 }
 
-.jsavhighlight {
+.jsavhighlight, .jsavarray.jsavbararray .jsavindex.jsavhighlight  {
   background-color: yellow;
   border-width: 4px;
   font-size: 120%;  
