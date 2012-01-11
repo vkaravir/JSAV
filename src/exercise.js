@@ -275,9 +275,37 @@
       fix(this.modelStructures);
     };
   };
+  exerproto._jsondump = function() {
+    var jsav = this.jsav,
+        states = [],
+        forw = true,
+        initial = this.initialStructures,
+        origStep = jsav.currentStep(),
+        oldFx = $.fx.off || false;
+    $.fx.off = true;
+    var getstate = function() {
+      if ($.isArray(initial)) {
+        var state = [];
+        for (var i=0, l=initial.length; i < l; i++) {
+          state.push(initial[i].state());
+        }
+        return state;
+      } else {
+        return initial.state();
+      }
+    };
+    jsav.begin();
+    while (forw) {
+      states.push(getstate());
+      forw = jsav.forward();
+    }
+    this.jsav.jumpToStep(origStep);
+    $.fx.off = oldFx;
+  };
+
   
   JSAV.ext.exercise = function(model, reset, compare, options) {
-    var opts = $.extend({model: model, reset: reset, compare:compare}, options)
+    var opts = $.extend({model: model, reset: reset, compare:compare}, options);
     return new Exercise(this, opts);
     // options:
     //  - reset: a function that initializes the exercise and returns the structure(s) to 
