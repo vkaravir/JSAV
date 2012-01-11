@@ -5,6 +5,9 @@
   border: 1px solid black;
   background-color: white;
 }
+.jsavcanvas {
+  position: relative;
+}
 
 .jsavnode {
   width: 45px;

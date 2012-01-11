@@ -230,7 +230,7 @@
     }
     el.append(liels);
     if (!this.options.element) {
-      $(this.jsav.container).append(el);
+      $(this.jsav.canvas).append(el);
     }
     this.element = el;
     this.layout();

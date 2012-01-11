@@ -280,7 +280,7 @@ if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
     } else if (this.options.after) {
       this.element.insertAfter(this.options.before.element);
     } else {
-      $(this.jsav.container).append(this.element);
+      $(this.jsav.canvas).append(this.element);
     }
     if (!(typeof options.display === "boolean" && options.display === true)) {
       this.show();

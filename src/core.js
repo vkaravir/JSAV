@@ -13,11 +13,10 @@
   var jsavproto = JSAV.prototype;
   jsavproto.getSvg = function() {
     if (!this.svg) { // lazily create the SVG overlay only when needed
-      this.svg = Raphael(this.container[0]);
+      this.svg = Raphael(this.canvas[0]);
+      this.svg.renderfix();
       var style = this.svg.canvas.style;
       style.position = "absolute";
-      style.top = this.container.position().top + "px";
-      style.left = this.container.position().left + "px";
     }
     return this.svg;
   };
@@ -36,6 +35,10 @@
         this.container = $(arguments[0]); // make sure it is jQuery object
       }
       this.container.addClass("jsavcontainer");
+      this.canvas = this.container.find(".jsavcanvas");
+      if (this.canvas.size() === 0) {
+        this.canvas = $("<div />").addClass("jsavcanvas").appendTo(this.container);
+      }
       this.options = arguments[1] || { }
       this.RECORD = true;
       jQuery.fx.off = true; // by default we are recording changes, not animating them

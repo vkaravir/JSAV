@@ -46,7 +46,7 @@
     var el = this.options.element || $("<div/>");
     el.addClass("jsavtree jsavcommontree");
     if (!this.options.element) {
-      $(this.jsav.container).append(el);
+      $(this.jsav.canvas).append(el);
     }
     this.element = el;
     this.rootnode = this.newNode("", null);

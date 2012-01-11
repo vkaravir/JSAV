@@ -13,7 +13,7 @@
     }
     // width of array expected to be last items position + its width
     var width = $lastItem.position().left + $lastItem.outerWidth(),
-      containerWidth = $(array.jsav.container).width();
+      containerWidth = $(array.jsav.canvas).width();
     array.element.css("left", (containerWidth - width)/2);
   }
   
@@ -198,7 +198,7 @@
     // center the tree inside its parent container
     if (tree.options.hasOwnProperty("center") && tree.options.center) {
       // if options center is set to truthy value, center it
-      containerWidth = $(tree.jsav.container).width();
+      containerWidth = $(tree.jsav.canvas).width();
       tree.element.css("left", (containerWidth - maxX)/2);
     }
 
@@ -211,7 +211,6 @@
   	        endnode = results[node.parent().id()].translation,
   	        end = {left: endnode.width + offset.left,
   	               top: endnode.height + offset.top};
-  	        
   	    edgeLayout(node.edgetoparent, start, end);
   	  }
   	});
@@ -225,8 +224,8 @@
         sHeight = sElem.outerHeight()/2.0,
         eHeight = eElem.outerHeight()/2.0,
         svgstyle = edge.jsav.getSvg().canvas.style,
-        svgleft = svgstyle.left,
-        svgtop = svgstyle.top,
+        svgleft = svgstyle.left || 0,
+        svgtop = svgstyle.top || 0,
         pi = Math.PI,
         startpos = sElem.offset(),
         endpos = eElem.offset(),
