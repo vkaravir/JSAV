@@ -83,22 +83,22 @@
   }
 
   function begin() {
-    var prevFx = $.fx.off;
+    var oldFx = $.fx.off || false;
     $.fx.off = true;
     while (this._undo.length) {
       this.backward();
     }
-    $.fx.off = false;
+    $.fx.off = oldFx;
     return this;
   }
   
   function end() {
-    var prevFx = $.fx.off;
+    var oldFx = $.fx.off || false;
     $.fx.off = true;
     while (this._redo.length) {
       this.forward();
     }
-    $.fx.off = false;
+    $.fx.off = oldFx;
     return this;
   }
   
@@ -292,6 +292,7 @@
         stepFunction = function(stp) {
           return jsav.currentStep() === step;
         };
+    var oldFx = $.fx.off || false;
     $.fx.off = true;
     if (step >= stepCount) {
       this.end();
@@ -302,7 +303,7 @@
     } else {
       this.forward(stepFunction);
     }
-    $.fx.off = false;
+    $.fx.off = oldFx;
     return this;
   };
   JSAV.ext.stepOption = function(name, value) {
@@ -328,6 +329,7 @@
   JSAV.ext.recorded = function() {
     this.begin();
     this.RECORD = false;
+    $.fx.off = false;
     return this;
   };
 })(jQuery);
