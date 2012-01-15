@@ -50,6 +50,13 @@
   z-index: 99;
   display: block;
 }
+.jsavarray .jsavindex:first-of-type, .jsavarray .jsavindex:first-of-type .jsavvalue {
+  border-radius: 8px 0 0 8px;
+}
+.jsavarray .jsavindex:last-of-type, .jsavarray .jsavindex:last-of-type .jsavvalue {
+  border-radius: 0 8px 8px 0;
+}
+
 .jsavarray.jsavbararray {
   height: 150px;
   overflow: visible;
@@ -65,6 +72,9 @@
   z-index: 100;
   bottom: 0;
   background-color: inherit;
+}
+.jsavarray.jsavbararray .jsavindex .jsavvalue {
+  border-radius: 0;
 }
 .jsavbararray .jsavindex .jsavvalue span {
   position: absolute;
