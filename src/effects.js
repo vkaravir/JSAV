@@ -15,7 +15,6 @@
           str2prevStyle = $str2.getstyles("color", "background-color"),
           speed = this.SPEED/5,
           tmp;
-      console.log(translateY, posdiffY);
 
       // ..swap the value elements...
       var val1 = $val1[0],
