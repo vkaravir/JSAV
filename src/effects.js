@@ -15,6 +15,7 @@
           str2prevStyle = $str2.getstyles("color", "background-color"),
           speed = this.SPEED/5,
           tmp;
+      console.log(translateY, posdiffY);
 
       // ..swap the value elements...
       var val1 = $val1[0],
@@ -45,7 +46,7 @@
               cy1 = y2 + curve,
               cy2 = y2 + curve,
               arrowStyle = "classic-wide-long";
-          if (posdiffY > 1) {
+          if (posdiffY > 1 || posdiffY < 1) {
             y2 = off2.top - coff.top + $val1.outerHeight() + 5;
             var angle = (y2 - y1) / (x2 - x1),
                 c1 = Math.pow(y1, 2) - (curve*curve / (1 + angle*angle)),
