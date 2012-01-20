@@ -387,9 +387,34 @@
     }
     return true;
   };
-  edgeproto.css = function(cssprop) {
-    // TODO: implement edge css function
-    return true;
+
+  edgeproto._setcss = JSAV.anim(function(cssprop, value) {
+    var oldProps = $.extend(true, {}, cssprop),
+        el = this.g.rObj,
+        newprops;
+    if (typeof cssprop === "string" && typeof value !== "undefined") {
+      oldProps[cssprop] = el.attr(cssprop);
+      newprops = {};
+      newprops[cssprop] = value;
+    } else {
+      for (var i in cssprop) {
+        oldProps[i] = el.attr(i);
+      }
+      newprops = cssprop;
+    }
+    if (!this.jsav.RECORD || !$.fx.off) { // only animate when playing, not when recording
+      el.animate(newprops, this.jsav.SPEED);
+    } else {
+      el.attr(newprops);
+    }
+    return [oldProps];
+  });
+  edgeproto.css = function(cssprop, value) {
+    if (typeof cssprop === "string" && typeof value === "undefined") {
+      return this.g.rObj.attr(cssprop);
+    } else {
+      return this._setcss(cssprop, value);
+    }
   };
   edgeproto.state = function(newState) {
     // TODO: implement state
