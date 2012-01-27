@@ -154,7 +154,8 @@
 
 svg {
   position: absolute;
-  z-index: 500;
+  height: 100%;
+  width: 100%;
 }
 
 /**** STYLING THE CONTROLS ****/
