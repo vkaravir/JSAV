@@ -51,9 +51,17 @@
   display: block;
 }
 .jsavarray .jsavindex:first-of-type, .jsavarray .jsavindex:first-of-type .jsavvalue {
+  -o-border-radius: 8px 0 0 8px;
+  -moz-border-radius: 8px 0 0 8px;
+  -ms-border-radius: 8px 0 0 8px;
+  -webkit-border-radius: 8px 0 0 8px;
   border-radius: 8px 0 0 8px;
 }
 .jsavarray .jsavindex:last-of-type, .jsavarray .jsavindex:last-of-type .jsavvalue {
+  -moz-border-radius: 0 8px 8px 0;
+  -o-border-radius: 0 8px 8px 0;
+  -ms-border-radius: 0 8px 8px 0;
+  -webkit-border-radius: 0 8px 8px 0;
   border-radius: 0 8px 8px 0;
 }
 
@@ -74,6 +82,10 @@
   background-color: inherit;
 }
 .jsavarray.jsavbararray .jsavindex .jsavvalue {
+  -moz-border-radius: 0;
+  -o-border-radius: 0;
+  -ms-border-radius: 0;
+  -webkit-border-radius: 0;
   border-radius: 0;
 }
 .jsavbararray .jsavindex .jsavvalue span {
@@ -160,6 +172,7 @@ svg {
   margin-left: 40px;
   margin-right: 40px;
   background-color: #aaa;
+  -o-border-radius: 20px;
   -moz-border-radius: 20px;
   -webkit-border-radius: 20px;
   -ms-border-radius: 20px;
@@ -190,6 +203,10 @@ svg {
   top: 0; 
   left: 0;
   -moz-border-radius: 6px;
+  -ms-border-radius: 6px;
+  -o-border-radius: 6px;
+  -webkit-border-radius: 6px;
+  border-radius: 6px;
 }
 .jsavmodal {
   z-index: 999;
@@ -205,6 +222,10 @@ svg {
   margin: 0;
   padding: 5px;
   -moz-border-radius: 6px 6px 0 0;
+  -ms-border-radius: 6px 6px 0 0;
+  -o-border-radius: 6px 6px 0 0;
+  -webkit-border-radius: 6px 6px 0 0;
+  border-radius: 6px 6px 0 0;
 }
 .jsavsettings {
   padding: 15px;
@@ -219,6 +240,10 @@ a.jsavsettings {
   text-indent: 9000px;
   padding: 2px;
   border: 1px solid black;
+  -o-border-radius: 3px;
+  -ms-border-radius: 3px;
+  -o-border-radius: 3px;
+  -webkit-border-radius: 3px;
   border-radius: 3px;
   float:right; 
   margin-right:10px; 
@@ -254,6 +279,10 @@ a.jsavsettings {
 }
 
 /********* TREE DATA STRUCTURE *******/
+
+.jsavtree {
+  position: relative;
+}
 .jsavtreenode {
   border-radius: 25px;
   position: absolute;
