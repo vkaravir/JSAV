@@ -47,6 +47,9 @@
   AnimStep.prototype.add = function(oper) {
     this.operations.push(oper);
   };
+  AnimStep.prototype.isEmpty = function() {
+    return this.operations.length === 0;
+  }
 
   function backward(filter) {
     if (this._undo.length === 0) { return; }
