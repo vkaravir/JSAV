@@ -80,7 +80,7 @@
   }
   
   function treeLayout(tree) {
-	  var NODEGAP = 40,
+	  var NODEGAP = tree.options.nodegap || 40,
         results = {};
     var compactArray = function(arr) {
           return $.map(arr, function(item) { return item || null; });
