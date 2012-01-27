@@ -110,6 +110,26 @@
 	  ok(av.backward()); // test undo of adding children
 	  equal(n2.children().length, 0);
 	  ok(av.forward());
+	  
+	  av.step();
+	  n1.child(0, null);
+	  equal(n1.children().length, 1);
+	  equal(n1.child(0).id(), n22.id());
+	  equal(n21.parent(), undefined);
+	  equal(n22.parent().id(), n1.id());
+
+	  ok(av.backward());
+	  equal(n1.children().length, 2);
+	  equal(n21.parent().id(), n1.id());
+	  equal(n22.parent().id(), n1.id());
+	  equal(n1.child(0).id(), n21.id());
+	  equal(n1.child(1).id(), n22.id());
+	  ok(av.forward());
+
+	  equal(n1.children().length, 1);
+	  equal(n1.child(0).id(), n22.id());
+	  equal(n21.parent(), undefined);
+	  equal(n22.parent().id(), n1.id());
   });
   
   
@@ -269,7 +289,50 @@
 	  equal(root.children().length, 2);
 	  equal(root.left().id(), n1.id());
 	  equal(root.right().value(), "Right");
-	  equal(tree.height(), 2);	      
+	  equal(tree.height(), 2);
+	  
+
+  });
+  
+  test("Binary Tree Remove Child", function() {
+    var av = new JSAV("emptycontainer");
+	  var tree = av.ds.bintree(),
+	      root = tree.root();
+	  tree.root("Ro");
+	  var left = root.left("L");
+	  var right = root.right("R");
+
+	  av.step();
+	  root.left(null); // test removing left
+	  equal(root.children().length, 2);
+	  ok(!root.left());
+	  ok(!left.parent());
+	  equal(root.right().value(), "R");
+	  equal(tree.height(), 2);
+
+	  ok(av.backward()); //
+	  equal(root.children().length, 2);
+	  equal(left.parent().id(), root.id());
+	  equal(root.left().id(), left.id());
+	  equal(root.right().value(), "R");
+	  equal(tree.height(), 2);
+	  ok(av.forward());
+	  
+	  av.step();
+	  root.right(null); // test removing right
+	  equal(root.children().length, 0);
+	  ok(!root.left());
+	  ok(!left.parent());
+	  ok(!root.right());
+	  ok(!right.parent());
+	  equal(tree.height(), 1);
+
+	  ok(av.backward()); //
+	  equal(root.children().length, 2);
+	  ok(!root.left());
+	  ok(!left.parent());
+	  equal(root.right().value(), "R");
+	  equal(tree.height(), 2);
   });
   
   test("Binary Tree Edges", function() {

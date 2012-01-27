@@ -191,17 +191,36 @@
     this._setchild(pos, node);
     return this;
   };
-  nodeproto._setchild = JSAV.anim(function(pos, node) {
+  nodeproto._setchild = JSAV.anim(function(pos, node, shift) {
     var oldval = this.childnodes[pos];
-    if (oldval) {
+    if (oldval && !shift) {
       oldval.parentnode = undefined;
     }
     if (node) {
-      this.childnodes[pos] = node;
       node.parent(this);
+      if (!shift) {
+        this.childnodes[pos] = node;
+      } else { // a child was deleted, we want to shift rest of children forward
+        var newchildren = [];
+        if (pos === 0) { // adding as first child
+          this.childnodes.unshift(node);
+        } else if (pos === this.childnodes.length) { // adding as last child
+          this.childnodes.push(node);
+        } else { // adding in the middle
+          for (var i = 0, l = this.childnodes.length; i < l; i++) {
+            if (i === pos) {
+              newchildren.push(node);
+            }
+            newchildren.push(this.childnodes[i]);
+          }
+          this.childnodes = newchildren;
+        }
+      }
     } else {
+      this.childnodes[pos].clear();
       delete this.childnodes[pos];
-      this.childnodes = $.map(this.childnodes, function(item) {return item;}); 
+      this.childnodes = $.map(this.childnodes, function(item) {return item;});
+      return [pos, oldval, true];
     }
     return [pos, oldval];
   });
@@ -437,55 +456,53 @@
   var binnodeproto = BinaryTreeNode.prototype;
   $.extend(binnodeproto, nodeproto);
 
-  binnodeproto.left = function(node) {
+
+  var setchild = function(self, pos, node) {
+    var oPos = pos?0:1;
     if (typeof node === "undefined") {
-      if (this.child(0) && this.child(0).value() !== "jsavnull") {
-        return this.child(0);
+      if (self.child(pos) && self.child(pos).value() !== "jsavnull") {
+        return self.child(pos);
       } else {
         return undefined;
       }
-    } else if (node.constructor === BinaryTreeNode) {
-      this.child(0, node);
+    } else if (node && node.constructor === BinaryTreeNode) {
+      self.child(pos, node);
     } else {
-      if (this.child(0)) {
-        this.child(0).value(node);
+      if (!node) { // node is null, remove child
+        if (self.child(pos) && self.child(pos).value() !== "jsavnull") {
+          // child exists
+          if (!self.child(oPos) || self.child(oPos).value() === "jsavnull") { // ..but no other child
+            self.child(pos, null);
+            self.child(oPos, null);
+          } else { // other child exists
+            // create a null node and set it as other child
+            var other = self.container.newNode("jsavnull", self);
+            other.element.addClass("jsavnullnode");
+            self.child(pos, other);
+          }
+        } else { // no such child
+          // nothing to be done
+        }
+      } else if (self.child(pos)) {
+        self.child(pos).value(node);
       } else {
-        var newNode = this.container.newNode(node, this);
-        this.child(0, newNode);
-        if (!this.child(1)) {
-          var right = this.container.newNode("jsavnull", this);
-          right.element.addClass("jsavnullnode");
-          this.child(1, right);
+        var newNode = self.container.newNode(node, self);
+        self.child(pos, newNode);
+        if (!self.child(oPos)) {
+          var left = self.container.newNode("jsavnull", self);
+          left.element.addClass("jsavnullnode");
+          self.child(oPos, left);
         }
         return newNode;
       }
     }
-    return this.child(0);
+    return self.child(1);
+  };
+  binnodeproto.left = function(node) {
+    return setchild(this, 0, node);
   };
   binnodeproto.right = function(node) {
-    if (typeof node === "undefined") {
-      if (this.child(1) && this.child(1).value() !== "jsavnull") {
-        return this.child(1);
-      } else {
-        return undefined;
-      }
-    } else if (node.constructor === BinaryTreeNode) {
-      this.child(1, node);
-    } else {
-      if (this.child(1)) {
-        this.child(1).value(node);
-      } else {
-        var newNode = this.container.newNode(node, this);
-        this.child(1, newNode);
-        if (!this.child(0)) {
-          var left = this.container.newNode("jsavnull", this);
-          left.element.addClass("jsavnullnode");
-          this.child(0, left);
-        }
-        return newNode;
-      }
-    }
-    return this.child(1);
+    return setchild(this, 1, node);
   };
   binnodeproto._setvalue = JSAV.anim(function(newValue) {
     var oldVal = this.element.removeClass("jsavnullnode")
