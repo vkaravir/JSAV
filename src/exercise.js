@@ -224,6 +224,7 @@
     this.jsav._undo = [];
   };
   exerproto.undo = function() {
+    var oldFx = $.fx.off || false;
     $.fx.off = true;
     // undo last step
     this.jsav.backward(); // the empty new step
@@ -235,12 +236,13 @@
       this.jsav.step();
     } else if (this.options.grader !== "default") {
       // other than default grader, finder grader does not use graded steps
+      this.jsav.step();
     } else {
       // ..if not, the first student step was incorrent and we can rewind to beginning
       this.jsav.begin();
     }
     this.jsav._redo = [];
-    $.fx.off = false;
+    $.fx.off = oldFx;
   };
   exerproto.gradeableStep = function() {
     this.jsav.stepOption("grade", true);
@@ -301,8 +303,10 @@
     }
     this.jsav.jumpToStep(origStep);
     $.fx.off = oldFx;
+    return JSON.stringify(states);
   };
 
+  JSAV._types.Exercise = Exercise;
   
   JSAV.ext.exercise = function(model, reset, compare, options) {
     var opts = $.extend({model: model, reset: reset, compare:compare}, options);
