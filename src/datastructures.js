@@ -245,10 +245,15 @@
     }
   };
   arrproto.initializeFromElement = function() {
-    // TODO: handle settings from data-attributes
     if (!this.element) { return; }
     var $elem = this.element,
-      $elems = $elem.find("li");
+      $elems = $elem.find("li"),
+      data = $elem.data();
+    for (var key in data) {
+      if (data.hasOwnProperty(key)) {
+        this.options[key] = data[key];
+      }
+    }
     $elem.addClass("jsavarray");
     $elems.each(function(index, item) {
       var $this = $(this);
