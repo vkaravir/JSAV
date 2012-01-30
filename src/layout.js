@@ -17,8 +17,8 @@
     array.element.css("left", (containerWidth - width)/2);
   }
   
-  function verticalArray(array) {
-    var $arr = $(array.element),
+  function horizontalArray(array) {
+    var $arr = $(array.element).addClass("jsavhorizontalarray"),
       // rely on browser doing the calculation, float everything to the left..
       $items = $arr.find("li").css({"float": "left", "position":"static"}),
       maxHeight = -1,
@@ -44,6 +44,32 @@
     $arr.height(maxHeight + (indexed?30:0));
     centerArray(array, $items.last());
   }
+  
+  function verticalArray(array) {
+    var $arr = $(array.element).addClass("jsavverticalarray"),
+      $items = $arr.find("li"),
+      maxWidth = -1,
+      indexed = !!array.options.indexed;
+    if (indexed) {
+      $arr.addClass("jsavindexed");
+      $items.each(function(index, item) {
+        var $i = $(this);
+        var $indexLabel = $i.find(".jsavindexlabel");
+        if ($indexLabel.size() === 0) {
+          $i.append('<span class="jsavindexlabel">' + index + '</span>');
+          $indexLabel = $i.find(".jsavindexlabel");
+        }
+        maxWidth = Math.max(maxWidth, $indexLabel.innerWidth());
+        $indexLabel.css({
+          left: -15 - $i.outerWidth() / 2,
+          top: $i.innerHeight() / 2 - $indexLabel.outerHeight() / 2
+        })
+      });
+      $items.css("margin-left", maxWidth);
+    }
+    centerArray(array, $items.last());
+  }
+ 
   function barArray(array) {
     var $arr = $(array.element).addClass("jsavbararray"),
       $items = $arr.find("li").css({"position":"relative", "float": "left"}), 
@@ -277,9 +303,10 @@
   
   var layouts = {};
   layouts.array = {
-    "_default": verticalArray,
+    "_default": horizontalArray,
     "bar": barArray,
-    "array": verticalArray
+    "array": horizontalArray,
+    "vertical": verticalArray
   };
   layouts.tree = {
     "_default": treeLayout
