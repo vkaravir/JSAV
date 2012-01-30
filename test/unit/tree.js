@@ -175,8 +175,8 @@
 	  ok(right.isHighlight());
 	  ok(root.isHighlight());
 	  
-	  av.begin();
 	  $.fx.off = true;
+	  av.recorded();
 	  ok(!left.isHighlight());
 	  ok(!right.isHighlight());
 	  ok(!root.isHighlight());

@@ -45,12 +45,19 @@
     this.options = options;
     var el = this.options.element || $("<div/>");
     el.addClass("jsavtree jsavcommontree");
+    for (var key in this.options) {
+      var val = this.options[key];
+      if (this.options.hasOwnProperty(key) && typeof(val) === "string" 
+          || typeof(val) === "number" || typeof(val) === "boolean") {
+        el.attr("data-" + key, val);
+      }
+    }
     if (!this.options.element) {
       $(this.jsav.canvas).append(el);
     }
     this.element = el;
     this.rootnode = this.newNode("", null);
-    //this.layout();
+    this.element.attr("data-root", this.rootnode.id());
     el.css("display", "hidden");
     var visible = (typeof this.options.display === "boolean" && this.options.display === true);
     if (visible) {
@@ -64,6 +71,7 @@
   treeproto._setrootnode = JSAV.anim(function(node) {
     var oldroot = this.rootnode;
     this.rootnode = node;
+    this.element.attr("data-root", node.id());
     return [oldroot];
   });
   treeproto.root = function(newRoot) {
@@ -124,6 +132,10 @@
     this.options = $.extend(true, {display: true}, options);
     var el = $("<div>" + valstring(value) + "</div>").addClass("jsavnode jsavtreenode")
               .attr({"data-value": value, "id": this.id() }).data("node", this);
+    el.attr("id", this.id());
+    if (parent) {
+      el.attr("data-parent", parent.id());
+    }
     this.element = el;
     this.container.element.append(el);
     el.css("display", "hidden");
@@ -188,13 +200,16 @@
   };
   nodeproto.addChild = function(node) {
     var pos = this.childnodes.length;
+    if (typeof node === "string" || typeof node === "number") {
+      node = this.container.newNode(node);
+    }
     this._setchild(pos, node);
     return this;
   };
   nodeproto._setchild = JSAV.anim(function(pos, node, shift) {
     var oldval = this.childnodes[pos];
     if (oldval && !shift) {
-      oldval.parentnode = undefined;
+      oldval.parent(null);
     }
     if (node) {
       node.parent(this);
@@ -217,7 +232,6 @@
         }
       }
     } else {
-      this.childnodes[pos].clear();
       delete this.childnodes[pos];
       this.childnodes = $.map(this.childnodes, function(item) {return item;});
       return [pos, oldval, true];
@@ -335,6 +349,8 @@
     var visible = (typeof this.options.display === "boolean" && this.options.display === true);
     this.g.rObj.attr({"opacity": 0});
     this.g.rObj.node.setAttribute("class", "jsavedge");
+    this.g.rObj.node.setAttribute("data-startnode", this.startnode.id());
+    this.g.rObj.node.setAttribute("data-endnode", this.endnode.id());
     if (visible) {
       if (this.jsav.currentStep() === 0) { // at beginning, just make it visible
         this.g.rObj.attr({"opacity": 1});
@@ -379,6 +395,12 @@
   };
   edgeproto.clear = function() {
     this.g.rObj.remove();
+  };
+  edgeproto.hide = function() {
+    this.g.hide();
+  };
+  edgeproto.show = function() {
+    this.g.show();
   };
   edgeproto.equals = function(otherEdge, options) {
     if (!otherEdge || !otherEdge instanceof Edge) {
@@ -457,7 +479,7 @@
   $.extend(binnodeproto, nodeproto);
 
 
-  var setchild = function(self, pos, node) {
+  function setchild(self, pos, node) {
     var oPos = pos?0:1;
     if (typeof node === "undefined") {
       if (self.child(pos) && self.child(pos).value() !== "jsavnull") {
@@ -476,28 +498,32 @@
             self.child(oPos, null);
           } else { // other child exists
             // create a null node and set it as other child
+            self.child(pos).edgeToParent().hide();
             var other = self.container.newNode("jsavnull", self);
-            other.element.addClass("jsavnullnode");
+            other.element.addClass("jsavnullnode").attr("data-binchildrole", pos?"right":"left");
             self.child(pos, other);
           }
         } else { // no such child
           // nothing to be done
         }
+      } else if (self.child(pos) && self.child(pos).value() !== "jsavnull") {
+        self.child(pos).value(node);
       } else if (self.child(pos)) {
         self.child(pos).value(node);
       } else {
         var newNode = self.container.newNode(node, self);
         self.child(pos, newNode);
+        newNode.element.attr("data-binchildrole", pos?"right":"left");
         if (!self.child(oPos)) {
-          var left = self.container.newNode("jsavnull", self);
-          left.element.addClass("jsavnullnode");
-          self.child(oPos, left);
+          var other = self.container.newNode("jsavnull", self);
+          other.element.addClass("jsavnullnode").attr("data-binchildrole", oPos?"right":"left");
+          self.child(oPos, other);
         }
         return newNode;
       }
     }
     return self.child(1);
-  };
+  }
   binnodeproto.left = function(node) {
     return setchild(this, 0, node);
   };
