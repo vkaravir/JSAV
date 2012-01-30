@@ -224,6 +224,13 @@
       liel, liels = $();
     el.addClass("jsavarray");
     this.options = jQuery.extend({display: true}, this.options);
+    for (var key in this.options) {
+      var val = this.options[key];
+      if (this.options.hasOwnProperty(key) && typeof(val) === "string" 
+          || typeof(val) === "number" || typeof(val) === "boolean") {
+        el.attr("data-" + key, val);
+      }
+    }
     for (var i=0; i < data.length; i++) {
       liel = this._newindex(data[i]);
       liels = liels.add(liel);
