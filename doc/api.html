@@ -518,6 +518,68 @@ out, this method will return the current text of the label.
     converted to the type specified when initializing the variable.
     </p>
     
+    <h2>Graphical Primitives API</h2>
+    <p>JSAV supports the following graphical primitives: circle, rectangle, line,
+      ellipse, polygon, and polyline. All these are in the JSAV.g namespace. A 
+      rectangle, for example, can be initialized like follows.</p>
+    <pre>var rect = av.g.rect(70, 60, 50, 40);</pre>
+    <p>This would initialize a rectangle with upper-left corner at point (70, 60) that
+      is 50 pixels wide and 40 pixels tall.</p>
+    <p>All the graphical primitives have the following functions.</p>
+    <h3 class="apimethod">.show()</h3>
+    <p>Make the shape visible. Essentially the same as calling <code>.css({opacity: 1})</code>.</p>
+    <h3 class="apimethod">.hide()</h3>
+    <p>Make the shape invisible. Essentially the same as calling <code>.css({opacity: 0})</code>.</p>
+    <h3 class="apimethod">.rotate(deg)</h3>
+    <p>Rotates the object by the given amount of degrees around the center of the shape.</p>
+    <h3 class="apimethod">.scale(sx, sy), .scaleX(sx), .scaleY(sy)</h3>
+    <p>Scales the object by given amount. The shortcuts for X/Y scaling only
+      are the same as calling <code>.scale(sx, 0)</code> and <code>.scale(0, sy)</code>. For example</p>
+    <pre>rect.scale(2, 1.5)</pre>
+    <p>would make the rectangle from the previous example to have width of 100 pixels and height of 60px. Note, that the position of the rectangle would also change, since the scaling is done relative to the center of the shape.</p>
+    <h3 class="apimethod">.translate(dx, dy), .translateX(dx), .translateY(dy)</h3>
+    <p>Translates the shape by the given amount. Again, X/Y versions are shortcuts to
+      the main translation function.</p>
+    <h3 class="apimethod">.css(propname)</h3>
+    <p>Returns the value of the attribute with the name <code>propname</code>.</p>
+    <h3 class="apimethod">.css(propname, propvalue), .css(propsObj)</h3>
+    <p>Like the .css functions of the other JSAV objects, these can be used to animate
+      attributes of the shape. Technically, what is changed is not CSS properties but
+      attributes of the SVG element visualizing the shape. For a list of valid values,
+      see <a href="http://raphaeljs.com/reference.html#Element.attr">Rapha&euml;l JS documentation</a>.</p>
+      
+    <h2>Circle API</h2>
+    <h3 class="apimethod">.center([cx, cy])</h3>
+    <p>Gets or sets the center of the circle. The center is returned as an object with
+      properties <code>cx</code> and <code>cy</code>.</p>
+    <h3 class="apimethod">.radius([r])</h3>
+    <p>Gets or sets the radius of the circle.</p>
+      
+    <h2>Ellipse API</h2>
+    <h3 class="apimethod">.center([cx, cy])</h3>
+    <p>Same as center function of the circle.</p>
+    <h3 class="apimethod">.radius([rx, ry])</h3>
+    <p>Gets or sets the radius of the ellipse. The radius is returned as an object with
+      properties <code>rx</code> and <code>ry</code>.</p>
+
+    <h2>Rectangle API</h2>
+    <h3 class="apimethod">.width([w])</h3>
+    <p>Gets or sets the width of the rectangle.</p>
+    <h3 class="apimethod">.height()</h3>
+    <p>Gets or sets the height of the rectangle.</p>
+
+    <h2>Line, Polygon, and Polyline API</h2>
+    <h3 class="apimethod">.translatePoint(point, dx, dy)</h3>
+    <p>Translates the given <code>point</code> in the (poly)line by the given amount of pixels. The point is a zero-indexed list of points used to initialize the polyline. For line, start point is index 0 and endpoint index 1.</p>
+
+    <h3 class="apimethod">.movePoints(points)</h3>
+    <p>Moves the given points to the given pixel positions. Parameter <code>points</code> should be an array of arrays with each item specifying point, px, and py.</p>
+
+    <h2>Graphical Primitive Set</h2>
+    <p>Sometimes there is a need to combine multiple graphical primitives to make up more complex shapes that can be changed simultaneously. Function <code>av.g.set()</code> can be used to create a set of graphical primitives. It has all the functions common to all graphical primitive listed above. In addition, it has one function:</p>
+    <h3 class="apimethod">.push(gp)</h3>
+    <p>Adds the graphical primitive gp to the set.</p>
+    
     <h2>Questions API</h2>
     <p>Interactive questions can be initialized with the <code>question</code>
       function of a JSAV instance.</p>
