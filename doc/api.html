@@ -361,11 +361,11 @@ shortcut to set the opacity of indices.
 <h2>Tree Data Structure API</h2>
 
 <p>
-Currently, JSAV supports tree types of trees: common tree, binary tree, and binary search tree. The structures form a "class" hierarchy: Tree &larr; Binary Tree &larr; Binary Search Tree and TreeNode &larr; BinaryTreeNode.
+Currently, JSAV supports two types of trees: common tree and binary tree. The structures form a "class" hierarchy: Tree &larr; Binary Tree and TreeNode &larr; BinaryTreeNode.
 </p>
 
-<h3 class="apimethod">.ds.tree([options]) and .ds.bintree([options]) and .ds.bst([options])</h3>
-<p>These functions of a JSAV instance initialize a new tree, binary tree, or binary search tree. The returned tree instance is controlled through a collection of methods explained next.</p>
+<h3 class="apimethod">.ds.tree([options]) and .ds.bintree([options])</h3>
+<p>These functions of a JSAV instance initialize a new tree or binary tree. The returned tree instance is controlled through a collection of methods explained next.</p>
 
 <p>Options that the optional parameter can specify:</p>
 <ul>
@@ -403,8 +403,6 @@ Currently, JSAV supports tree types of trees: common tree, binary tree, and bina
 <h3 class="apimethod">.layout()</h3>
 <p>This function (re)calculates the layout for the tree. Note, that the library does not do this automatically. That means that after changing the tree, you should call this manually at the end of each animation step. This function exists for all trees.</p>
 
-<h3 class="apimethod">.insert(value)</h3>
-<p>For binary search tree, this function inserts the given value to the tree.</p>
 
 <h2>Tree Node API</h2>
 <p>The following functions exist for both tree nodes and binary tree nodes.</p>

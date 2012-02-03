@@ -539,59 +539,12 @@
     return [oldVal];
   });
   binnodeproto._setcss = JSAV.anim(_setcss);
-  
-  var BinarySearchTree = function(jsav, options) {
-    this.init(jsav, options);
-    this.element.addClass("jsavbinarysearchtree");
-  };
-  var defaultCompare = function(a, b) {
-    return a - b;
-  };
-  var bstproto = BinarySearchTree.prototype;
-  $.extend(bstproto, bintreeproto);
-  bstproto.insert = function(value) {
-    var comp = this.options.compare;
-    // helper function to recursively insert
-    var ins = function(node, insval) {
-      var val = node.value();
-      if (!val || val === "jsavnull") { // no value in node
-        node.value(insval);
-      } else if (comp(val, insval) > 0) { // go left
-        if (node.left()) {
-          ins(node.left(), insval);
-        } else {
-          node.left(insval)
-        }
-      } else { // go right
-        if (node.right()) {
-          ins(node.right(), insval);
-        } else {
-          node.right(insval);
-        }
-      }
-    }
-    if ($.isArray(value)) { // array of values
-      for (var i=0, l=value.length; i < l; i++) {
-        ins(this.root(), value[i]);
-      }
-    } else {
-      ins(this.root(), value);
-    }
-    return this;
-  };
-  bstproto.remove = function(value) {
-    // TODO: implement BST delete
-  };
-  bstproto.search = function(value) {
-    // TODO: implement BST search
-  };
-  
+    
   var dstypes = JSAV._types.ds;
   dstypes.Tree = Tree;
   dstypes.TreeNode = TreeNode;
   dstypes.Edge = Edge;
   dstypes.BinaryTree = BinaryTree;
-  dstypes.BinarySearchTree = BinarySearchTree;
   dstypes.BinaryTreeNode = BinaryTreeNode;
 
   JSAV.ext.ds.tree = function(options) {
@@ -599,9 +552,6 @@
   };
   JSAV.ext.ds.bintree = function(options) {
     return new BinaryTree(this, $.extend(true, {}, options));
-  };
-  JSAV.ext.ds.bst = function(options) {
-    return new BinarySearchTree(this, $.extend(true, {'compare': defaultCompare}, options));
   };
   JSAV.ext.ds.edge = function(options) {
     return new Edge(this, $.extend(true, {}, options));
