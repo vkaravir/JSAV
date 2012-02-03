@@ -417,15 +417,15 @@ Currently, JSAV supports tree types of trees: common tree, binary tree, and bina
 <h3 class="apimethod">.child(pos)</h3>
 <p>Returns the <var>pos</var>:th child of this node.</p>
 <h3 class="apimethod">.child(pos, node)</h3>
-<p>Sets the <var>pos</var>:th child to the given value. The <var>node</var> can be a value or a node of correct type to the node.</p>
+<p>Sets the <var>pos</var>:th child to the given value. The <var>node</var> can be a value or a node of correct type to the node. If value <code>null</code> is given as <code>node</code>, the child at that position is removed. Note, that this only changes the state of the data structure and does not affect the visualization. That means you have to manually hide or move the removed node and the edge.</p>
 <h3 class="apimethod">.child(node)</h3>
 <p>Adds a child node to this node. The <var>node</var> can be a value or a node of correct type to the node.</p>
 
 <h2>Binary Tree Node API</h2>
 <h3 class="apimethod">.left([node])</h3>
-<p>Returns the left child or undefined if node has no left child. If optional parameter <var>node</var> is given, sets the left child. The parameter can be a value or a binary tree node.</p>
+<p>Returns the left child or undefined if node has no left child. If optional parameter <var>node</var> is given, sets the left child. The parameter can be a value or a binary tree node. If value <code>null</code> is given as <code>node</code>, the left child is removed. Note, that this only changes the state of the data structure and does not affect the visualization. That means you have to manually hide or move the removed node and the edge.</p>
 <h3 class="apimethod">.right([node])</h3>
-<p>Returns the right child or undefined if node has no right child. If optional parameter <var>node</var> is given, sets the right child. The parameter can be a value or a binary tree node.</p>
+<p>Returns the right child or undefined if node has no right child. If optional parameter <var>node</var> is given, sets the right child. The parameter can be a value or a binary tree node. Passing <code>null</code> as node works similarly to the left function.</p>
   
 <h2>Edge structure API</h2>
 <h3 class="apimethod">start([node])</h3>
