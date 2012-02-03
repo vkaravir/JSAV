@@ -498,7 +498,6 @@
             self.child(oPos, null);
           } else { // other child exists
             // create a null node and set it as other child
-            self.child(pos).edgeToParent().hide();
             var other = self.container.newNode("jsavnull", self);
             other.element.addClass("jsavnullnode").attr("data-binchildrole", pos?"right":"left");
             self.child(pos, other);
