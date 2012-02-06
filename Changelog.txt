@@ -1,0 +1,11 @@
+For changes before version 0.3.1, see 
+  http://algoviz.org/algoviz-wiki/index.php/JSAV_Roadmap
+  
+Changes in version 0.4
+----------------------
+* Support for tree and binary tree
+* Support for vertical array layout
+* Removed the initial support for binary search tree
+* Documentation for graphical primitives
+* Styling improvements to array visualization
+* General swap effect added; swap now shows an arrow for the swapped elements
