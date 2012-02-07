@@ -1,4 +1,4 @@
 
- * Copyright (c) 2011- Ville Karavirta and Cliff Shaffer
- * Licensed under the MIT license.
+ * Copyright (c) 2011-2012 by Ville Karavirta and Cliff Shaffer
+ * Released under the MIT license.
  */

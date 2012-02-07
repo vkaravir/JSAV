@@ -6,10 +6,13 @@ complete hypertextbook for Data Structures and Algorithms along with
 the necessary supporting infrastructure. For more information about
 OpenDSA, see http://algoviz.org/ebook .
 
-The official "release" versions of JSAV are maintained as part of the
-OpenAlgoViz project at SourceForge. The OpenDSA SourceForge repository
-also stores the AVs that actually make use of JSAV. These materials
-are available by checking out:
+JSAV and OpenDSA are released under the MIT license. See the file
+MIT-license.txt included with this distribution.
+
+The official "stable release" versions of JSAV are maintained as part
+of the OpenAlgoViz project at SourceForge. The OpenDSA SourceForge
+repository also stores the AVs that actually make use of JSAV. These
+materials are available by checking out:
 svn co https://openalgoviz.svn.sourceforge.net/svnroot/openalgoviz/OpenDSA OpenDSA
 
 The day-to-day working JSAV repository is located at GitHub. For new
