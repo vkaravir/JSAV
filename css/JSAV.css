@@ -122,6 +122,29 @@
   position: absolute;
 }
 
+/* bar array marker line */
+.jsavmark {
+  position: absolute;
+  display: none;
+  background-color: #FF6464;;
+  -moz-border-radius: 10px;
+  -webkit-border-radius: 10px;
+  -ms-border-radius: 10px;
+  -o-border-radius: 10px;
+  border-radius: 10px;
+  width: 8px;
+  height: 8px;
+  z-index: 190;
+}
+.jsavmarkline {
+  position: absolute;
+  display: none;
+  height:1px;
+  background-color: #FF6464;
+  background-color: rgba(255, 100, 100, 0.6);
+  z-index: 190;
+}
+
 /***** END STYLING OF THE ARRAY DATA STRUCTURE *****/
 
 /*** OUTPUT STYLING ***/

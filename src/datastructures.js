@@ -355,6 +355,52 @@
     var $elems = getIndices($(this.element).find("li"), indices);
     $elems.toggleClass("jsavarrow");
   });
+  arrproto.toggleLine = JSAV.anim(function(index, options) {
+      // Toggles a marker line above a given array index for bar layout
+      // Options that can be passed:
+      //  - markStyle: style of the "ball" as an object of CSS property/value pairs.  
+      //               Default style is first applied, then the given style. Passing
+      //               null will disable the ball alltogether
+      //  - lineStyle: style of the line, similarly to markStyle
+      //  - startIndex: index in the array where the line will start. default 0
+      //  - endIndex: index in the array where the line will end, inclusive. default 
+      //              last index of the array
+      if (this.options.layout !== "bar") { return; } // not bar layout
+      var valelem = this.element.find("li .jsavvalue").eq(index),
+          lielem = valelem.parent();
+      if (valelem.size() === 0 ) { return; } // no such index
+      var opts = $.extend({startIndex: 0, endIndex: this.size() - 1}, options);
+      
+      var $mark = lielem.find(".jsavmark"),
+          $markline = lielem.find(".jsavmarkline");
+      if ($markline.size() === 0 && $mark.size() === 0) { // no mark exists yet
+        if (opts.markStyle !== null) { // mark is not disabled
+          $mark = $("<div class='jsavmark' />");
+          lielem.prepend($mark);
+          if (opts.markStyle) { $mark.css(opts.markStyle); }
+          $mark.css({ bottom: valelem.height() - $mark.outerHeight()/2, 
+                      left: valelem.position().left + valelem.width() / 2 - $mark.outerWidth()/2,
+                      display: "block"});
+        }
+        if (opts.lineStyle !== null) { // mark line not disabled
+          $markline = $("<div class='jsavmarkline' />");
+          lielem.prepend($markline);
+          if (opts.lineStyle) { $markline.css(opts.lineStyle); }
+          var startelem = this.element.find("li:eq(" + opts.startIndex + ")"),
+              endelem = this.element.find("li:eq(" + opts.endIndex + ")");
+          $markline.css({ width: endelem.position().left
+                                  - startelem.position().left
+                                  + endelem.width(),  
+                          left:startelem.position().left - lielem.position().left,
+                          bottom: valelem.height() - $markline.outerHeight()/2,
+                          display: "block"});
+        }
+      } else { // mark exists already, remove them
+        $mark.remove();
+        $markline.remove();
+      }
+      return [index, opts];
+    });
   
   function addCommonProperties(dsPrototype, commonProps) {
     if (!commonProps) { commonProps = common; }

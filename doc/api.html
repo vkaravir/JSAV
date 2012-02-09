@@ -333,6 +333,15 @@ for highlight.
 Sets the value of the element at the given index to the given value.
 </p>
 
+<h3 class="apimethod">.toggleLine(index, [options])</h3>
+<p>Toggles a marker line above a given array index for bar layout. For other layouts, does nothing. Options that can be passed:</p>
+<ul>
+  <li><code>markStyle</code>: Style of the "ball" as an object of CSS property/value pairs. Default style is first applied, then the given style. Passing <code>null</code> will disable the ball altogether.</li>
+  <li><code>lineStyle</code>: Style of the line. Works similarly to <code>markStyle</code>.</li>
+  <li><code>startIndex</code>: Index in the array where the line will start. Default 0.</li>
+  <li><code>endIndex</code>: Index in the array where the line will end, inclusive. Defaults to last index of the array.</li>
+</ul>
+
 <h3 class="apitopic">CSS control</h3>
 
 There are various options and style effects that can be controlled via
