@@ -174,6 +174,7 @@
       } else {
         this.edgetoparent.end(newParent);
       }
+      this.element.attr("data-parent", newParent?newParent.id():"");
       this.parentnode = newParent;
     }
   };
@@ -215,6 +216,7 @@
       node.parent(this);
       if (!shift) {
         this.childnodes[pos] = node;
+        node.element.attr("data-child-pos", pos);
       } else { // a child was deleted, we want to shift rest of children forward
         var newchildren = [];
         if (pos === 0) { // adding as first child
@@ -230,10 +232,16 @@
           }
           this.childnodes = newchildren;
         }
+      $.each(this.childnodes, function(index, n) {
+        n.element.attr("data-child-pos", index);
+      });
       }
     } else {
       delete this.childnodes[pos];
       this.childnodes = $.map(this.childnodes, function(item) {return item;});
+      $.each(this.childnodes, function(index, n) {
+        n.element.attr("data-child-pos", index);
+      });
       return [pos, oldval, true];
     }
     return [pos, oldval];
@@ -379,6 +387,7 @@
       return this.startnode;
     } else {
       this.startnode = node;
+      this.g.rObj.node.setAttribute("data-startnode", this.startnode?this.startnode.id():"");
       return this;
     }
   };
@@ -387,6 +396,7 @@
       return this.endnode;
     } else {
       this.endnode = node;
+      this.g.rObj.node.setAttribute("data-endnode", this.endnode?this.endnode.id():"");
       return this;
     }
   };
