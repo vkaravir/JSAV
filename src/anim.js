@@ -237,7 +237,7 @@
     return true;
   };
   JSAV.anim = anim;
-  JSAV.ext.SPEED = 400;
+  JSAV.ext.SPEED = 300;
   JSAV.ext.begin = begin;
   JSAV.ext.end = end;
   JSAV.ext.forward = function(filter) {
