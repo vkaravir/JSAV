@@ -196,17 +196,11 @@
   			noderes.cachedTranslation = null;
   		}
   	},
-  	calculateFinalLayout = function(node, dx, dy) {
-  	  var cLeftExtent = results[node.id()].contours.cLeftExtent;
-  	  if (-cLeftExtent - getXTranslation(node) > 0) {
-  			translateThisNode(node, -cLeftExtent - getXTranslation(node), 0);
-  		}
-  		translateNodes(node, dx, dy);
-  		propagateTranslations(node);
-  	};
+  	root = tree.root();
   	
-  	calculateLayout(tree.root());
-  	calculateFinalLayout(tree.root(), 20, 10+NODEGAP);
+  	calculateLayout(root);
+		translateNodes(root, 20, 10 + NODEGAP);
+		propagateTranslations(root);
   	var maxX = -1, maxY = -1, max = Math.max;
   	$.each(results, function(key, value) {
   	  var oldPos = value.node.element.position();
@@ -220,13 +214,18 @@
   	});
   	tree.element.width(maxX);
   	tree.element.height(maxY);
-
-    // center the tree inside its parent container
-    if (tree.options.hasOwnProperty("center") && tree.options.center) {
-      // if options center is set to truthy value, center it
+  	
+  	var centerTree = function() {
+      // if options center is not set to truthy value, center it
+      if (tree.options.hasOwnProperty("center") && !tree.options.center) {
+        return;
+      }
       containerWidth = $(tree.jsav.canvas).width();
       tree.element.css("left", (containerWidth - maxX)/2);
-    }
+  	};
+
+    // center the tree inside its parent container
+    centerTree(tree);
 
   	var offset = tree.element.position();
   	$.each(results, function(key, value) {
@@ -348,7 +347,7 @@ TreeContours.prototype = {
 	},
 	joinWith: function(other, hDist) {
 		if (other.cHeight > this.cHeight) {
-			var newLeftC = new Array();
+			var newLeftC = [];
 			var otherLeft = other.cHeight - this.cHeight;
 			var thisCDisp = 0;
 			var otherCDisp = 0;
