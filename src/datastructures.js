@@ -43,13 +43,15 @@
       // gets or sets the id of the DS
       'id': function(newId) { 
         if (newId) { 
-          this._id = newId;
+          this.element[0].id = newId;
           return this;
         } else {
-          if (!(this.hasOwnProperty("_id")) || typeof this._id === "undefined") {
-            this._id = JSAV.utils.createUUID();
+          var id = this.element[0].id
+          if (!id) {
+            id = JSAV.utils.createUUID();
+            this.element[0].id = id;
           }
-          return this._id; 
+          return id;
         }
       },
       // returns the position of the DS

@@ -57,7 +57,7 @@
     }
     this.element = el;
     this.rootnode = this.newNode("", null);
-    this.element.attr("data-root", this.rootnode.id());
+    this.element.attr({"data-root": this.rootnode.id(), "id": this.id()});
     this.rootnode.element.attr("data-child-role", "root");
     el.css("display", "hidden");
     var visible = (typeof this.options.display === "boolean" && this.options.display === true);
@@ -133,13 +133,13 @@
     this.parentnode = parent;
     this.options = $.extend(true, {display: true}, options);
     var el = this.options.nodeelement || $("<div>" + valstring(value) + "</div>");
+    this.element = el;
     el.addClass("jsavnode jsavtreenode")
         .attr({"data-value": value, "id": this.id() })
         .data("node", this);
     if (parent) {
       el.attr("data-parent", parent.id());
     }
-    this.element = el;
     this.container.element.append(el);
     el.css("display", "hidden");
     var visible = (typeof this.options.display === "boolean" && this.options.display === true);
