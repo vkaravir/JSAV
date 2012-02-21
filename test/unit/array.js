@@ -2,7 +2,7 @@
   module("datastructures.array", {  });
 test("Initializing from HTML", function() {
   var values = [12, 22, 14, 39, 10]; // array in HTML
-  expect(8);
+  expect(9);
 	var av = new JSAV("arraycontainer");
 	ok( av, "JSAV initialized" );
 	ok( av.ds.array, "Array exists" );
@@ -11,6 +11,7 @@ test("Initializing from HTML", function() {
 	for (var i = 0; i < values.length; i++) {
 	  equals( arr.value(i), values[i], "Getting value of index " + i );
 	}
+	equals(arr.id(), "array");
 });
 
 
