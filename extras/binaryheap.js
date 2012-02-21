@@ -190,7 +190,7 @@
       i = parent;
       parent = Math.floor(i / 2);
     }
-    if (comp(this.value(parent -1), val) === 0) {
+    if (comp(this.value(parent -1), val) === 0 && this.options.stats) {
       this.stats.collision = true;
     }
     return this;

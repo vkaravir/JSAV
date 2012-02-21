@@ -58,6 +58,7 @@
     this.element = el;
     this.rootnode = this.newNode("", null);
     this.element.attr("data-root", this.rootnode.id());
+    this.rootnode.element.attr("data-child-role", "root");
     el.css("display", "hidden");
     var visible = (typeof this.options.display === "boolean" && this.options.display === true);
     if (visible) {
@@ -72,6 +73,7 @@
     var oldroot = this.rootnode;
     this.rootnode = node;
     this.element.attr("data-root", node.id());
+    node.element.attr("data-child-role", "root");
     return [oldroot];
   });
   treeproto.root = function(newRoot) {
@@ -116,7 +118,7 @@
       return this._setcss(cssprop);
     }
   };
-  treeproto.state = function() {
+  treeproto.state = function(newState) {
     // TODO: Should tree.state be implemented??? Probably..
   };
   
@@ -130,9 +132,10 @@
     this.container = container;
     this.parentnode = parent;
     this.options = $.extend(true, {display: true}, options);
-    var el = $("<div>" + valstring(value) + "</div>").addClass("jsavnode jsavtreenode")
-              .attr({"data-value": value, "id": this.id() }).data("node", this);
-    el.attr("id", this.id());
+    var el = this.options.nodeelement || $("<div>" + valstring(value) + "</div>");
+    el.addClass("jsavnode jsavtreenode")
+        .attr({"data-value": value, "id": this.id() })
+        .data("node", this);
     if (parent) {
       el.attr("data-parent", parent.id());
     }
@@ -336,6 +339,7 @@
     }
   };
   
+  // implementation for a tree edge
   var Edge = function(jsav, start, end, options) {
     this.jsav = jsav;
     this.startnode = start;
@@ -470,7 +474,9 @@
   edgeproto.state = function(newState) {
     // TODO: implement state
   };
+
   
+  /// Binary Tree implementation
   var BinaryTree = function(jsav, options) {
     this.init(jsav, options);
     this.element.addClass("jsavbinarytree");
@@ -481,6 +487,8 @@
     return new BinaryTreeNode(this, value, parent);
   };
   
+  
+  /// Binary Tree Node implementation
   var BinaryTreeNode = function(container, value, parent, options) {
     this.init(container, value, parent, options);
     this.element.addClass("jsavbinarynode");
@@ -488,7 +496,8 @@
   var binnodeproto = BinaryTreeNode.prototype;
   $.extend(binnodeproto, nodeproto);
 
-
+  // a general setchild method for bintreenode, pos parameter
+  // should be either 0 (left) or 1 (right), node is the new child
   function setchild(self, pos, node) {
     var oPos = pos?0:1;
     if (typeof node === "undefined") {
@@ -500,7 +509,7 @@
     } else if (node && node.constructor === BinaryTreeNode) {
       self.child(pos, node);
     } else {
-      if (!node) { // node is null, remove child
+      if (node === null) { // node is null, remove child
         if (self.child(pos) && self.child(pos).value() !== "jsavnull") {
           // child exists
           if (!self.child(oPos) || self.child(oPos).value() === "jsavnull") { // ..but no other child
@@ -515,8 +524,6 @@
         } else { // no such child
           // nothing to be done
         }
-      } else if (self.child(pos) && self.child(pos).value() !== "jsavnull") {
-        self.child(pos).value(node);
       } else if (self.child(pos)) {
         self.child(pos).value(node);
       } else {
@@ -550,6 +557,7 @@
   });
   binnodeproto._setcss = JSAV.anim(_setcss);
     
+  // expose the types to JSAV._types.ds
   var dstypes = JSAV._types.ds;
   dstypes.Tree = Tree;
   dstypes.TreeNode = TreeNode;
@@ -557,6 +565,7 @@
   dstypes.BinaryTree = BinaryTree;
   dstypes.BinaryTreeNode = BinaryTreeNode;
 
+  // add functions to jsav.ds to create tree, bintree, end edge
   JSAV.ext.ds.tree = function(options) {
     return new Tree(this, $.extend(true, {}, options));
   };
