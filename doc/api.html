@@ -556,6 +556,9 @@ out, this method will return the current text of the label.
       see <a href="http://raphaeljs.com/reference.html#Element.attr">Rapha&euml;l JS documentation</a>.</p>
       
     <h2>Circle API</h2>
+    <h3 class="apimethod">jsav.g.circle(cx, cy, r[, properties])</h3>
+    <p>Initializes a new circle with the given center and radius. Optional parameter <code>properties</code>,if given,  
+      should be an object with key-value pairs. See <a href="http://raphaeljs.com/reference.html#Element.attr">raphael.attr</a> for valid keys and values.</p>
     <h3 class="apimethod">.center([cx, cy])</h3>
     <p>Gets or sets the center of the circle. The center is returned as an object with
       properties <code>cx</code> and <code>cy</code>.</p>
@@ -563,6 +566,10 @@ out, this method will return the current text of the label.
     <p>Gets or sets the radius of the circle.</p>
       
     <h2>Ellipse API</h2>
+    <h3 class="apimethod">jsav.g.ellipse(cx, cy, rx, ry[, properties])</h3>
+    <p>Initializes a new ellipse with the given center and x and y radius. Optional parameter 
+      <code>properties</code>,if given, should be an object with key-value pairs. See 
+      <a href="http://raphaeljs.com/reference.html#Element.attr">raphael.attr</a> for valid keys and values.</p>
     <h3 class="apimethod">.center([cx, cy])</h3>
     <p>Same as center function of the circle.</p>
     <h3 class="apimethod">.radius([rx, ry])</h3>
@@ -570,12 +577,31 @@ out, this method will return the current text of the label.
       properties <code>rx</code> and <code>ry</code>.</p>
 
     <h2>Rectangle API</h2>
+    <h3 class="apimethod">jsav.g.rect(x, y, w, h[, r, properties])</h3>
+    <p>Initializes a new rectangle with upper left corner at <code>x, y</code> and given width and height.
+      Optional parameter <code>r</code> can be used to specify the roundness of corners.
+      Optional parameter <code>properties</code>,if given, should be an object with key-value pairs. See 
+      <a href="http://raphaeljs.com/reference.html#Element.attr">raphael.attr</a> for valid keys and values.</p>
     <h3 class="apimethod">.width([w])</h3>
     <p>Gets or sets the width of the rectangle.</p>
     <h3 class="apimethod">.height()</h3>
     <p>Gets or sets the height of the rectangle.</p>
 
     <h2>Line, Polygon, and Polyline API</h2>
+    <h3 class="apimethod">jsav.g.line(x1, y1, x2, y2[, properties])</h3>
+    <p>Initializes a line from point <code>x1, y1</code> to <code>x2, y2</code>. Optional parameter 
+      <code>properties</code>,if given, should be an object with key-value pairs. See 
+      <a href="http://raphaeljs.com/reference.html#Element.attr">raphael.attr</a> for valid keys and values.</p>
+
+    <h3 class="apimethod">jsav.g.polyline(points[, properties]) and jsav.polygon(points[, properties])</h3>
+    <p>Initializes a polyline or polygon. Parameter <code>points</code> should be an array of arrays with
+      x and y coordinates. For example:</p>
+    <pre>var polyline = av.g.polyline([[0, 0], [20, 20], [200, 200]], 
+                                      {"stroke-width": 7, "stroke":"#ddd"});</pre>
+    <p>Optional parameter 
+      <code>properties</code>,if given, should be an object with key-value pairs. See 
+      <a href="http://raphaeljs.com/reference.html#Element.attr">raphael.attr</a> for valid keys and values.</p>
+
     <h3 class="apimethod">.translatePoint(point, dx, dy)</h3>
     <p>Translates the given <code>point</code> in the (poly)line by the given amount of pixels. The point is a zero-indexed list of points used to initialize the polyline. For line, start point is index 0 and endpoint index 1.</p>
 
