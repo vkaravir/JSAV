@@ -41,6 +41,7 @@
   var treeproto = Tree.prototype;
   JSAV.ext.ds.extend("common", treeproto);
   treeproto.init = function(jsav, options) {
+    this._layoutDone = false;
     this.jsav = jsav;
     this.options = options;
     var el = this.options.element || $("<div/>");
