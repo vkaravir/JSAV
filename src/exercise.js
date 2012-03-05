@@ -192,7 +192,7 @@
       this.modelav = new JSAV($("<div><span class='jsavcounter'/><div class='jsavcontrols'/><p class='jsavoutput jsavline'></p></div>").addClass("jsavmodelanswer"));
       // 2. create a dialog for the model answer
       this.modelDialog = JSAV.utils.dialog(this.modelav.container, 
-                {'title': 'Model Answer', 'closeText': "Close", "closeOnClick": false, "modal": false});
+                {'title': 'Model Answer', "closeOnClick": false, "modal": false});
       // 3. generate the model structures and the state sequence
       var str = model(this.modelav);
       // 4. rewind the model answer and hide the dialog

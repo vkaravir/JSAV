@@ -70,7 +70,7 @@
       $dialog.append(html); // jquery or dom element
     }
     if ("title" in options) {
-      $dialog.prepend("<h2>" + options.title + "</h2>");
+      $dialog.prepend("<h2>" + options.title + "<a href='#' class='jsavdialogclose'>X</a></h2>");
     }
     if ("dialogClass" in options) {
       $dialog.addClass(options["dialogClass"]);
@@ -108,6 +108,7 @@
         $modalElem.click(close);
       }
     }
+    $dialog.find(".jsavdialogclose").click(close);
     if ("closeText" in options) {
       var closeButton = $('<button type="button" class="jsavrow">' + options.closeText + '</button>')
         .click(close);

@@ -275,7 +275,7 @@ a.jsavsettings {
   border: 1px solid black;
   -o-border-radius: 3px;
   -ms-border-radius: 3px;
-  -o-border-radius: 3px;
+  -moz-border-radius: 3px;
   -webkit-border-radius: 3px;
   border-radius: 3px;
   float:right; 
@@ -297,9 +297,10 @@ a.jsavsettings {
 /**** MODEL ANSWER ********/
 .jsavmodelanswer.jsavcontainer {
   padding: 0;
+  padding-bottom: 5px;
   background-color: white;
-  border-width: 0 0 1px 0;
-  border-style: dashed;
+  border-width: 0;
+  border-radius: 8px;
 }
 .jsavcontainer svg {
   pointer-events: none;
@@ -308,7 +309,29 @@ a.jsavsettings {
   float: left;
   left: 10px;
   position: relative;
-  top: 25px;
+  top: 15px;
+}
+.jsavmodelanswer .jsavcontrols a {
+  margin: 5px 20px 0 0;
+}
+.jsavdialogclose {
+  background-color: #AAA;
+  border: 2px solid white;
+  -ms-border-radius: 20px;
+  -webkit-border-radius: 20px;
+  -moz-border-radius: 20px;
+  -o-border-radius: 20px;
+  border-radius: 20px;
+  color: white;
+  float: right;
+  font-family: monospace;
+  font-size: 20px;
+  font-weight: normal;
+  height: 20px;
+  padding: 3px;
+  text-align: center;
+  text-decoration: none;
+  width: 20px;
 }
 
 /********* TREE DATA STRUCTURE *******/
