@@ -235,4 +235,30 @@ test("Array data-attributes", function() {
   equals(data2.center, false);
   equals(data2.noop, undefined);
 });
+
+test("Array CSS", function() {
+  var av = new JSAV("emptycontainer"),
+    arr1 = av.ds.array([10, 20, 30, 40], {indexed: true});
+  equals(arr1.css("color"), "rgb(0, 0, 0)");
+  arr1.css({color: "red"});
+  av.step();
+  equals(arr1.css("color"), "rgb(255, 0, 0)");
+  arr1.css({color: "blue", left: "20px"});
+  av.step();
+  equals(arr1.css("color"), "rgb(0, 0, 255)");
+  equals(arr1.css("left"), "20px");
+  
+  av.backward();
+  av.backward();
+  equals(arr1.css("color"), "rgb(255, 0, 0)");
+  ok(arr1.css("left") !== "20px");
+  
+  av.begin();
+  equals(arr1.css("color"), "rgb(0, 0, 0)");
+  ok(arr1.css("left") !== "20px");
+  
+  av.end();
+  equals(arr1.css("color"), "rgb(0, 0, 255)");
+  equals(arr1.css("left"), "20px");
+});
 })();

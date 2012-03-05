@@ -10,3 +10,7 @@ Changes in version 0.4
 * Styling improvements to array visualization
 * General swap effect added; swap now shows an arrow for the swapped elements
 * License changed to MIT license.
+
+Changes in dev version
+----------------------
+* Possibility to better control array styling

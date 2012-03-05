@@ -157,10 +157,31 @@
     }
     return this;
   });
+  arrproto._setarraycss = JSAV.anim(function(cssprops) {
+    var oldProps = $.extend(true, {}, cssprops),
+        el = this.element;
+    if (typeof cssprops !== "object") {
+      return [cssprops];
+    } else {
+      for (var i in cssprops) {
+        oldProps[i] = el.css(i);
+      }
+    }
+    if (!this.jsav.RECORD || !$.fx.off) { // only animate when playing, not when recording
+      this.element.animate(cssprops, this.jsav.SPEED);
+    } else {
+      this.element.css(cssprops);
+    }
+    return [oldProps];
+  });
   arrproto.css = function(indices, cssprop) {
     var $elems = getIndices($(this.element).find("li"), indices);
     if (typeof cssprop === "string") {
       return $elems.css(cssprop);
+    } else if (typeof indices === "string") {
+      return this.element.css(indices);
+    } else if (!$.isArray(indices) && typeof indices === "object") { // object, apply for array
+      return this._setarraycss(indices);
     } else {
       if ($.isFunction(indices)) { // if indices is a function, evaluate it right away and get a list of indices
         var all_elems = $(this.element).find("li"),

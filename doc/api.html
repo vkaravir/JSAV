@@ -6,7 +6,7 @@
   </head>
 
 <body>
-<h1>Documentation for the JavaScript Algorithm Visualization API (JSAV) Version 0.3</h1>
+<h1>Documentation for the JavaScript Algorithm Visualization API (JSAV) Version 0.5dev</h1>
 
 <p class="note">
 This documentation reflects the current status of the library.
@@ -243,6 +243,12 @@ The clone will remain invisible until the <code>show</code>
 method is called on it.
 </p>
 
+<h3 class="apimethod">.css(indices, cssPropertyName)</h3>
+<p>Returns the value of CSS property <code>cssPropertyName</code> for the first 
+  index matching the <code>indices</code> parameter. Parameter <code>indices</code> 
+  can be a number, array, or function like for the <code>highlight</code> method.</p>
+
+
 <h3 class="apimethod">.css(indices, css)</h3>
 <p>
 Apply the given CSS properties to the specified <code>indices</code>.
@@ -260,6 +266,19 @@ arr.css([0, 4], {"color": "green", "background-color": "#eee"});
 <p>
 <b>Returns:</b> a JSAV array object. Thus, this method can be chained.
 </p>
+
+<h3 class="apimethod">.css(cssPropertyName)</h3>
+<p>Returns the value of CSS property <code>cssPropertyName</code> for the array.</p>
+
+<h3 class="apimethod">.css(css)</h3>
+<p>
+Apply the given CSS properties to the array element.
+The argument <code>css</code> should be an object with property
+name-and-value pairs. For example, to move the array 20 pixels to the right:
+</p>
+<pre>
+arr.css({"left": "+=20px"});
+</pre>
 
 <h3 class="apimethod">.hide()</h3>
 <p>
