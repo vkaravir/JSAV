@@ -14,3 +14,4 @@ Changes in version 0.4
 Changes in dev version
 ----------------------
 * Possibility to better control array styling
+* Fixed a bug in tree positioning
