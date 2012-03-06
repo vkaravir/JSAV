@@ -270,7 +270,7 @@ a.jsavsettings {
   background-position: 50% 50%;
   background-repeat: no-repeat;
   background-color: #aaa;
-  text-indent: 9000px;
+  text-indent: 100%;
   padding: 2px;
   border: 1px solid black;
   -o-border-radius: 3px;
