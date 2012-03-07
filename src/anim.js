@@ -115,7 +115,7 @@
     // function for clearing the playing flag
     function clearPlaying() {
       // check to see if some elements are still animated
-      if (!that.container.find(":animated").size()) {
+      if (!that.isAnimating()) {
         // if not, clear the playing flag
         $controls.removeClass(playingCl);
       } else {
@@ -334,6 +334,10 @@
     this.RECORD = false;
     $.fx.off = false;
     return this;
+  };
+  JSAV.ext.isAnimating = function() {
+    // returns true if animation is playing, false otherwise
+    return !!this.container.find(":animated").size();
   };
 })(jQuery);
 
