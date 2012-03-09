@@ -204,7 +204,7 @@
   	var maxX = -1, maxY = -1, max = Math.max, previousLayout = tree._layoutDone;
   	$.each(results, function(key, value) {
   	  var oldPos = value.node.element.position();
-  	  if (!previousLayout || (oldPos.left == 0 && oldPos.top == 0)) {
+  	  if (!previousLayout || (oldPos.left == 0 && oldPos.top == 0)) {
     	  value.node.element.css({left: value.translation.width + "px", top: value.translation.height + "px"});
   	  } else {
     	  value.node.css({left: value.translation.width + "px", top: value.translation.height + "px"});
