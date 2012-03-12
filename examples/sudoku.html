@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Sudoku</title>
+    <link rel="stylesheet" href="../css/JSAV.css" type="text/css" media="screen" title="no title" charset="utf-8" />
+  </head>
+  <body>
+    <h1>JSAV Sudoku Grid</h1>
+    <p>This is a simple example of the flexibility of JSAV arrays. The example creates a sudoku game using nine
+      JSAV arrays. View the source to see how this is done in CSS and JavaScript.</p>
+  <div id="container">
+    <div class="jsavcontrols"></div>
+    <p class="jsavoutput jsavline"></p>
+    <div class="jsavcanvas">
+    </div>
+  </div>
+  <style>
+  /** change size and margins of arrays */
+  .jsavarray { margin: 0; margin-top: -1px; height: 20px; min-height: 20px;}
+  .jsavarray li { border-radius: 0 !important; height: 20px; width: 20px; font-size: 8px; line-height: 20px;}
+  
+  /** change the borders of the elements to create 3x3 grids **/
+  .jsavarray:nth-of-type(3n+1) { border-width: 2px;}
+  .jsavarray li:nth-of-type(3n) { border-right: 2px solid black;}
+  .jsavarray li:first-of-type { border-left: 2px solid black;}
+  .jsavarray:nth-of-type(3n-2) li { border-top: 2px solid black;}
+  .jsavarray:nth-of-type(9) li { border-bottom: 2px solid black;}
+  </style>
+    <script
+       src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js">
+    </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js"></script>
+    <script src="../lib/jquery.transform.light.js"></script>
+    <script src="../lib/raphael.js"></script>
+    <script src="../build/JSAV-min.js"></script>
+    <script>
+  // wrap everything in an anonymous function to not pollute global namespace
+  (function() {
+    var c1;
+    var av = new JSAV("container");
+    var arrays = [];
+    // initialize nine arrays
+    for (var i = 0; i < 9; i++) {
+      arrays[i] = av.ds.array([1, 2, 3, 4, 5, 6, 7, 8, 9]);
+    }
+    $(function() { 
+      // register a click event handler to all JSAV array indices
+      $(".jsavindex").click(function() {
+        //find the index of the clicked item
+        
+        var array = $(this).parent(),
+            pos = array.find(".jsavindex").index(this),
+            arraypos = array.parent().find(".jsavarray").index(array);
+        // change styling of the clicked element
+        arrays[arraypos].css(pos, {"background-color": "yellow", "transform": "scale(1.2)", "zIndex": 700});
+        av.step();
+      });
+    });
+    av.recorded();
+  })();
+    </script>
+  </body>
+</html>
