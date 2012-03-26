@@ -45,24 +45,38 @@
   height: 20px;
   line-height: 20px;
   color: black;
+  position: absolute;
 }
 .jsavindex span {
   z-index: 99;
   display: block;
 }
+.jsavhorizontalarray .jsavindexlabel {
+  bottom: -20px;
+}
 .jsavhorizontalarray .jsavindex:first-of-type, .jsavhorizontalarray .jsavindex:first-of-type .jsavvalue {
-  -o-border-radius: 8px 0 0 8px;
-  -moz-border-radius: 8px 0 0 8px;
-  -ms-border-radius: 8px 0 0 8px;
-  -webkit-border-radius: 8px 0 0 8px;
-  border-radius: 8px 0 0 8px;
+  -ms-border-top-left-radius: 8px;
+  -ms-border-bottom-left-radius: 8px;
+  -moz-border-top-left-radius: 8px;
+  -moz-border-bottom-left-radius: 8px;
+  -o-border-top-left-radius: 8px;
+  -o-border-bottom-left-radius: 8px;
+  -webkit-border-top-left-radius: 8px;
+  -webkit-border-bottom-left-radius: 8px;
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 8px;
 }
 .jsavhorizontalarray .jsavindex:last-of-type, .jsavhorizontalarray .jsavindex:last-of-type .jsavvalue {
-  -moz-border-radius: 0 8px 8px 0;
-  -o-border-radius: 0 8px 8px 0;
-  -ms-border-radius: 0 8px 8px 0;
-  -webkit-border-radius: 0 8px 8px 0;
-  border-radius: 0 8px 8px 0;
+  -ms-border-top-right-radius: 8px;
+  -ms-border-bottom-right-radius: 8px;
+  -moz-border-top-right-radius: 8px;
+  -moz-border-bottom-right-radius: 8px;
+  -o-border-top-right-radius: 8px;
+  -o-border-bottom-right-radius: 8px;
+  -webkit-border-top-right-radius: 8px;
+  -webkit-border-bottom-right-radius: 8px;
+  border-top-right-radius: 8px;
+  border-bottom-right-radius: 8px;
 }
 
 .jsavarray.jsavbararray {
@@ -120,6 +134,30 @@
 }
 .jsavverticalarray .jsavindexlabel {
   position: absolute;
+}
+.jsavverticalarray .jsavindex:first-of-type, .jsavverticalarray .jsavindex:first-of-type .jsavvalue {
+  -ms-border-top-left-radius: 8px;
+  -moz-border-top-left-radius: 8px;
+  -o-border-top-left-radius: 8px;
+  -webkit-border-top-left-radius: 8px;
+  border-top-left-radius: 8px;
+  -ms-border-top-right-radius: 8px;
+  -moz-border-top-right-radius: 8px;
+  -o-border-top-right-radius: 8px;
+  -webkit-border-top-right-radius: 8px;
+  border-top-right-radius: 8px;
+}
+.jsavverticalarray .jsavindex:last-of-type, .jsavverticalarray .jsavindex:last-of-type .jsavvalue {
+  -ms-border-bottom-left-radius: 8px;
+  -moz-border-bottom-left-radius: 8px;
+  -o-border-bottom-left-radius: 8px;
+  -webkit-border-bottom-left-radius: 8px;
+  border-bottom-left-radius: 8px;
+  -ms-border-bottom-right-radius: 8px;
+  -moz-border-bottom-right-radius: 8px;
+  -o-border-bottom-right-radius: 8px;
+  -webkit-border-bottom-right-radius: 8px;
+  border-bottom-right-radius: 8px;
 }
 
 /* bar array marker line */
