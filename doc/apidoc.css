@@ -17,6 +17,9 @@
   content: "NOTE: ";
   color: green;
 }
+h1, h2, h3, h4, h5, h6 {
+  font-family: Arial, sans-serif;
+}
 h2 {
   border-bottom: 1px dashed #bbb;
 }
@@ -28,7 +31,9 @@ h3.apimethod {
   font-family: monospace;
 }
 body {
-  margin: 20px;
+  margin: 20px 80px;
+  font-family: Georgia, Times, Helvetica, serif;
+  line-height: 1.5;
 }
 p, ul, ol, dl {
   margin-left: 10px;

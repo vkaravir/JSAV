@@ -361,6 +361,23 @@ Sets the value of the element at the given index to the given value.
   <li><code>endIndex</code>: Index in the array where the line will end, inclusive. Defaults to last index of the array.</li>
 </ul>
 
+<h3 class="apitopic">Events</h3>
+<p>There are functions to attach event handlers for the array elements. The events that can be
+  listened for are: click, dblclick, mousedown, mousemove, mouseup, mouseenter, and mouseleave. 
+  See <a href="http://api.jquery.com/category/events/">jQuery documentation</a> for details on 
+  the events. Every event handler gets as a first parameter the index of the array element that
+  the event was triggered for. The second parameter is the jQuery event object. Inside the event
+  handler function, <code>this</code> will refer to the JSAV array object. </p>
+<p><b>Returns:</b> a JSAV array object. Thus, this method can be chained.</p>
+<p>Example to toggle arrow on click of an element:</p>
+  <pre>arr.click(function(index) {
+    this.toggleArrow(index);
+  });</pre>
+<p>Since many of the JSAV array functions take the index as the first parameter, they can be used
+  as event handlers. For example, to highlight an index on mouseenter and unhighlight on mouseleave,
+  you can use:</p>
+  <pre>arr.mouseenter(arr.highlight).mouseleave(arr.unhighlight);</pre>
+
 <h3 class="apitopic">CSS control</h3>
 
 There are various options and style effects that can be controlled via
@@ -431,6 +448,22 @@ Currently, JSAV supports two types of trees: common tree and binary tree. The st
 <h3 class="apimethod">.layout()</h3>
 <p>This function (re)calculates the layout for the tree. Note, that the library does not do this automatically. That means that after changing the tree, you should call this manually at the end of each animation step. This function exists for all trees.</p>
 
+
+<h3 class="apitopic">Events</h3>
+<p>There are functions to attach event handlers for the nodes and edges in the tree. The events 
+  that can be
+  listened for are: click, dblclick, mousedown, mousemove, mouseup, mouseenter, and mouseleave. 
+  See <a href="http://api.jquery.com/category/events/">jQuery documentation</a> for details on 
+  the events. Every event handler gets as a parameter the jQuery event object. Inside the event
+  handler function, <code>this</code> will refer to the JSAV node or edge object. </p>
+<p>The function takes another, optional, parameter options that should be an object. It can be 
+  used to specify whether
+  the event handler is for nodes or edges. By default, it is attached to only nodes.
+<p><b>Returns:</b> a JSAV tree object. Thus, this method can be chained.</p>
+<p>For example, to highlight an node on mouseenter and unhighlight on mouseleave,
+  you can use:</p>
+  <pre>tree.mouseenter(function() { this.highlight(); })
+    .mouseleave(function() { this.unhighlight(); });</pre>
 
 <h2>Tree Node API</h2>
 <p>The following functions exist for both tree nodes and binary tree nodes.</p>

@@ -122,6 +122,40 @@
   treeproto.state = function(newState) {
     // TODO: Should tree.state be implemented??? Probably..
   };
+
+  // events to register as functions on tree
+  var events = ["click", "dblclick", "mousedown", "mousemove", "mouseup", 
+                "mouseenter", "mouseleave"];
+  // returns a function for the passed eventType that binds a passed
+  // function to that eventType nodes/edges in the tree
+  var eventhandler = function(eventType) {
+    return function(handler, options) {
+      // default options; not enabled for edges by default
+      var opts = jQuery.extend({node: true, edge: false}, options);
+      if (opts.node) {
+        this.element.on(eventType, ".jsavnode", function(e) {
+          var node = $(this).data("node");
+          // bind this to the node and call handler
+          // with the event as parameter
+          handler.call(node, e); 
+        });
+      }
+      if (opts.edge) {
+        this.jsav.canvas.on(eventType, '.jsavedge[data-container="' + this.id() + '"]', function(e) {
+          var edge = $(this).data("edge");
+          // bind this to the edge and call handler
+          // with the event as parameter
+          handler.call(edge, e);
+        });
+      }
+      return this;
+    }
+  };
+  // create the event binding functions and add to array prototype
+  for (var i = events.length; i--; ) {
+    treeproto[events[i]] = eventhandler(events[i]);
+  }
+
   
   var TreeNode = function(container, value, parent, options) {
     this.init(container, value, parent, options);
@@ -309,11 +343,23 @@
   nodeproto.state = function() {
     // TODO: Should this be implemented??? Probably..
   };
+  
+  // TODO: these are so ugly, do something! soon!
   nodeproto.highlight = function() {
     var testDiv = $('<div class="' + this.container.element[0].className + 
         '" style="position:absolute;left:-10000px">' + 
         '<div class="' + this.element[0].className + ' jsavhighlight"></div><div class="' + this.element[0].className + '" ></div></div>'),
   	  styleDiv = testDiv.find(".jsavnode").filter(".jsavhighlight");
+  	// TODO: general way to get styles for the whole av system
+  	$("body").append(testDiv);
+    this._setcss({color: styleDiv.css("color"), "background-color": styleDiv.css("background-color")});
+    testDiv.remove();
+  };
+  nodeproto.unhighlight = function() {
+    var testDiv = $('<div class="' + this.container.element[0].className + 
+        '" style="position:absolute;left:-10000px">' + 
+        '<div class="' + this.element[0].className + ' jsavhighlight"></div><div class="' + this.element[0].className + '" ></div></div>'),
+  	  styleDiv = testDiv.find(".jsavnode").not(".jsavhighlight");
   	// TODO: general way to get styles for the whole av system
   	$("body").append(testDiv);
     this._setcss({color: styleDiv.css("color"), "background-color": styleDiv.css("background-color")});
@@ -364,6 +410,8 @@
     this.g.rObj.node.setAttribute("class", "jsavedge");
     this.g.rObj.node.setAttribute("data-startnode", this.startnode.id());
     this.g.rObj.node.setAttribute("data-endnode", this.endnode.id());
+    this.g.rObj.node.setAttribute("data-container", this.container.id());
+    $(this.g.rObj.node).data("edge", this);
     if (visible) {
       if (this.jsav.currentStep() === 0) { // at beginning, just make it visible
         this.g.rObj.attr({"opacity": 1});

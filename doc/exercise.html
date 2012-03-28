@@ -315,47 +315,37 @@ her solution.
 <h2>Adding Student Interaction</h2>
 
 <p>
-The JSAV library design allows developers to represent all
-data structures using HTML elements.
 It is simple to attach listeners for user actions (like mouse clicks)
-to these elements using standard HTML.
-Looking at the initial HTML and the HTML generated to initialize the array (inside the loop in the <code>initialize</code> function),
-we see that it is an <code>ol</code> element with several
-<code>li</code> elements inside.
-And since the exercise was to click the indices, we will
-register a click event handler to these <code>li</code> elements.
+to JSAV data structures. We will
+register a click event handler to the array.
 Inside the handler, we need to first decide if we are in "swap mode" or not. This
 is done based on whether the last index is highlighted or not.
 </p>
 
 <pre>
-// we already have reference to the ol element, find its li children 
-// and bind a function to handle all click events
-$array.find("li").live("click", function() {
-  // find the index of the clicked (variable this) element within its' parent
-  var index = $array.find("li").index(this);
-  
+// bind a function to handle all click events on the array
+jsavArray.click(function(index) {
   // if last index is highlighted, we are in "swap mode"
-  if (jsavArray.isHighlight(arraySize - 1)) {
+  if (this.isHighlight(arraySize - 1)) {
     // when in swap mode, first click on index will store that index
     // and change the font size on the value
     if (swapIndex.value() == -1) {
       swapIndex.value(index);
       // apply the CSS property change to index
-      jsavArray.css(index, {"font-size": "130%"});
+      this.css(index, {"font-size": "130%"});
       av.step(); // add a step to the animation
     } else {
       // the second click (swapIndex has some value) will cause
       // the swap of indices index and stored swapIndex
-      jsavArray.swap(index, swapIndex.value());
+      this.swap(index, swapIndex.value());
       // change the font-size back to normal
-      jsavArray.css([swapIndex.value(), index], {"font-size": "100%"});
+      this.css([swapIndex.value(), index], {"font-size": "100%"});
       swapIndex.value(-1);
       exercise.gradeableStep(); // this step will be graded
     }
   } else { // we are in highlight mode
     // highlight the index
-    jsavArray.highlight(index);
+    this.highlight(index);
     if (index == (arraySize - 1)) {
       av.umsg("Good, now swap the first and last index");
     }

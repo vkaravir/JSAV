@@ -39,23 +39,19 @@
     var c1;
     var av = new JSAV("container");
     var arrays = [];
+    
+    // function to handle a click event on an array
+    var clickHandler = function(index, e) {
+      this.css(index, {"background-color": "yellow", "transform": "scale(1.2)", "zIndex": 700});
+      av.step();
+    };
+    
     // initialize nine arrays
     for (var i = 0; i < 9; i++) {
       arrays[i] = av.ds.array([1, 2, 3, 4, 5, 6, 7, 8, 9]);
+      // bind the clickHandler to handle click events on the array
+      arrays[i].click(clickHandler);
     }
-    $(function() { 
-      // register a click event handler to all JSAV array indices
-      $(".jsavindex").click(function() {
-        //find the index of the clicked item
-        
-        var array = $(this).parent(),
-            pos = array.find(".jsavindex").index(this),
-            arraypos = array.parent().find(".jsavarray").index(array);
-        // change styling of the clicked element
-        arrays[arraypos].css(pos, {"background-color": "yellow", "transform": "scale(1.2)", "zIndex": 700});
-        av.step();
-      });
-    });
     av.recorded();
   })();
     </script>

@@ -373,6 +373,28 @@
   arrproto.clear = function() {
     this.element.remove();
   };
+  
+  // events to register as functions on array
+  var events = ["click", "dblclick", "mousedown", "mousemove", "mouseup", 
+                "mouseenter", "mouseleave"];
+  // returns a function for the passed eventType that binds a passed
+  // function to that eventType for indices in the array
+  var eventhandler = function(eventType) {
+    return function(handler) {
+      var self = this;
+      this.element.on(eventType, ".jsavindex", function(e) {
+        var index = self.element.find(".jsavindex").index(this);
+        // bind this to the array and call handler
+        // with params array index and the event
+        handler.call(self, index, e); 
+      });
+      return this;
+    }
+  };
+  // create the event binding functions and add to array prototype
+  for (var i = events.length; i--; ) {
+    arrproto[events[i]] = eventhandler(events[i]);
+  }
  
   arrproto.toggleArrow = JSAV.anim(function(indices) {
     var $elems = getIndices($(this.element).find("li"), indices);
