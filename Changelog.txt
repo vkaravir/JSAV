@@ -16,3 +16,7 @@ Changes in dev version
 * Possibility to better control array styling
 * Fixed a bug in tree positioning
 * Added function isAnimating() to check whether an animation is playing
+* Restructured data structure implementations into modules:
+   - array moved to array.js
+   - layouts moved to same module as DS implementation
+* Added easier way to attach event handlers to the data structures
