@@ -1,6 +1,6 @@
 /**
 * Module that contains the message output implementations.
-* Depends on core.js, anim.js
+* Depends on core.js, anim.js, utils.js
 */
 (function($) {
   var BLOCKED_ATTRIBUTES = ['correct', 'comment', 'points'];

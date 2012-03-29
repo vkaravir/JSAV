@@ -1,6 +1,6 @@
 /**
 * Module that contains the configurable settings panel implementation
-* Depends on core.js, utils
+* Depends on core.js, utils.js
 */
 (function($) {
   if (typeof JSAV === "undefined") { return; }

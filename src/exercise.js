@@ -1,6 +1,6 @@
 /**
 * Module that contains support for TRAKLA2-type exercises.
-* Depends on core.js, anim.js, datastructures.js
+* Depends on core.js, anim.js, utils.js
 */
 (function($) {
   if (typeof JSAV === "undefined") { return; }
