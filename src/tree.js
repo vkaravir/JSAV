@@ -523,6 +523,10 @@
   edgeproto.state = function(newState) {
     // TODO: implement state
   };
+  edgeproto.position = function() {
+    var bbox = this.g.rObj.getBBox();
+    return {left: bbox.x, top: bbox.y};
+  };
 
   
   /// Binary Tree implementation
