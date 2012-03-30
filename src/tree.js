@@ -1,31 +1,10 @@
 /**
 * Module that contains the tree data structure implementations.
-* Depends on core.js, datastructures.js, anim.js
+* Depends on core.js, datastructures.js, anim.js, utils.js
 */
 (function($) {
   if (typeof JSAV === "undefined") { return; }
 
-  var _setcss = function(cssprop, value) {
-    var oldProps = $.extend(true, {}, cssprop),
-        el = this.element,
-        newprops;
-    if (typeof cssprop === "string" && typeof value !== "undefined") {
-      oldProps[cssprop] = el.css(cssprop);
-      newprops = {};
-      newprops[cssprop] = value;
-    } else {
-      for (var i in cssprop) {
-        oldProps[i] = el.css(i);
-      }
-      newprops = cssprop;
-    }
-    if (!this.jsav.RECORD || !$.fx.off) { // only animate when playing, not when recording
-      this.element.animate(newprops, this.jsav.SPEED);
-    } else {
-      this.element.css(newprops);
-    }
-    return [oldProps];
-  };
   var valstring = function(value) {
     var valstr = "<span class='jsavvalue'>";
     if (value === "jsavnull") {
@@ -111,14 +90,9 @@
     }
     return this.root().equals(otherTree.root(), options);
   };
-  treeproto._setcss = JSAV.anim(_setcss);
-  treeproto.css = function(cssprop) {
-    if (typeof cssprop === "string") {
-      return this.element.css(cssprop);
-    } else {
-      return this._setcss(cssprop);
-    }
-  };
+  treeproto.css = JSAV.utils._helpers.css;
+  treeproto._setcss = JSAV.anim(JSAV.utils._helpers._setcss);
+
   treeproto.state = function(newState) {
     // TODO: Should tree.state be implemented??? Probably..
   };
@@ -377,14 +351,8 @@
   	testDiv.remove();
   	return isHl;
   };
-  nodeproto._setcss = JSAV.anim(_setcss);
-  nodeproto.css = function(cssprop, value) {
-    if (typeof cssprop === "string" && typeof value === "undefined") {
-      return this.element.css(cssprop);
-    } else {
-      return this._setcss(cssprop, value);
-    }
-  };
+  nodeproto.css = JSAV.utils._helpers.css;
+  nodeproto._setcss = JSAV.anim(JSAV.utils._helpers._setcss);
   
   // implementation for a tree edge
   var Edge = function(jsav, start, end, options) {
@@ -608,7 +576,6 @@
     }
     return [oldVal];
   });
-  binnodeproto._setcss = JSAV.anim(_setcss);
     
   // expose the types to JSAV._types.ds
   var dstypes = JSAV._types.ds;

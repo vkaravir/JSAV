@@ -370,5 +370,35 @@ mixkey(math.random(), pool);
 /*!
  End seedrandom.js
  */
-
+ 
+  var _helpers = {};
+  u._helpers = _helpers;
+  _helpers.css = function(cssprop, value) {
+    if (typeof cssprop === "string" && typeof value === "undefined") {
+      return this.element.css(cssprop);
+    } else {
+      return this._setcss(cssprop, value);
+    }
+  };
+  _helpers._setcss = function(cssprop, value) {
+    var oldProps = $.extend(true, {}, cssprop),
+        el = this.element,
+        newprops;
+    if (typeof cssprop === "string" && typeof value !== "undefined") {
+      oldProps[cssprop] = el.css(cssprop);
+      newprops = {};
+      newprops[cssprop] = value;
+    } else {
+      for (var i in cssprop) {
+        oldProps[i] = el.css(i);
+      }
+      newprops = cssprop;
+    }
+    if (!this.jsav.RECORD || !$.fx.off) { // only animate when playing, not when recording
+      this.element.animate(newprops, this.jsav.SPEED);
+    } else {
+      this.element.css(newprops);
+    }
+    return [oldProps];
+  };
 })(jQuery);

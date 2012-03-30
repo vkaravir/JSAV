@@ -315,6 +315,8 @@ if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
       return $(this.element).html();
     }
   };
+  labelproto.css = JSAV.utils._helpers.css;
+  labelproto._setcss = JSAV.anim(JSAV.utils._helpers._setcss);
   
   JSAV.ext.label = function(text, options) {
     return new Label(this, text, options);
