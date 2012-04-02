@@ -390,8 +390,7 @@
   // expose the data structures for the JSAV
   JSAV.ext.ds.array = function(element, options) {
       return new AVArray(this, element, options);
-  JSAV.ext.ds.extend("common", edgeproto);
-};
+  };
 
 })(jQuery);
 
