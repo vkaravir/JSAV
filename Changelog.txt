@@ -20,3 +20,4 @@ Changes in dev version
    - array moved to array.js
    - layouts moved to same module as DS implementation
 * Added easier way to attach event handlers to the data structures
+* Fixed a bug in array and tree value handling
