@@ -240,8 +240,11 @@
     $elem.addClass("jsavarray");
     $elems.each(function(index, item) {
       var $this = $(this);
-      if (!$this.attr("data-value")) {
-        $this.attr("data-value", parseInt($this.html(), 10));
+      if (typeof $this.attr("data-value") === "undefined") {
+        $this.attr("data-value", $this.html());
+      }
+      if (!$this.attr("data-value-type")) {
+        $this.attr("data-value-type", "string");
       }
       $this.addClass("jsavnode jsavindex").html("<span class='jsavvalue'>" + $this.html() + "</span>");     
     });
