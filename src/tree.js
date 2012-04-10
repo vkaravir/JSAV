@@ -141,10 +141,12 @@
     this.container = container;
     this.parentnode = parent;
     this.options = $.extend(true, {display: true}, options);
-    var el = this.options.nodeelement || $("<div>" + valstring(value) + "</div>");
+    var el = this.options.nodeelement || $("<div>" + valstring(value) + "</div>"),
+      valtype = typeof(value);
+    if (valtype === "object") { valtype = "string"; }
     this.element = el;
     el.addClass("jsavnode jsavtreenode")
-        .attr({"data-value": value, "id": this.id() })
+        .attr({"data-value": value, "id": this.id(), "data-value-type": valtype })
         .data("node", this);
     if (parent) {
       el.attr("data-parent", parent.id());
@@ -166,15 +168,17 @@
   };
   nodeproto.value = function(newVal) {
     if (typeof newVal === "undefined") {
-      return this.element.attr("data-value");
+      return JSAV.utils.value2type(this.element.attr("data-value"), this.element.attr("data-value-type"));
     } else {
       this._setvalue(newVal);
     }
     return this;
   };
   nodeproto._setvalue = JSAV.anim(function(newValue) {
-    var oldVal = this.element.attr("data-value") || "";
-    this.element.html(valstring(newValue)).attr("data-value", newValue);
+    var oldVal = this.element.attr("data-value") || "",
+      valtype = typeof(newValue);
+    if (valtype === "object") { valtype = "string"; }
+    this.element.html(valstring(newValue)).attr({"data-value": newValue, "data-value-type": valtype});
     return [oldVal];
   });
   nodeproto.parent = function(newParent) {
@@ -569,8 +573,10 @@
   };
   binnodeproto._setvalue = JSAV.anim(function(newValue) {
     var oldVal = this.element.removeClass("jsavnullnode")
-          .attr("data-value");
-    this.element.html(valstring(newValue)).attr("data-value", newValue);
+          .attr("data-value"),
+        valtype = typeof(newValue);
+    if (valtype === "object") { valtype = "string"; }
+    this.element.html(valstring(newValue)).attr({"data-value": newValue, "data-value-type": valtype});
     if (newValue === "jsavnull") {
       this.element.addClass("jsavnullnode");
     }

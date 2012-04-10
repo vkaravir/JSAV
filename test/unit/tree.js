@@ -140,17 +140,17 @@
 	  var tree = av.ds.tree(),
 	      root = tree.root();
 	  tree.root("R"); // set the value of root
-	  equal(root.value(), "R");
+	  deepEqual(root.value(), "R");
 
     av.step();
-	  root.value("Root");
-	  equal(root.value(), "Root");
+	  root.value(4);
+	  deepEqual(root.value(), 4);
 
 	  ok(av.backward());
-	  equal(root.value(), "R");
+	  deepEqual(root.value(), "R");
 
 	  ok(av.forward());
-	  equal(root.value(), "Root");	  
+	  deepEqual(root.value(), 4);
   });
   
   test("Tree Node Highlight", function() {

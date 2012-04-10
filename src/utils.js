@@ -131,6 +131,21 @@
     return $dial;
   };
   
+  u.value2type = function(val, valtype) {
+    if (valtype === "number") {
+      return Number(val);
+    } else if (valtype === "boolean") {
+      if (typeof(val) === "boolean") {
+        return val;
+      } else if (typeof(val) === "string") {
+        return val === "true";
+      }
+      return !!val;
+    } else {
+      return val;
+    }
+  };
+  
   u.rand = {
     random: Math.random,
     numKey: function(min, max) {

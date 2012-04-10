@@ -155,18 +155,7 @@
       var $index = this.element.find("li:eq(" + index + ")"),
           val = $index.attr("data-value"),
           valtype = $index.attr("data-value-type");
-      if (valtype === "number") {
-        return Number(val);
-      } else if (valtype === "boolean") {
-        if (typeof(val) === "boolean") {
-          return val;
-        } else if (typeof(val) === "string") {
-          return val === "true";
-        }
-        return !!val;
-      } else {
-        return val;
-      }
+      return JSAV.utils.value2type(val, valtype);
     } else {
       return this.setvalue(index, newValue);
     }

@@ -24,7 +24,7 @@ test("Initializing from Array", function() {
 	var arr = av.ds.array(values);
 	ok( arr, "Array initialized" );
 	for (var i = 0; i < values.length; i++) {
-	  equals( arr.value(i), values[i], "Getting value of index " + i );
+	  deepEqual( arr.value(i), values[i], "Getting value of index " + i );
 	}
 });
 
@@ -267,7 +267,7 @@ test("Array values", function() {
     values = [-1, 0, 1, false, true, ""],
     arr = av.ds.array(values);
 	for (var i = 0; i < values.length; i++) {
-	  equals( arr.value(i), values[i], "Getting value of index " + i );
+	  deepEqual( arr.value(i), values[i], "Getting value of index " + i );
 	}
   arr.value(0, 0);
   arr.value(1, "<span>html test</span>");
@@ -276,16 +276,16 @@ test("Array values", function() {
   arr.value(4, [0]);
   arr.value(5, "0");
   av.step();
-  equals( arr.value(0), 0);
-  equals( arr.value(1), "<span>html test</span>");
-  equals( arr.value(2), false);
-  equals( arr.value(3), "");
-  equals( arr.value(4), "" + [0]);
-  equals( arr.value(5), "0");
+  deepEqual( arr.value(0), 0);
+  deepEqual( arr.value(1), "<span>html test</span>");
+  deepEqual( arr.value(2), false);
+  deepEqual( arr.value(3), "");
+  deepEqual( arr.value(4), "" + [0]);
+  deepEqual( arr.value(5), "0");
   ok(av.backward());
   ok(av.backward());
  	for (var i = 0; i < values.length; i++) {
-	  equals( arr.value(i), values[i], "Getting value of index " + i );
+	  deepEqual( arr.value(i), values[i], "Getting value of index " + i );
 	}
  
 });

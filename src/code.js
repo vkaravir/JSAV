@@ -46,18 +46,7 @@
   varproto.value = function(newValue) {
     if (typeof newValue === "undefined") {
       var val = this.element.find(".jsavvarvalue").attr("data-value");
-      if (this.options.type === "number") {
-        return Number(val);
-      } else if (this.options.type === "boolean") {
-        if (typeof(val) === "boolean") {
-          return val;
-        } else if (typeof(val) === "string") {
-          return val === "true";
-        }
-        return !!val;
-      } else {
-        return val;
-      }
+      return JSAV.utils.value2type(val, this.options.type);
     } else {
       this._setValue(newValue);
       return this;
