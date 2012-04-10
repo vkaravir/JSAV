@@ -282,7 +282,7 @@ if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
     } else {
       $(this.jsav.canvas).append(this.element);
     }
-    if (!(typeof this.options.display === "boolean" && this.options.display === true)) {
+    if ((typeof this.options.display === "boolean" && this.options.display === true)) {
       this.show();
     }    
   };
