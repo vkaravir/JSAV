@@ -11,8 +11,8 @@ Changes in version 0.4
 * General swap effect added; swap now shows an arrow for the swapped elements
 * License changed to MIT license.
 
-Changes in dev version
-----------------------
+Changes in version 0.4.2
+------------------------
 * Possibility to better control array styling
 * Fixed a bug in tree positioning
 * Added function isAnimating() to check whether an animation is playing
