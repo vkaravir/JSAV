@@ -273,15 +273,16 @@ test("Array values", function() {
   arr.value(1, "<span>html test</span>");
   arr.value(2, false);
   arr.value(3, "");
-  arr.value(4, "1");
+  arr.value(4, [0]);
   arr.value(5, "0");
   av.step();
   equals( arr.value(0), 0);
   equals( arr.value(1), "<span>html test</span>");
   equals( arr.value(2), false);
   equals( arr.value(3), "");
-  equals( arr.value(4), "1");
+  equals( arr.value(4), "" + [0]);
   equals( arr.value(5), "0");
+  ok(av.backward());
   ok(av.backward());
  	for (var i = 0; i < values.length; i++) {
 	  equals( arr.value(i), values[i], "Getting value of index " + i );

@@ -151,18 +151,34 @@
   };
   arrproto.size = function() { return this.element.find("li").size(); };
   arrproto.value = function(index, newValue) {
-    if (!newValue) {
-      var val = this.element.find("li:eq(" + index + ")").attr("data-value"),
-          intval = parseInt(val, 10);
-      if (isNaN(intval)) { return val || ""; 
-      } else return intval;
+    if (typeof newValue === "undefined") {
+      var $index = this.element.find("li:eq(" + index + ")"),
+          val = $index.attr("data-value"),
+          valtype = $index.attr("data-value-type");
+      if (valtype === "number") {
+        return Number(val);
+      } else if (valtype === "boolean") {
+        if (typeof(val) === "boolean") {
+          return val;
+        } else if (typeof(val) === "string") {
+          return val === "true";
+        }
+        return !!val;
+      } else {
+        return val;
+      }
     } else {
       return this.setvalue(index, newValue);
     }
   };
   arrproto._newindex = function(value) {
-    var ind = $("<li class='jsavnode jsavindex'><span class='jsavvalue'>" + (value || "") + "</span></li>")
-    ind.attr("data-value", value);
+    if (typeof value === "undefined") {
+      value = "";
+    }
+    var ind = $("<li class='jsavnode jsavindex'><span class='jsavvalue'>" + value + "</span></li>"),
+      valtype = typeof(value);
+    if (valtype === "object") { valtype = "string"; }
+    ind.attr("data-value", value).attr("data-value-type", valtype);
     return ind;
   };
   arrproto.setvalue = JSAV.anim(function(index, newValue) {
@@ -172,9 +188,10 @@
       this.element.append(newli);
       size = this.size();
     }
-    var $index = this.element.find("li:eq(" + index + ")");
-    var oldVal = $index.attr("data-value") || undefined;  
-    $index.attr("data-value", newValue);
+    var $index = this.element.find("li:eq(" + index + ")"),
+      valtype = typeof(newValue);
+    if (valtype === "object") { valtype = "string"; }
+    $index.attr("data-value", "" + newValue).attr("data-value-type", valtype);
     $index.find(".jsavvalue").html("" + newValue);
     this.layout();
   });
