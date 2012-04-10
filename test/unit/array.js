@@ -261,4 +261,31 @@ test("Array CSS", function() {
   equals(arr1.css("color"), "rgb(0, 0, 255)");
   equals(arr1.css("left"), "20px");
 });
+
+test("Array values", function() {
+  var av = new JSAV("emptycontainer"),
+    values = [-1, 0, 1, false, true, ""],
+    arr = av.ds.array(values);
+	for (var i = 0; i < values.length; i++) {
+	  equals( arr.value(i), values[i], "Getting value of index " + i );
+	}
+  arr.value(0, 0);
+  arr.value(1, "<span>html test</span>");
+  arr.value(2, false);
+  arr.value(3, "");
+  arr.value(4, "1");
+  arr.value(5, "0");
+  av.step();
+  equals( arr.value(0), 0);
+  equals( arr.value(1), "<span>html test</span>");
+  equals( arr.value(2), false);
+  equals( arr.value(3), "");
+  equals( arr.value(4), "1");
+  equals( arr.value(5), "0");
+  ok(av.backward());
+ 	for (var i = 0; i < values.length; i++) {
+	  equals( arr.value(i), values[i], "Getting value of index " + i );
+	}
+ 
+});
 })();
