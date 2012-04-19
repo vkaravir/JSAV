@@ -2,6 +2,7 @@
 * Module that contains support for program code constructs.
 * Depends on core.js, anim.js
 */
+/*global JSAV:true*/
 (function($) {
   if (typeof JSAV === "undefined") { return; }
   var Variable = function(jsav, value, options) {

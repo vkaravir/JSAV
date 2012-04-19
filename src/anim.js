@@ -2,6 +2,7 @@
 * Module that contains the animator implementations.
 * Depends on core.js
 */
+/*global JSAV:true */
 (function($) {
   if (typeof JSAV === "undefined") { return; }
 
@@ -13,10 +14,7 @@
     this.undoargs = opts.undoargs;
   };
   AnimatableOperation.prototype.apply = function() {
-    var undoFunction = undefined,
-        self = this;
-    if (typeof this.undoeffect === "undefined" || !$.isFunction(this.undoeffect)) { // if no undo function
-    } 
+    var self = this;
     var obj = self.obj,
       state = obj.state();
     var retVal = this.effect.apply(this.obj, this.args);
@@ -49,7 +47,7 @@
   };
   AnimStep.prototype.isEmpty = function() {
     return this.operations.length === 0;
-  }
+  };
 
   function backward(filter) {
     if (this._undo.length === 0) { return; }
@@ -195,7 +193,7 @@
     return function() {
       var jsav = this; // this points to the objects whose function was decorated
       if (!jsav.hasOwnProperty("_redo")) { jsav = this.jsav; }
-      if (jsav.options.animationMode == 'none') { // if not recording, apply immediately
+      if (jsav.options.animationMode === 'none') { // if not recording, apply immediately
         effect.apply(this, arguments);
       } else {
         var stackTop = jsav._undo[jsav._undo.length - 1];
@@ -235,7 +233,7 @@
       }
     }
     return true;
-  };
+  }
   JSAV.anim = anim;
   JSAV.ext.SPEED = 300;
   JSAV.ext.begin = begin;
@@ -343,13 +341,13 @@
 
 /** Override the borderWidth/Color CSS getters to return the
  info for border-top. */
-jQuery.cssHooks["borderColor"] = {
+jQuery.cssHooks.borderColor = {
 	get: function(elem) {
-	  return jQuery(elem).css("border-top-color");
+    return jQuery(elem).css("border-top-color");
 	}
 };
-jQuery.cssHooks["borderWidth"] = {
+jQuery.cssHooks.borderWidth = {
 	get: function(elem) {
-	  return jQuery(elem).css("border-top-width");
+    return jQuery(elem).css("border-top-width");
 	}
 };

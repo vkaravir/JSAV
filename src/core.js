@@ -1,6 +1,10 @@
+/**
+* Module that contains JSAV core.
+*/
+/*global Raphael:true*/
 (function() {
   var JSAV = function() {
-    create['apply'](this, arguments);
+    create.apply(this, arguments);
   };
   JSAV.position = function(elem) {
     var $el = $(elem),
@@ -20,7 +24,7 @@
     }
     return this.svg;
   };
-  JSAV._types = {} // for exposing types of JSAV for customization
+  JSAV._types = {}; // for exposing types of JSAV for customization
   JSAV.ext = {}; // for extensions
   JSAV.init = function(f) { // for initialization functions
     JSAV.init.functions.push(f);
@@ -29,7 +33,7 @@
   
   var AV = function() {},
     create = function() {
-      if (typeof arguments[0] == "string") {
+      if (typeof arguments[0] === "string") {
         this.container = $(document.getElementById(arguments[0]));
       } else {
         this.container = $(arguments[0]); // make sure it is jQuery object
@@ -39,7 +43,7 @@
       if (this.canvas.size() === 0) {
         this.canvas = $("<div />").addClass("jsavcanvas").appendTo(this.container);
       }
-      this.options = arguments[1] || { }
+      this.options = arguments[1] || { };
       this.RECORD = true;
       jQuery.fx.off = true; // by default we are recording changes, not animating them
       var options = arguments[1] || { }; // TODO: default options
@@ -55,7 +59,7 @@
         fs[i].call(this, options);
       }
     }
-  };
+  }
   function extensions(con, add) {
     var that = this;
     for (var prop in add) {
@@ -79,7 +83,5 @@
 }
   if (window) {
     window.JSAV = JSAV;
-  } else if (exports) { // CommonJS, no idea if this works, though :(
-    exports['JSAV'] = JSAV;
   }
  })();
