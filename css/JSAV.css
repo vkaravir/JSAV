@@ -52,7 +52,7 @@
   display: block;
 }
 .jsavhorizontalarray .jsavindexlabel {
-  bottom: -20px;
+  bottom: -25px;
 }
 .jsavhorizontalarray .jsavindex:first-of-type, .jsavhorizontalarray .jsavindex:first-of-type .jsavvalue {
   -ms-border-top-left-radius: 8px;
@@ -134,6 +134,9 @@
 }
 .jsavverticalarray .jsavindexlabel {
   position: absolute;
+  text-align: right;
+  width: auto;
+  right: 55px;
 }
 .jsavverticalarray .jsavindex:first-of-type, .jsavverticalarray .jsavindex:first-of-type .jsavvalue {
   -ms-border-top-left-radius: 8px;

@@ -464,7 +464,6 @@
         }
         maxWidth = Math.max(maxWidth, $indexLabel.innerWidth());
         $indexLabel.css({
-          left: -15 - $i.outerWidth() / 2,
           top: $i.innerHeight() / 2 - $indexLabel.outerHeight() / 2
         })
       });
