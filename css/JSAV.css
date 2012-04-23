@@ -82,6 +82,7 @@
 .jsavarray.jsavbararray {
   height: 150px;
   overflow: visible;
+  padding-bottom: 30px;
 }
 .jsavarray.jsavbararray .jsavindex {
   height: 100%;

@@ -46,7 +46,7 @@
               cy2 = y2 + curve,
               arrowStyle = "classic-wide-long";
           if (posdiffY > 1 || posdiffY < 1) {
-            y2 = off2.top - coff.top + $val1.outerHeight() + 5;
+            y2 = off2.top - coff.top + $val2.outerHeight() + 5;
             var angle = (y2 - y1) / (x2 - x1),
                 c1 = Math.pow(y1, 2) - (curve*curve / (1 + angle*angle)),
                 cy1 = y1 + Math.sqrt(y1*y1 - c1),
