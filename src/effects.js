@@ -6,25 +6,24 @@
   var jsanim = JSAV.anim;
   JSAV.ext.effects = {
     /* toggles visibility of an element */
-    _toggleVisible: function(hide) {
+    _toggleVisible: function() {
       if (!this.jsav.RECORD || !$.fx.off) { // only animate when playing, not when recording
-        hide?$(this.element).fadeOut(this.jsav.SPEED):$(this.element).fadeIn(this.jsav.SPEED);
+        this.element.fadeToggle(this.jsav.SPEED);
       } else {
-        hide?this.element.hide():this.element.show();
+        this.element.toggle();
       }
-      return [!hide]
+      return []
     },
     /* shows an element */
     show: function() {
-      console.log("show", this.element.size(), this.element);
       if (this.element.filter(":visible").size() === 0) {
-        this._toggleVisible(false);
+        this._toggleVisible();
       }
     }, 
     /* hides an element */
     hide: function() { 
       if (this.element.filter(":visible").size() > 0) {
-        this._toggleVisible(true);
+        this._toggleVisible();
       }
     },
     swap: function($str1, $str2, translateY) {

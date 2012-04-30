@@ -43,7 +43,6 @@
     el.css("display", "none");
     var visible = (typeof this.options.visible === "boolean" && this.options.visible === true);
     if (visible) {
-      console.log("making it visible");
       if (this.jsav.currentStep() === 0) { // at beginning, just make it visible
         el.css("display", "block");
       } else { // add effect to show otherwise
@@ -157,7 +156,6 @@
     el.css("display", "none");
     var visible = (typeof this.options.visible === "boolean" && this.options.visible === true);
     if (visible) {
-      console.log("visiblying a node");
       if (this.jsav.currentStep() === 0) { // at beginning, just make it visible
         el.css("display", "block");
       } else { // add effect to show otherwise
