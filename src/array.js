@@ -334,7 +334,7 @@
         handler.call(self, index, e); 
       });
       return this;
-    }
+    };
   };
   // create the event binding functions and add to array prototype
   for (var i = events.length; i--; ) {
@@ -423,16 +423,14 @@
   function horizontalArray(array) {
     var $arr = $(array.element).addClass("jsavhorizontalarray"),
       // rely on browser doing the calculation, float everything to the left..
-      $items = $arr.find("li").css({"float": "left", "position":"static"}),
+      $items = $arr.find("li"),//.css({"float": "left", "position":"static"}),
       maxHeight = -1,
       indexed = !!array.options.indexed;
     if (indexed) {
       $arr.addClass("jsavindexed");
     }
     $items.each(function(index, item) {
-      var $i = $(this),
-        pos = $i.position();
-      $i.css({"left": pos.left - index, "top": pos.top});
+      var $i = $(this);
       maxHeight = Math.max(maxHeight, $i.outerHeight());
       if (indexed) {
         var $indexLabel = $i.find(".jsavindexlabel");
@@ -442,8 +440,6 @@
         }
       }
     });
-    // ..and return float and positioning
-    $items.css({"float": "none", "position": "absolute"});
     $arr.height(maxHeight + (indexed?30:0));
     centerArray(array, $items.last());
   }
@@ -465,7 +461,7 @@
         maxWidth = Math.max(maxWidth, $indexLabel.innerWidth());
         $indexLabel.css({
           top: $i.innerHeight() / 2 - $indexLabel.outerHeight() / 2
-        })
+        });
       });
       $items.css("margin-left", maxWidth);
     }

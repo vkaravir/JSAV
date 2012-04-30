@@ -32,6 +32,7 @@
   list-style: none;
   min-height: 50px;
   padding: 0;
+  clear:both;
 }
 .jsavarray.jsavindexed {
   margin-bottom: 0;
@@ -39,6 +40,7 @@
 .jsavarray:after {
   content: "";
   clear: both;
+  display: block;
 }
 .jsavindexlabel {
   width: inherit;
@@ -50,6 +52,14 @@
 .jsavindex span {
   z-index: 99;
   display: block;
+}
+.jsavhorizontalarray .jsavindex {
+  float: left;
+  position: relative;
+}
+/* remove right borders from everything but the last index */
+.jsavhorizontalarray .jsavindex:not(:last-of-type) {
+  border-right: none;
 }
 .jsavhorizontalarray .jsavindexlabel {
   bottom: -25px;
