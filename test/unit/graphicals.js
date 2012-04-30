@@ -413,4 +413,38 @@
     equals(Math.round(currBB.width), Math.round(origBB.width));
     equals(Math.round(currBB.height), Math.round(origBB.height));
   });
+  
+  test("Test Label show/hide", function() {
+	  var av = new JSAV("emptycontainer"),
+	      label = av.label("label");
+	  equals(label.element.filter(":visible").size(), 1, "Label initially visible");
+	  label.hide();
+	  av.step();
+	  equals(label.element.filter(":visible").size(), 0, "Label not visible after hide");
+	  label.show();
+	  av.step();
+	  equals(label.element.filter(":visible").size(), 1, "Label again visible after show");
+	  label.show();
+	  av.step();
+	  equals(label.element.filter(":visible").size(), 1, "Label visible after another show");
+	  label.hide();
+	  av.step();
+	  equals(label.element.filter(":visible").size(), 0, "Label not visible after hide");
+	  label.hide();
+	  equals(label.element.filter(":visible").size(), 0, "Label not visible after another hide");
+	  av.recorded();
+	  jQuery.fx.off = true;
+	  av.end();
+	  equals(label.element.filter(":visible").size(), 0);
+	  av.backward();
+	  equals(label.element.filter(":visible").size(), 0, "Undoing hiding hidden should keep it hidden");
+	  av.begin();
+	  av.forward(); // redo hide
+	  av.forward(); // redo show
+	  av.forward(); // redo another show
+	  equals(label.element.filter(":visible").size(), 1, "Label visible after another show");
+	  av.backward(); // undo showing a visible Label
+	  equals(label.element.filter(":visible").size(), 1, "Undoing show of a visible should keep it visible");
+  });
+
 })();
