@@ -16,7 +16,7 @@
   </div>
   <style>
   /** change size and margins of arrays */
-  .jsavarray { margin: 0; margin-top: -1px; height: 20px; min-height: 20px;}
+  .jsavarray { margin: 0; height: 20px; min-height: 20px; }
   .jsavarray li { border-radius: 0 !important; height: 20px; width: 20px; font-size: 8px; line-height: 20px;}
   
   /** change the borders of the elements to create 3x3 grids **/
@@ -25,6 +25,7 @@
   .jsavarray li:first-of-type { border-left: 2px solid black;}
   .jsavarray:nth-of-type(3n-2) li { border-top: 2px solid black;}
   .jsavarray:nth-of-type(9) li { border-bottom: 2px solid black;}
+  .jsavarray:not(first-of-type) li{ border-top: none;}
   </style>
     <script
        src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js">
