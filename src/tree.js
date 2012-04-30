@@ -40,9 +40,10 @@
     this.rootnode = this.newNode("", null);
     this.element.attr({"data-root": this.rootnode.id(), "id": this.id()});
     this.rootnode.element.attr("data-child-role", "root");
-    el.css("display", "hidden");
-    var visible = (typeof this.options.display === "boolean" && this.options.display === true);
+    el.css("display", "none");
+    var visible = (typeof this.options.visible === "boolean" && this.options.visible === true);
     if (visible) {
+      console.log("making it visible");
       if (this.jsav.currentStep() === 0) { // at beginning, just make it visible
         el.css("display", "block");
       } else { // add effect to show otherwise
@@ -141,7 +142,7 @@
     this.jsav = container.jsav;
     this.container = container;
     this.parentnode = parent;
-    this.options = $.extend(true, {display: true}, options);
+    this.options = $.extend(true, {visible: true}, options);
     var el = this.options.nodeelement || $("<div>" + valstring(value) + "</div>"),
       valtype = typeof(value);
     if (valtype === "object") { valtype = "string"; }
@@ -153,9 +154,10 @@
       el.attr("data-parent", parent.id());
     }
     this.container.element.append(el);
-    el.css("display", "hidden");
-    var visible = (typeof this.options.display === "boolean" && this.options.display === true);
+    el.css("display", "none");
+    var visible = (typeof this.options.visible === "boolean" && this.options.visible === true);
     if (visible) {
+      console.log("visiblying a node");
       if (this.jsav.currentStep() === 0) { // at beginning, just make it visible
         el.css("display", "block");
       } else { // add effect to show otherwise
@@ -450,10 +452,10 @@
 
   // add functions to jsav.ds to create tree, bintree, end edge
   JSAV.ext.ds.tree = function(options) {
-    return new Tree(this, $.extend(true, {}, options));
+    return new Tree(this, $.extend(true, {visible: true}, options));
   };
   JSAV.ext.ds.bintree = function(options) {
-    return new BinaryTree(this, $.extend(true, {}, options));
+    return new BinaryTree(this, $.extend(true, {visible: true}, options));
   };
   JSAV.ext.ds.edge = function(options) {
     return new Edge(this, $.extend(true, {}, options));

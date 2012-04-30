@@ -7,7 +7,7 @@
   if (typeof JSAV === "undefined") { return; }
   var Variable = function(jsav, value, options) {
     this.jsav = jsav;
-    this.options = $.extend({display: false, type: typeof value}, options);
+    this.options = $.extend({visible: false, type: typeof value}, options);
     this.element = $('<div class="jsavvariable">' +
                       '<span class="jsavvarlabel"></span> <span class="jsavvalue jsavvarvalue">' + 
                       value + '</span></div>');
@@ -25,19 +25,14 @@
     if (this.options.name) {
       this.element.attr("data-varname", this.options.name);
     }
-    if (!this.options.display) {
+    if (!this.options.visible) {
       this.element.css("display", "none");
     }    
   };
   var varproto = Variable.prototype;
-  varproto.show = JSAV.anim(
-    function() { this.element.fadeIn(this.jsav.SPEED); }, 
-    function() { this.element.fadeOut(this.jsav.SPEED); }
-  );
-  varproto.hide = JSAV.anim(
-    function() { this.element.fadeOut(this.jsav.SPEED); }, 
-    function() { this.element.fadeIn(this.jsav.SPEED); }
-  );
+  varproto._toggleVisible = JSAV.anim(JSAV.ext.effects._toggleVisible);
+  varproto.show = JSAV.ext.effects.show;
+  varproto.hide = JSAV.ext.effects.hide;
   varproto._setValue = JSAV.anim(
     function(newValue) {
       this.element.find(".jsavvarvalue").html(newValue);

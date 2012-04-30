@@ -5,6 +5,28 @@
 (function($) {
   var jsanim = JSAV.anim;
   JSAV.ext.effects = {
+    /* toggles visibility of an element */
+    _toggleVisible: function(hide) {
+      if (!this.jsav.RECORD || !$.fx.off) { // only animate when playing, not when recording
+        hide?$(this.element).fadeOut(this.jsav.SPEED):$(this.element).fadeIn(this.jsav.SPEED);
+      } else {
+        hide?this.element.hide():this.element.show();
+      }
+      return [!hide]
+    },
+    /* shows an element */
+    show: function() {
+      console.log("show", this.element.size(), this.element);
+      if (this.element.filter(":visible").size() === 0) {
+        this._toggleVisible(false);
+      }
+    }, 
+    /* hides an element */
+    hide: function() { 
+      if (this.element.filter(":visible").size() > 0) {
+        this._toggleVisible(true);
+      }
+    },
     swap: function($str1, $str2, translateY) {
       var $val1 = $str1.find("span.jsavvalue"),
           $val2 = $str2.find("span.jsavvalue"),

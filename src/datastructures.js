@@ -25,18 +25,7 @@
     }
     return res;
   };
-  
-  // helper functions we want to keep private
-  var priv = {
-    _hide: function() {
-      $(this.element).fadeOut(this.jsav.SPEED);
-    },
-    // utility function that actually implements show
-    _show: function() {
-      $(this.element).fadeIn(this.jsav.SPEED);
-    }
-  };
-  
+    
   // common properties/functions for all data structures, these can be copied
   // to the prototype of a new DS using the addCommonProperties(prototype) function
   var common = {
@@ -58,13 +47,9 @@
       'position': function() {
         return JSAV.position(this.element);
       },
-      // utility function that actually implements hide
-      // animated show function
-      show: JSAV.anim(function() { priv._show.apply(this); }, 
-        function() { priv._hide.apply(this); }),
-      // animated hide function
-      hide: JSAV.anim(function() { priv._hide.apply(this); },
-        function() { priv._show.apply(this); }),
+      _toggleVisible: JSAV.anim(JSAV.ext.effects._toggleVisible),
+      show: JSAV.ext.effects.show,
+      hide: JSAV.ext.effects.hide,
       // dummy methods for initializing a DS, the DS should override these
       initialize: function() { },
       initializeFromElement: function() { },

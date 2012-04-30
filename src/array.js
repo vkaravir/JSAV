@@ -147,7 +147,7 @@
     for (var i=0; i < size; i++) {
       vals[i] = this.value(i);
     }
-    return new AVArray(this.jsav, vals, $.extend(true, {}, this.options, {display: false})); 
+    return new AVArray(this.jsav, vals, $.extend(true, {}, this.options, {visible: false})); 
   };
   arrproto.size = function() { return this.element.find("li").size(); };
   arrproto.value = function(index, newValue) {
@@ -188,7 +188,7 @@
     var el = this.options.element || $("<ol/>"),
       liel, liels = $();
     el.addClass("jsavarray");
-    this.options = jQuery.extend({display: true}, this.options);
+    this.options = jQuery.extend({visible: true}, this.options);
     for (var key in this.options) {
       var val = this.options[key];
       if (this.options.hasOwnProperty(key) && typeof(val) === "string" 
@@ -206,8 +206,8 @@
     }
     this.element = el;
     this.layout();
-    el.css("display", "hidden");
-    var visible = (typeof this.options.display === "boolean" && this.options.display === true);
+    el.css("display", "none");
+    var visible = (typeof this.options.visible === "boolean" && this.options.visible === true);
     if (visible) {
       if (this.jsav.currentStep() === 0) { // at beginning, just make it visible
         el.css("display", "block");

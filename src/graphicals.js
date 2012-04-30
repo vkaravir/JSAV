@@ -273,7 +273,7 @@ if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
   
   var Label = function(jsav, text, options) {
     this.jsav = jsav;
-    this.options = $.extend({display: true}, options);
+    this.options = $.extend({visible: true}, options);
     this.element = $('<div class="jsavlabel" style="display:none;">' + text + '</div>');
     if (this.options.before) {
       this.element.insertBefore(this.options.before.element);
@@ -282,19 +282,14 @@ if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
     } else {
       $(this.jsav.canvas).append(this.element);
     }
-    if ((typeof this.options.display === "boolean" && this.options.display === true)) {
+    if ((typeof this.options.visible === "boolean" && this.options.visible === true)) {
       this.show();
     }    
   };
   var labelproto = Label.prototype;
-  labelproto.show = JSAV.anim(
-    function() { this.element.fadeIn(this.jsav.SPEED); }, 
-    function() { this.element.fadeOut(this.jsav.SPEED); }
-  );
-  labelproto.hide = JSAV.anim(
-    function() { this.element.fadeOut(this.jsav.SPEED); }, 
-    function() { this.element.fadeIn(this.jsav.SPEED); }
-  );
+  labelproto._toggleVisible = JSAV.anim(JSAV.ext.effects._toggleVisible);
+  labelproto.show = JSAV.ext.effects.show;
+  labelproto.hide = JSAV.ext.effects.hide;
   labelproto._setText = JSAV.anim(
     function(newText) {
       this.element.html(newText);
