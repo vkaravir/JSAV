@@ -130,16 +130,12 @@
       return this._setcss(indices, cssprop);
     }
   };
-  function realSwap(index1, index2, options) {
-    var $pi1 = $(this.element).find("li:eq(" + index1 + ")"), // index
+  arrproto.swap = JSAV.anim(function(index1, index2, options) {
+    var $pi1 = $(this.element).find("li:eq(" + index1 + ")"), 
       $pi2 = $(this.element).find("li:eq(" + index2 + ")");
     this.jsav.effects.swap($pi1, $pi2);
-  }
-  arrproto.swap = JSAV.anim(function(index1, index2, options) {
-    realSwap.apply(this, arguments);
-    return this; 
-  }, realSwap
-  );
+    return [index1, index2, options];
+  });
   arrproto.clone = function() { 
     // fetch all values
     var size = this.size(),
