@@ -1,16 +1,12 @@
 For changes before version 0.3.1, see 
   http://algoviz.org/algoviz-wiki/index.php/JSAV_Roadmap
-  
-Changes in version 0.4
-----------------------
-* Support for tree and binary tree
-* Support for vertical array layout
-* Removed the initial support for binary search tree
-* Documentation for graphical primitives
-* Styling improvements to array visualization
-* General swap effect added; swap now shows an arrow for the swapped elements
-* License changed to MIT license.
 
+Changes in dev version
+----------------------
+* bug fixes:
+   - issue with changing array value in horizontal layout in Webkit based browsers fixed
+   - show/hide bug for data structures fixed
+  
 Changes in version 0.4.2
 ------------------------
 * Possibility to better control array styling
@@ -21,3 +17,13 @@ Changes in version 0.4.2
    - layouts moved to same module as DS implementation
 * Added easier way to attach event handlers to the data structures
 * Fixed a bug in array and tree value handling
+
+Changes in version 0.4
+----------------------
+* Support for tree and binary tree
+* Support for vertical array layout
+* Removed the initial support for binary search tree
+* Documentation for graphical primitives
+* Styling improvements to array visualization
+* General swap effect added; swap now shows an arrow for the swapped elements
+* License changed to MIT license.
