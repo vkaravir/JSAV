@@ -325,13 +325,24 @@
   // returns a function for the passed eventType that binds a passed
   // function to that eventType for indices in the array
   var eventhandler = function(eventType) {
-    return function(handler) {
+    return function(data, handler) {
+      // store reference to this, needed when executing the handler
       var self = this;
+      // bind a jQuery event handler, limit to .jsavindex
       this.element.on(eventType, ".jsavindex", function(e) {
+        // get the index of the clicked element
         var index = self.element.find(".jsavindex").index(this);
-        // bind this to the array and call handler
-        // with params array index and the event
-        handler.call(self, index, e); 
+        if ($.isFunction(data)) { // if no custom data..
+          // ..bind this to the array and call handler
+          // with params array index and the event
+          data.call(self, index, e);
+        } else if ($.isFunction(handler)) { // if custom data is passed
+          // ..bind this to the array and call handler
+          var params = $.isArray(data)?data.slice(0):[data]; // get a cloned array or data as array
+          params.unshift(index); // add index to first parameter
+          params.push(e); // jQuery event as the last
+          handler.apply(self, params); // apply the function
+        }
       });
       return this;
     };

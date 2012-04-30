@@ -321,4 +321,36 @@ test("Test show/hide", function() {
 	av.backward(); // undo showing a visible array
 	equals(arr.element.filter(":visible").size(), 1, "Undoing show of a visible should keep it visible");
 });
+
+test("Test click event", function() {
+  expect(12);
+  var handler1 = function(index, event) {
+    equals(index, 2);
+    ok(event);
+    equals(this.value(index), 3);
+  };
+  var handler2 = function(index, myval, event) {
+    equals(myval, "kissa");
+    equals(index, 0);
+    ok(event);
+    equals(this.value(index), 5);
+  }
+  var handler3 = function(index, myval, myval2, event) {
+    equals(myval, "kissa");
+    equals(myval2, "koira");
+    equals(index, 3);
+    ok(event);
+    equals(this.value(index), 12);
+  }
+	var av = new JSAV("arraycontainer"),
+	    arr = av.ds.array([1, 2, 3, 4]),
+	    arr2 = av.ds.array([5, 6, 7, 8]),
+	    arr3 = av.ds.array([9, 10, 11, 12]);
+  arr.click(handler1);
+  arr2.click("kissa", handler2);
+  arr3.click(["kissa", "koira"], handler3);
+  arr.element.find(".jsavindex:eq(2)").click();
+  arr2.element.find(".jsavindex:eq(0)").click();
+  arr3.element.find(".jsavindex:eq(3)").click();
+});
 })();

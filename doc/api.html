@@ -366,7 +366,7 @@ Sets the value of the element at the given index to the given value.
   listened for are: click, dblclick, mousedown, mousemove, mouseup, mouseenter, and mouseleave. 
   See <a href="http://api.jquery.com/category/events/">jQuery documentation</a> for details on 
   the events. Every event handler gets as a first parameter the index of the array element that
-  the event was triggered for. The second parameter is the jQuery event object. Inside the event
+  the event was triggered for. The last parameter is the jQuery event object. Inside the event
   handler function, <code>this</code> will refer to the JSAV array object. </p>
 <p><b>Returns:</b> a JSAV array object. Thus, this method can be chained.</p>
 <p>Example to toggle arrow on click of an element:</p>
@@ -377,7 +377,13 @@ Sets the value of the element at the given index to the given value.
   as event handlers. For example, to highlight an index on mouseenter and unhighlight on mouseleave,
   you can use:</p>
   <pre>arr.mouseenter(arr.highlight).mouseleave(arr.unhighlight);</pre>
-
+  <p>You can also pass custom arguments to the event handler function. To do this, the first argument
+  to the event binding function should be an array of parameters that will be passed as parameters to
+  the event handler function. This is best explained with an example:</p>
+  <pre>arr.mouseenter([{"color": "red"}], arr.css).mouseleave([{"color": "black"], arr.css});</pre>
+  <p>This will use array's <code>css</code> function as the event handler and pass it another parameter
+    when the event is triggered. On mouse enter, the function call will essentially be: 
+    <code>arr(index, {"color": "red"}, e)</code>. Here, <code>e</code> is again the jQuery event object.</p>
 <h3 class="apitopic">CSS control</h3>
 
 There are various options and style effects that can be controlled via
@@ -466,14 +472,20 @@ Currently, JSAV supports two types of trees: common tree and binary tree. The st
   See <a href="http://api.jquery.com/category/events/">jQuery documentation</a> for details on 
   the events. Every event handler gets as a parameter the jQuery event object. Inside the event
   handler function, <code>this</code> will refer to the JSAV node or edge object. </p>
-<p>The function takes another, optional, parameter options that should be an object. It can be 
+  <p>The function takes another, optional, parameter options that should be an object. It can be 
   used to specify whether
   the event handler is for nodes or edges. By default, it is attached to only nodes.
-<p><b>Returns:</b> a JSAV tree object. Thus, this method can be chained.</p>
-<p>For example, to highlight an node on mouseenter and unhighlight on mouseleave,
+  <p><b>Returns:</b> a JSAV tree object. Thus, this method can be chained.</p>
+  <p>For example, to highlight an node on mouseenter and unhighlight on mouseleave,
   you can use:</p>
   <pre>tree.mouseenter(function() { this.highlight(); })
     .mouseleave(function() { this.unhighlight(); });</pre>
+  <p>To attach a handler to edges, you can do:</p>
+  <pre>tree.mouseenter(yourEventHandler, {edge: true});</pre>
+  <p>Similarly to arrays, you can also pass custom data to the handler. For example, 
+    <code>bt.click({"color": "blue"}, JSAV.utils._helpers.css);</code> would call the <code>css</code>
+    function with the given parameter. </p>
+  
 
 <h2>Tree Node API</h2>
 <p>The following functions exist for both tree nodes and binary tree nodes.</p>
