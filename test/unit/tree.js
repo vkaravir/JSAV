@@ -370,5 +370,39 @@
 	  equal(lrl.edgeToParent().end().id(), lr.id());
 	  equal(lr.edgeToParent().end().id(), left.id());
   });
-  
+
+test("Test show/hide", function() {
+	var av = new JSAV("emptycontainer"),
+	    tree = av.ds.bintree();
+
+	equals(tree.element.filter(":visible").size(), 1, "Tree initially visible");
+	tree.hide();
+	av.step();
+	equals(tree.element.filter(":visible").size(), 0, "Tree not visible after hide");
+	tree.show();
+	av.step();
+	equals(tree.element.filter(":visible").size(), 1, "Tree again visible after show");
+	tree.show();
+	av.step();
+	equals(tree.element.filter(":visible").size(), 1, "Tree visible after another show");
+	tree.hide();
+	av.step();
+	equals(tree.element.filter(":visible").size(), 0, "Tree not visible after hide");
+	tree.hide();
+	equals(tree.element.filter(":visible").size(), 0, "Tree not visible after another hide");
+	av.recorded();
+	jQuery.fx.off = true;
+	av.end();
+	equals(tree.element.filter(":visible").size(), 0);
+	av.backward();
+	equals(tree.element.filter(":visible").size(), 0, "Undoing hiding hidden should keep it hidden");
+	av.begin();
+	av.forward(); // redo hide
+	av.forward(); // redo show
+	av.forward(); // redo another show
+	equals(tree.element.filter(":visible").size(), 1, "Tree visible after another show");
+	av.backward(); // undo showing a visible Tree
+	equals(tree.element.filter(":visible").size(), 1, "Undoing show of a visible should keep it visible");
+});
+ 
 })();

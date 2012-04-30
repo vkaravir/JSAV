@@ -287,6 +287,38 @@ test("Array values", function() {
  	for (var i = 0; i < values.length; i++) {
 	  deepEqual( arr.value(i), values[i], "Getting value of index " + i );
 	}
- 
+});
+
+test("Test show/hide", function() {
+	var av = new JSAV("arraycontainer"),
+	    arr = av.ds.array([0, 7, 4, 3]);
+	equals(arr.element.filter(":visible").size(), 1, "Array initially visible");
+	arr.hide();
+	av.step();
+	equals(arr.element.filter(":visible").size(), 0, "Array not visible after hide");
+	arr.show();
+	av.step();
+	equals(arr.element.filter(":visible").size(), 1, "Array again visible after show");
+	arr.show();
+	av.step();
+	equals(arr.element.filter(":visible").size(), 1, "Array visible after another show");
+	arr.hide();
+	av.step();
+	equals(arr.element.filter(":visible").size(), 0, "Array not visible after hide");
+	arr.hide();
+	equals(arr.element.filter(":visible").size(), 0, "Array not visible after another hide");
+	av.recorded();
+	jQuery.fx.off = true;
+	av.end();
+	equals(arr.element.filter(":visible").size(), 0);
+	av.backward();
+	equals(arr.element.filter(":visible").size(), 0, "Undoing hiding hidden should keep it hidden");
+	av.begin();
+	av.forward(); // redo hide
+	av.forward(); // redo show
+	av.forward(); // redo another show
+	equals(arr.element.filter(":visible").size(), 1, "Array visible after another show");
+	av.backward(); // undo showing a visible array
+	equals(arr.element.filter(":visible").size(), 1, "Undoing show of a visible should keep it visible");
 });
 })();
