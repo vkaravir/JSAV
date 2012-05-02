@@ -150,6 +150,10 @@
   for (var i = events.length; i--; ) {
     treeproto[events[i]] = eventhandler(events[i]);
   }
+  treeproto.on = function(eventName, data, handler, options) {
+    eventhandler(eventName).call(this, data, handler, options);
+    return this;
+  };
 
   
   var TreeNode = function(container, value, parent, options) {

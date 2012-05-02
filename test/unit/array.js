@@ -353,4 +353,36 @@ test("Test click event", function() {
   arr2.element.find(".jsavindex:eq(0)").click();
   arr3.element.find(".jsavindex:eq(3)").click();
 });
+
+test("Test on event binding and custom events", function() {
+  expect(12);
+  var handler1 = function(index, event) {
+    equals(index, 2);
+    ok(event);
+    equals(this.value(index), 3);
+  };
+  var handler2 = function(index, myval, event) {
+    equals(myval, "kissa");
+    equals(index, 0);
+    ok(event);
+    equals(this.value(index), 5);
+  }
+  var handler3 = function(index, myval, myval2, event) {
+    equals(myval, "kissa");
+    equals(myval2, "koira");
+    equals(index, 3);
+    ok(event);
+    equals(this.value(index), 12);
+  }
+	var av = new JSAV("arraycontainer"),
+	    arr = av.ds.array([1, 2, 3, 4]),
+	    arr2 = av.ds.array([5, 6, 7, 8]),
+	    arr3 = av.ds.array([9, 10, 11, 12]);
+  arr.on("jsavclick", handler1);
+  arr2.on("jsavclick", "kissa", handler2);
+  arr3.on("jsavclick", ["kissa", "koira"], handler3);
+  arr.element.find(".jsavindex:eq(2)").trigger("jsavclick");
+  arr2.element.find(".jsavindex:eq(0)").trigger("jsavclick");
+  arr3.element.find(".jsavindex:eq(3)").trigger("jsavclick");
+});
 })();

@@ -347,6 +347,10 @@
   for (var i = events.length; i--; ) {
     arrproto[events[i]] = eventhandler(events[i]);
   }
+  arrproto.on = function(eventName, data, handler) {
+    eventhandler(eventName).call(this, data, handler);
+    return this;
+  };
  
   arrproto.toggleArrow = JSAV.anim(function(indices) {
     var $elems = getIndices($(this.element).find("li"), indices);

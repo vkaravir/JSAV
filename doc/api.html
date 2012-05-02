@@ -384,6 +384,11 @@ Sets the value of the element at the given index to the given value.
   <p>This will use array's <code>css</code> function as the event handler and pass it another parameter
     when the event is triggered. On mouse enter, the function call will essentially be: 
     <code>arr(index, {"color": "red"}, e)</code>. Here, <code>e</code> is again the jQuery event object.</p>
+<h3 class="apimethod">.on(eventName, [data,], handler)</h3>
+<p>To bind other events than the ones listed above, you can use the <code>on</code> function. It takes
+  as the first parameter the name of the event. Multiple events can be bound by separating their names with
+  spaces. Other parameters are the same as for the shortcuts.</p>
+
 <h3 class="apitopic">CSS control</h3>
 
 There are various options and style effects that can be controlled via
@@ -485,6 +490,10 @@ Currently, JSAV supports two types of trees: common tree and binary tree. The st
   <p>Similarly to arrays, you can also pass custom data to the handler. For example, 
     <code>bt.click({"color": "blue"}, JSAV.utils._helpers.css);</code> would call the <code>css</code>
     function with the given parameter. </p>
+<h3 class="apimethod">.on(eventName, [data,], handler, options)</h3>
+<p>To bind other events than the ones listed above, you can use the <code>on</code> function. It takes
+  as the first parameter the name of the event. Multiple events can be bound by separating their names with
+  spaces. Other parameters are the same as for the shortcuts.</p>
   
 
 <h2>Tree Node API</h2>
