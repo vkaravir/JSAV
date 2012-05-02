@@ -43,6 +43,15 @@
           return id;
         }
       },
+      getSvg: function() {
+        if (!this.svg) { // lazily create the SVG overlay only when needed
+          this.svg = Raphael(this.element[0]);
+          this.svg.renderfix();
+          var style = this.svg.canvas.style;
+          style.position = "absolute";
+        }
+        return this.svg;
+      },
       // returns the position of the DS
       'position': function() {
         return JSAV.position(this.element);
@@ -68,12 +77,12 @@
         endOffset = end.element.offset();
     if (startOffset.left === endOffset.left && startOffset.top === endOffset.top) {
       // layout not done yet
-      this.g = this.jsav.g.line(-1, -1, -1, -1);
+      this.g = this.jsav.g.line(-1, -1, -1, -1, {container: this.container});
     } else {
       this.g = this.jsav.g.line(start.element.offset().left,
                               start.element.offset().top,
                               end.element.offset().left,
-                              end.element.offset().top);
+                              end.element.offset().top, {container: this.container});
     }
 
     var visible = (typeof this.options.display === "boolean" && this.options.display === true);

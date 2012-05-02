@@ -241,28 +241,41 @@ if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
       this.rObj.push(g.rObj);
       return this;
     };
-
+    var getSvgCanvas = function(jsav, props) {
+      if (typeof props === "undefined" || !props.container) {
+        return jsav.getSvg();
+      } else {
+        return props.container.getSvg();
+      }
+    };
     JSAV.ext.g = {
       circle: function(x, y, r, props) {
-        return new Circle(this, this.getSvg(), x, y, r, props);
+        var svgCanvas = getSvgCanvas(this, props);
+        return new Circle(this, svgCanvas, x, y, r, props);
       },
       rect: function(x, y, w, h, r, props) {
-        return new Rect(this, this.getSvg(), x, y, w, h, r, props);
+        var svgCanvas = getSvgCanvas(this, props);
+        return new Rect(this, svgCanvas, x, y, w, h, r, props);
       },
       line: function(x1, y1, x2, y2, props) {
-        return new Line(this, this.getSvg(), x1, y1, x2, y2, props);
+        var svgCanvas = getSvgCanvas(this, props);
+        return new Line(this, svgCanvas, x1, y1, x2, y2, props);
       },
       ellipse: function(x, y, rx, ry, props) {
-        return new Ellipse(this, this.getSvg(), x, y, rx, ry, props);
+        var svgCanvas = getSvgCanvas(this, props);
+        return new Ellipse(this, svgCanvas, x, y, rx, ry, props);
       },
       polyline: function(points, props) {
-        return new Polyline(this, this.getSvg(), points, false, props);
+        var svgCanvas = getSvgCanvas(this, props);
+        return new Polyline(this, svgCanvas, points, false, props);
       },
       polygon: function(points, props) {
-        return new Polyline(this, this.getSvg(), points, true, props);
+        var svgCanvas = getSvgCanvas(this, props);
+        return new Polyline(this, svgCanvas, points, true, props);
       },
       set: function() {
-        return new Set(this, this.getSvg());
+        var svgCanvas = getSvgCanvas(this, props);
+        return new Set(this, svgCanvas);
       }
     };
   })(jQuery, Raphael);

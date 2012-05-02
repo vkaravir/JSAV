@@ -617,11 +617,11 @@
   	$.each(results, function(key, value) {
   	  var node = value.node;
   	  if (node['edgetoparent']) {
-  	    var start = {left: value.translation.width + offset.left,
-  	                 top: value.translation.height + offset.top},
+  	    var start = {left: value.translation.width,// + offset.left,
+  	                 top: value.translation.height},// + offset.top},
   	        endnode = results[node.parent().id()].translation,
-  	        end = {left: endnode.width + offset.left,
-  	               top: endnode.height + offset.top};
+  	        end = {left: endnode.width,// + offset.left,
+  	               top: endnode.height};// + offset.top};
   	    edgeLayout(node.edgetoparent, start, end);
   	  }
   	});
