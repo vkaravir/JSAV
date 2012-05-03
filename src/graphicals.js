@@ -287,7 +287,7 @@ if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
   var Label = function(jsav, text, options) {
     this.jsav = jsav;
     this.options = $.extend({visible: true}, options);
-    this.element = $('<div class="jsavlabel" style="display:none;">' + text + '</div>');
+    this.element = $('<div class="jsavlabel">' + text + '</div>');
     if (this.options.before) {
       this.element.insertBefore(this.options.before.element);
     } else if (this.options.after) {
@@ -296,14 +296,7 @@ if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
       $(this.jsav.canvas).append(this.element);
     }
     JSAV.utils._helpers.handlePosition(this.element, this.options);
-    var visible = (typeof this.options.visible === "boolean" && this.options.visible === true);
-    if (visible) {
-      if (this.jsav.currentStep() === 0) { // at beginning, just make it visible
-        this.element.css("display", "block");
-      } else { // add effect to show otherwise
-        this.show();
-      }
-    }
+    JSAV.utils._helpers.handleVisibility(this, this.options)
   };
   var labelproto = Label.prototype;
   labelproto._toggleVisible = JSAV.anim(JSAV.ext.effects._toggleVisible);

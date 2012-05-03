@@ -204,14 +204,7 @@
     this.element = el;
     this.layout();
     el.css("display", "none");
-    var visible = (typeof this.options.visible === "boolean" && this.options.visible === true);
-    if (visible) {
-      if (this.jsav.currentStep() === 0) { // at beginning, just make it visible
-        el.css("display", "block");
-      } else { // add effect to show otherwise
-        this.show();
-      }
-    }
+    JSAV.utils._helpers.handleVisibility(this, this.options)
   };
   arrproto.initializeFromElement = function() {
     if (!this.element) { return; }

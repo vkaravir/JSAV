@@ -41,15 +41,7 @@
     this.rootnode = this.newNode("", null);
     this.element.attr({"data-root": this.rootnode.id(), "id": this.id()});
     this.rootnode.element.attr("data-child-role", "root");
-    el.css("display", "none");
-    var visible = (typeof this.options.visible === "boolean" && this.options.visible === true);
-    if (visible) {
-      if (this.jsav.currentStep() === 0) { // at beginning, just make it visible
-        el.css("display", "block");
-      } else { // add effect to show otherwise
-        this.show();
-      }
-    }
+    JSAV.utils._helpers.handleVisibility(this, this.options)
   };
   treeproto._setrootnode = JSAV.anim(function(node) {
     var oldroot = this.rootnode;

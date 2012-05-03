@@ -26,9 +26,7 @@
       this.element.attr("data-varname", this.options.name);
     }
     JSAV.utils._helpers.handlePosition(this.element, this.options);
-    if (!this.options.visible) {
-      this.element.css("display", "none");
-    }    
+    JSAV.utils._helpers.handleVisibility(this, this.options)
   };
   var varproto = Variable.prototype;
   varproto._toggleVisible = JSAV.anim(JSAV.ext.effects._toggleVisible);
