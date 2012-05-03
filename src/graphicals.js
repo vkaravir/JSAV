@@ -295,9 +295,15 @@ if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
     } else {
       $(this.jsav.canvas).append(this.element);
     }
-    if ((typeof this.options.visible === "boolean" && this.options.visible === true)) {
-      this.show();
-    }    
+    JSAV.utils._helpers.handlePosition(this.element, this.options);
+    var visible = (typeof this.options.visible === "boolean" && this.options.visible === true);
+    if (visible) {
+      if (this.jsav.currentStep() === 0) { // at beginning, just make it visible
+        this.element.css("display", "block");
+      } else { // add effect to show otherwise
+        this.show();
+      }
+    }
   };
   var labelproto = Label.prototype;
   labelproto._toggleVisible = JSAV.anim(JSAV.ext.effects._toggleVisible);

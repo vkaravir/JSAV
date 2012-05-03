@@ -200,8 +200,7 @@ for example, the <code>step</code> method.
 
 <p>
 JSAV will ultimately provide layout support for a number of standard
-data structures. Presently, only arrays are supported, as described in
-this section.
+data structures. Presently, only arrays and trees are supported.
 </p>
 
 <h3 class="apimethod">.ds.array(element[, options]) and
@@ -234,6 +233,7 @@ JSAV rather than by the developer.
       not. Default true.</li>
 <li>center: Boolean to determine if array should be automatically centered
   within its container. Defaults to true.</li>
+  <li>left/top/right/bottom: Values to determine the absolute position of the array relative to its container.</li>
 </ul>
 
 <h3 class="apimethod">.clone()</h3>
@@ -435,6 +435,7 @@ Currently, JSAV supports two types of trees: common tree and binary tree. The st
       not. Default true.</li>
 <li>center: Boolean to determine if tree should be automatically centered
   within its container. Defaults to true.</li>
+  <li>left/top/right/bottom: Values to determine the absolute position of the tree relative to its container.</li>
 </ul>
 
 <h3 class="apimethod">.css(propertyName)</h3>
@@ -544,6 +545,7 @@ Paramter <code>options</code> include the following:
 <code>UI element</code></li>
 <li> <code>{visible: &lt;boolean>}</code> Determine whether the label
 is visible on creation. Defaults to true.</li>
+  <li><code>{left/top/right/bottom: &lt;lengthUnit>}</code> Values to determine the absolute position of the label relative to its container.</li>
 </ul>
 
 <h3 class="apimethod">.hide()</h3>
@@ -589,6 +591,7 @@ out, this method will return the current text of the label.
     <li> <code>{type: &lt;string>}</code> Type of the variable. Can be boolean,
       number, or string. By default, the type is decided based on the type of the
       initial value.</li>
+    <li><code>{left/top/right/bottom: &lt;lengthUnit>}</code> Values to determine the absolute position of the label relative to its container.</li>
     </ul>
 
     <h3 class="apimethod">.hide()</h3>

@@ -416,4 +416,22 @@ mixkey(math.random(), pool);
     }
     return [oldProps];
   };
+  /* Handles top, left, right, bottom options and positions the given element accordingly */
+  _helpers.handlePosition = function(el, options) {
+    if ("left" in options || "top" in options || "bottom" in options || "right" in options) {
+      var positions = ["right", "bottom", "top", "left"],
+          posProps = {"position": "absolute"},
+          pos;
+      for (var i = positions.length; i--; ) {
+        pos = positions[i];
+        if (options.hasOwnProperty(pos)) {
+          posProps[positions[i]] = options[positions[i]];
+        }
+      }
+      if (options.hasOwnProperty("left") || options.hasOwnProperty("right")) {
+        options.center = false;
+      }
+      el.css(posProps);
+    }
+  };
 })(jQuery);

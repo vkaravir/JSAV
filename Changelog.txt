@@ -3,9 +3,14 @@ For changes before version 0.3.1, see
 
 Changes in dev version
 ----------------------
+* new features:
+   - absolute positioning of labels, variables and data structures is now possible
 * bug fixes:
    - issue with changing array value in horizontal layout in Webkit based browsers fixed
    - show/hide bug for data structures fixed
+* new minor features:
+   - allow custom event binding for data structures
+   - allow data to be passed to event handlers for data structures
   
 Changes in version 0.4.2
 ------------------------

@@ -200,6 +200,7 @@
     if (!this.options.element) {
       $(this.jsav.canvas).append(el);
     }
+    JSAV.utils._helpers.handlePosition(el, this.options);
     this.element = el;
     this.layout();
     el.css("display", "none");
