@@ -7,7 +7,7 @@
   JSAV.ext.effects = {
     /* toggles visibility of an element */
     _toggleVisible: function() {
-      if (!this.jsav.RECORD || !$.fx.off) { // only animate when playing, not when recording
+      if (this.jsav._shouldAnimate()) { // only animate when playing, not when recording
         this.element.fadeToggle(this.jsav.SPEED);
       } else {
         this.element.toggle();
@@ -51,7 +51,7 @@
       $str2.attr("data-value", tmp);
       
       // ..and finally animate..
-      if (!this.RECORD && !$.fx.off) {  // only animate when playing, not when recording
+      if (this._shouldAnimate()) {  // only animate when playing, not when recording
         if ('Raphael' in window) { // draw arrows only if Raphael is loaded
           var off1 = $val1.offset(),
               off2 = $val2.offset(),

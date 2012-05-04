@@ -85,7 +85,7 @@
   };
   arrproto._setcss = JSAV.anim(function(indices, cssprop) {
     var $elems = getIndices($(this.element).find("li"), indices);
-    if (!this.jsav.RECORD && !$.fx.off) { // only animate when playing, not when recording
+    if (this.jsav._shouldAnimate()) { // only animate when playing, not when recording
       // also animate the values due to a bug in webkit based browsers with inherited bg color not changing
       $elems.animate(cssprop, this.jsav.SPEED).find("span.jsavvalue").animate(cssprop, this.jsav.SPEED);
     } else {
@@ -103,7 +103,7 @@
         oldProps[i] = el.css(i);
       }
     }
-    if (!this.jsav.RECORD || !$.fx.off) { // only animate when playing, not when recording
+    if (this.jsav._shouldAnimate()) { // only animate when playing, not when recording
       this.element.animate(cssprops, this.jsav.SPEED);
     } else {
       this.element.css(cssprops);
@@ -200,8 +200,8 @@
     if (!this.options.element) {
       $(this.jsav.canvas).append(el);
     }
-    JSAV.utils._helpers.handlePosition(el, this.options);
     this.element = el;
+    JSAV.utils._helpers.handlePosition(el, this.options);
     this.layout();
     el.css("display", "none");
     JSAV.utils._helpers.handleVisibility(this, this.options)

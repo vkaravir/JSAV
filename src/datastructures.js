@@ -186,7 +186,7 @@
       }
       newprops = cssprop;
     }
-    if (!this.jsav.RECORD || !$.fx.off) { // only animate when playing, not when recording
+    if (this.jsav._shouldAnimate()) { // only animate when playing, not when recording
       el.animate(newprops, this.jsav.SPEED);
     } else {
       el.attr(newprops);

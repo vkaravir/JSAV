@@ -18,7 +18,7 @@ if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
       },
       transform: function(transform) {
         var oldTrans = this.rObj.transform();
-        if (!this.jsav.RECORD && !$.fx.off) { // only animate when playing, not when recording
+        if (this.jsav._shouldAnimate()) { // only animate when playing, not when recording
           this.rObj.animate( { transform: transform }, this.jsav.SPEED);
         } else {
           this.rObj.transform(transform);
@@ -54,7 +54,7 @@ if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
         for (var i in props) {
           oldProps[i] = this.rObj.attr(i);
         }
-        if (!this.jsav.RECORD && !$.fx.off && !dontAnimate) { // only animate when playing, not when recording
+        if (this.jsav._shouldAnimate() && !dontAnimate) { // only animate when playing, not when recording
           this.rObj.animate( props, this.jsav.SPEED);
         } else {
           for (var i in props) {
@@ -103,7 +103,7 @@ if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
           newPath += pathElem[0] + " " + (+pathElem[1] + dx) + " " +
                     (+pathElem[2] + dy);
         } else {
-          newPath += pathElem.join();
+          newPath += pathElem.join(' ');
         }
       }
       this._setattrs({"path": newPath});
@@ -122,7 +122,7 @@ if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
       var np = "";
       for (var i=0, l=newPath.length; i < l; i++) {
         pathElem = newPath[i];
-        np += pathElem.join();
+        np += pathElem.join(' ');
       }
       this._setattrs({"path": np}, ("" + currPath) === "M-1,-1L-1,-1");
       return this;

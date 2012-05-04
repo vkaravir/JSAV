@@ -117,7 +117,7 @@
   };
   qproto.show = JSAV.anim(function() {
      // once asked, ignore; when recording, ignore
-    if (this.asked || this.jsav.RECORD || $.fx.off) { return; }
+    if (this.asked || this.jsav._shouldAnimate()) { return; }
     this.asked = true; // mark asked
     var $elems = $(),
         that = this;

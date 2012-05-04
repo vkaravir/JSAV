@@ -270,7 +270,6 @@
         (this._redo.length === 0 || this._redo[0].operations.length === 0)) { // ignore step if no operations in it
       return this;
     }*/
-    //this.forward();
     this._undo.push(new AnimStep(options)); // add new empty step to oper. stack
     if (options && this.message && options.message) {
       this.message(options.message);
@@ -336,6 +335,9 @@
   JSAV.ext.isAnimating = function() {
     // returns true if animation is playing, false otherwise
     return !!this.container.find(":animated").size();
+  };
+  JSAV.ext._shouldAnimate = function() {
+    return (!this.RECORD && !$.fx.off);
   };
 })(jQuery);
 

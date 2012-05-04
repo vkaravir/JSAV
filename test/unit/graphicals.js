@@ -28,6 +28,7 @@
     av.step();
     c.show();
     av.recorded();
+    $.fx.off = true;
 
     equals(c.center().cx, 50, "circle center x");
     equals(c.center().cy, 60, "circle center y");
@@ -45,7 +46,6 @@
     equals(Math.round(currBB.y), Math.round(origBB.y));
     equals(Math.round(currBB.width), Math.round(origBB.width), "scale undone correctly");
 
-    $.fx.off = true;
     
     av.forward(); // apply center
     equals(c.center().cx, 80, "circle center x");
@@ -333,8 +333,6 @@
     equals(Math.round(currBB.width), Math.round(origBB.width), "horizontal scale undone correctly");
     equals(Math.round(currBB.height), Math.round(origBB.height), "vertical scale undone correctly");
 
-    $.fx.off = true;
-    
     av.forward(); // apply translate point 0
     currBB = l.rObj.getBBox();
     equals(Math.round(currBB.x), Math.round(origBB.x) + 20);
