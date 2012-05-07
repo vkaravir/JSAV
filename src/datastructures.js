@@ -93,11 +93,7 @@
     this.g.rObj.node.setAttribute("data-container", this.container.id());
     $(this.g.rObj.node).data("edge", this);
     if (visible) {
-      if (this.jsav.currentStep() === 0) { // at beginning, just make it visible
-        this.g.rObj.attr({"opacity": 1});
-      } else { // add effect to show otherwise
-        this.g.show();
-      }
+      this.g.show();
     }    
   };
   var edgeproto = Edge.prototype;

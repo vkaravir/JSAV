@@ -440,11 +440,7 @@ mixkey(math.random(), pool);
     jsavobj.element.css("display", "none");
     var visible = (typeof options.visible === "boolean" && options.visible === true);
     if (visible) {
-      if (jsavobj.jsav.currentStep() === 0) { // at beginning, just make it visible
-        jsavobj.element.css("display", "block");
-      } else { // add effect to show otherwise
-        jsavobj.show();
-      }
+      jsavobj.show();
     }
 
   }

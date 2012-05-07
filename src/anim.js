@@ -285,6 +285,10 @@
       this._redo = [];
     }
   };
+  JSAV.ext.displayInit = function() {
+    this.clear({redo: false});
+    return this;
+  };
   /** Jumps to step number step. */
   JSAV.ext.jumpToStep = function(step) {
     var stepCount = this.totalSteps(),
