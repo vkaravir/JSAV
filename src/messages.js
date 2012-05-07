@@ -14,7 +14,7 @@
   };
   MessageHandler.prototype.umsg = JSAV.anim(function(msg, options) {
     if (!this.jsav.RECORD) { // trigger events only if not recording
-      this.jsav.container.trigger("jsavmessage", [msg, options]);
+      this.jsav.container.trigger("jsav-message", [msg, options]);
     }
     var opts = $.extend({color: "black", preserve: false}, options);
     if (this.output) {
@@ -47,7 +47,7 @@
   MessageHandler.prototype.state = function(newValue) {
     if (newValue) {
       this.output.html(newValue);
-      this.jsav.container.trigger("jsavmessage", [newValue, this.options]);
+      this.jsav.container.trigger("jsav-message", [newValue, this.options]);
     } else {
       return this.output.html() || "<span/>";
     }
