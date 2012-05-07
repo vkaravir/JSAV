@@ -25,7 +25,7 @@
     if (this.options.name) {
       this.element.attr("data-varname", this.options.name);
     }
-    JSAV.utils._helpers.handlePosition(this.element, this.options);
+    JSAV.utils._helpers.handlePosition(this);
     JSAV.utils._helpers.handleVisibility(this, this.options)
   };
   var varproto = Variable.prototype;

@@ -201,7 +201,7 @@
       $(this.jsav.canvas).append(el);
     }
     this.element = el;
-    JSAV.utils._helpers.handlePosition(el, this.options);
+    JSAV.utils._helpers.handlePosition(this);
     this.layout();
     el.css("display", "none");
     JSAV.utils._helpers.handleVisibility(this, this.options)

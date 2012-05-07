@@ -36,8 +36,8 @@
     if (!this.options.element) {
       $(this.jsav.canvas).append(el);
     }
-    JSAV.utils._helpers.handlePosition(el, this.options);
     this.element = el;
+    JSAV.utils._helpers.handlePosition(this);
     this.rootnode = this.newNode("", null);
     this.element.attr({"data-root": this.rootnode.id(), "id": this.id()});
     this.rootnode.element.attr("data-child-role", "root");

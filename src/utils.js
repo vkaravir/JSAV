@@ -417,7 +417,9 @@ mixkey(math.random(), pool);
     return [oldProps];
   };
   /* Handles top, left, right, bottom options and positions the given element accordingly */
-  _helpers.handlePosition = function(el, options) {
+  _helpers.handlePosition = function(jsavobj) {
+    var el = jsavobj.element,
+        options = jsavobj.options;
     if ("left" in options || "top" in options || "bottom" in options || "right" in options) {
       var positions = ["right", "bottom", "top", "left"],
           posProps = {"position": "absolute"},

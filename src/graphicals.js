@@ -295,7 +295,7 @@ if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
     } else {
       $(this.jsav.canvas).append(this.element);
     }
-    JSAV.utils._helpers.handlePosition(this.element, this.options);
+    JSAV.utils._helpers.handlePosition(this);
     JSAV.utils._helpers.handleVisibility(this, this.options)
   };
   var labelproto = Label.prototype;
