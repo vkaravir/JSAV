@@ -6,15 +6,6 @@
   if (typeof JSAV === "undefined") { return; }
   var Edge = JSAV._types.ds.Edge; // shortcut to JSAV Edge
 
-  var valstring = function(value) {
-    var valstr = "<span class='jsavvalue'>";
-    if (value === "jsavnull") {
-      return valstr + "</span>";
-    }
-    return valstr + value + "</span>";
-  };
-  
-  
   var Tree = function(jsav, options) {
     this.init(jsav, options);
   };
@@ -154,12 +145,13 @@
   };
   var nodeproto = TreeNode.prototype;
   JSAV.ext.ds.extend("common", nodeproto);
+  $.extend(nodeproto, JSAV._types.ds.Node.prototype);
   nodeproto.init = function(container, value, parent, options) {
     this.jsav = container.jsav;
     this.container = container;
     this.parentnode = parent;
     this.options = $.extend(true, {visible: true}, options);
-    var el = this.options.nodeelement || $("<div>" + valstring(value) + "</div>"),
+    var el = this.options.nodeelement || $("<div>" + this._valstring(value) + "</div>"),
       valtype = typeof(value);
     if (valtype === "object") { valtype = "string"; }
     this.element = el;
@@ -177,21 +169,13 @@
     }
     this.childnodes = [];
   };
-  nodeproto.value = function(newVal) {
-    if (typeof newVal === "undefined") {
-      return JSAV.utils.value2type(this.element.attr("data-value"), this.element.attr("data-value-type"));
-    } else {
-      this._setvalue(newVal);
+  nodeproto._valstring = function(value) {
+    var valstr = "<span class='jsavvalue'>";
+    if (value === "jsavnull") {
+      return valstr + "</span>";
     }
-    return this;
+    return valstr + value + "</span>";
   };
-  nodeproto._setvalue = JSAV.anim(function(newValue) {
-    var oldVal = this.element.attr("data-value") || "",
-      valtype = typeof(newValue);
-    if (valtype === "object") { valtype = "string"; }
-    this.element.html(valstring(newValue)).attr({"data-value": newValue, "data-value-type": valtype});
-    return [oldVal];
-  });
   nodeproto.parent = function(newParent) {
     if (typeof newParent === "undefined") {
       return this.parentnode;
@@ -333,41 +317,6 @@
     // TODO: Should this be implemented??? Probably..
   };
   
-  // TODO: these are so ugly, do something! soon!
-  nodeproto.highlight = function() {
-    var testDiv = $('<div class="' + this.container.element[0].className + 
-        '" style="position:absolute;left:-10000px">' + 
-        '<div class="' + this.element[0].className + ' jsavhighlight"></div><div class="' + this.element[0].className + '" ></div></div>'),
-  	  styleDiv = testDiv.find(".jsavnode").filter(".jsavhighlight");
-  	// TODO: general way to get styles for the whole av system
-  	$("body").append(testDiv);
-    this._setcss({color: styleDiv.css("color"), "background-color": styleDiv.css("background-color")});
-    testDiv.remove();
-  };
-  nodeproto.unhighlight = function() {
-    var testDiv = $('<div class="' + this.container.element[0].className + 
-        '" style="position:absolute;left:-10000px">' + 
-        '<div class="' + this.element[0].className + ' jsavhighlight"></div><div class="' + this.element[0].className + '" ></div></div>'),
-  	  styleDiv = testDiv.find(".jsavnode").not(".jsavhighlight");
-  	// TODO: general way to get styles for the whole av system
-  	$("body").append(testDiv);
-    this._setcss({color: styleDiv.css("color"), "background-color": styleDiv.css("background-color")});
-    testDiv.remove();
-  };
-  
-  nodeproto.isHighlight = function() {
-    var testDiv = $('<div class="' + this.container.element[0].className + 
-        '" style="position:absolute;left:-10000px">' + 
-        '<div class="' + this.element[0].className + ' jsavhighlight"></div><div class="' + this.element[0].className + '" ></div></div>'),
-  	  styleDiv = testDiv.find(".jsavnode").filter(".jsavhighlight");
-  	// TODO: general way to get styles for the whole av system
-  	$("body").append(testDiv);
-  	var isHl = this.element.css("background-color") == styleDiv.css("background-color");
-  	testDiv.remove();
-  	return isHl;
-  };
-  nodeproto.css = JSAV.utils._helpers.css;
-  nodeproto._setcss = JSAV.anim(JSAV.utils._helpers._setcss);
   
   /// Binary Tree implementation
   var BinaryTree = function(jsav, options) {
@@ -444,7 +393,7 @@
           .attr("data-value"),
         valtype = typeof(newValue);
     if (valtype === "object") { valtype = "string"; }
-    this.element.html(valstring(newValue)).attr({"data-value": newValue, "data-value-type": valtype});
+    this.element.html(this._valstring(newValue)).attr({"data-value": newValue, "data-value-type": valtype});
     if (newValue === "jsavnull") {
       this.element.addClass("jsavnullnode");
     }

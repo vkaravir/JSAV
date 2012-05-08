@@ -77,12 +77,12 @@
         endOffset = end.element.offset();
     if (startOffset.left === endOffset.left && startOffset.top === endOffset.top) {
       // layout not done yet
-      this.g = this.jsav.g.line(-1, -1, -1, -1, {container: this.container});
+      this.g = this.jsav.g.line(-1, -1, -1, -1, $.extend({container: this.container}, this.options));
     } else {
       this.g = this.jsav.g.line(start.element.offset().left,
                               start.element.offset().top,
                               end.element.offset().left,
-                              end.element.offset().top, {container: this.container});
+                              end.element.offset().top, $.extend({container: this.container}, this.options));
     }
 
     var visible = (typeof this.options.display === "boolean" && this.options.display === true);
@@ -205,6 +205,64 @@
   };
  
   
+  var Node = function() {},
+      nodeproto = Node.prototype;
+      
+  nodeproto.value = function(newVal) {
+    if (typeof newVal === "undefined") {
+      return JSAV.utils.value2type(this.element.attr("data-value"), this.element.attr("data-value-type"));
+    } else {
+      this._setvalue(newVal);
+    }
+    return this;
+  };
+  nodeproto._setvalue = JSAV.anim(function(newValue) {
+    var oldVal = this.element.attr("data-value") || "",
+      valtype = typeof(newValue);
+    if (valtype === "object") { valtype = "string"; }
+    this.element.html(this._valstring(newValue)).attr({"data-value": newValue, "data-value-type": valtype});
+    return [oldVal];
+  });
+  nodeproto._valstring = function(value) {
+    return "<span class='jsavvalue'>" + value + "</span>";
+  };
+  // TODO: these are so ugly, do something! soon!
+  nodeproto.highlight = function() {
+    var testDiv = $('<div class="' + this.container.element[0].className + 
+        '" style="position:absolute;left:-10000px">' + 
+        '<div class="' + this.element[0].className + ' jsavhighlight"></div><div class="' + this.element[0].className + '" ></div></div>'),
+  	  styleDiv = testDiv.find(".jsavnode").filter(".jsavhighlight");
+  	// TODO: general way to get styles for the whole av system
+  	$("body").append(testDiv);
+    this._setcss({color: styleDiv.css("color"), "background-color": styleDiv.css("background-color")});
+    testDiv.remove();
+  };
+  nodeproto.unhighlight = function() {
+    var testDiv = $('<div class="' + this.container.element[0].className + 
+        '" style="position:absolute;left:-10000px">' + 
+        '<div class="' + this.element[0].className + ' jsavhighlight"></div><div class="' + this.element[0].className + '" ></div></div>'),
+  	  styleDiv = testDiv.find(".jsavnode").not(".jsavhighlight");
+  	// TODO: general way to get styles for the whole av system
+  	$("body").append(testDiv);
+    this._setcss({color: styleDiv.css("color"), "background-color": styleDiv.css("background-color")});
+    testDiv.remove();
+  };
+  
+  nodeproto.isHighlight = function() {
+    var testDiv = $('<div class="' + this.container.element[0].className + 
+        '" style="position:absolute;left:-10000px">' + 
+        '<div class="' + this.element[0].className + ' jsavhighlight"></div><div class="' + this.element[0].className + '" ></div></div>'),
+  	  styleDiv = testDiv.find(".jsavnode").filter(".jsavhighlight");
+  	// TODO: general way to get styles for the whole av system
+  	$("body").append(testDiv);
+  	var isHl = this.element.css("background-color") == styleDiv.css("background-color");
+  	testDiv.remove();
+  	return isHl;
+  };
+  nodeproto.css = JSAV.utils._helpers.css;
+  nodeproto._setcss = JSAV.anim(JSAV.utils._helpers._setcss);
+  
+  
   function addCommonProperties(dsPrototype, commonProps) {
     if (!commonProps) { commonProps = common; }
     for (var prop in commonProps) {
@@ -214,7 +272,7 @@
     }
   }
  
-  JSAV._types.ds = { "common": common, "Edge": Edge };
+  JSAV._types.ds = { "common": common, "Edge": Edge, "Node": Node };
   // expose the extend for the JSAV
   JSAV.ext.ds = {
     extend: function(strName, strPrototype) {
