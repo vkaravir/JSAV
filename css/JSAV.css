@@ -405,3 +405,24 @@ a.jsavsettings {
   stroke: transparent;
   opacity: 0;
 }
+
+/******** LINKED LIST STRUCTURE ******/
+.jsavpointerarea {
+  width: 10px;
+  background-color: #eee;
+  height: 100%;
+  display: inline-block;
+  border-left: 1px solid black;
+  float: right;
+}
+
+.jsavlist {
+  position: relative;
+}
+
+.jsavlistnode {
+  position: absolute;
+}
+.jsavlist .jsavedge {
+  stroke-width: 2;
+}
