@@ -19,12 +19,14 @@
       if (this.element.filter(":visible").size() === 0) {
         this._toggleVisible();
       }
+      return this;
     }, 
     /* hides an element */
     hide: function() { 
       if (this.element.filter(":visible").size() > 0) {
         this._toggleVisible();
       }
+      return this;
     },
     swap: function($str1, $str2, translateY) {
       var $val1 = $str1.find("span.jsavvalue"),
