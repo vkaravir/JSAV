@@ -37,7 +37,7 @@
     av.displayInit();
     av.umsg("Add a new item to the beginning with addFirst(..)");
     av.step();
-    l.addFirst(7);
+    l.addFirst(7, {edgeLabel: "e1" });
     l.layout();
     av.step();
     av.umsg("Add another item by first manually creating the new node");
