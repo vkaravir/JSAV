@@ -10,7 +10,7 @@
 
   var List = function(jsav, options) {
     this.jsav = jsav;
-    this.options = $.extend({visible: true}, options);
+    this.options = $.extend({visible: true, nodegap: 40}, options);
     var el = this.options.element || $("<div/>");
     el.addClass("jsavlist");
     for (var key in this.options) {
@@ -216,13 +216,13 @@
     var curNode = list.first(),
         prevNode,
         prevLeft = 0,
-        opts = $.extend({updateLeft: true, updateTop: true, updateEdges: true}, options);
+        opts = $.extend({updateLeft: true, updateTop: true, updateEdges: true}, list.options, options);
     while (curNode) {
       var newPos = { };
       if (opts.updateLeft) { newPos.left = prevLeft; }
       if (opts.updateTop) { newPos.top = 0; }
       curNode.css(newPos);
-      prevLeft += 50 + curNode.element.outerWidth();
+      prevLeft += opts.nodegap + curNode.element.outerWidth();
       var edge = prevNode?prevNode._edgetonext:undefined;
       if (edge && opts.updateEdges) {
         var start = [0, prevNode.element.position().left + prevNode.element.width() - 5,
@@ -234,7 +234,7 @@
       prevNode = curNode;
       curNode = curNode.next();
     }
-    list.css("width", prevLeft - 50);
+    list.css("width", prevLeft - opts.nodegap);
     list.css("height", "50px");
     centerList(list);
   };
