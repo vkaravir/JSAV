@@ -52,10 +52,9 @@
     av.step();
     av.umsg("Remove the item in index 2 (3rd item)");
     av.step();
-    var remNode = l.get(2);
-    l.remove(2);
-    remNode.hide();
-    remNode.edgeToNext().hide();
+    l.remove(2) // remove the node
+      .hide()   // hide it
+      .edgeToNext().hide(); // and hide the edge to next
     l.layout();
 
     av.step();
