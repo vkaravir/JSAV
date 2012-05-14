@@ -270,6 +270,7 @@
         (this._redo.length === 0 || this._redo[0].operations.length === 0)) { // ignore step if no operations in it
       return this;
     }*/
+    this.container.trigger("jsav-updaterelative");
     this._undo.push(new AnimStep(options)); // add new empty step to oper. stack
     if (options && this.message && options.message) {
       this.message(options.message);
@@ -331,6 +332,7 @@
     }
   };
   JSAV.ext.recorded = function() {
+    this.container.trigger("jsav-updaterelative");
     this.begin();
     this.RECORD = false;
     $.fx.off = false;

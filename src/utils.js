@@ -10,6 +10,15 @@
   $.support.inputTypeRange = (inp.prop("type") === "range");
   delete inp;
   
+  var objcommons = {};
+  objcommons.bounds = function() {
+    var pos = this.position();
+    return $.extend({width: this.element.width(), height: this.element.height()}, pos);
+  };
+  objcommons.position = function() {
+    return JSAV.position(this.element);
+  };
+  JSAV._types.common = objcommons;
   
   JSAV.utils = {};
   var u = JSAV.utils; // shortcut for easier and faster access

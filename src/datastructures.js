@@ -52,10 +52,6 @@
         }
         return this.svg;
       },
-      // returns the position of the DS
-      'position': function() {
-        return JSAV.position(this.element);
-      },
       _toggleVisible: JSAV.anim(JSAV.ext.effects._toggleVisible),
       show: JSAV.ext.effects.show,
       hide: JSAV.ext.effects.hide,
@@ -64,6 +60,7 @@
       initializeFromElement: function() { },
       clone: function() {}
     };
+  $.extend(common, JSAV._types.common);
 
 
   // implementation for a tree edge
@@ -129,17 +126,43 @@
       return this;
     }
   };
-  edgeproto.weight = function(node) {
-    
+  edgeproto.weight = function(newWeight) {
   };
   edgeproto.clear = function() {
     this.g.rObj.remove();
   };
   edgeproto.hide = function() {
     this.g.hide();
+    if (this._label) { this._label.hide(); }
   };
   edgeproto.show = function() {
     this.g.show();
+    if (this._label) { this._label.show(); }
+  };
+  edgeproto.label = function(newLabel) {
+    if (typeof newLabel === "undefined") {
+      return this._label?this._label.text():undefined;
+    } else {
+      var self = this;
+      var positionUpdate = function() {
+        var bbox = self.g.bounds(),
+            lbbox = self._label.bounds(),
+            containerPos = self.container.position(),
+            newTop = containerPos.top + bbox.top + (bbox.height - lbbox.height)/2,
+            newLeft = containerPos.left + bbox.left + (bbox.width - lbbox.width)/2;
+        if (newTop !== lbbox.top || newLeft || lbbox.left) {
+          self._label.css({top: newTop, left: newLeft});
+        }
+      };
+      if (!this._label) {
+        this._label = this.jsav.label(newLabel);
+        this._label.element.css({position: "absolute", display: "inline-block"});
+        positionUpdate();
+      } else {
+        this._label.text(newLabel);
+      }
+      this.jsav.container.on("jsav-updaterelative", positionUpdate);
+    }
   };
   edgeproto.equals = function(otherEdge, options) {
     if (!otherEdge || !otherEdge instanceof Edge) {
@@ -200,7 +223,7 @@
     // TODO: implement state
   };
   edgeproto.position = function() {
-    var bbox = this.g.rObj.getBBox();
+    var bbox = this.g.bounds();
     return {left: bbox.x, top: bbox.y};
   };
  

@@ -8,7 +8,7 @@
   };
   JSAV.position = function(elem) {
     var $el = $(elem),
-      offset = $el.offset(),
+      offset = $el.position(),
       translate = $el.css("transform").translate; // requires jquery.transform.light.js!!
     if (translate) {
       return {left: offset.left + translate[0], top: offset.top + translate[1]};

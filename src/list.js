@@ -23,18 +23,17 @@
       $(jsav.canvas).append(el);
     }
     this.element = el;
-    this._first = this.newNode("key");
     this.element.attr({"id": this.id()});
     JSAV.utils._helpers.handlePosition(this);
     JSAV.utils._helpers.handleVisibility(this, this.options);
   };
   var listproto = List.prototype;
   $.extend(listproto, JSAV._types.ds.common);
-  listproto.first = function(newFirst) {
+  listproto.first = function(newFirst, options) {
     if (typeof newFirst === "undefined") {
       return this._first;
     } else {
-      return this.addFirst(newFirst);
+      return this.addFirst(newFirst, options);
     }
   };
   listproto._setfirst = JSAV.anim(function(newFirst) {
@@ -42,7 +41,7 @@
     this._first = newFirst;
     return [oldFirst];
   });
-  listproto.add = function(index, newValue) {
+  listproto.add = function(index, newValue, options) {
     if (index === 0) { 
       return this.addFirst(newValue);
     }
@@ -54,22 +53,22 @@
       newNode = this.newNode(newValue);
     }
     if (node) { // there is node for the index
-      newNode.next(node.next());
+      newNode.next(node.next(), options);
       node.next(newNode);
     }
     return this;
   };
-  listproto.addFirst = function(newValue) {
+  listproto.addFirst = function(newValue, options) {
     if (newValue instanceof ListNode) {
-      newValue.next(this._first);
+      newValue.next(this._first, options);
       this._setfirst(newValue);
     } else {
-      this._setfirst(this.newNode(newValue, {first: true, next: this._first}));
+      this._setfirst(this.newNode(newValue, $.extend({}, options, {first: true, next: this._first})));
     }
     return this;
   };
   /** returns the last item in the list or if newLast is given, adds it to the end */
-  listproto.last = function(newLast) {
+  listproto.last = function(newLast, options) {
     if (typeof newLast === "undefined") {
       var curNode = this.first();
       while (curNode.next()) {
@@ -77,11 +76,11 @@
       }
       return curNode;
     } else {
-      this.addLast(newLast);
+      this.addLast(newLast, options);
     }
   };
   /** adds the given value/node as the last item in the list */
-  listproto.addLast = function(newValue) {
+  listproto.addLast = function(newValue, options) {
     var last = this.last(),
         newNode;
     if (newValue instanceof ListNode) {
@@ -89,7 +88,7 @@
     } else {
       newNode = this.newNode(newValue);
     }
-    last.next(newNode);
+    last.next(newNode, options);
     return this;
   };
   /** Returns the item at index, first node is at index 0 */
@@ -172,6 +171,9 @@
     }
     if (this._next) {
       this._edgetonext = new Edge(this.jsav, this, this._next, {"arrow-end": "classic-wide-long"});
+      if (this.options.edgeLabel) {
+        this._edgetonext.label(this.options.edgeLabel);
+      }
     }
     JSAV.utils._helpers.handleVisibility(this, this.options);
   };
@@ -180,20 +182,23 @@
   $.extend(listnodeproto, JSAV._types.ds.common);
   $.extend(listnodeproto, JSAV._types.ds.Node.prototype);
   
-  listnodeproto.next = function(newNext) {
+  listnodeproto.next = function(newNext, options) {
     if (typeof newNext === "undefined") {
       return this._next;
     } else {
-      return this._setnext(newNext);
+      return this._setnext(newNext, options);
     }
   };
-  listnodeproto._setnext = JSAV.anim(function(newNext) {
+  listnodeproto._setnext = JSAV.anim(function(newNext, options) {
     var oldNext = this._next;
     this._next = newNext;
     if (newNext && this._edgetonext) {
       this._edgetonext.end(newNext);
     } else if (newNext){
       this._edgetonext = new Edge(this.jsav, this, this._next, {"arrow-end": "classic-wide-long"});
+    }
+    if (options && options.edgeLabel) {
+      this._edgetonext.label(options.edgeLabel);
     }
     return [oldNext];
   });

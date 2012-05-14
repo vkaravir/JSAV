@@ -80,6 +80,10 @@ if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
           var attrs = $.extend(true, {}, this.rObj.attrs);
           return attrs;
         }
+      },
+      bounds: function() {
+        var bbox = this.rObj.getBBox();
+        return { left: bbox.x, top: bbox.y, width: bbox.width, height: bbox.height };
       }
     };
     var init = function(obj, jsav, props) {
@@ -299,6 +303,7 @@ if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
     JSAV.utils._helpers.handleVisibility(this, this.options)
   };
   var labelproto = Label.prototype;
+  $.extend(labelproto, JSAV._types.common);
   labelproto._toggleVisible = JSAV.anim(JSAV.ext.effects._toggleVisible);
   labelproto.show = JSAV.ext.effects.show;
   labelproto.hide = JSAV.ext.effects.hide;
