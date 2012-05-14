@@ -117,18 +117,21 @@
       return this.removeLast();
     }
     var prev = this.get(index - 1),
-        next = this.get(index + 1);
+        next = this.get(index + 1),
+        oldNode = prev.next();
     prev.next(next);
-    return this;
+    return oldNode;
   };
   listproto.removeFirst = function() {
-    this.first(this.first().next());
-    return this;
+    var oldFirst = this.first();
+    this.first(oldFirst.next());
+    return oldFirst;
   };
   listproto.removeLast = function() {
-    var newLast = this.get(this.size() - 1);
+    var newLast = this.get(this.size() - 1),
+      oldLast = this.last();
     newLast.next(null);
-    return this;
+    return oldLast;
   };
   listproto.layout = function(options) {
     var layoutAlg = $.extend({}, this.options, options).layout || "_default";

@@ -533,6 +533,49 @@ Currently, JSAV supports two types of trees: common tree and binary tree. The st
 <p>Returns the end node of this edge. If the optional <var>node</var> parameter is given, sets the end node of this edge.</p>
 
 
+<h2>Linked List API</h2>
+<h3 class="apimethod">.ds.list([options])</h3>
+<p>This function of a JSAV instance initializes an empty linked list. Options that the optional parameter can specify:</p>
+<ul>
+  <li>layout: Defines choices of layout (currently only the default layout is supported).</li>
+  <li>visible: Boolean to determine if initially the list is shown or not. Default true.</li>
+  <li>center: Boolean to determine if list should be automatically centered within its container. Defaults to true.</li>
+  <li>left/top/right/bottom: Values to determine the absolute position of the list relative to its container.</li>
+  <li>nodegap: Number to specify how big the gap between nodes in the list should be. Defaults to 40.
+</li>
+</ul>
+<p>The returned list instance is controlled through a collection of methods explained next. In addition, the list has the common functions such as <code>.id()</code>, <code>.css(...)</code>, <code>.show()</code>, and <code>.hide()</code>.</p>
+
+<h3 class="apimethod">.first() and last()</h3>
+<p>Returns the first or last node in the list. If there are no nodes in the list, returns undefined.</p>
+<h3 class="apimethod">.addFirst([value]) and .addFirst([node])</h3>
+<p>Adds the given <code>value</code> or <code>node</code> as the first item in the list. Returns the list, so calls can be chained.</p>
+<h3 class="apimethod">.addLast([value]) and .addLast([node])</h3>
+<p>Adds the given <code>value</code> or <code>node</code> as the last item in the list. Returns the list, so calls can be chained.</p>
+<h3 class="apimethod">.add(index, [value or node])</h3>
+<p>Adds the given <code>value</code> or <code>node</code> to be the <code>index</code>th item in the list. The first item in the list has index 0. Returns the list, so calls can be chained.</p>
+<h3 class="apimethod">.get(index)</h3>
+<p>Returns the node at <code>index</code>. First item has index 0.</p>
+<h3 class="apimethod">.removeFirst() and .removeLast()</h3>
+<p>Removes the first or last node in the list. Returns the removed node.</p>
+<h3 class="apimethod">.remove(index)</h3>
+<p>Removes the node at <code>index</code> in the list. First item has index 0. Returns the removed node.</p>
+<h3 class="apimethod">.size()</h3>
+<p>Returns the size of the list.</p>
+<h3 class="apimethod">.layout([options])</h3>
+<p>Positions the nodes and edges is the list.</p>
+<h3 class="apimethod">.newNode(value [, options])</h3>
+<p>Returns a new node that can be added to the list.</p>
+
+<h2>Linked List Node API</h2>
+<p>A node in a list has the same functions as a tree node: <code>.value([newValue])</code>, <code>.highlight()/unhighlight()</code>, <code>.show()/.hide()</code>, and <code>.css(...)</code>. In addition, it has the following functions.</p>
+<h3 class="apimethod">.next()</h3>
+<p>Returns the next node in the linked list. If no next, returns null.</p>
+<h3 class="apimethod">.next([node])</h3>
+<p>Sets the next node to be the passed <code>node</code>.</p>
+<h3 class="apimethod">.edgeToNext()</h3>
+<p>Returns the JSAV Edge object that points to the next item in the list.</p>
+
 <h2>Label API</h2>
 
 UI elements such as arrays can take a label.
