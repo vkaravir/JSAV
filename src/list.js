@@ -2,6 +2,7 @@
 * Module that contains the linked list data structure implementations.
 * Depends on core.js, datastructures.js, anim.js, utils.js
 */
+/*global JSAV:true */
 (function($) {
   if (typeof JSAV === "undefined") { return; }
 
@@ -14,8 +15,7 @@
     el.addClass("jsavlist");
     for (var key in this.options) {
       var val = this.options[key];
-      if (this.options.hasOwnProperty(key) && typeof(val) === "string" 
-          || typeof(val) === "number" || typeof(val) === "boolean") {
+      if (this.options.hasOwnProperty(key) && typeof(val) === "string" || typeof(val) === "number" || typeof(val) === "boolean") {
         el.attr("data-" + key, val);
       }
     }
@@ -170,7 +170,7 @@
     if (this._next) {
       this._edgetonext = new Edge(this.jsav, this, this._next, {"arrow-end": "classic-wide-long"});
     }
-    JSAV.utils._helpers.handleVisibility(this, this.options)
+    JSAV.utils._helpers.handleVisibility(this, this.options);
   };
   
   var listnodeproto = ListNode.prototype;
@@ -194,6 +194,9 @@
     }
     return [oldNext];
   });
+  listnodeproto.edgeToNext = function() {
+    return this._edgetonext;
+  };
   listnodeproto.state = function(newState) {
     // TODO: implement state
   };
@@ -214,25 +217,25 @@
         prevNode,
         prevLeft = 0,
         opts = $.extend({updateLeft: true, updateTop: true, updateEdges: true}, options);
-  	while (curNode) {
-  	  var newPos = { };
-  	  if (opts.updateLeft) { newPos.left = prevLeft; }
-  	  if (opts.updateTop) { newPos.top = 0; }
-  	  curNode.css(newPos);
-  	  prevLeft += 50 + curNode.element.outerWidth();
-	    var edge = prevNode?prevNode._edgetonext:undefined;
-  	  if (edge && opts.updateEdges) {
-  	    var start = [0, prevNode.element.position().left + prevNode.element.width() - 5,
-  	                 prevNode.element.position().top + Math.round(prevNode.element.height()/2)],
-  	        end = [1, curNode.element.position().left - 3,
-  	                 curNode.element.position().top + Math.round(curNode.element.height()/2)];
+    while (curNode) {
+      var newPos = { };
+      if (opts.updateLeft) { newPos.left = prevLeft; }
+      if (opts.updateTop) { newPos.top = 0; }
+      curNode.css(newPos);
+      prevLeft += 50 + curNode.element.outerWidth();
+      var edge = prevNode?prevNode._edgetonext:undefined;
+      if (edge && opts.updateEdges) {
+        var start = [0, prevNode.element.position().left + prevNode.element.width() - 5,
+                    prevNode.element.position().top + Math.round(prevNode.element.height()/2)],
+            end = [1, curNode.element.position().left - 3,
+                    curNode.element.position().top + Math.round(curNode.element.height()/2)];
         edge.g.movePoints([start, end]);
-  	  }
-  	  prevNode = curNode;
+      }
+      prevNode = curNode;
       curNode = curNode.next();
-  	}
-  	list.css("width", prevLeft - 50);
-  	list.css("height", "50px");
+    }
+    list.css("width", prevLeft - 50);
+    list.css("height", "50px");
     centerList(list);
   };
 
