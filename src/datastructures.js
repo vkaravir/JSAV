@@ -227,7 +227,8 @@
  
   
   var Node = function() {},
-      nodeproto = Node.prototype;
+  nodeproto = Node.prototype;
+  $.extend(nodeproto, common);
       
   nodeproto.value = function(newVal) {
     if (typeof newVal === "undefined") {
@@ -283,27 +284,9 @@
   nodeproto.css = JSAV.utils._helpers.css;
   nodeproto._setcss = JSAV.anim(JSAV.utils._helpers._setcss);
   
-  
-  function addCommonProperties(dsPrototype, commonProps) {
-    if (!commonProps) { commonProps = common; }
-    for (var prop in commonProps) {
-      if (commonProps.hasOwnProperty(prop)) {
-        dsPrototype[prop] = commonProps[prop];
-      }
-    }
-  }
- 
   JSAV._types.ds = { "common": common, "Edge": Edge, "Node": Node };
   // expose the extend for the JSAV
-  JSAV.ext.ds = {
-    extend: function(strName, strPrototype) {
-      // copies properties for strName into strPrototype
-      if (strName === "common") {
-        addCommonProperties(strPrototype);
-      }
-    }
+  JSAV.ext.ds = { 
+    layout: {}
   };
-  
-  JSAV.ext.ds.layout = {};
-
 })(jQuery);

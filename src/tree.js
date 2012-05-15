@@ -10,7 +10,7 @@
     this.init(jsav, options);
   };
   var treeproto = Tree.prototype;
-  JSAV.ext.ds.extend("common", treeproto);
+  $.extend(treeproto, JSAV._types.ds.common);
   treeproto.init = function(jsav, options) {
     this._layoutDone = false;
     this.jsav = jsav;
@@ -144,7 +144,6 @@
     this.init(container, value, parent, options);
   };
   var nodeproto = TreeNode.prototype;
-  JSAV.ext.ds.extend("common", nodeproto);
   $.extend(nodeproto, JSAV._types.ds.Node.prototype);
   nodeproto.init = function(container, value, parent, options) {
     this.jsav = container.jsav;

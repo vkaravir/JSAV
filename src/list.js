@@ -179,7 +179,6 @@
   };
   
   var listnodeproto = ListNode.prototype;
-  $.extend(listnodeproto, JSAV._types.ds.common);
   $.extend(listnodeproto, JSAV._types.ds.Node.prototype);
   
   listnodeproto.next = function(newNext, options) {

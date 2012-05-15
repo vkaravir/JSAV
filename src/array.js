@@ -50,7 +50,7 @@
     initDs(this, element, options);
   };
   var arrproto = AVArray.prototype;
-  JSAV.ext.ds.extend("common", arrproto); // add functionality from common
+  $.extend(arrproto, JSAV._types.ds.common);
   function setHighlight(indices, mode) {
     var testDiv = $('<ol class="' + this.element[0].className + 
         '" style="position:absolute;left:-10000px">' + 
