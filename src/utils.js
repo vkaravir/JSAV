@@ -172,6 +172,22 @@
       } while (tries-- && !opts.test(keys))
       if (opts.sorted) { keys.sort(opts.sortfunc || function(a, b) {return a - b;}); }
       return keys;
+    },
+    /** returns an array of num random items from given array collection */
+    sample: function(collection, num) {
+      var min = 0,
+        max = collection.length,
+        result = [],
+        dupl = collection.slice(0),
+        tmp, rnd;
+      // do num random swaps, always swap with an item later in the array
+      for (var i = 0; i < num; i++) {
+        tmp = dupl[i];
+        rnd = this.numKey(i, max);
+        dupl[i] = dupl[rnd];
+        dupl[rnd] = tmp;
+      }
+      return dupl.slice(0, num);
     }
   };
 
