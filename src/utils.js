@@ -180,6 +180,7 @@
         result = [],
         dupl = collection.slice(0),
         tmp, rnd;
+      if (max < num || num < 0) { return undefined; }
       // do num random swaps, always swap with an item later in the array
       for (var i = 0; i < num; i++) {
         tmp = dupl[i];

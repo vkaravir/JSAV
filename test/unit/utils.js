@@ -47,4 +47,20 @@
     deepEqual(r.numKeys(1, 99, 10, {sorted: true, sortfunc: function(a, b) {return b - a;}}), 
           [94, 90, 89, 78, 49, 45, 31, 26, 9, 8]);
   });
+  test("sample", function() {
+    var r = JSAV.utils.rand,
+      seed = new Date().getTime(),
+      fixedseed = "satunnaisuutta",
+      values = [31, 94, 49, 8, 26, 90, 9, 45, 78, 89];
+      
+    equal(r.sample([], 1), undefined, "Sampling more than there are items should return undefined");
+    equal(r.sample([2, 4], 3), undefined);
+    equal(r.sample([2, 4], -3), undefined, "Negative values should return undefined");
+    deepEqual(r.sample([2, 5], 0), [], "Sampling 0 items should return an empty array");
+
+    r.seedrandom(fixedseed);
+    var res = r.sample(values, 7);
+    equal(res.length, 7);
+    deepEqual(res, [8, 89, 90, 31, 49, 94, 9]);
+  });
 })();
