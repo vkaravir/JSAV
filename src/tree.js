@@ -59,8 +59,8 @@
     this.root().clear();
     this.element.remove();
   };
-  treeproto.newNode = function(value, parent) {
-    return new TreeNode(this, value, parent);
+  treeproto.newNode = function(value, parent, options) {
+    return new TreeNode(this, value, parent, options);
   };
   treeproto.height = function() {
     return this.rootnode.height();
@@ -165,7 +165,10 @@
     
     JSAV.utils._helpers.handleVisibility(this, this.options)
     if (parent) {
-      this.edgetoparent = new Edge(this.jsav, this, parent);
+      this._edgetoparent = new Edge(this.jsav, this, parent);
+      if (this.options.edgeLabel) {
+        this._edgetoparent.label(this.options.edgeLabel);
+      }
     }
     this.childnodes = [];
   };
@@ -176,14 +179,17 @@
     }
     return valstr + value + "</span>";
   };
-  nodeproto.parent = function(newParent) {
+  nodeproto.parent = function(newParent, options) {
     if (typeof newParent === "undefined") {
       return this.parentnode;
     } else {
-      if (!this.edgetoparent) {
-        this.edgetoparent = new Edge(this.jsav, this, newParent);
+      if (!this._edgetoparent) {
+        this._edgetoparent = new Edge(this.jsav, this, newParent, options);
       } else {
-        this.edgetoparent.end(newParent);
+        this._edgetoparent.end(newParent);
+        if (options && options.edgeLabel) {
+          this._edgetoparent.label(options.edgeLabel);
+        }
       }
       this.element.attr("data-parent", newParent?newParent.id():"");
       this.parentnode = newParent;
@@ -191,9 +197,9 @@
   };
   nodeproto.edgeToParent = function(edge) {
     if (typeof edge === "undefined") {
-      return this.edgetoparent;
+      return this._edgetoparent;
     } else {
-      this.edgetoparent = edge;
+      this._edgetoparent = edge;
       return this;
     }
   };
@@ -210,21 +216,21 @@
     this.childnodes = [];
     this.element.remove();
   };
-  nodeproto.addChild = function(node) {
+  nodeproto.addChild = function(node, options) {
     var pos = this.childnodes.length;
     if (typeof node === "string" || typeof node === "number") {
       node = this.container.newNode(node);
     }
-    this._setchild(pos, node);
+    this._setchild(pos, node, null, options);
     return this;
   };
-  nodeproto._setchild = JSAV.anim(function(pos, node, shift) {
+  nodeproto._setchild = JSAV.anim(function(pos, node, shift, options) {
     var oldval = this.childnodes[pos];
     if (oldval && !shift) {
       oldval.parent(null);
     }
     if (node) {
-      node.parent(this);
+      node.parent(this, options);
       if (!shift) {
         this.childnodes[pos] = node;
         node.element.attr("data-child-pos", pos);
@@ -257,11 +263,11 @@
     }
     return [pos, oldval];
   });
-  nodeproto.child = function(pos, node) {
+  nodeproto.child = function(pos, node, options) {
     if (typeof node === "undefined") {
       return this.childnodes[pos];
     } else {
-      this._setchild(pos, node);
+      this._setchild(pos, node, null, options);
     }
   };
   nodeproto.height = function() {
@@ -325,8 +331,8 @@
   };
   var bintreeproto = BinaryTree.prototype;
   $.extend(bintreeproto, treeproto);
-  bintreeproto.newNode = function(value, parent) {
-    return new BinaryTreeNode(this, value, parent);
+  bintreeproto.newNode = function(value, parent, options) {
+    return new BinaryTreeNode(this, value, parent, options);
   };
   
   
@@ -340,7 +346,7 @@
 
   // a general setchild method for bintreenode, pos parameter
   // should be either 0 (left) or 1 (right), node is the new child
-  function setchild(self, pos, node) {
+  function setchild(self, pos, node, options) {
     var oPos = pos?0:1;
     if (typeof node === "undefined") {
       if (self.child(pos) && self.child(pos).value() !== "jsavnull") {
@@ -349,7 +355,7 @@
         return undefined;
       }
     } else if (node && node.constructor === BinaryTreeNode) {
-      self.child(pos, node);
+      self.child(pos, node, options);
     } else {
       if (node === null) { // node is null, remove child
         if (self.child(pos) && self.child(pos).value() !== "jsavnull") {
@@ -369,7 +375,7 @@
       } else if (self.child(pos)) {
         self.child(pos).value(node);
       } else {
-        var newNode = self.container.newNode(node, self);
+        var newNode = self.container.newNode(node, self, options);
         self.child(pos, newNode);
         newNode.element.attr("data-binchildrole", pos?"right":"left");
         if (!self.child(oPos)) {
@@ -382,11 +388,11 @@
     }
     return self.child(1);
   }
-  binnodeproto.left = function(node) {
-    return setchild(this, 0, node);
+  binnodeproto.left = function(node, options) {
+    return setchild(this, 0, node, options);
   };
-  binnodeproto.right = function(node) {
-    return setchild(this, 1, node);
+  binnodeproto.right = function(node, options) {
+    return setchild(this, 1, node, options);
   };
   binnodeproto._setvalue = JSAV.anim(function(newValue) {
     var oldVal = this.element.removeClass("jsavnullnode")
@@ -551,13 +557,13 @@
   	var offset = tree.element.position();
   	$.each(results, function(key, value) {
   	  var node = value.node;
-  	  if (node['edgetoparent']) {
+  	  if (node['_edgetoparent']) {
   	    var start = {left: value.translation.width,// + offset.left,
   	                 top: value.translation.height},// + offset.top},
   	        endnode = results[node.parent().id()].translation,
   	        end = {left: endnode.width,// + offset.left,
   	               top: endnode.height};// + offset.top};
-  	    edgeLayout(node.edgetoparent, start, end);
+  	    edgeLayout(node._edgetoparent, start, end);
   	  }
   	});
   }

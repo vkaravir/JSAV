@@ -157,7 +157,6 @@
       if (!this._label) {
         this._label = this.jsav.label(newLabel);
         this._label.element.css({position: "absolute", display: "inline-block"});
-        positionUpdate();
       } else {
         this._label.text(newLabel);
       }
