@@ -515,22 +515,32 @@ Currently, JSAV supports two types of trees: common tree and binary tree. The st
 <p>Returns the edge that connects this node to its parent. If the optional <var>newEdge</var> parameter is given, the edge to parent is set.</p>
 <h3 class="apimethod">.child(pos)</h3>
 <p>Returns the <var>pos</var>:th child of this node.</p>
-<h3 class="apimethod">.child(pos, node)</h3>
+<h3 class="apimethod">.child(pos, node [,options])</h3>
 <p>Sets the <var>pos</var>:th child to the given value. The <var>node</var> can be a value or a node of correct type to the node. If value <code>null</code> is given as <code>node</code>, the child at that position is removed. Note, that this only changes the state of the data structure and does not affect the visualization. That means you have to manually hide or move the removed node and the edge.</p>
-<h3 class="apimethod">.child(node)</h3>
-<p>Adds a child node to this node. The <var>node</var> can be a value or a node of correct type to the node.</p>
+<p>The optional third argument <code>options</code> should be an object. The following option(s) are supported:</p>
+<ul>
+  <li><code>edgeLabel</code>: specify a label shown on the edge connecting the new node to its parent.</li>
+</ul>
+<h3 class="apimethod">.addChild(node [,options])</h3>
+<p>Adds a child node to this node. The <var>node</var> can be a value or a node of correct type to the node.
+  The <code>options</code> parameter works like above.</p>
 
 <h2>Binary Tree Node API</h2>
-<h3 class="apimethod">.left([node])</h3>
-<p>Returns the left child or undefined if node has no left child. If optional parameter <var>node</var> is given, sets the left child. The parameter can be a value or a binary tree node. If value <code>null</code> is given as <code>node</code>, the left child is removed. Note, that this only changes the state of the data structure and does not affect the visualization. That means you have to manually hide or move the removed node and the edge.</p>
-<h3 class="apimethod">.right([node])</h3>
-<p>Returns the right child or undefined if node has no right child. If optional parameter <var>node</var> is given, sets the right child. The parameter can be a value or a binary tree node. Passing <code>null</code> as node works similarly to the left function.</p>
+<h3 class="apimethod">.left([node [, options]])</h3>
+<p>Returns the left child or undefined if node has no left child. If optional parameter <var>node</var> is given, sets the left child. The parameter can be a value or a binary tree node. If value <code>null</code> is given as <code>node</code>, the left child is removed. Note, that this only changes the state of the data structure and does not affect the visualization. That means you have to manually hide or move the removed node and the edge.
+The additional <code>options</code> parameter works like for <code>.child(...)</code> above. </p>
+<h3 class="apimethod">.right([node [,options]])</h3>
+<p>Returns the right child or undefined if node has no right child. If optional parameter <var>node</var> is given, sets the right child. The parameter can be a value or a binary tree node. Passing <code>null</code> as node works similarly to the left function. The additional <code>options</code> parameter works like for <code>.child(...)</code> above.</p>
   
 <h2>Edge structure API</h2>
-<h3 class="apimethod">start([node])</h3>
+<h3 class="apimethod">.start([node])</h3>
 <p>Returns the start node of this edge. If the optional <var>node</var> parameter is given, sets the start node of this edge.</p>
-<h3 class="apimethod">end([node])</h3>
+<h3 class="apimethod">.end([node])</h3>
 <p>Returns the end node of this edge. If the optional <var>node</var> parameter is given, sets the end node of this edge.</p>
+<h3 class="apimethod">.label()</h3>
+<p>Returns the label attached to this edge.</p>
+<h3 class="apimethod">.label(newLabel)</h3>
+<p>Sets the value of the label attached to this edge.</p>
 
 
 <h2>Linked List API</h2>
@@ -571,8 +581,12 @@ Currently, JSAV supports two types of trees: common tree and binary tree. The st
 <p>A node in a list has the same functions as a tree node: <code>.value([newValue])</code>, <code>.highlight()/unhighlight()</code>, <code>.show()/.hide()</code>, and <code>.css(...)</code>. In addition, it has the following functions.</p>
 <h3 class="apimethod">.next()</h3>
 <p>Returns the next node in the linked list. If no next, returns null.</p>
-<h3 class="apimethod">.next([node])</h3>
-<p>Sets the next node to be the passed <code>node</code>.</p>
+<h3 class="apimethod">.next([node [, options]])</h3>
+<p>Sets the next node to be the passed <code>node</code>. The optional second argument <code>options</code> should be an object. The following option(s) are supported:</p>
+<ul>
+  <li><code>edgeLabel</code>: specify a label shown on the edge connecting the node to the next.</li>
+</ul>
+
 <h3 class="apimethod">.edgeToNext()</h3>
 <p>Returns the JSAV Edge object that points to the next item in the list.</p>
 
