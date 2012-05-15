@@ -4,14 +4,21 @@ For changes before version 0.3.1, see
 Changes in dev version
 ----------------------
 * new features:
+   - support for linked list data structure
+
+Changes in version 0.4.3
+------------------------
+* new features:
    - absolute positioning of labels, variables and data structures is now possible
+   - labels can be attached to edges
 * bug fixes:
    - issue with changing array value in horizontal layout in Webkit based browsers fixed
    - show/hide bug for data structures fixed
 * new minor features:
    - allow custom event binding for data structures
    - allow data to be passed to event handlers for data structures
-  
+   - added function JSAV.utils.rand.sample to get a random sample from an array
+
 Changes in version 0.4.2
 ------------------------
 * Possibility to better control array styling
