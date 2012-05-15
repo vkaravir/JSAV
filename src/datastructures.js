@@ -147,15 +147,14 @@
       var positionUpdate = function() {
         var bbox = self.g.bounds(),
             lbbox = self._label.bounds(),
-            containerPos = self.container.position(),
-            newTop = containerPos.top + bbox.top + (bbox.height - lbbox.height)/2,
-            newLeft = containerPos.left + bbox.left + (bbox.width - lbbox.width)/2;
+            newTop = bbox.top + (bbox.height - lbbox.height)/2,
+            newLeft = bbox.left + (bbox.width - lbbox.width)/2;
         if (newTop !== lbbox.top || newLeft || lbbox.left) {
           self._label.css({top: newTop, left: newLeft});
         }
       };
       if (!this._label) {
-        this._label = this.jsav.label(newLabel);
+        this._label = this.jsav.label(newLabel, {container: this.container.element});
         this._label.element.css({position: "absolute", display: "inline-block"});
       } else {
         this._label.text(newLabel);
