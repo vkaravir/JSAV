@@ -31,8 +31,8 @@
     swap: function($str1, $str2, translateY) {
       var $val1 = $str1.find("span.jsavvalue"),
           $val2 = $str2.find("span.jsavvalue"),
-          posdiffX = JSAV.position($val1).left - JSAV.position($val2).left,
-          posdiffY = translateY?JSAV.position($val1).top - JSAV.position($val2).top:0,
+          posdiffX = JSAV.position($str1).left - JSAV.position($str2).left,
+          posdiffY = translateY?JSAV.position($str1).top - JSAV.position($str2).top:0,
           $both = $($str1).add($str2),
           str1prevStyle = $str1.getstyles("color", "background-color"),
           str2prevStyle = $str2.getstyles("color", "background-color"),
