@@ -74,7 +74,6 @@
     $.fx.off = oldfx;
   };
   var bhproto = BinaryHeap.prototype;
-  JSAV.ext.ds.extend("common", bhproto);
   $.extend(bhproto, JSAV._types.ds.AVArray.prototype);
   bhproto.arrayswap = bhproto.swap;
   bhproto.arraycss = bhproto.css;
