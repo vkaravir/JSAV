@@ -22,7 +22,6 @@ $(TARGET)/JSAV.js: $(SRC)/version.txt $(SRC)/front.js $(SRC)/version.js $(SOURCE
 	$(CAT) $(SOURCES) > $(TARGET)/JSAV.js
 
 .git/FETCH_HEAD:
-	-git pull
 
 $(SRC)/version.txt: .git/FETCH_HEAD
 	git describe --tags --long | awk '{ printf "%s", $$0 }' - > $(SRC)/version.txt
