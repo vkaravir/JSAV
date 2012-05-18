@@ -287,6 +287,7 @@
     }
   };
   JSAV.ext.displayInit = function() {
+    this.container.trigger("jsav-updaterelative");
     this.clear({redo: false});
     return this;
   };
