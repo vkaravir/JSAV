@@ -387,7 +387,7 @@ Sets the value of the element at the given index to the given value.
   <p>You can also pass custom arguments to the event handler function. To do this, the first argument
   to the event binding function should be an array of parameters that will be passed as parameters to
   the event handler function. This is best explained with an example:</p>
-  <pre>arr.mouseenter([{"color": "red"}], arr.css).mouseleave([{"color": "black"], arr.css});</pre>
+  <pre>arr.mouseenter([{"color": "red"}], arr.css).mouseleave([{"color": "black"}], arr.css);</pre>
   <p>This will use array's <code>css</code> function as the event handler and pass it another parameter
     when the event is triggered. On mouse enter, the function call will essentially be: 
     <code>arr(index, {"color": "red"}, e)</code>. Here, <code>e</code> is again the jQuery event object.</p>
