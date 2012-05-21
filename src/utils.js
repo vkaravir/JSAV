@@ -155,13 +155,14 @@
     }
   };
   
+  var dummyTestFunction = function(dataArr) { return true; };
   u.rand = {
     random: Math.random,
     numKey: function(min, max) {
       return Math.floor(this.random()*(max-min) + min);
     },
     numKeys: function(min, max, num, options) {
-      var opts = $.extend(true, {sorted: false, test: function(dataArr) { return true; },
+      var opts = $.extend(true, {sorted: false, test: dummyTestFunction,
                                 tries: 10}, options);
       var keys, tries = opts.tries, size = num;
       do {
@@ -174,20 +175,27 @@
       return keys;
     },
     /** returns an array of num random items from given array collection */
-    sample: function(collection, num) {
+    sample: function(collection, num, options) {
+      var opts = $.extend(true, {test: dummyTestFunction, 
+                                 tries: 10}, options);
       var min = 0,
         max = collection.length,
         result = [],
-        dupl = collection.slice(0),
-        tmp, rnd;
+        dupl,
+        tmp, rnd,
+        tries = opts.tries;
       if (max < num || num < 0) { return undefined; }
-      // do num random swaps, always swap with an item later in the array
-      for (var i = 0; i < num; i++) {
-        tmp = dupl[i];
-        rnd = this.numKey(i, max);
-        dupl[i] = dupl[rnd];
-        dupl[rnd] = tmp;
-      }
+      do {
+        dupl = collection.slice(0);
+
+        // do num random swaps, always swap with an item later in the array
+        for (var i = 0; i < num; i++) {
+          tmp = dupl[i];
+          rnd = this.numKey(i, max);
+          dupl[i] = dupl[rnd];
+          dupl[rnd] = tmp;
+        }
+      } while (tries-- && !opts.test(dupl))
       return dupl.slice(0, num);
     }
   };
