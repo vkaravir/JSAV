@@ -252,8 +252,9 @@
   nodeproto.highlight = function() {
     var testDiv = $('<div class="' + this.container.element[0].className + 
         '" style="position:absolute;left:-10000px">' + 
-        '<div class="' + this.element[0].className + ' jsavhighlight"></div><div class="' + this.element[0].className + '" ></div></div>'),
-  	  styleDiv = testDiv.find(".jsavnode").filter(".jsavhighlight");
+        '<div class="' + this.element[0].className + ' jsavhighlight"><span class="jsavvalue"></span></div><div class="' + 
+        this.element[0].className + '" ><span class="jsavvalue"></span></div></div>'),
+  	  styleDiv = testDiv.find(".jsavnode").filter(".jsavhighlight").find(".jsavvalue");
   	// TODO: general way to get styles for the whole av system
   	$("body").append(testDiv);
     this._setcss({color: styleDiv.css("color"), "background-color": styleDiv.css("background-color")});
@@ -262,8 +263,9 @@
   nodeproto.unhighlight = function() {
     var testDiv = $('<div class="' + this.container.element[0].className + 
         '" style="position:absolute;left:-10000px">' + 
-        '<div class="' + this.element[0].className + ' jsavhighlight"></div><div class="' + this.element[0].className + '" ></div></div>'),
-  	  styleDiv = testDiv.find(".jsavnode").not(".jsavhighlight");
+        '<div class="' + this.element[0].className + ' jsavhighlight"><span class="jsavvalue"></span></div><div class="' + 
+        this.element[0].className + '" ><span class="jsavvalue"></span></div></div>'),
+  	  styleDiv = testDiv.find(".jsavnode").not(".jsavhighlight").find(".jsavvalue");
   	// TODO: general way to get styles for the whole av system
   	$("body").append(testDiv);
     this._setcss({color: styleDiv.css("color"), "background-color": styleDiv.css("background-color")});
@@ -273,8 +275,9 @@
   nodeproto.isHighlight = function() {
     var testDiv = $('<div class="' + this.container.element[0].className + 
         '" style="position:absolute;left:-10000px">' + 
-        '<div class="' + this.element[0].className + ' jsavhighlight"></div><div class="' + this.element[0].className + '" ></div></div>'),
-  	  styleDiv = testDiv.find(".jsavnode").filter(".jsavhighlight");
+        '<div class="' + this.element[0].className + ' jsavhighlight"><span class="jsavvalue"></span></div><div class="' + 
+        this.element[0].className + '" ><span class="jsavvalue"></span></div></div>'),
+  	  styleDiv = testDiv.find(".jsavnode").filter(".jsavhighlight").find(".jsavvalue");
   	// TODO: general way to get styles for the whole av system
   	$("body").append(testDiv);
   	var isHl = this.element.css("background-color") == styleDiv.css("background-color");

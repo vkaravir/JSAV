@@ -54,8 +54,10 @@
   function setHighlight(indices, mode) {
     var testDiv = $('<ol class="' + this.element[0].className + 
         '" style="position:absolute;left:-10000px">' + 
-        '<li class="jsavnode jsavindex jsavhighlight"></li><li class="jsavnode jsavindex" ></li></li></ol>'),
-  	  styleDiv = (mode && mode === "add" ? testDiv.find(".jsavnode").filter(".jsavhighlight"):testDiv.find(".jsavnode").not(".jsavhighlight"));
+        '<li class="jsavnode jsavindex jsavhighlight"><span class="jsavvalue"></span></li>' +
+        '<li class="jsavnode jsavindex" ><span class="jsavvalue"></span></li></ol>'),
+  	  styleDiv = (mode && mode === "add" ? testDiv.find(".jsavnode").filter(".jsavhighlight").find(".jsavvalue")
+  	              : testDiv.find(".jsavnode").not(".jsavhighlight").find(".jsavvalue"));
   	// TODO: general way to get styles for the whole av system
   	$("body").append(testDiv);
     this.css(indices, {color: styleDiv.css("color"), "background-color": styleDiv.css("background-color")});
@@ -65,11 +67,12 @@
   arrproto.isHighlight = function(index, options) {
     var testDiv = $('<ol class="' + this.element[0].className + 
         '" style="position:absolute;left:-10000px">' + 
-        '<li class="jsavnode jsavindex jsavhighlight"></li><li class="jsavnode jsavindex" ></li></li></ol>'),
-  	  styleDiv = testDiv.find(".jsavnode").filter(".jsavhighlight");
+        '<li class="jsavnode jsavindex jsavhighlight"><span class="jsavvalue"></span></li>' +
+        '<li class="jsavnode jsavindex" ><span class="jsavvalue"></span></li></ol>'),
+  	  styleDiv = testDiv.find(".jsavnode").filter(".jsavhighlight").find(".jsavvalue");
   	// TODO: general way to get styles for the whole av system
   	$("body").append(testDiv);
-  	var isHl = getIndices($(this.element).find("li"), index).css("background-color") == styleDiv.css("background-color");
+  	var isHl = this.css(index, "background-color") == styleDiv.css("background-color");
   	testDiv.remove();
   	return isHl;
   };
@@ -86,10 +89,9 @@
   arrproto._setcss = JSAV.anim(function(indices, cssprop) {
     var $elems = getIndices($(this.element).find("li"), indices);
     if (this.jsav._shouldAnimate()) { // only animate when playing, not when recording
-      // also animate the values due to a bug in webkit based browsers with inherited bg color not changing
-      $elems.animate(cssprop, this.jsav.SPEED).find("span.jsavvalue").animate(cssprop, this.jsav.SPEED);
+      $elems.find("span.jsavvalue").animate(cssprop, this.jsav.SPEED);
     } else {
-      $elems.css(cssprop).find("span.jsavvalue").css(cssprop);
+      $elems.find("span.jsavvalue").css(cssprop);
     }
     return this;
   });
@@ -113,7 +115,7 @@
   arrproto.css = function(indices, cssprop) {
     var $elems = getIndices($(this.element).find("li"), indices);
     if (typeof cssprop === "string") {
-      return $elems.css(cssprop);
+      return $elems.find(".jsavvalue").css(cssprop);
     } else if (typeof indices === "string") {
       return this.element.css(indices);
     } else if (!$.isArray(indices) && typeof indices === "object") { // object, apply for array
