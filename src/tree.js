@@ -161,7 +161,7 @@
       el.attr("data-parent", parent.id());
     }
     this.container.element.append(el);
-    
+
     JSAV.utils._helpers.handleVisibility(this, this.options)
     if (parent) {
       this._edgetoparent = new Edge(this.jsav, this, parent);
@@ -218,7 +218,7 @@
   nodeproto.addChild = function(node, options) {
     var pos = this.childnodes.length;
     if (typeof node === "string" || typeof node === "number") {
-      node = this.container.newNode(node);
+      node = this.container.newNode(node, this, options);
     }
     this._setchild(pos, node, null, options);
     return this;
@@ -581,15 +581,13 @@
         startpos = sElem.offset(),
         endpos = eElem.offset(),
         fromX =  Math.round(start.left + sWidth - parseInt(svgleft, 10)),
-  	    fromY = Math.round(start.top + sHeight - parseInt(svgtop, 10)),
+  	    fromY = Math.round(start.top - parseInt(svgtop, 10)),
   	    toX = Math.round(end.left + eWidth - parseInt(svgleft, 10)),
   	    toY = Math.round(end.top + eHeight - parseInt(svgtop, 10)),
-  	    fromAngle = normalizeAngle(2*pi - Math.atan2(toY - fromY, toX - fromX)),
         toAngle = normalizeAngle(2*pi - Math.atan2(fromY - toY, fromX - toX)),
-        fromPoint = getNodeBorderAtAngle(0, edge.startnode.element, 
-                  {width: sWidth, height: sHeight, x: fromX, y: fromY}, fromAngle),
+        fromPoint = [0, fromX, fromY], // from point is the lower node, position at top
         toPoint = getNodeBorderAtAngle(1, edge.endnode.element, 
-                  {width: eWidth, height: eHeight, x: toX, y: toY}, toAngle)
+                  {width: eWidth, height: eHeight, x: toX, y: toY}, toAngle);
     edge.g.movePoints([fromPoint, toPoint]);
     edge.layout();
     
