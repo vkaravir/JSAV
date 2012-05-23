@@ -4,7 +4,7 @@ MINIMIZE = java -jar tools/yuicompressor-2.4.6.jar --nomunge --preserve-semi -o 
 CAT = cat
 SRC = src
 TARGET = build
-SOURCES = $(SRC)/front.js $(SRC)/core.js $(SRC)/utils.js $(SRC)/anim.js $(SRC)/messages.js $(SRC)/effects.js  $(SRC)/graphicals.js $(SRC)/datastructures.js $(SRC)/array.js $(SRC)/tree.js $(SRC)/list.js $(SRC)/code.js $(SRC)/settings.js $(SRC)/questions.js $(SRC)/exercise.js $(SRC)/version.js 
+SOURCES = $(SRC)/front.js $(SRC)/core.js $(SRC)/utils.js $(SRC)/anim.js $(SRC)/messages.js $(SRC)/effects.js $(SRC)/events.js $(SRC)/graphicals.js $(SRC)/datastructures.js $(SRC)/array.js $(SRC)/tree.js $(SRC)/list.js $(SRC)/code.js $(SRC)/settings.js $(SRC)/questions.js $(SRC)/exercise.js $(SRC)/version.js 
 
 all: build
 

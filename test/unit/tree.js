@@ -404,5 +404,72 @@ test("Test show/hide", function() {
 	av.backward(); // undo showing a visible Tree
 	equals(tree.element.filter(":visible").size(), 1, "Undoing show of a visible should keep it visible");
 });
- 
+
+
+
+test("Test click event", function() {
+  expect(6);
+  var handler1 = function(event) {
+    ok(event);
+  };
+  var handler2 = function(myval, event) {
+    equals(myval, "kissa");
+    ok(event);
+  }
+  var handler3 = function(myval, myval2, event) {
+    equals(myval, "kissa");
+    equals(myval2, "koira");
+    ok(event);
+  }
+	var av = new JSAV("arraycontainer"),
+	    tree1 = av.ds.tree(),
+	    tree2 = av.ds.bintree(),
+	    tree3 = av.ds.bintree();
+  var setup = function(tree) {
+    tree.root("r");
+    var r = tree.root();
+    r.addChild(0);
+    r.addChild(2);
+  }
+  setup(tree1); setup(tree2); setup(tree3);
+  tree1.click(handler1);
+  tree2.click(["kissa"], handler2);
+  tree3.click(["kissa", "koira"], handler3);
+  tree1.element.find(".jsavnode:eq(2)").click();
+  tree2.element.find(".jsavnode:eq(0)").click();
+  tree3.element.find(".jsavnode:eq(1)").click();
+});
+
+test("Test on event binding and custom events", function() {
+  expect(6);
+  var handler1 = function(event) {
+    ok(event);
+  };
+  var handler2 = function(myval, event) {
+    equals(myval, "kissa");
+    ok(event);
+  }
+  var handler3 = function(myval, myval2, event) {
+    equals(myval, "kissa");
+    equals(myval2, "koira");
+    ok(event);
+  }
+	var av = new JSAV("arraycontainer"),
+	    tree1 = av.ds.tree(),
+	    tree2 = av.ds.bintree(),
+	    tree3 = av.ds.bintree();
+  var setup = function(tree) {
+    tree.root("r");
+    var r = tree.root();
+    r.addChild(0);
+    r.addChild(2);
+  }
+  setup(tree1); setup(tree2); setup(tree3);
+  tree1.on("jsavclick", handler1);
+  tree2.on("jsavclick", "kissa", handler2);
+  tree3.on("jsavclick", ["kissa", "koira"], handler3);
+  tree1.element.find(".jsavnode:eq(2)").trigger("jsavclick");
+  tree2.element.find(".jsavnode:eq(0)").trigger("jsavclick");
+  tree3.element.find(".jsavnode:eq(1)").trigger("jsavclick");
+});
 })();
