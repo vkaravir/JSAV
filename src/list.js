@@ -150,6 +150,9 @@
   };
   listproto.css = JSAV.utils._helpers.css;
   listproto._setcss = JSAV.anim(JSAV.utils._helpers._setcss);
+
+  // add the event handler registration functions to the list prototype
+  JSAV.utils._events._addEventSupport(listproto);
   
   var ListNode = function(container, value, options) {
     this.jsav = container.jsav;
