@@ -101,14 +101,14 @@
     line.setAttribute("class", clazz);
     return [oldclass];
   });
-  edgeproto.layout = function() {
+  edgeproto.layout = function(options) {
     if (this.start().value() === "jsavnull" || this.end().value() === "jsavnull") {
-      this._setclass("jsavedge jsavnulledge");
+      this._setclass("jsavedge jsavnulledge", options);
     } else {
-      this._setclass("jsavedge");
+      this._setclass("jsavedge", options);
     }
   };
-  edgeproto.start = function(node) {
+  edgeproto.start = function(node, options) {
     if (typeof node === "undefined") {
       return this.startnode;
     } else {
@@ -117,7 +117,7 @@
       return this;
     }
   };
-  edgeproto.end = function(node) {
+  edgeproto.end = function(node, options) {
     if (typeof node === "undefined") {
       return this.endnode;
     } else {
@@ -131,15 +131,15 @@
   edgeproto.clear = function() {
     this.g.rObj.remove();
   };
-  edgeproto.hide = function() {
-    this.g.hide();
-    if (this._label) { this._label.hide(); }
+  edgeproto.hide = function(options) {
+    this.g.hide(options);
+    if (this._label) { this._label.hide(options); }
   };
-  edgeproto.show = function() {
-    this.g.show();
-    if (this._label) { this._label.show(); }
+  edgeproto.show = function(options) {
+    this.g.show(options);
+    if (this._label) { this._label.show(options); }
   };
-  edgeproto.label = function(newLabel) {
+  edgeproto.label = function(newLabel, options) {
     if (typeof newLabel === "undefined") {
       return this._label?this._label.text():undefined;
     } else {
@@ -150,14 +150,14 @@
             newTop = bbox.top + (bbox.height - lbbox.height)/2,
             newLeft = bbox.left + (bbox.width - lbbox.width)/2;
         if (newTop !== lbbox.top || newLeft || lbbox.left) {
-          self._label.css({top: newTop, left: newLeft});
+          self._label.css({top: newTop, left: newLeft}, options);
         }
       };
       if (!this._label) {
         this._label = this.jsav.label(newLabel, {container: this.container.element});
         this._label.element.css({position: "absolute", display: "inline-block"});
       } else {
-        this._label.text(newLabel);
+        this._label.text(newLabel, options);
       }
       this.jsav.container.on("jsav-updaterelative", positionUpdate);
     }
@@ -210,11 +210,11 @@
     }
     return [oldProps];
   });
-  edgeproto.css = function(cssprop, value) {
+  edgeproto.css = function(cssprop, value, options) {
     if (typeof cssprop === "string" && typeof value === "undefined") {
       return this.g.rObj.attr(cssprop);
     } else {
-      return this._setcss(cssprop, value);
+      return this._setcss(cssprop, value, options);
     }
   };
   edgeproto.state = function(newState) {
@@ -230,11 +230,11 @@
   nodeproto = Node.prototype;
   $.extend(nodeproto, common);
       
-  nodeproto.value = function(newVal) {
+  nodeproto.value = function(newVal, options) {
     if (typeof newVal === "undefined") {
       return JSAV.utils.value2type(this.element.attr("data-value"), this.element.attr("data-value-type"));
     } else {
-      this._setvalue(newVal);
+      this._setvalue(newVal, options);
     }
     return this;
   };
@@ -249,7 +249,7 @@
     return "<span class='jsavvalue'>" + value + "</span>";
   };
   // TODO: these are so ugly, do something! soon!
-  nodeproto.highlight = function() {
+  nodeproto.highlight = function(options) {
     var testDiv = $('<div class="' + this.container.element[0].className + 
         '" style="position:absolute;left:-10000px">' + 
         '<div class="' + this.element[0].className + ' jsavhighlight"><span class="jsavvalue"></span></div><div class="' + 
@@ -257,10 +257,10 @@
   	  styleDiv = testDiv.find(".jsavnode").filter(".jsavhighlight").find(".jsavvalue");
   	// TODO: general way to get styles for the whole av system
   	$("body").append(testDiv);
-    this._setcss({color: styleDiv.css("color"), "background-color": styleDiv.css("background-color")});
+    this._setcss({color: styleDiv.css("color"), "background-color": styleDiv.css("background-color")}, options);
     testDiv.remove();
   };
-  nodeproto.unhighlight = function() {
+  nodeproto.unhighlight = function(options) {
     var testDiv = $('<div class="' + this.container.element[0].className + 
         '" style="position:absolute;left:-10000px">' + 
         '<div class="' + this.element[0].className + ' jsavhighlight"><span class="jsavvalue"></span></div><div class="' + 
@@ -268,7 +268,7 @@
   	  styleDiv = testDiv.find(".jsavnode").not(".jsavhighlight").find(".jsavvalue");
   	// TODO: general way to get styles for the whole av system
   	$("body").append(testDiv);
-    this._setcss({color: styleDiv.css("color"), "background-color": styleDiv.css("background-color")});
+    this._setcss({color: styleDiv.css("color"), "background-color": styleDiv.css("background-color")}, options);
     testDiv.remove();
   };
   

@@ -43,7 +43,7 @@
   });
   listproto.add = function(index, newValue, options) {
     if (index === 0) { 
-      return this.addFirst(newValue);
+      return this.addFirst(newValue, options);
     }
     var node = this.get(index - 1),
       newNode;
@@ -54,16 +54,16 @@
     }
     if (node) { // there is node for the index
       newNode.next(node.next(), options);
-      node.next(newNode);
+      node.next(newNode, options);
     }
     return this;
   };
   listproto.addFirst = function(newValue, options) {
     if (newValue instanceof ListNode) {
       newValue.next(this._first, options);
-      this._setfirst(newValue);
+      this._setfirst(newValue, options);
     } else {
-      this._setfirst(this.newNode(newValue, $.extend({}, options, {first: true, next: this._first})));
+      this._setfirst(this.newNode(newValue, $.extend({}, options, {first: true, next: this._first})), options);
     }
     return this;
   };
@@ -108,28 +108,28 @@
   listproto.newNode = function(value, options) {
     return new ListNode(this, value, $.extend({first: false}, this.options, options));
   };
-  listproto.remove = function(index) {
+  listproto.remove = function(index, options) {
     // TODO: remove bounds checks -> use removefirst/last
     if (index === 0) {
-      return this.removeFirst();
+      return this.removeFirst(options);
     } else if (index === this.size() - 1) {
-      return this.removeLast();
+      return this.removeLast(options);
     }
     var prev = this.get(index - 1),
         next = this.get(index + 1),
         oldNode = prev.next();
-    prev.next(next);
+    prev.next(next, options);
     return oldNode;
   };
-  listproto.removeFirst = function() {
+  listproto.removeFirst = function(options) {
     var oldFirst = this.first();
-    this.first(oldFirst.next());
+    this.first(oldFirst.next(), options);
     return oldFirst;
   };
-  listproto.removeLast = function() {
+  listproto.removeLast = function(options) {
     var newLast = this.get(this.size() - 1),
       oldLast = this.last();
-    newLast.next(null);
+    newLast.next(null, options);
     return oldLast;
   };
   listproto.layout = function(options) {
@@ -210,7 +210,7 @@
   listnodeproto.state = function(newState) {
     // TODO: implement state
   };
-  function centerList(list) {
+  function centerList(list, options) {
     // center the list inside its parent container
     if (list.options.hasOwnProperty("center") && !list.options.center) {
       // if options center is set to falsy value, return
@@ -219,7 +219,7 @@
     // width of list expected to be last items position + its width
     var width = list.element.outerWidth(),
       containerWidth = $(list.jsav.canvas).width();
-    list.css("left", (containerWidth - width)/2);
+    list.css("left", (containerWidth - width)/2, options);
   }
 
   var horizontalList = function(list, options) {
@@ -239,14 +239,14 @@
                     prevNode.element.position().top + Math.round(prevNode.element.height()/2)],
             end = [1, curNode.element.position().left - 3,
                     curNode.element.position().top + Math.round(curNode.element.height()/2)];
-        edge.g.movePoints([start, end]);
+        edge.g.movePoints([start, end], options);
       }
       prevNode = curNode;
       curNode = curNode.next();
     }
-    list.css("width", prevLeft - opts.nodegap);
-    list.css("height", "50px");
-    centerList(list);
+    list.css("width", prevLeft - opts.nodegap, options);
+    list.css("height", "50px", options);
+    centerList(list, options);
   };
 
   JSAV.ext.ds.layout.list = {

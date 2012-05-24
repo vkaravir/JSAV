@@ -15,16 +15,16 @@
       return []
     },
     /* shows an element */
-    show: function() {
+    show: function(options) {
       if (this.element.filter(":visible").size() === 0) {
-        this._toggleVisible();
+        this._toggleVisible(options);
       }
       return this;
     }, 
     /* hides an element */
-    hide: function() { 
+    hide: function(options) { 
       if (this.element.filter(":visible").size() > 0) {
-        this._toggleVisible();
+        this._toggleVisible(options);
       }
       return this;
     },

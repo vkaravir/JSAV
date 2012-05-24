@@ -192,8 +192,14 @@
     // when viewing the visualization
     return function() {
       var jsav = this; // this points to the objects whose function was decorated
+      var args = $.makeArray(arguments),
+          norecord = false;
+      if (args.length > 0 && args[args.length-1] && typeof args[args.length-1] === "object" &&
+              args[args.length-1].record === false) {
+        norecord = true;
+      }
       if (!jsav.hasOwnProperty("_redo")) { jsav = this.jsav; }
-      if (jsav.options.animationMode === 'none') { // if not recording, apply immediately
+      if (jsav.options.animationMode === 'none' || norecord) { // if not recording, apply immediately
         effect.apply(this, arguments);
       } else {
         var stackTop = jsav._undo[jsav._undo.length - 1];

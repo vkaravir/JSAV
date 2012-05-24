@@ -422,11 +422,11 @@ mixkey(math.random(), pool);
  
   var _helpers = {};
   u._helpers = _helpers;
-  _helpers.css = function(cssprop, value) {
+  _helpers.css = function(cssprop, value, options) {
     if (typeof cssprop === "string" && typeof value === "undefined") {
       return this.element.css(cssprop);
     } else {
-      return this._setcss(cssprop, value);
+      return this._setcss(cssprop, value, options);
     }
   };
   _helpers._setcss = function(cssprop, value) {
@@ -474,8 +474,7 @@ mixkey(math.random(), pool);
     jsavobj.element.css("display", "none");
     var visible = (typeof options.visible === "boolean" && options.visible === true);
     if (visible) {
-      jsavobj.show();
+      jsavobj.show(options);
     }
-
   }
 })(jQuery);

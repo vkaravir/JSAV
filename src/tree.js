@@ -41,16 +41,16 @@
     node.element.attr("data-child-role", "root");
     return [oldroot];
   });
-  treeproto.root = function(newRoot) {
+  treeproto.root = function(newRoot, options) {
     if (typeof newRoot === "undefined") {
       return this.rootnode;
     } else if (newRoot.constructor === TreeNode) {
-      this._setrootnode(newRoot);
+      this._setrootnode(newRoot, options);
     } else {
       if (this.rootnode) {
-        this.rootnode.value(newRoot);
+        this.rootnode.value(newRoot, options);
       } else {
-        this._setrootnode(this.newNode(newRoot, null));
+        this._setrootnode(this.newNode(newRoot, null, options), options);
       }
     }
     return this.rootnode;
@@ -65,9 +65,9 @@
   treeproto.height = function() {
     return this.rootnode.height();
   };
-  treeproto.layout = function() {
+  treeproto.layout = function(options) {
     var layoutAlg = this.options.layout || "_default";
-    this.jsav.ds.layout.tree[layoutAlg](this);
+    this.jsav.ds.layout.tree[layoutAlg](this, options);
   };
   treeproto.equals = function(otherTree, options) {
     if (!otherTree instanceof Tree) {
@@ -129,9 +129,9 @@
       if (!this._edgetoparent) {
         this._edgetoparent = new Edge(this.jsav, this, newParent, options);
       } else {
-        this._edgetoparent.end(newParent);
+        this._edgetoparent.end(newParent, options);
         if (options && options.edgeLabel) {
-          this._edgetoparent.label(options.edgeLabel);
+          this._edgetoparent.label(options.edgeLabel, options);
         }
       }
       this.element.attr("data-parent", newParent?newParent.id():"");
@@ -300,31 +300,33 @@
     } else if (node && node.constructor === BinaryTreeNode) {
       self.child(pos, node, options);
     } else {
+      var nullopts = $.extend({}, options);
+      nullopts.edgeLabel = undefined;
       if (node === null) { // node is null, remove child
         if (self.child(pos) && self.child(pos).value() !== "jsavnull") {
           // child exists
           if (!self.child(oPos) || self.child(oPos).value() === "jsavnull") { // ..but no other child
-            self.child(pos, null);
-            self.child(oPos, null);
+            self.child(pos, null, options);
+            self.child(oPos, null, options);
           } else { // other child exists
             // create a null node and set it as other child
-            var other = self.container.newNode("jsavnull", self);
+            var other = self.container.newNode("jsavnull", self, nullopts);
             other.element.addClass("jsavnullnode").attr("data-binchildrole", pos?"right":"left");
-            self.child(pos, other);
+            self.child(pos, other, options, nullopts);
           }
         } else { // no such child
           // nothing to be done
         }
       } else if (self.child(pos)) {
-        self.child(pos).value(node);
+        self.child(pos).value(node, options);
       } else {
         var newNode = self.container.newNode(node, self, options);
-        self.child(pos, newNode);
+        self.child(pos, newNode, options);
         newNode.element.attr("data-binchildrole", pos?"right":"left");
         if (!self.child(oPos)) {
-          var other = self.container.newNode("jsavnull", self);
+          var other = self.container.newNode("jsavnull", self, nullopts);
           other.element.addClass("jsavnullnode").attr("data-binchildrole", oPos?"right":"left");
-          self.child(oPos, other);
+          self.child(oPos, other, nullopts);
         }
         return newNode;
       }
@@ -370,8 +372,9 @@
 
 // Tree layout
 (function($) {
-  function treeLayout(tree) {
-	  var NODEGAP = tree.options.nodegap || 40,
+  function treeLayout(tree, options) {
+    var opts = $.extend({}, tree.options, options);
+	  var NODEGAP = opts.nodegap || 40,
         results = {};
     var compactArray = function(arr) {
           return $.map(arr, function(item) { return item || null; });
@@ -489,7 +492,7 @@
       if (!previousLayout) {
         tree.element.css({"left": (containerWidth - maxX)/2});
       } else {
-        tree.css({"left": (containerWidth - maxX)/2});
+        tree.css({"left": (containerWidth - maxX)/2}, opts);
       }
   	};
 
@@ -506,12 +509,12 @@
   	        endnode = results[node.parent().id()].translation,
   	        end = {left: endnode.width,// + offset.left,
   	               top: endnode.height};// + offset.top};
-  	    edgeLayout(node._edgetoparent, start, end);
+  	    edgeLayout(node._edgetoparent, start, end, opts);
   	  }
   	});
   }
   
-  var edgeLayout = function(edge, start, end) {
+  var edgeLayout = function(edge, start, end, opts) {
     var sElem = edge.startnode.element,
         eElem = edge.endnode.element,
         sWidth = sElem.outerWidth()/2.0,
@@ -532,8 +535,8 @@
         fromPoint = [0, fromX, fromY], // from point is the lower node, position at top
         toPoint = getNodeBorderAtAngle(1, edge.endnode.element, 
                   {width: eWidth, height: eHeight, x: toX, y: toY}, toAngle);
-    edge.g.movePoints([fromPoint, toPoint]);
-    edge.layout();
+    edge.g.movePoints([fromPoint, toPoint], opts);
+    edge.layout(opts);
     
     function normalizeAngle(angle) {
       var pi = Math.PI;

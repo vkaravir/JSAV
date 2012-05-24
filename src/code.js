@@ -38,12 +38,12 @@
       this.element.find(".jsavvarvalue").attr("data-value", newValue);
     }
   );
-  varproto.value = function(newValue) {
+  varproto.value = function(newValue, options) {
     if (typeof newValue === "undefined") {
       var val = this.element.find(".jsavvarvalue").attr("data-value");
       return JSAV.utils.value2type(val, this.options.type);
     } else {
-      this._setValue(newValue);
+      this._setValue(newValue, options);
       return this;
     }
   };

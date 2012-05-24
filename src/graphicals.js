@@ -9,19 +9,19 @@ if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
     var common = {
       // utility function that actually implements hide
       // animated show function
-      show: function() {
-        this.css({"opacity": 1});
+      show: function(options) {
+        this.css({"opacity": 1}, options);
       },
       // animated hide function
-      hide: function() { 
-        this.css({"opacity": 0});
+      hide: function(options) { 
+        this.css({"opacity": 0}, options);
       },
-      transform: function(transform) {
+      transform: function(transform, options) {
         var oldTrans = this.rObj.transform();
         if (this.jsav._shouldAnimate()) { // only animate when playing, not when recording
           this.rObj.animate( { transform: transform }, this.jsav.SPEED);
         } else {
-          this.rObj.transform(transform);
+          this.rObj.transform(transform, options);
         }
         return oldTrans;
       },
@@ -33,28 +33,28 @@ if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
         this.transform("...S" + sx + "," + sy);
         return [1.0/sx, 1.0/sy];
       }),
-      scaleX: function(sx) {
-        return this.scale(sx, 1);
+      scaleX: function(sx, options) {
+        return this.scale(sx, 1, options);
       },
-      scaleY: function(sy) {
-        return this.scale(1, sy);
+      scaleY: function(sy, options) {
+        return this.scale(1, sy, options);
       },
-      translate: JSAV.anim(function(dx, dy) {
+      translate: JSAV.anim(function(dx, dy, options) {
         this.transform("...T" + dx + "," + dy);
         return [0-dx, 0-dy];
       }),
-      translateX: function(dx) {
-        return this.translate(dx, 0);
+      translateX: function(dx, options) {
+        return this.translate(dx, 0, options);
       },
-      translateY: function(dy) {
-        return this.translate(0, dy);
+      translateY: function(dy, options) {
+        return this.translate(0, dy, options);
       },
-      _setattrs: JSAV.anim(function(props, dontAnimate) {
+      _setattrs: JSAV.anim(function(props, options) {
         var oldProps = $.extend(true, {}, props);
         for (var i in props) {
           oldProps[i] = this.rObj.attr(i);
         }
-        if (this.jsav._shouldAnimate() && !dontAnimate) { // only animate when playing, not when recording
+        if (this.jsav._shouldAnimate() && (!options || !options.dontAnimate)) { // only animate when playing, not when recording
           this.rObj.animate( props, this.jsav.SPEED);
         } else {
           for (var i in props) {
@@ -63,11 +63,11 @@ if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
         }
         return [oldProps];
       }),
-      css: function(props) {
+      css: function(props, options) {
         if (typeof props === "string") {
           return this.rObj.attr(props);
         } else {
-          return this._setattrs(props);
+          return this._setattrs(props, options);
         }
       },
       state: function(newState) {
@@ -96,7 +96,7 @@ if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
       }
     };
 
-    var translatePoint  = function(point, dx, dy) {
+    var translatePoint  = function(point, dx, dy, options) {
       var currPath = this.rObj.attrs.path,
           newPath = "",
           pathElem;
@@ -110,11 +110,11 @@ if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
           newPath += pathElem.join(' ');
         }
       }
-      this._setattrs({"path": newPath});
+      this._setattrs({"path": newPath}, options);
       return this;
     };
 
-    var movePoints  = function(points) {
+    var movePoints  = function(points, options) {
       var currPath = this.rObj.attrs.path,
           newPath = currPath.slice(),
           pathElem;
@@ -128,7 +128,7 @@ if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
         pathElem = newPath[i];
         np += pathElem.join(' ');
       }
-      this._setattrs({"path": np}, ("" + currPath) === "M-1,-1L-1,-1");
+      this._setattrs({"path": np}, $.extend({dontAnimate: ("" + currPath) === "M-1,-1L-1,-1"}, options));
       return this;
     };
     
@@ -139,23 +139,23 @@ if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
     };
     var cproto = Circle.prototype;
     $.extend(cproto, common);
-    cproto.center = function(x, y) {
+    cproto.center = function(x, y, options) {
       if (typeof x === "undefined") { // getting center
         return this.rObj.attr(["cx", "cy"]);
       } else if ($.isArray(x) && x.length == 2) {
-        this._setattrs({"cx": x[0], "cy": x[1]});
+        this._setattrs({"cx": x[0], "cy": x[1]}, options);
       } else if (typeof y !== "undefined") {
-        this._setattrs({"cx": x, "cy": y});
+        this._setattrs({"cx": x, "cy": y}, options);
       } else if ("cx" in x && "cy" in x) {
-        this._setattrs(x)
+        this._setattrs(x, options)
       }
       return this;
     };
-    cproto.radius = function(r) {
+    cproto.radius = function(r, options) {
       if (typeof r === "undefined") {
         return this.rObj.attr("r");
       } else {
-        this._setattrs({"r": r});
+        this._setattrs({"r": r}, options);
         return this;
       }
     }
@@ -167,19 +167,19 @@ if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
     };
     var rectproto = Rect.prototype;
     $.extend(rectproto, common);
-    rectproto.width = function(w) {
+    rectproto.width = function(w, options) {
       if (typeof w === "undefined") {
         return this.rObj.attr("width");
       } else {
-        this._setattrs({"width": w});
+        this._setattrs({"width": w}, options);
         return this;
       }
     };
-    rectproto.height = function(h) {
+    rectproto.height = function(h, options) {
       if (typeof h === "undefined") {
         return this.rObj.attr("height");
       } else {
-        this._setattrs({"height": h});
+        this._setattrs({"height": h}, options);
         return this;
       }
     };
@@ -202,15 +202,15 @@ if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
     var ellproto = Ellipse.prototype;
     $.extend(ellproto, common);
     ellproto.center = cproto.center;
-    ellproto.radius = function(x, y) {
+    ellproto.radius = function(x, y, options) {
       if (typeof x === "undefined") { // getting center
         return this.rObj.attr(["rx", "ry"]);
       } else if ($.isArray(x) && x.length == 2) {
-        this._setattrs({"rx": x[0], "ry": x[1]});
+        this._setattrs({"rx": x[0], "ry": x[1]}, options);
       } else if (typeof y !== "undefined") {
-        this._setattrs({"rx": x, "ry": y});
+        this._setattrs({"rx": x, "ry": y}, options);
       } else if ("rx" in x && "ry" in x) {
-        this._setattrs(x)
+        this._setattrs(x, options)
       }
       return this;
     };
@@ -314,11 +314,11 @@ if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
       this.element.html(newText);
     }
   );
-  labelproto.text = function(newValue) {
+  labelproto.text = function(newValue, options) {
     if (typeof newValue === "undefined") {
       return this.element.html();
     } else {
-      this._setText(newValue);
+      this._setText(newValue, options);
       return this;
     }
   };

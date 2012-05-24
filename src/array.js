@@ -51,7 +51,7 @@
   };
   var arrproto = AVArray.prototype;
   $.extend(arrproto, JSAV._types.ds.common);
-  function setHighlight(indices, mode) {
+  function setHighlight(indices, mode, options) {
     var testDiv = $('<ol class="' + this.element[0].className + 
         '" style="position:absolute;left:-10000px">' + 
         '<li class="jsavnode jsavindex jsavhighlight"><span class="jsavvalue"></span></li>' +
@@ -60,7 +60,7 @@
   	              : testDiv.find(".jsavnode").not(".jsavhighlight").find(".jsavvalue"));
   	// TODO: general way to get styles for the whole av system
   	$("body").append(testDiv);
-    this.css(indices, {color: styleDiv.css("color"), "background-color": styleDiv.css("background-color")});
+    this.css(indices, {color: styleDiv.css("color"), "background-color": styleDiv.css("background-color")}, options);
     testDiv.remove();
   }
   
@@ -78,12 +78,12 @@
   };
   
   arrproto.highlight = function(indices, options) {
-    setHighlight.call(this, indices, "add");
+    setHighlight.call(this, indices, "add", options);
     return this; 
   };
 
   arrproto.unhighlight = function(indices, options) {
-    setHighlight.call(this, indices, "remove");
+    setHighlight.call(this, indices, "remove", options);
     return this; 
   };
   arrproto._setcss = JSAV.anim(function(indices, cssprop) {
@@ -112,14 +112,14 @@
     }
     return [oldProps];
   });
-  arrproto.css = function(indices, cssprop) {
+  arrproto.css = function(indices, cssprop, options) {
     var $elems = getIndices($(this.element).find("li"), indices);
     if (typeof cssprop === "string") {
       return $elems.find(".jsavvalue").css(cssprop);
     } else if (typeof indices === "string") {
       return this.element.css(indices);
     } else if (!$.isArray(indices) && typeof indices === "object") { // object, apply for array
-      return this._setarraycss(indices);
+      return this._setarraycss(indices, options);
     } else {
       if ($.isFunction(indices)) { // if indices is a function, evaluate it right away and get a list of indices
         var all_elems = $(this.element).find("li"),
@@ -129,13 +129,13 @@
         }
         indices = sel_indices;
       }
-      return this._setcss(indices, cssprop);
+      return this._setcss(indices, cssprop, options);
     }
   };
   arrproto.swap = JSAV.anim(function(index1, index2, options) {
     var $pi1 = $(this.element).find("li:eq(" + index1 + ")"), 
       $pi2 = $(this.element).find("li:eq(" + index2 + ")");
-    this.jsav.effects.swap($pi1, $pi2);
+    this.jsav.effects.swap($pi1, $pi2, options);
     return [index1, index2, options];
   });
   arrproto.clone = function() { 
@@ -148,14 +148,14 @@
     return new AVArray(this.jsav, vals, $.extend(true, {}, this.options, {visible: false})); 
   };
   arrproto.size = function() { return this.element.find("li").size(); };
-  arrproto.value = function(index, newValue) {
+  arrproto.value = function(index, newValue, options) {
     if (typeof newValue === "undefined") {
       var $index = this.element.find("li:eq(" + index + ")"),
           val = $index.attr("data-value"),
           valtype = $index.attr("data-value-type");
       return JSAV.utils.value2type(val, valtype);
     } else {
-      return this.setvalue(index, newValue);
+      return this.setvalue(index, newValue, options);
     }
   };
   arrproto._newindex = function(value) {
@@ -169,7 +169,8 @@
     return ind;
   };
   arrproto.setvalue = JSAV.anim(function(index, newValue) {
-    var size = this.size();
+    var size = this.size(),
+      oldval = this.value(index);
     while (index > size - 1) {
       var newli = this._newindex();
       this.element.append(newli);
@@ -181,6 +182,7 @@
     $index.attr("data-value", "" + newValue).attr("data-value-type", valtype);
     $index.find(".jsavvalue").html("" + newValue);
     this.layout();
+    return [index, oldval];
   });
   arrproto.initialize = function(data) {
     var el = this.options.element || $("<ol/>"),
@@ -231,10 +233,10 @@
     });
     this.layout();
   };
-  arrproto.layout = function() {
+  arrproto.layout = function(options) {
     var layoutAlg = this.options.layout || "_default";
     this.element.removeClass("jsavbararray");
-    this.jsav.ds.layout.array[layoutAlg](this);
+    this.jsav.ds.layout.array[layoutAlg](this, options);
   };
   arrproto.state = function(newstate) {
     if (newstate) {
@@ -415,9 +417,10 @@
 
 /// array layout
 (function($) {
-  function centerArray(array, $lastItem) {
+  function centerArray(array, $lastItem, options) {
+    var opts = $.extend({}, array.options, options);
     // center the array inside its parent container
-    if (array.options.hasOwnProperty("center") && !array.options.center) {
+    if (opts.hasOwnProperty("center") && !opts.center) {
       // if options center is set to falsy value, return
       return;
     }
@@ -427,7 +430,7 @@
     array.element.css("left", (containerWidth - width)/2);
   }
   
-  function horizontalArray(array) {
+  function horizontalArray(array, options) {
     var $arr = $(array.element).addClass("jsavhorizontalarray"),
       // rely on browser doing the calculation, float everything to the left..
       $items = $arr.find("li"),//.css({"float": "left", "position":"static"}),
@@ -448,10 +451,10 @@
       }
     });
     $arr.height(maxHeight + (indexed?30:0));
-    centerArray(array, $items.last());
+    centerArray(array, $items.last(), options);
   }
   
-  function verticalArray(array) {
+  function verticalArray(array, options) {
     var $arr = $(array.element).addClass("jsavverticalarray"),
       $items = $arr.find("li"),
       maxWidth = -1,
@@ -472,10 +475,10 @@
       });
       $items.css("margin-left", maxWidth);
     }
-    centerArray(array, $items.last());
+    centerArray(array, $items.last(), options);
   }
  
-  function barArray(array) {
+  function barArray(array, options) {
     var $arr = $(array.element).addClass("jsavbararray"),
       $items = $arr.find("li").css({"position":"relative", "float": "left"}), 
       maxValue = Number.MIN_VALUE,
@@ -507,7 +510,7 @@
         }
       }
     });
-    centerArray(array, $items.last());
+    centerArray(array, $items.last(), options);
   }
   
     JSAV.ext.ds.layout.array = {
@@ -516,5 +519,4 @@
     "array": horizontalArray,
     "vertical": verticalArray
   };
-
 })(jQuery);
