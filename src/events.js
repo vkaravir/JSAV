@@ -7,14 +7,14 @@
   var eventhandler = function(eventType) {
     return function(data, handler, options) {
       // default options; not enabled for edges by default
-      var defaultopts = {node: true, edge: false},
+      var defaultopts = {edge: false},
           opts = defaultopts; // by default, go with default options
       if (typeof options === "object") { // 3 arguments, last one is options
-        opts = jQuery.extend(defaultopts, options);
+        opts = $.extend(defaultopts, options);
       } else if (typeof handler === "object") { // 2 arguments, 2nd is options
-        opts = jQuery.extend(defaultopts, handler);
+        opts = $.extend(defaultopts, handler);
       }
-      if ((opts.node && !opts.edge) || (options.node && opts.edge)) {
+      if (!opts.edge || opts.node) {
         // bind an event handler for nodes in this tree
         this.element.on(eventType, ".jsavnode", function(e) {
           var node = $(this).data("node"); // get the JSAV node object
@@ -31,7 +31,7 @@
       }
       if (opts.edge) { // if supposed to attach the handler to edges
         // find the SVG elements matching this tree's container
-        this.jsav.canvas.on(eventType, '.jsavedge[data-container="' + self.id() + '"]', function(e) {
+        this.jsav.canvas.on(eventType, '.jsavedge[data-container="' + this.id() + '"]', function(e) {
           var edge = $(this).data("edge"); // get the JSAV edge object
           if ($.isFunction(data)) { // no data
             // bind this to the edge and call handler
@@ -40,7 +40,7 @@
           } else if ($.isFunction(handler)) { // data provided
             var params = $.isArray(data)?data.slice(0):[data]; // get a cloned array or data as array
             params.push(e); // jQuery event as the last parameter
-            handler.apply(self, params); // apply the function
+            handler.apply(edge, params); // apply the function
           }
         });
       }
