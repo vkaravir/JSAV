@@ -222,7 +222,7 @@
   };
   edgeproto.position = function() {
     var bbox = this.g.bounds();
-    return {left: bbox.x, top: bbox.y};
+    return {left: bbox.left, top: bbox.top};
   };
  
   
