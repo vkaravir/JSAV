@@ -246,7 +246,7 @@
     }
     list.css("width", prevLeft - opts.nodegap, options);
     list.css("height", "50px", options);
-    centerList(list, options);
+    centerList(list, opts);
   };
 
   JSAV.ext.ds.layout.list = {
