@@ -52,7 +52,7 @@
       s[12] = 4;  // bits 12-15 of the time_hi_and_version field to 0010
       s[16] = ((s[16] & 3) | 8).toString(16);  // bits 6-7 of the clock_seq_hi_and_reserved to 01
       return "jsav-" + s.join("");
-  }
+  };
   
   
   var dialogBase = '<div class="jsavdialog"></div>',
@@ -82,7 +82,7 @@
       $dialog.prepend("<h2>" + options.title + "<a href='#' class='jsavdialogclose'>X</a></h2>");
     }
     if ("dialogClass" in options) {
-      $dialog.addClass(options["dialogClass"]);
+      $dialog.addClass(options.dialogClass);
     }
     for (var attr in ["width", "height", "minWidth", "minHeight", "maxWidth", "maxHeight"]) {
       if (attr in options) {
@@ -135,7 +135,7 @@
     $dial.show = function() {
       center();
       $dial.fadeIn();
-    }
+    };
     $dial.close = close;
     return $dial;
   };
@@ -170,7 +170,7 @@
         for (size = num; size--; ) {
           keys.push(this.numKey(min, max));
         }
-      } while (tries-- && !opts.test(keys))
+      } while (tries-- && !opts.test(keys));
       if (opts.sorted) { keys.sort(opts.sortfunc || function(a, b) {return a - b;}); }
       return keys;
     },
@@ -195,7 +195,7 @@
           dupl[i] = dupl[rnd];
           dupl[rnd] = tmp;
         }
-      } while (tries-- && !opts.test(dupl))
+      } while (tries-- && !opts.test(dupl));
       return dupl.slice(0, num);
     }
   };
@@ -251,7 +251,7 @@
 // seedrandom()
 // This is the seedrandom function described above.
 //
-math['seedrandom'] = function seedrandom(seed, use_entropy) {
+math.seedrandom = function seedrandom(seed, use_entropy) {
   var key = [];
   var arc4;
 
@@ -272,7 +272,7 @@ math['seedrandom'] = function seedrandom(seed, use_entropy) {
   // This function returns a random double in [0, 1) that contains
   // randomness in every bit of the mantissa of the IEEE 754 value.
 
-  math['random'] = function random() {  // Closure to return a random double:
+  math.random = function random() {  // Closure to return a random double:
     var n = arc4.g(chunks);             // Start with a numerator n < 2 ^ 48
     var d = startdenom;                 //   and denominator d = 2 ^ 48.
     var x = 0;                          //   and no 'extra last byte'.
@@ -476,5 +476,5 @@ mixkey(math.random(), pool);
     if (visible) {
       jsavobj.show(options);
     }
-  }
+  };
 })(jQuery);

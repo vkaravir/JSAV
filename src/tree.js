@@ -19,8 +19,8 @@
     el.addClass("jsavtree jsavcommontree");
     for (var key in this.options) {
       var val = this.options[key];
-      if (this.options.hasOwnProperty(key) && typeof(val) === "string" 
-          || typeof(val) === "number" || typeof(val) === "boolean") {
+      if (this.options.hasOwnProperty(key) && typeof(val) === "string" || 
+            typeof(val) === "number" || typeof(val) === "boolean") {
         el.attr("data-" + key, val);
       }
     }
@@ -260,8 +260,8 @@
     if (ch.length !== och.length) {
       return false;
     }
-    for (var i = 0, l = ch.length; i < l; i++) {
-      if (ch[i] && och[i] && !ch[i].equals(och[i], options)) {
+    for (var j = 0, l = ch.length; j < l; j++) {
+      if (ch[j] && och[j] && !ch[j].equals(och[j], options)) {
         return false;
       }
     }
@@ -298,7 +298,8 @@
   // a general setchild method for bintreenode, pos parameter
   // should be either 0 (left) or 1 (right), node is the new child
   function setchild(self, pos, node, options) {
-    var oPos = pos?0:1;
+    var oPos = pos?0:1,
+        other;
     if (typeof node === "undefined") {
       if (self.child(pos) && self.child(pos).value() !== "jsavnull") {
         return self.child(pos);
@@ -318,7 +319,7 @@
             self.child(oPos, null, options);
           } else { // other child exists
             // create a null node and set it as other child
-            var other = self.container.newNode("jsavnull", self, nullopts);
+            other = self.container.newNode("jsavnull", self, nullopts);
             other.element.addClass("jsavnullnode").attr("data-binchildrole", pos?"right":"left");
             self.child(pos, other, options, nullopts);
           }
@@ -332,7 +333,7 @@
         self.child(pos, newNode, options);
         newNode.element.attr("data-binchildrole", pos?"right":"left");
         if (!self.child(oPos)) {
-          var other = self.container.newNode("jsavnull", self, nullopts);
+          other = self.container.newNode("jsavnull", self, nullopts);
           other.element.addClass("jsavnullnode").attr("data-binchildrole", oPos?"right":"left");
           self.child(oPos, other, nullopts);
         }
@@ -387,117 +388,117 @@
 // Tree layout
 (function($) {
   function treeLayout(tree, options) {
-    var opts = $.extend({}, tree.options, options);
-	  var NODEGAP = opts.nodegap || 40,
+    var opts = $.extend({}, tree.options, options),
+        NODEGAP = opts.nodegap || 40,
         results = {};
     var compactArray = function(arr) {
           return $.map(arr, function(item) { return item || null; });
         };
     var calculateLayout = function(node) {
-  		var ch = compactArray(node.children());
-  		for (var i = 0, l=ch.length; i < l; i++) {
-  			if (ch[i]) {
-  				calculateLayout(ch[i]);
-  			}
-  		}
-  		results[node.id()] = {
-  		  cachedTranslation: {width: 0, height: 0},
-  		  translation: {width: 0, height: 0},
-  		  node: node
-  		};
+      var ch = compactArray(node.children());
+      for (var i = 0, l=ch.length; i < l; i++) {
+        if (ch[i]) {
+          calculateLayout(ch[i]);
+        }
+      }
+      results[node.id()] = {
+        cachedTranslation: {width: 0, height: 0},
+        translation: {width: 0, height: 0},
+        node: node
+      };
       calculateContours(node);
-  	},
-  	calculateContours = function(node) {
-  		var children = compactArray(node.children()),
-  		  resnode = results[node.id()];
-			var nodeWidth = node.element.outerWidth()/2.0,
-			    nodeHeight = node.element.outerHeight();
-  		if (children.length === 0) {
-  			resnode.contours = new TreeContours(-nodeWidth, nodeWidth + (nodeWidth % 2 === 0 ? 0 : 1), 
-  			                  nodeHeight, node.value());
-  			translateThisNode(node, -nodeWidth, 0);
-  		} else {
-  			var transSum = 0;
-  			var firstChild = children[0];
-  			resnode.contours = results[firstChild.id()].contours;
-  			results[firstChild.id()].contours = null;
-  			translateNodes(firstChild, 0, NODEGAP + nodeHeight);
+    },
+    calculateContours = function(node) {
+      var children = compactArray(node.children()),
+        resnode = results[node.id()];
+      var nodeWidth = node.element.outerWidth()/2.0,
+          nodeHeight = node.element.outerHeight();
+      if (children.length === 0) {
+        resnode.contours = new TreeContours(-nodeWidth, nodeWidth + (nodeWidth % 2 === 0 ? 0 : 1), 
+                          nodeHeight, node.value());
+        translateThisNode(node, -nodeWidth, 0);
+      } else {
+        var transSum = 0;
+        var firstChild = children[0];
+        resnode.contours = results[firstChild.id()].contours;
+        results[firstChild.id()].contours = null;
+        translateNodes(firstChild, 0, NODEGAP + nodeHeight);
 
-  			for (var i = 1, l = children.length; i < l; i++) {
-  				var child = children[i];
-  				if (!child) { continue; }
-  				var childC = results[child.id()].contours;
-  				var trans = resnode.contours.calcTranslation(childC, NODEGAP);
-  				transSum += trans;
+        for (var i = 1, l = children.length; i < l; i++) {
+          var child = children[i];
+          if (!child) { continue; }
+          var childC = results[child.id()].contours;
+          var trans = resnode.contours.calcTranslation(childC, NODEGAP);
+          transSum += trans;
 
-  				results[child.id()].contours = null;
-  				resnode.contours.joinWith(childC, trans);
+          results[child.id()].contours = null;
+          resnode.contours.joinWith(childC, trans);
 
-  				translateNodes(child, getXTranslation(firstChild) + trans - getXTranslation(child),
-                                  	NODEGAP + nodeHeight);
-  			}
+          translateNodes(child, getXTranslation(firstChild) + trans - getXTranslation(child),
+                                    NODEGAP + nodeHeight);
+        }
 
-  			var rootTrans = transSum / children.length;
-  			resnode.contours.addOnTop(-nodeWidth, nodeWidth + (nodeWidth % 2 === 0 ? 0 : 1), 
-  			          nodeHeight, NODEGAP, rootTrans);
-  			translateThisNode(node, getXTranslation(firstChild) + rootTrans, 0);
-  		}
-  	},
-  	translateThisNode = function(node, x, y) {
-  	  var restrans = results[node.id()].translation;
-  		restrans.width += x;
-  		restrans.height += y;
-  	},
-  	translateNodes = function(node, x, y) {
-  	  if (!node) { return; }
-  	  var restrans = results[node.id()].cachedTranslation;
-  		if (!restrans) {
-  			restrans = {width: 0, height: 0};
-  			results[node.id()].cachedTranslation = restrans;
-  		}
-  		restrans.width += x;
-  		restrans.height += y;
-  	},
-  	getXTranslation = function(node) {
-  	  var restrans = results[node.id()].cachedTranslation;
-  		return results[node.id()].translation.width +
-  			((!restrans) ? 0 : restrans.width);
-  	},
-  	propagateTranslations = function(node) {
-  	  if (!node) { return; }
-  	  var noderes = results[node.id()];
-  		if (noderes.cachedTranslation) {
-  			var ch = compactArray(node.children());
-  			for (var i = 0, l = ch.length; i < l; i++) {
-  				var child = ch[i];
-  				translateNodes(child, noderes.cachedTranslation.width, noderes.cachedTranslation.height);
-  				propagateTranslations(child);
-  			}
-  			noderes.translation.width += noderes.cachedTranslation.width;
-  			noderes.translation.height += noderes.cachedTranslation.height;
-  			noderes.cachedTranslation = null;
-  		}
-  	},
-  	root = tree.root();
-  	
-  	calculateLayout(root);
-		translateNodes(root, 20, 10 + NODEGAP);
-		propagateTranslations(root);
-  	var maxX = -1, maxY = -1, max = Math.max, previousLayout = tree._layoutDone;
-  	$.each(results, function(key, value) {
-  	  var oldPos = value.node.element.position();
-  	  if (!previousLayout || (oldPos.left == 0 && oldPos.top == 0)) {
-    	  value.node.element.css({left: value.translation.width + "px", top: value.translation.height + "px"});
-  	  } else {
-    	  value.node.css({left: value.translation.width + "px", top: value.translation.height + "px"});
-  	  }
-  	  maxX = max(maxX, value.translation.width + value.node.element.outerWidth());
-  	  maxY = max(maxY, value.translation.height + value.node.element.outerHeight());
-  	});
-  	tree.element.width(maxX);
-  	tree.element.height(maxY);
-  	
-  	var centerTree = function() {
+        var rootTrans = transSum / children.length;
+        resnode.contours.addOnTop(-nodeWidth, nodeWidth + (nodeWidth % 2 === 0 ? 0 : 1), 
+                  nodeHeight, NODEGAP, rootTrans);
+        translateThisNode(node, getXTranslation(firstChild) + rootTrans, 0);
+      }
+    },
+    translateThisNode = function(node, x, y) {
+      var restrans = results[node.id()].translation;
+      restrans.width += x;
+      restrans.height += y;
+    },
+    translateNodes = function(node, x, y) {
+      if (!node) { return; }
+      var restrans = results[node.id()].cachedTranslation;
+      if (!restrans) {
+        restrans = {width: 0, height: 0};
+        results[node.id()].cachedTranslation = restrans;
+      }
+      restrans.width += x;
+      restrans.height += y;
+    },
+    getXTranslation = function(node) {
+      var restrans = results[node.id()].cachedTranslation;
+      return results[node.id()].translation.width +
+        ((!restrans) ? 0 : restrans.width);
+    },
+    propagateTranslations = function(node) {
+      if (!node) { return; }
+      var noderes = results[node.id()];
+      if (noderes.cachedTranslation) {
+        var ch = compactArray(node.children());
+        for (var i = 0, l = ch.length; i < l; i++) {
+          var child = ch[i];
+          translateNodes(child, noderes.cachedTranslation.width, noderes.cachedTranslation.height);
+          propagateTranslations(child);
+        }
+        noderes.translation.width += noderes.cachedTranslation.width;
+        noderes.translation.height += noderes.cachedTranslation.height;
+        noderes.cachedTranslation = null;
+      }
+    },
+    root = tree.root();
+    
+    calculateLayout(root);
+    translateNodes(root, 20, 10 + NODEGAP);
+    propagateTranslations(root);
+    var maxX = -1, maxY = -1, max = Math.max, previousLayout = tree._layoutDone;
+    $.each(results, function(key, value) {
+      var oldPos = value.node.element.position();
+      if (!previousLayout || (oldPos.left === 0 && oldPos.top === 0)) {
+        value.node.element.css({left: value.translation.width + "px", top: value.translation.height + "px"});
+      } else {
+        value.node.css({left: value.translation.width + "px", top: value.translation.height + "px"});
+      }
+      maxX = max(maxX, value.translation.width + value.node.element.outerWidth());
+      maxY = max(maxY, value.translation.height + value.node.element.outerHeight());
+    });
+    tree.element.width(maxX);
+    tree.element.height(maxY);
+    
+    var centerTree = function() {
       // if options center is not set to truthy value, center it
       if (tree.options.hasOwnProperty("center") && !tree.options.center) {
         return;
@@ -508,24 +509,24 @@
       } else {
         tree.css({"left": (containerWidth - maxX)/2}, opts);
       }
-  	};
+    };
 
     // center the tree inside its parent container
     centerTree(tree);
     tree._layoutDone = true;
 
-  	var offset = tree.element.position();
-  	$.each(results, function(key, value) {
-  	  var node = value.node;
-  	  if (node['_edgetoparent']) {
-  	    var start = {left: value.translation.width,// + offset.left,
-  	                 top: value.translation.height},// + offset.top},
-  	        endnode = results[node.parent().id()].translation,
-  	        end = {left: endnode.width,// + offset.left,
-  	               top: endnode.height};// + offset.top};
-  	    edgeLayout(node._edgetoparent, start, end, opts);
-  	  }
-  	});
+    var offset = tree.element.position();
+    $.each(results, function(key, value) {
+      var node = value.node;
+      if (node._edgetoparent) {
+        var start = {left: value.translation.width,// + offset.left,
+                     top: value.translation.height},// + offset.top},
+            endnode = results[node.parent().id()].translation,
+            end = {left: endnode.width,// + offset.left,
+                   top: endnode.height};// + offset.top};
+        edgeLayout(node._edgetoparent, start, end, opts);
+      }
+    });
   }
   
   var edgeLayout = function(edge, start, end, opts) {
@@ -542,9 +543,9 @@
         startpos = sElem.offset(),
         endpos = eElem.offset(),
         fromX =  Math.round(start.left + sWidth - parseInt(svgleft, 10)),
-  	    fromY = Math.round(start.top - parseInt(svgtop, 10)),
-  	    toX = Math.round(end.left + eWidth - parseInt(svgleft, 10)),
-  	    toY = Math.round(end.top + eHeight - parseInt(svgtop, 10)),
+        fromY = Math.round(start.top - parseInt(svgtop, 10)),
+        toX = Math.round(end.left + eWidth - parseInt(svgleft, 10)),
+        toY = Math.round(end.top + eHeight - parseInt(svgtop, 10)),
         toAngle = normalizeAngle(2*pi - Math.atan2(fromY - toY, fromX - toX)),
         fromPoint = [0, fromX, fromY], // from point is the lower node, position at top
         toPoint = getNodeBorderAtAngle(1, edge.endnode.element, 
@@ -554,15 +555,15 @@
     
     function normalizeAngle(angle) {
       var pi = Math.PI;
-    	while (angle < 0)
+      while (angle < 0)
         angle += 2 * pi;
       while (angle >= 2 * pi) 
         angle -= 2 * pi;
       return angle;
-    };
+    }
     function getNodeBorderAtAngle(pos, node, dim, angle) {
       // dim: x, y coords of center and half of width and height
-    	var x, y, pi = Math.PI,
+      var x, y, pi = Math.PI,
           urCornerA = Math.atan2(dim.height*2.0, dim.width*2.0),
           ulCornerA = pi - urCornerA,
           lrCornerA = 2*pi - urCornerA,
@@ -581,7 +582,7 @@
         x = dim.x - (dim.height) / Math.tan(angle - pi);
         y = dim.y + dim.height;
       }
-    	return [pos, Math.round(x), Math.round(y)];
+      return [pos, Math.round(x), Math.round(y)];
     }
   };
   
@@ -594,156 +595,158 @@
   };
 
 TreeContours = function(left, right, height, data) {
-		this.cHeight = height;
-		this.leftCDims = [];
-		this.leftCDims[this.leftCDims.length] = {width: -left, height: height};
-		this.cLeftExtent = left;
-		this.rightCDims = [];
-		this.rightCDims[this.rightCDims.length] = {width: -right, height: height};
-		this.cRightExtent = right;
-	};
+    this.cHeight = height;
+    this.leftCDims = [];
+    this.leftCDims[this.leftCDims.length] = {width: -left, height: height};
+    this.cLeftExtent = left;
+    this.rightCDims = [];
+    this.rightCDims[this.rightCDims.length] = {width: -right, height: height};
+    this.cRightExtent = right;
+  };
 TreeContours.prototype = {
-	addOnTop: function(left, right, height, addHeight, originTrans) {
-	  var lCD = this.leftCDims,
-	      rCD = this.rightCDims;
-		lCD[lCD.length-1].height += addHeight;
-		lCD[lCD.length-1].width += originTrans + left;
-		rCD[rCD.length-1].height += addHeight;
-		rCD[rCD.length-1].width += originTrans + right;
+  addOnTop: function(left, right, height, addHeight, originTrans) {
+    var lCD = this.leftCDims,
+        rCD = this.rightCDims;
+    lCD[lCD.length-1].height += addHeight;
+    lCD[lCD.length-1].width += originTrans + left;
+    rCD[rCD.length-1].height += addHeight;
+    rCD[rCD.length-1].width += originTrans + right;
 
-		lCD.push({width: -left, height: height});
-		rCD.push({width: -right, height: height});
-		this.cHeight += height + addHeight;
-		this.cLeftExtent -= originTrans;
-		this.cRightExtent -= originTrans;
-		if (left < this.cLeftExtent) {
-			this.cLeftExtent = left;
-		}
-		if (right > this.cRightExtent) {
-			this.cRightExtent = right;
-		}
-	},
-	joinWith: function(other, hDist) {
-		if (other.cHeight > this.cHeight) {
-			var newLeftC = [];
-			var otherLeft = other.cHeight - this.cHeight;
-			var thisCDisp = 0;
-			var otherCDisp = 0;
-			$.each(other.leftCDims, function (index, item) {
-				if (otherLeft > 0 ) {
-					var dim = {width: item.width, height: item.height};
-					otherLeft -= item.height;
-					if (otherLeft < 0) {
-						dim.height += otherLeft;					
-					}
-					newLeftC[newLeftC.length] = dim;
-				} else {
-					otherCDisp += item.width;
-				}
-			});
-			var middle = newLeftC[newLeftC.length - 1];
+    lCD.push({width: -left, height: height});
+    rCD.push({width: -right, height: height});
+    this.cHeight += height + addHeight;
+    this.cLeftExtent -= originTrans;
+    this.cRightExtent -= originTrans;
+    if (left < this.cLeftExtent) {
+      this.cLeftExtent = left;
+    }
+    if (right > this.cRightExtent) {
+      this.cRightExtent = right;
+    }
+  },
+  joinWith: function(other, hDist) {
+    var thisCDisp, otherCDisp, middle;
+    if (other.cHeight > this.cHeight) {
+      var newLeftC = [];
+      var otherLeft = other.cHeight - this.cHeight;
+      thisCDisp = 0;
+      otherCDisp = 0;
+      $.each(other.leftCDims, function (index, item) {
+        if (otherLeft > 0 ) {
+          var dim = {width: item.width, height: item.height};
+          otherLeft -= item.height;
+          if (otherLeft < 0) {
+            dim.height += otherLeft;          
+          }
+          newLeftC[newLeftC.length] = dim;
+        } else {
+          otherCDisp += item.width;
+        }
+      });
+      middle = newLeftC[newLeftC.length - 1];
 
-			$.each(this.leftCDims, function(index, item) {
-				thisCDisp += item.width;
-				newLeftC[newLeftC.length] = {width: item.width, height: item.height};
-			});
+      $.each(this.leftCDims, function(index, item) {
+        thisCDisp += item.width;
+        newLeftC[newLeftC.length] = {width: item.width, height: item.height};
+      });
                
-			middle.width -= thisCDisp - otherCDisp;
-			middle.width -= hDist;
-			this.leftCDims = newLeftC;
-		}
-		if (other.cHeight >= this.cHeight) {
-			this.rightCDims = other.rightCDims.slice();
-		} else {
-			var thisLeft = this.cHeight - other.cHeight;
-			var nextIndex = 0;
+      middle.width -= thisCDisp - otherCDisp;
+      middle.width -= hDist;
+      this.leftCDims = newLeftC;
+    }
+    if (other.cHeight >= this.cHeight) {
+      this.rightCDims = other.rightCDims.slice();
+    } else {
+      var thisLeft = this.cHeight - other.cHeight;
+      var nextIndex = 0;
 
-			var thisCDisp = 0;
-			var otherCDisp = 0;
-			$.each(this.rightCDims, function (index, item) {
-				if (thisLeft > 0 ) {
-					nextIndex++;
-					thisLeft -= item.height;
-					if (thisLeft < 0) {
-						item.height += thisLeft;
-					}
-				} else {
-					thisCDisp += item.width;
-				}
-			});
-			for (var i = nextIndex + 1, l=this.rightCDims.length; i < l; i++) {
-				this.rightCDims[i] = null;
-			}
-			this.rightCDims = $.map(this.rightCDims, function(item) {return item;});
-			var middle = this.rightCDims[nextIndex];
+      thisCDisp = 0;
+      otherCDisp = 0;
+      $.each(this.rightCDims, function (index, item) {
+        if (thisLeft > 0 ) {
+          nextIndex++;
+          thisLeft -= item.height;
+          if (thisLeft < 0) {
+            item.height += thisLeft;
+          }
+        } else {
+          thisCDisp += item.width;
+        }
+      });
+      for (var i = nextIndex + 1, l=this.rightCDims.length; i < l; i++) {
+        this.rightCDims[i] = null;
+      }
+      this.rightCDims = $.map(this.rightCDims, function(item) {return item;});
+      middle = this.rightCDims[nextIndex];
 
-			for (i = 0, l=other.rightCDims.length; i < l; i++) {
-				var item = other.rightCDims[i];
-				otherCDisp += item.width;
-				this.rightCDims[this.rightCDims.length] = {width: item.width, height: item.height};
-			}
-			middle.width += thisCDisp - otherCDisp;
-			middle.width += hDist;
-		}
-		this.rightCDims[this.rightCDims.length-1].width -= hDist;
+      for (i = 0, l=other.rightCDims.length; i < l; i++) {
+        var item = other.rightCDims[i];
+        otherCDisp += item.width;
+        this.rightCDims[this.rightCDims.length] = {width: item.width, height: item.height};
+      }
+      middle.width += thisCDisp - otherCDisp;
+      middle.width += hDist;
+    }
+    this.rightCDims[this.rightCDims.length-1].width -= hDist;
 
-		if (other.cHeight > this.cHeight) {
-			this.cHeight = other.cHeight;
-		}
-		if (other.cLeftExtent + hDist < this.cLeftExtent) {
-			this.cLeftExtent = other.cLeftExtent + hDist;
-		}
-		if (other.cRightExtent + hDist > this.cRightExtent) {
-			this.cRightExtent = other.cRightExtent + hDist;
-		}
-	},
-	calcTranslation: function(other, wantedDist) {
-		var lc = this.rightCDims,
-		    rc = other.leftCDims,
-		    li = lc.length - 1,
-		    ri = rc.length - 1,
+    if (other.cHeight > this.cHeight) {
+      this.cHeight = other.cHeight;
+    }
+    if (other.cLeftExtent + hDist < this.cLeftExtent) {
+      this.cLeftExtent = other.cLeftExtent + hDist;
+    }
+    if (other.cRightExtent + hDist > this.cRightExtent) {
+      this.cRightExtent = other.cRightExtent + hDist;
+    }
+  },
+  calcTranslation: function(other, wantedDist) {
+    var lc = this.rightCDims,
+        rc = other.leftCDims,
+        li = lc.length - 1,
+        ri = rc.length - 1,
         lCumD = {width: 0, height: 0},
-		    rCumD = {width: 0, height: 0},
-		    displacement = wantedDist;
+        rCumD = {width: 0, height: 0},
+        displacement = wantedDist,
+        ld, rd;
 
-		while (true) {
-			if (li < 0) {
-				if (ri < 0 || rCumD.height >= lCumD.height) {
-					break;
-				}
-				var rd = rc[ri];
-				rCumD.height += rd.height;
-				rCumD.width += rd.width;
-				ri--;
-			} else if (ri < 0) {
-				if (lCumD.height >= rCumD.height) {
-					break;
-				}
-				var ld = lc[li];
-				lCumD.height += ld.height;
-				lCumD.width += ld.width;
-				li--;
-			} else {
-				var ld = lc[li],
-				    rd = rc[ri],
-				    leftNewHeight = lCumD.height,
-				    rightNewHeight = rCumD.height;
-				if (leftNewHeight <= rightNewHeight) {
-					lCumD.height += ld.height;
-					lCumD.width += ld.width;
-					li--;
-				}
-				if (rightNewHeight <= leftNewHeight) {
-					rCumD.height += rd.height;
-					rCumD.width += rd.width;
-					ri--;
-				}
-			}
-			if (displacement < rCumD.width - lCumD.width + wantedDist) {
-				displacement = rCumD.width - lCumD.width + wantedDist;
-			}
-		}
-		return displacement;
-	}
+    while (true) {
+      if (li < 0) {
+        if (ri < 0 || rCumD.height >= lCumD.height) {
+          break;
+        }
+        rd = rc[ri];
+        rCumD.height += rd.height;
+        rCumD.width += rd.width;
+        ri--;
+      } else if (ri < 0) {
+        if (lCumD.height >= rCumD.height) {
+          break;
+        }
+        ld = lc[li];
+        lCumD.height += ld.height;
+        lCumD.width += ld.width;
+        li--;
+      } else {
+        ld = lc[li];
+        rd = rc[ri];
+        var leftNewHeight = lCumD.height,
+            rightNewHeight = rCumD.height;
+        if (leftNewHeight <= rightNewHeight) {
+          lCumD.height += ld.height;
+          lCumD.width += ld.width;
+          li--;
+        }
+        if (rightNewHeight <= leftNewHeight) {
+          rCumD.height += rd.height;
+          rCumD.width += rd.width;
+          ri--;
+        }
+      }
+      if (displacement < rCumD.width - lCumD.width + wantedDist) {
+        displacement = rCumD.width - lCumD.width + wantedDist;
+      }
+    }
+    return displacement;
+  }
 };
 })(jQuery);

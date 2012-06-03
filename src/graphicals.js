@@ -57,7 +57,7 @@ if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
         if (this.jsav._shouldAnimate() && (!options || !options.dontAnimate)) { // only animate when playing, not when recording
           this.rObj.animate( props, this.jsav.SPEED);
         } else {
-          for (var i in props) {
+          for (i in props) {
             this.rObj.attr(i, props[i]);
           }
         }
@@ -117,14 +117,14 @@ if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
     var movePoints  = function(points, options) {
       var currPath = this.rObj.attrs.path,
           newPath = currPath.slice(),
-          pathElem;
-      for (var i=0, l=points.length; i < l; i++) {
+          pathElem, i;
+      for (i = 0, l = points.length; i < l; i++) {
         var p = points[i];
         pathElem = currPath[p[0]];
         newPath[p[0]] = [pathElem[0], p[1], p[2]];
       }
       var np = "";
-      for (var i=0, l=newPath.length; i < l; i++) {
+      for (i = 0, l = newPath.length; i < l; i++) {
         pathElem = newPath[i];
         np += pathElem.join(' ');
       }
@@ -147,7 +147,7 @@ if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
       } else if (typeof y !== "undefined") {
         this._setattrs({"cx": x, "cy": y}, options);
       } else if ("cx" in x && "cy" in x) {
-        this._setattrs(x, options)
+        this._setattrs(x, options);
       }
       return this;
     };
@@ -158,7 +158,7 @@ if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
         this._setattrs({"r": r}, options);
         return this;
       }
-    }
+    };
  
     var Rect = function(jsav, raphael, x, y, w, h, r, props) {
       this.rObj = raphael.rect(x, y, w, h, r);
@@ -210,7 +210,7 @@ if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
       } else if (typeof y !== "undefined") {
         this._setattrs({"rx": x, "ry": y}, options);
       } else if ("rx" in x && "ry" in x) {
-        this._setattrs(x, options)
+        this._setattrs(x, options);
       }
       return this;
     };
@@ -302,7 +302,7 @@ if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
       $(this.jsav.canvas).append(this.element);
     }
     JSAV.utils._helpers.handlePosition(this);
-    JSAV.utils._helpers.handleVisibility(this, this.options)
+    JSAV.utils._helpers.handleVisibility(this, this.options);
   };
   var labelproto = Label.prototype;
   $.extend(labelproto, JSAV._types.common);

@@ -53,28 +53,28 @@
   $.extend(arrproto, JSAV._types.ds.common);
   function setHighlight(indices, mode, options) {
     var testDiv = $('<ol class="' + this.element[0].className + 
-        '" style="position:absolute;left:-10000px">' + 
-        '<li class="jsavnode jsavindex jsavhighlight"><span class="jsavvalue"></span></li>' +
-        '<li class="jsavnode jsavindex" ><span class="jsavvalue"></span></li></ol>'),
-  	  styleDiv = (mode && mode === "add" ? testDiv.find(".jsavnode").filter(".jsavhighlight").find(".jsavvalue")
-  	              : testDiv.find(".jsavnode").not(".jsavhighlight").find(".jsavvalue"));
-  	// TODO: general way to get styles for the whole av system
-  	$("body").append(testDiv);
+              '" style="position:absolute;left:-10000px">' + 
+              '<li class="jsavnode jsavindex jsavhighlight"><span class="jsavvalue"></span></li>' +
+              '<li class="jsavnode jsavindex" ><span class="jsavvalue"></span></li></ol>'),
+        styleDiv = (mode && mode === "add" ? testDiv.find(".jsavnode").filter(".jsavhighlight").find(".jsavvalue")
+                    : testDiv.find(".jsavnode").not(".jsavhighlight").find(".jsavvalue"));
+    // TODO: general way to get styles for the whole av system
+    $("body").append(testDiv);
     this.css(indices, {color: styleDiv.css("color"), "background-color": styleDiv.css("background-color")}, options);
     testDiv.remove();
   }
   
   arrproto.isHighlight = function(index, options) {
     var testDiv = $('<ol class="' + this.element[0].className + 
-        '" style="position:absolute;left:-10000px">' + 
-        '<li class="jsavnode jsavindex jsavhighlight"><span class="jsavvalue"></span></li>' +
-        '<li class="jsavnode jsavindex" ><span class="jsavvalue"></span></li></ol>'),
-  	  styleDiv = testDiv.find(".jsavnode").filter(".jsavhighlight").find(".jsavvalue");
-  	// TODO: general way to get styles for the whole av system
-  	$("body").append(testDiv);
-  	var isHl = this.css(index, "background-color") == styleDiv.css("background-color");
-  	testDiv.remove();
-  	return isHl;
+              '" style="position:absolute;left:-10000px">' + 
+              '<li class="jsavnode jsavindex jsavhighlight"><span class="jsavvalue"></span></li>' +
+              '<li class="jsavnode jsavindex" ><span class="jsavvalue"></span></li></ol>'),
+        styleDiv = testDiv.find(".jsavnode").filter(".jsavhighlight").find(".jsavvalue");
+    // TODO: general way to get styles for the whole av system
+    $("body").append(testDiv);
+    var isHl = this.css(index, "background-color") == styleDiv.css("background-color");
+    testDiv.remove();
+    return isHl;
   };
   
   arrproto.highlight = function(indices, options) {
@@ -191,8 +191,8 @@
     this.options = jQuery.extend({visible: true}, this.options);
     for (var key in this.options) {
       var val = this.options[key];
-      if (this.options.hasOwnProperty(key) && typeof(val) === "string" 
-          || typeof(val) === "number" || typeof(val) === "boolean") {
+      if (this.options.hasOwnProperty(key) && typeof(val) === "string" || 
+            typeof(val) === "number" || typeof(val) === "boolean") {
         el.attr("data-" + key, val);
       }
     }
@@ -208,7 +208,7 @@
     JSAV.utils._helpers.handlePosition(this);
     this.layout();
     el.css("display", "none");
-    JSAV.utils._helpers.handleVisibility(this, this.options)
+    JSAV.utils._helpers.handleVisibility(this, this.options);
   };
   arrproto.initializeFromElement = function() {
     if (!this.element) { return; }
@@ -280,7 +280,7 @@
       if (this.size() !== len) { // size check
         return false;
       }
-      if (!('value' in opts) || opts['value']) { // if comparing values
+      if (!('value' in opts) || opts.value) { // if comparing values
         for (i = 0; i < len; i++) {
           equal = this.value(i) == otherArray.value(i);
           if (!equal) { return false; }
@@ -387,9 +387,8 @@
           if (opts.lineStyle) { $markline.css(opts.lineStyle); }
           var startelem = this.element.find("li:eq(" + opts.startIndex + ")"),
               endelem = this.element.find("li:eq(" + opts.endIndex + ")");
-          $markline.css({ width: endelem.position().left
-                                  - startelem.position().left
-                                  + endelem.width(),  
+          $markline.css({ width: endelem.position().left - startelem.position().left + 
+                                  endelem.width(),  
                           left:startelem.position().left - lielem.position().left,
                           bottom: valelem.height() - $markline.outerHeight()/2,
                           display: "block"});

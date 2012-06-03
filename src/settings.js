@@ -120,17 +120,14 @@
       this.components.push(create);
     } else {
       // create is a name of a variable
-      if (!'type' in options) {
+      if (!('type' in options)) {
         return;
       }
       var elem, func;
-      switch (options.type) {
-        case 'select':
-          func = createSelectComponent;
-          break;
-        default:
-          func = createInputComponent;
-          break;
+      if (options.type === 'select') {
+        func = createSelectComponent;
+      } else {
+        func = createInputComponent;
       }
       elem = func(create, options);
       this.components.push(elem);

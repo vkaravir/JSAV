@@ -12,7 +12,7 @@
       } else {
         this.element.toggle();
       }
-      return []
+      return [];
     },
     /* shows an element */
     show: function(options) {
@@ -72,11 +72,11 @@
             y2 = off2.top - coff.top + $val2.outerHeight() + 5;
             var angle = (y2 - y1) / (x2 - x1),
                 c1 = Math.pow(y1, 2) - (curve*curve / (1 + angle*angle)),
-                cy1 = y1 + Math.sqrt(y1*y1 - c1),
-                cx1 = x1 - angle*Math.sqrt(y1*y1 - c1),
-                c2 = Math.pow(y2, 2) - (curve*curve / (1 + angle*angle)),
-                cy2 = y2 + Math.sqrt(y2*y2 - c2),
-                cx2 = x2 - angle*Math.sqrt(y2*y2 - c2);
+                c2 = Math.pow(y2, 2) - (curve*curve / (1 + angle*angle));
+            cy1 = y1 + Math.sqrt(y1*y1 - c1);
+            cx1 = x1 - angle*Math.sqrt(y1*y1 - c1);
+            cy2 = y2 + Math.sqrt(y2*y2 - c2);
+            cx2 = x2 - angle*Math.sqrt(y2*y2 - c2);
           }
           // .. and draw a curved path with arrowheads
           var arr = this.getSvg().path("M" + x1 + "," + y1 + "C" + cx1 + "," + cy1 + " " + cx2 + "," + cy2 + " " + x2 + "," + y2).attr({"arrow-start": arrowStyle, "arrow-end": arrowStyle, "stroke-width": 5, "stroke":"lightGray"});

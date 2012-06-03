@@ -15,7 +15,7 @@
     // initialize controls
     var cont = $(this.options.controls),
         self = this;
-    if (cont.size() == 0) {
+    if (cont.size() === 0) {
        cont = this.jsav.container.find(".jsavexercisecontrols");
     }
     if (cont.size()) {
@@ -275,7 +275,7 @@
     var fix = this.options.fix;
     if ($.isFunction(fix)) {
       fix(this.modelStructures);
-    };
+    }
   };
   exerproto._jsondump = function() {
     var jsav = this.jsav,
