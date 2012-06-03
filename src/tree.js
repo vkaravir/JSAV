@@ -146,6 +146,14 @@
       return this;
     }
   };
+  nodeproto.edgeToChild = function(pos) {
+    var child = this.child(pos);
+    if (child) {
+      return child.edgeToParent();
+    } else {
+      return undefined;
+    }
+  };
   nodeproto.clear = function() {
     if (this.edgeToParent()) {
       this.edgeToParent().clear();
@@ -338,6 +346,12 @@
   };
   binnodeproto.right = function(node, options) {
     return setchild(this, 1, node, options);
+  };
+  binnodeproto.edgeToLeft = function() {
+    return this.edgeToChild(0);
+  };
+  binnodeproto.edgeToRight = function() { 
+    return this.edgeToChild(1);
   };
   binnodeproto._setvalue = JSAV.anim(function(newValue) {
     var oldVal = this.element.removeClass("jsavnullnode")
