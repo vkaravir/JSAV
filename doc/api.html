@@ -513,6 +513,8 @@ Currently, JSAV supports two types of trees: common tree and binary tree. The st
 <p>Returns the parent node of this node. If the optional <var>newParent</var> parameter is given, the parent node is set.</p>
 <h3 class="apimethod">.edgeToParent([newEdge])</h3>
 <p>Returns the edge that connects this node to its parent. If the optional <var>newEdge</var> parameter is given, the edge to parent is set.</p>
+<h3 class="apimethod">.edgeToChild(pos)</h3>
+<p>Returns the edge that connects this node to its child at <var>pos</var>. Returns <code>undefined</code> is no such child exists.</p>
 <h3 class="apimethod">.child(pos)</h3>
 <p>Returns the <var>pos</var>:th child of this node.</p>
 <h3 class="apimethod">.child(pos, node [,options])</h3>
@@ -531,6 +533,10 @@ Currently, JSAV supports two types of trees: common tree and binary tree. The st
 The additional <code>options</code> parameter works like for <code>.child(...)</code> above. </p>
 <h3 class="apimethod">.right([node [,options]])</h3>
 <p>Returns the right child or undefined if node has no right child. If optional parameter <var>node</var> is given, sets the right child. The parameter can be a value or a binary tree node. Passing <code>null</code> as node works similarly to the left function. The additional <code>options</code> parameter works like for <code>.child(...)</code> above.</p>
+<h3 class="apimethod">.edgeToLeft()</h3>
+<p>Returns the edge that connects this node to its left child. Returns <code>undefined</code> is node has no left child.</p>
+<h3 class="apimethod">.edgeToRight()</h3>
+<p>Returns the edge that connects this node to its right child. Returns <code>undefined</code> is node has no right child.</p>
   
 <h2>Edge structure API</h2>
 <h3 class="apimethod">.start([node])</h3>
