@@ -42,6 +42,7 @@
     return [oldFirst];
   });
   listproto.add = function(index, newValue, options) {
+    if (index < 0 || index > this.size()) { return this; }
     if (index === 0) { 
       return this.addFirst(newValue, options);
     }
@@ -93,6 +94,7 @@
   };
   /** Returns the item at index, first node is at index 0 */
   listproto.get = function(index) {
+    if (typeof(index) !== "number" || index < 0) { return; }
     var curNode = this.first(),
         pos = 0;
     while (curNode.next() && pos < index) {
@@ -102,7 +104,7 @@
     if (pos === index) {
       return curNode;
     } else {
-      return null;
+      return undefined;
     }
   };
   listproto.newNode = function(value, options) {
@@ -123,11 +125,11 @@
   };
   listproto.removeFirst = function(options) {
     var oldFirst = this.first();
-    this.first(oldFirst.next(), options);
+    this._setfirst(oldFirst.next(), options);
     return oldFirst;
   };
   listproto.removeLast = function(options) {
-    var newLast = this.get(this.size() - 1),
+    var newLast = this.get(this.size() - 2),
       oldLast = this.last();
     newLast.next(null, options);
     return oldLast;
