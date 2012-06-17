@@ -4,6 +4,7 @@
 */
 /*global JSAV:true */
 (function($) {
+  "use strict";
   if (typeof JSAV === "undefined") { return; }
 
   var Edge = JSAV._types.ds.Edge;
@@ -43,7 +44,7 @@
   });
   listproto.add = function(index, newValue, options) {
     if (index < 0 || index > this.size()) { return this; }
-    if (index === 0) { 
+    if (index === 0) {
       return this.addFirst(newValue, options);
     }
     var node = this.get(index - 1),
@@ -258,4 +259,4 @@
   JSAV.ext.ds.list = function() {
     return new List(this);
   };
-})(jQuery);
+}(jQuery));
