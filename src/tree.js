@@ -3,6 +3,7 @@
 * Depends on core.js, datastructures.js, anim.js, utils.js
 */
 (function($) {
+  "use strict";
   if (typeof JSAV === "undefined") { return; }
   var Edge = JSAV._types.ds.Edge; // shortcut to JSAV Edge
 
@@ -19,7 +20,7 @@
     el.addClass("jsavtree jsavcommontree");
     for (var key in this.options) {
       var val = this.options[key];
-      if (this.options.hasOwnProperty(key) && typeof(val) === "string" || 
+      if (this.options.hasOwnProperty(key) && typeof(val) === "string" ||
             typeof(val) === "number" || typeof(val) === "boolean") {
         el.attr("data-" + key, val);
       }
@@ -241,12 +242,12 @@
       if ($.isArray(options.css)) { // array of property names
         for (var i = 0; i < options.css.length; i++) {
           cssprop = options.css[i];
-          equal = this.css(cssprop) == otherNode.css(cssprop);
+          equal = (this.css(cssprop) === otherNode.css(cssprop));
           if (!equal) { return false; }
         }
       } else { // if not array, expect it to be a property name string
         cssprop = options.css;
-        equal = this.css(cssprop) == otherNode.css(cssprop);
+        equal = (this.css(cssprop) === otherNode.css(cssprop));
         if (!equal) { return false; }
       }
     }
@@ -323,9 +324,8 @@
             other.element.addClass("jsavnullnode").attr("data-binchildrole", pos?"right":"left");
             self.child(pos, other, options, nullopts);
           }
-        } else { // no such child
-          // nothing to be done
         }
+        // if no such child so nothing needs to be done
       } else if (self.child(pos)) {
         self.child(pos).value(node, options);
       } else {
@@ -351,7 +351,7 @@
   binnodeproto.edgeToLeft = function() {
     return this.edgeToChild(0);
   };
-  binnodeproto.edgeToRight = function() { 
+  binnodeproto.edgeToRight = function() {
     return this.edgeToChild(1);
   };
   binnodeproto._setvalue = JSAV.anim(function(newValue) {
@@ -383,10 +383,11 @@
   JSAV.ext.ds.edge = function(options) {
     return new Edge(this, $.extend(true, {}, options));
   };
-})(jQuery);
+}(jQuery));
 
 // Tree layout
 (function($) {
+  "use strict";
   function treeLayout(tree, options) {
     var opts = $.extend({}, tree.options, options),
         NODEGAP = opts.nodegap || 40,
@@ -414,7 +415,7 @@
       var nodeWidth = node.element.outerWidth()/2.0,
           nodeHeight = node.element.outerHeight();
       if (children.length === 0) {
-        resnode.contours = new TreeContours(-nodeWidth, nodeWidth + (nodeWidth % 2 === 0 ? 0 : 1), 
+        resnode.contours = new TreeContours(-nodeWidth, nodeWidth + (nodeWidth % 2 === 0 ? 0 : 1),
                           nodeHeight, node.value());
         translateThisNode(node, -nodeWidth, 0);
       } else {
@@ -439,7 +440,7 @@
         }
 
         var rootTrans = transSum / children.length;
-        resnode.contours.addOnTop(-nodeWidth, nodeWidth + (nodeWidth % 2 === 0 ? 0 : 1), 
+        resnode.contours.addOnTop(-nodeWidth, nodeWidth + (nodeWidth % 2 === 0 ? 0 : 1),
                   nodeHeight, NODEGAP, rootTrans);
         translateThisNode(node, getXTranslation(firstChild) + rootTrans, 0);
       }
@@ -503,7 +504,7 @@
       if (tree.options.hasOwnProperty("center") && !tree.options.center) {
         return;
       }
-      containerWidth = $(tree.jsav.canvas).width();
+      var containerWidth = $(tree.jsav.canvas).width();
       if (!previousLayout) {
         tree.element.css({"left": (containerWidth - maxX)/2});
       } else {
@@ -529,6 +530,42 @@
     });
   }
   
+
+  function normalizeAngle(angle) {
+    var pi = Math.PI;
+    while (angle < 0) {
+      angle += 2 * pi;
+    }
+    while (angle >= 2 * pi) {
+      angle -= 2 * pi;
+    }
+    return angle;
+  }
+
+  function getNodeBorderAtAngle(pos, node, dim, angle) {
+    // dim: x, y coords of center and half of width and height
+    var x, y, pi = Math.PI,
+        urCornerA = Math.atan2(dim.height*2.0, dim.width*2.0),
+        ulCornerA = pi - urCornerA,
+        lrCornerA = 2*pi - urCornerA,
+        llCornerA = urCornerA + pi;
+
+    if (angle < urCornerA || angle > lrCornerA) { // on right side
+      x = dim.x + dim.width;
+      y = dim.y - (dim.width) * Math.tan(angle);
+    } else if (angle > ulCornerA && angle < llCornerA) { // left
+      x = dim.x - dim.width;
+      y = dim.y + (dim.width) * Math.tan(angle - pi);
+    } else if (angle <= ulCornerA) { // top
+      x = dim.x + (dim.height) / Math.tan(angle);
+      y = dim.y- dim.height;
+    } else { // on bottom side
+      x = dim.x - (dim.height) / Math.tan(angle - pi);
+      y = dim.y + dim.height;
+    }
+    return [pos, Math.round(x), Math.round(y)];
+  }
+
   var edgeLayout = function(edge, start, end, opts) {
     var sElem = edge.startnode.element,
         eElem = edge.endnode.element,
@@ -548,42 +585,10 @@
         toY = Math.round(end.top + eHeight - parseInt(svgtop, 10)),
         toAngle = normalizeAngle(2*pi - Math.atan2(fromY - toY, fromX - toX)),
         fromPoint = [0, fromX, fromY], // from point is the lower node, position at top
-        toPoint = getNodeBorderAtAngle(1, edge.endnode.element, 
+        toPoint = getNodeBorderAtAngle(1, edge.endnode.element,
                   {width: eWidth, height: eHeight, x: toX, y: toY}, toAngle);
     edge.g.movePoints([fromPoint, toPoint], opts);
     edge.layout(opts);
-    
-    function normalizeAngle(angle) {
-      var pi = Math.PI;
-      while (angle < 0)
-        angle += 2 * pi;
-      while (angle >= 2 * pi) 
-        angle -= 2 * pi;
-      return angle;
-    }
-    function getNodeBorderAtAngle(pos, node, dim, angle) {
-      // dim: x, y coords of center and half of width and height
-      var x, y, pi = Math.PI,
-          urCornerA = Math.atan2(dim.height*2.0, dim.width*2.0),
-          ulCornerA = pi - urCornerA,
-          lrCornerA = 2*pi - urCornerA,
-          llCornerA = urCornerA + pi;
-
-      if (angle < urCornerA || angle > lrCornerA) { // on right side
-        x = dim.x + dim.width;
-        y = dim.y - (dim.width) * Math.tan(angle);
-      } else if (angle > ulCornerA && angle < llCornerA) { // left
-        x = dim.x - dim.width;
-        y = dim.y + (dim.width) * Math.tan(angle - pi);
-      } else if (angle <= ulCornerA) { // top
-        x = dim.x + (dim.height) / Math.tan(angle);
-        y = dim.y- dim.height;
-      } else { // on bottom side
-        x = dim.x - (dim.height) / Math.tan(angle - pi);
-        y = dim.y + dim.height;
-      }
-      return [pos, Math.round(x), Math.round(y)];
-    }
   };
   
   var layouts = JSAV.ext.ds.layout;
@@ -594,7 +599,7 @@
     "_default": edgeLayout
   };
 
-TreeContours = function(left, right, height, data) {
+var TreeContours = function(left, right, height, data) {
     this.cHeight = height;
     this.leftCDims = [];
     this.leftCDims[this.leftCDims.length] = {width: -left, height: height};
@@ -636,7 +641,7 @@ TreeContours.prototype = {
           var dim = {width: item.width, height: item.height};
           otherLeft -= item.height;
           if (otherLeft < 0) {
-            dim.height += otherLeft;          
+            dim.height += otherLeft;
           }
           newLeftC[newLeftC.length] = dim;
         } else {
@@ -749,4 +754,4 @@ TreeContours.prototype = {
     return displacement;
   }
 };
-})(jQuery);
+}(jQuery));
