@@ -1,4 +1,6 @@
+/*global ok,test,module,deepEqual,equal,expect,equals */
 (function() {
+  "use strict";
   module("datastructures.list", {  });
   
   var testListValues = function(list, values) {
@@ -115,11 +117,11 @@
     testListValues(list, [4, 2, 1]);
     av.step();
 
-    list.removeFirst();    
+    list.removeFirst();
     testListValues(list, [2, 1]);
     av.step();
     
-    list.removeLast();    
+    list.removeLast();
     testListValues(list, [2]);
     av.recorded();
     $.fx.off = true; // turn off animation effects
@@ -139,6 +141,37 @@
 
   });
 
+test("List node highlights", function() {
+  var av = new JSAV("emptycontainer"),
+      list = av.ds.list();
+  for (var i = 0; i < 6; i++) {
+    list.first(i);
+  }
+  var testHighlight = function(hlvals) {
+    for (i = 0; i < 6; i++) {
+      equal(list.get(i).isHighlight(), hlvals[i]);
+    }
+  };
+  testHighlight([false, false, false, false, false, false]);
+  av.step();
+  list.get(0).highlight();
+  list.get(3).highlight();
+  testHighlight([true, false, false, true, false, false]);
+  av.step();
+  list.get(3).unhighlight();
+  list.get(5).highlight();
+  testHighlight([true, false, false, false, false, true]);
+  av.recorded();
+  $.fx.off = true;
+
+  ok(av.forward()); // recreate list nodes
+  testHighlight([false, false, false, false, false, false]);
+  ok(av.forward());
+  testHighlight([true, false, false, true, false, false]);
+  ok(av.forward());
+  testHighlight([true, false, false, false, false, true]);
+});
+
 // highlight
 // css
 
@@ -152,22 +185,22 @@
       equals(myval, "kissa");
       ok(event);
       equals(this.value(), 2);
-    }
+    };
     var handler3 = function(myval, myval2, event) {
       equals(myval, "kissa");
       equals(myval2, "koira");
       ok(event);
       equals(this.value(), 1);
-    }
-  	var av = new JSAV("arraycontainer"),
-	      list1 = av.ds.list(),
-	      list2 = av.ds.list(),
-	      list3 = av.ds.list();
+    };
+    var av = new JSAV("arraycontainer"),
+        list1 = av.ds.list(),
+        list2 = av.ds.list(),
+        list3 = av.ds.list();
     var setup = function(list) {
       list.addFirst(0);
       list.addFirst(1);
       list.addFirst(2);
-    }
+    };
     setup(list1); setup(list2); setup(list3);
     list1.click(handler1);
     list2.click(["kissa"], handler2);
@@ -187,22 +220,22 @@
       equals(myval, "kissa");
       ok(event);
       equals(this.value(), 2);
-    }
+    };
     var handler3 = function(myval, myval2, event) {
       equals(myval, "kissa");
       equals(myval2, "koira");
       ok(event);
       equals(this.value(), 1);
-    }
-	  var av = new JSAV("arraycontainer"),
-	      list1 = av.ds.list(),
-	      list2 = av.ds.list(),
-  	    list3 = av.ds.list();
+    };
+    var av = new JSAV("arraycontainer"),
+        list1 = av.ds.list(),
+        list2 = av.ds.list(),
+        list3 = av.ds.list();
     var setup = function(list) {
       list.addFirst(0);
       list.addFirst(1);
       list.addFirst(2);
-    }
+    };
     setup(list1); setup(list2); setup(list3);
     list1.on("jsavclick", handler1);
     list2.on("jsavclick", "kissa", handler2);
@@ -211,4 +244,4 @@
     list2.element.find(".jsavnode:eq(0)").trigger("jsavclick");
     list3.element.find(".jsavnode:eq(1)").trigger("jsavclick");
   });
-})();
+}());
