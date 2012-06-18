@@ -39,3 +39,11 @@ $(SRC)/version.js :$(SRC)/version1.txt $(SRC)/version.txt $(SRC)/version2.txt
 
 $(TARGET)/JSAV-min.js: $(SRC)/version.txt $(SRC)/front.js $(SRC)/version.js $(SOURCES)
 	-$(MINIMIZE)
+
+jshint:
+	-jshint src/
+
+csslint:
+	csslint --errors=empty-rules,import,errors --warnings=duplicate-background-images,compatible-vendor-prefixes,display-property-grouping,fallback-colors,duplicate-properties,shorthand,gradients,font-sizes,floats,overqualified-elements,import,regex-selectors,rules-count,unique-headings,unqualified-attributes,vendor-prefix,zero-units css/JSAV.css
+
+lint: jshint csslint
