@@ -229,7 +229,15 @@
     var curNode = list.first(),
         prevNode,
         prevLeft = 0,
-        opts = $.extend({updateLeft: true, updateTop: true, updateEdges: true}, list.options, options);
+        opts = $.extend({updateLeft: true, updateTop: true, updateEdges: true}, list.options, options),
+        maxTop = 0;
+    // calculate and set the height of the list before animating the element positions
+    // this results in a smoother visualization
+    list.element.find(".jsavlistnode").each(function(index, elem) {
+      maxTop = Math.max($(elem).position().top + $(elem).outerHeight(), maxTop);
+    });
+    list.css("height", maxTop + "px", options);
+
     while (curNode) {
       var newPos = { };
       if (opts.updateLeft) { newPos.left = prevLeft; }
@@ -248,7 +256,6 @@
       curNode = curNode.next();
     }
     list.css("width", prevLeft - opts.nodegap, options);
-    list.css("height", "50px", options);
     centerList(list, opts);
   };
 
