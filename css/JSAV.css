@@ -89,43 +89,43 @@
   border-bottom-right-radius: 8px;
 }
 
-.jsavarray.jsavbararray {
+.jsavbararray {
   height: 150px;
   overflow: visible;
   padding-bottom: 30px;
 }
-.jsavarray.jsavbararray .jsavindex {
+.jsavbararray .jsavindex {
   height: 100%;
   vertical-align: bottom;
   border: none;
   background-color: #ddd;
   margin-left: 2px;
 }
-.jsavbararray .jsavindex .jsavvalue {
+.jsavbararray .jsavvalue {
   z-index: 100;
   bottom: 0;
   background-color: inherit;
 }
-.jsavarray.jsavbararray .jsavindex .jsavvalue {
+.jsavbararray .jsavvalue {
   -moz-border-radius: 0;
   -o-border-radius: 0;
   -ms-border-radius: 0;
   -webkit-border-radius: 0;
   border-radius: 0;
 }
-.jsavbararray .jsavindex .jsavvalue span {
+.jsavbararray .jsavvalue span {
   position: absolute;
   width: inherit;
   bottom: 0;
 }
-.jsavbararray .jsavindex .jsavvalue, .jsavbararray .jsavindex .jsavvaluebar {
+.jsavbararray .jsavvalue, .jsavbararray .jsavvaluebar {
   display: block;
   line-height: 20px;
   padding: 0;
   position: absolute;
   width: inherit;
 }
-.jsavbararray .jsavindex .jsavvaluebar {
+.jsavbararray .jsavvaluebar {
   top: 0;
   background-color: #fff;
 }
@@ -252,10 +252,11 @@
   text-indent: 9999px;
   width: 45px;
   height: 45px;
-  margin-top: 15px;
+  margin: 15px 40px;
+  /*margin-top: 15px;
   margin-bottom: 15px;
   margin-left: 40px;
-  margin-right: 40px;
+  margin-right: 40px;*/
   background-color: #aaa;
   -o-border-radius: 20px;
   -moz-border-radius: 20px;
@@ -295,7 +296,7 @@
 }
 .jsavmodal {
   z-index: 999;
-  background-color: (120, 120, 120);
+  background-color: rgb(120, 120, 120);
   background-color: rgba(0, 0, 0, 0.2);
   position: absolute;
   top: 0;
@@ -322,7 +323,7 @@ a.jsavsettings {
   background-position: 50% 50%;
   background-repeat: no-repeat;
   background-color: #aaa;
-  text-indent: 100%;
+  text-indent: 120%;
   padding: 2px;
   border: 1px solid black;
   -o-border-radius: 3px;
@@ -335,7 +336,6 @@ a.jsavsettings {
   display:block;
   white-space: nowrap;
   overflow: hidden;
-  color: rgba(0, 0, 0, 0);
 }
 .jsavsettings .jsavhelp {
   font-size: 80%;
@@ -415,7 +415,7 @@ a.jsavsettings {
   width: 10px;
   background-color: #eee;
   height: 100%;
-  display: inline-block;
+  display: block;
   border-left: 1px solid black;
   float: right;
 }
