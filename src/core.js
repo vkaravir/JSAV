@@ -1,8 +1,8 @@
 /**
 * Module that contains JSAV core.
 */
-/*global Raphael:true*/
-(function() {
+(function($) {
+  "use strict";
   var JSAV = function() {
     create.apply(this, arguments);
   };
@@ -48,40 +48,39 @@
       jQuery.fx.off = true; // by default we are recording changes, not animating them
       var options = arguments[1] || { }; // TODO: default options
       // initialize stuff from init namespace
-      initializations.call(this, options);
+      initializations(this, options);
       // add all plugins from ext namespace
-      extensions.call(this, this, JSAV.ext);
+      extensions(this, this, JSAV.ext);
     };
-  function initializations(options) {
+  function initializations(jsav, options) {
     var fs = JSAV.init.functions;
     for (var i = 0; i < fs.length; i++) {
       if ($.isFunction(fs[i])) {
-        fs[i].call(this, options);
+        fs[i].call(jsav, options);
       }
     }
   }
-  function extensions(con, add) {
-    var that = this;
+  function extensions(jsav, con, add) {
     for (var prop in add) {
       if (add.hasOwnProperty(prop) && !(prop in con)) {
         switch (typeof add[prop]) {
-        case "function":
-          (function (f) {
-            con[prop] = con === that ? f : function () { return f.apply(that, arguments); };
-          })(add[prop]);
-        break;
-        case "object":
-          con[prop] = con[prop] || {};
-          extensions.call(this, con[prop], add[prop]);
-        break;
-        default:
-          con[prop] = add[prop];
-        break;
+          case "function":
+            (function (f) {
+              con[prop] = con === jsav ? f : function () { return f.apply(jsav, arguments); };
+            }(add[prop]));
+            break;
+          case "object":
+            con[prop] = con[prop] || {};
+            extensions(jsav, con[prop], add[prop]);
+            break;
+          default:
+            con[prop] = add[prop];
+            break;
+        }
       }
     }
   }
-}
   if (window) {
     window.JSAV = JSAV;
   }
- })();
+}(jQuery));

@@ -3,6 +3,7 @@
 * Depends on core.js, anim.js
 */
 (function($) {
+  "use strict";
   var jsanim = JSAV.anim;
   JSAV.ext.effects = {
     /* toggles visibility of an element */
@@ -20,9 +21,9 @@
         this._toggleVisible(options);
       }
       return this;
-    }, 
+    },
     /* hides an element */
-    hide: function(options) { 
+    hide: function(options) {
       if (this.element.filter(":visible").size() > 0) {
         this._toggleVisible(options);
       }
@@ -88,9 +89,9 @@
         $both.animate({"color": "red", "background-color": "pink"}, 3*speed, function() {
           // ..animate the translation to 0, so they'll be in their final positions..
           $val1.animate({"transform": "translate(0, 0)"}, 7*speed, 'linear');
-          $val2.animate({"transform": "translate(0, 0)"}, 7*speed, 'linear', 
+          $val2.animate({"transform": "translate(0, 0)"}, 7*speed, 'linear',
             function() {
-              if (arr) arr.remove(); // ..remove the arrows if they exist
+              if (arr) { arr.remove(); } // ..remove the arrows if they exist
               // ..and finally animate to the original styles.
               $str1.animate(str1prevStyle, speed);
               $str2.animate(str2prevStyle, speed);
@@ -99,4 +100,4 @@
       }
     }
   };
-})(jQuery);
+}(jQuery));

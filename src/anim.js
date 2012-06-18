@@ -4,6 +4,7 @@
 */
 /*global JSAV:true */
 (function($) {
+  "use strict";
   if (typeof JSAV === "undefined") { return; }
 
   var AnimatableOperation = function(opts) {
@@ -20,11 +21,11 @@
     var retVal = this.effect.apply(this.obj, this.args);
     if (typeof retVal === "undefined" || retVal === this.obj) {
       if (typeof this.undoeffect === "undefined" || !$.isFunction(this.undoeffect)) {
-        this.undoeffect = function() {
+        this.undoeffect = (function() {
           return function() { // we create one that will set the state of obj to its current state
             obj.state(state);
           };
-        }();
+        }());
       }
     } else {
       this.undoArgs = retVal;
@@ -165,7 +166,7 @@
       $("<a class='jsavend' href='#' title='End'>End</a>").click(endHandler).appendTo($controls);
     }
     // bind the handlers to events to enable control by triggering events
-    this.container.bind({ "jsav-forward": forwardHandler, 
+    this.container.bind({ "jsav-forward": forwardHandler,
                           "jsav-backward": backwardHandler,
                           "jsav-begin": beginHandler,
                           "jsav-end": endHandler });
@@ -174,7 +175,7 @@
     var counter = $(".jsavcounter", this.container);
     // register an event to be triggered on container to update the counter
     if (counter.size() > 0) {
-      this.container.bind("jsav-updatecounter", function(evet, current, total) { 
+      this.container.bind("jsav-updatecounter", function(evet, current, total) {
         counter.text(current + " / " + total);
       });
     }
@@ -208,7 +209,7 @@
           jsav._undo.push(stackTop);
         }
         // add to stack: [target object, effect function, arguments, undo function]
-        var oper = new AnimatableOperation({obj: this, effect: effect, 
+        var oper = new AnimatableOperation({obj: this, effect: effect,
           args: arguments, undo: undo});
         stackTop.add(oper);
         oper.apply();
@@ -272,10 +273,6 @@
     return info;
   };
   JSAV.ext.step = function(options) {
-    /*if (this._undo.length > 0 && 
-        (this._redo.length === 0 || this._redo[0].operations.length === 0)) { // ignore step if no operations in it
-      return this;
-    }*/
     this.container.trigger("jsav-updaterelative");
     this._undo.push(new AnimStep(options)); // add new empty step to oper. stack
     if (options && this.message && options.message) {
@@ -352,7 +349,7 @@
   JSAV.ext._shouldAnimate = function() {
     return (!this.RECORD && !$.fx.off);
   };
-})(jQuery);
+}(jQuery));
 
 /** Override the borderWidth/Color CSS getters to return the
  info for border-top. */

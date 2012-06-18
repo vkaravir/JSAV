@@ -225,7 +225,7 @@ test("Array data-attributes", function() {
       arr2 = av.ds.array([10, 20, 30, 40], {layout: "bar", center: false, noop: function(){}});
       data = arr.element.data(),
       data2 = arr2.element.data();
-  ok(arr.equals([6, 4, 2]), "Array index value from data-attribute");
+  ok(arr.equals(["6", "4", "2"]), "Array index value from data-attribute");
   equals(arr.options.layout, data.layout);
   equals(arr.options.layout, "bar");
   equals(arr.options.foo, data.foo);

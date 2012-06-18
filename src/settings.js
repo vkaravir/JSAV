@@ -3,6 +3,7 @@
 * Depends on core.js, utils.js
 */
 (function($) {
+  "use strict";
   if (typeof JSAV === "undefined") { return; }
   var speedChoices = [5000, 3000, 1500, 1000, 500, 400, 300, 200, 100, 50];
   var speedSetting = function() {
@@ -10,9 +11,9 @@
     return function() {
       var rangeSupported = !!$.support.inputTypeRange;
       // add explanation if using range slider, help text otherwise
-      var $elem = $('<div class="jsavrow">Animation speed' + (rangeSupported?' (slow - fast)':'') + 
+      var $elem = $('<div class="jsavrow">Animation speed' + (rangeSupported?' (slow - fast)':'') +
           ': <input type="range" min="1" max="10" step="1" size="30"/></div> ' +
-          (rangeSupported?'':'<div class="jsavhelp">Value between 1 (Slow) and 10 (Fast).') + 
+          (rangeSupported?'':'<div class="jsavhelp">Value between 1 (Slow) and 10 (Fast).') +
           '</div>');
       // get the closest speed choice to the current speed
       var curval = speedChoices.length - 1;
@@ -63,13 +64,16 @@
     Option options should be a map where every key-value pair will make for an option element
     in the form. Every other option will be set as an attribute of the input element. */
   var createSelectComponent = function(varname, options) {
-    var label, 
+    var label,
         select = $('<select id="jsavsettings-' + varname + '" />');
     if ('label' in options) {
       label = $('<label for="jsavsettings-' + varname + '">' + options.label + "</label>");
     }
-    for (var key in options.options) {
-      select.append('<option value="' + key + '">' + options.options[key] + '</option>');
+    var opts = options.options;
+    for (var key in opts) {
+      if (opts.hasOwnProperty(key)) {
+        select.append('<option value="' + key + '">' + opts[key] + '</option>');
+      }
     }
     if ('value' in options) {
       select.val(options.value);
@@ -77,7 +81,7 @@
     var toCheck = ['label', 'value', 'options', 'type'];
     for (var attr in options) {
       if ($.inArray(attr, toCheck) === -1) {
-        input.attr(attr, options[attr]);
+        select.attr(attr, options[attr]);
       }
     }
     return $('<div class="jsavrow"/>').append(label).append(select);
@@ -142,4 +146,4 @@
       this.settings = new Settings($(this.container).find(".jsavsettings").show());
     }
   });
-})(jQuery);
+}(jQuery));

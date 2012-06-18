@@ -3,6 +3,7 @@
 * Depends on core.js, anim.js, utils.js
 */
 (function($) {
+  "use strict";
   var BLOCKED_ATTRIBUTES = ['correct', 'comment', 'points'];
   var createUUID = JSAV.utils.createUUID;
   
@@ -11,7 +12,7 @@
       input = $('<input id="' + options.id + '" type="' +
         itemtype + '"/>');
     $.each(options, function(key, value) {
-      if (BLOCKED_ATTRIBUTES.indexOf(key) == -1) {
+      if (BLOCKED_ATTRIBUTES.indexOf(key) === -1) {
         input.attr(key, value);
       }
     });
@@ -27,7 +28,7 @@
     cbs.each(function(index, item) {
       var qi = that.choiceById(item.id);
       var $item = $(item);
-      if (!!$item.prop("checked") != !!qi.options.correct) {
+      if (!!$item.prop("checked") !== !!qi.options.correct) {
         correct = false;
         return false; // break the loop
       }
@@ -45,9 +46,9 @@
   var qTypes = {};
   qTypes.TF = { // True-False type question
     init: function() {
-      this.choices[0] = new QuestionItem(this.options.falseLabel || "False", 
+      this.choices[0] = new QuestionItem(this.options.falseLabel || "False",
                                         "checkbox", {correct: !this.options.correct});
-      this.choices[1] = new QuestionItem(this.options.trueLabel || "True", 
+      this.choices[1] = new QuestionItem(this.options.trueLabel || "True",
                                         "checkbox", {correct: !!this.options.correct});
       this.correctChoice = function(correctVal) {
         if (correctVal) {
@@ -153,7 +154,7 @@
   
   // dummy function for the animation, there is no need to change the state
   // when moving in animation; once shown, the question is not shown again
-  qproto.state = function() {}; 
+  qproto.state = function() {};
   
   // add dummy function for the stuff that question types need to overwrite
   var noop = function() {};
@@ -164,4 +165,4 @@
   JSAV.ext.question = function(qtype, questionText, options) {
     return new Question(this, qtype, questionText, $.extend({}, options));
   };
-})(jQuery);
+}(jQuery));

@@ -3,20 +3,19 @@
 * Depends on core.js, anim.js, utils.js, effects.js, datastructures.js
 */
 (function($) {
+  "use strict";
   if (typeof JSAV === "undefined") { return; }
 
-    // initializes a data structure
-   var initDs = function(dstr, element, options) {
-      dstr.options = $.extend(true, {}, options);
-      if ($.isArray(element)) {
-        dstr.initialize(element);
-      } else if (element) { // assume it's a DOM element
-        dstr.element = element;
-        dstr.initializeFromElement();
-      } else {
-        // TODO: create an element for this data structure
-      }
-    }; 
+  // initializes a data structure
+  var initDs = function(dstr, element, options) {
+    dstr.options = $.extend(true, {}, options);
+    if ($.isArray(element)) {
+      dstr.initialize(element);
+    } else if (element) { // assume it's a DOM element
+      dstr.element = element;
+      dstr.initializeFromElement();
+    }
+  };
 
 
   // function that selects elements from $elems that match the indices
@@ -29,7 +28,7 @@
       // return indices that are in the array
       return $elems.filter(function(index, item) {
         for (var i=0; i < indices.length; i++) {
-          if (indices[i] == index) { return true; }
+          if (indices[i] === index) { return true; }
         }
         return false;
       });
@@ -51,9 +50,12 @@
   };
   var arrproto = AVArray.prototype;
   $.extend(arrproto, JSAV._types.ds.common);
+
+  // sets/removes the highlight on given indices
+  // should be called withcall/apply and set this to an array instance
   function setHighlight(indices, mode, options) {
-    var testDiv = $('<ol class="' + this.element[0].className + 
-              '" style="position:absolute;left:-10000px">' + 
+    var testDiv = $('<ol class="' + this.element[0].className +
+              '" style="position:absolute;left:-10000px">' +
               '<li class="jsavnode jsavindex jsavhighlight"><span class="jsavvalue"></span></li>' +
               '<li class="jsavnode jsavindex" ><span class="jsavvalue"></span></li></ol>'),
         styleDiv = (mode && mode === "add" ? testDiv.find(".jsavnode").filter(".jsavhighlight").find(".jsavvalue")
@@ -65,26 +67,26 @@
   }
   
   arrproto.isHighlight = function(index, options) {
-    var testDiv = $('<ol class="' + this.element[0].className + 
-              '" style="position:absolute;left:-10000px">' + 
+    var testDiv = $('<ol class="' + this.element[0].className +
+              '" style="position:absolute;left:-10000px">' +
               '<li class="jsavnode jsavindex jsavhighlight"><span class="jsavvalue"></span></li>' +
               '<li class="jsavnode jsavindex" ><span class="jsavvalue"></span></li></ol>'),
         styleDiv = testDiv.find(".jsavnode").filter(".jsavhighlight").find(".jsavvalue");
     // TODO: general way to get styles for the whole av system
     $("body").append(testDiv);
-    var isHl = this.css(index, "background-color") == styleDiv.css("background-color");
+    var isHl = this.css(index, "background-color") === styleDiv.css("background-color");
     testDiv.remove();
     return isHl;
   };
   
   arrproto.highlight = function(indices, options) {
     setHighlight.call(this, indices, "add", options);
-    return this; 
+    return this;
   };
 
   arrproto.unhighlight = function(indices, options) {
     setHighlight.call(this, indices, "remove", options);
-    return this; 
+    return this;
   };
   arrproto._setcss = JSAV.anim(function(indices, cssprop) {
     var $elems = getIndices($(this.element).find("li"), indices);
@@ -102,7 +104,9 @@
       return [cssprops];
     } else {
       for (var i in cssprops) {
-        oldProps[i] = el.css(i);
+        if (cssprops.hasOwnProperty(i)) {
+          oldProps[i] = el.css(i);
+        }
       }
     }
     if (this.jsav._shouldAnimate()) { // only animate when playing, not when recording
@@ -133,19 +137,19 @@
     }
   };
   arrproto.swap = JSAV.anim(function(index1, index2, options) {
-    var $pi1 = $(this.element).find("li:eq(" + index1 + ")"), 
+    var $pi1 = $(this.element).find("li:eq(" + index1 + ")"),
       $pi2 = $(this.element).find("li:eq(" + index2 + ")");
     this.jsav.effects.swap($pi1, $pi2, options);
     return [index1, index2, options];
   });
-  arrproto.clone = function() { 
+  arrproto.clone = function() {
     // fetch all values
     var size = this.size(),
       vals = [];
     for (var i=0; i < size; i++) {
       vals[i] = this.value(i);
     }
-    return new AVArray(this.jsav, vals, $.extend(true, {}, this.options, {visible: false})); 
+    return new AVArray(this.jsav, vals, $.extend(true, {}, this.options, {visible: false}));
   };
   arrproto.size = function() { return this.element.find("li").size(); };
   arrproto.value = function(index, newValue, options) {
@@ -191,7 +195,7 @@
     this.options = jQuery.extend({visible: true}, this.options);
     for (var key in this.options) {
       var val = this.options[key];
-      if (this.options.hasOwnProperty(key) && typeof(val) === "string" || 
+      if (this.options.hasOwnProperty(key) && typeof(val) === "string" ||
             typeof(val) === "number" || typeof(val) === "boolean") {
         el.attr("data-" + key, val);
       }
@@ -229,7 +233,7 @@
       if (!$this.attr("data-value-type")) {
         $this.attr("data-value-type", "string");
       }
-      $this.addClass("jsavnode jsavindex").html("<span class='jsavvalue'>" + $this.html() + "</span>");     
+      $this.addClass("jsavnode jsavindex").html("<span class='jsavvalue'>" + $this.html() + "</span>");
     });
     this.layout();
   };
@@ -261,7 +265,7 @@
           return false;
         }
         for (i = 0; i < len; i++) { // are the values equal
-          equal = this.value(i) == otherArray[i];
+          equal = this.value(i) === otherArray[i];
           if (!equal) { return false; }
         }
         return true; // if tests passed, arrays are equal
@@ -269,7 +273,7 @@
         if ('css' in opts) { // if css property given, compare given array to property
           cssprop = opts.css;
           for (i = 0; i < len; i++) {
-            equal = this.css(i, cssprop) == otherArray[i];
+            equal = this.css(i, cssprop) === otherArray[i];
             if (!equal) { return false; }
           }
           return true; // if tests passed, arrays are equal
@@ -282,7 +286,7 @@
       }
       if (!('value' in opts) || opts.value) { // if comparing values
         for (i = 0; i < len; i++) {
-          equal = this.value(i) == otherArray.value(i);
+          equal = this.value(i) === otherArray.value(i);
           if (!equal) { return false; }
         }
       }
@@ -291,14 +295,14 @@
           for (i = 0; i < opts.css.length; i++) {
             cssprop = opts.css[i];
             for (j = 0; j < len; j++) {
-              equal = this.css(j, cssprop) == otherArray.css(j, cssprop);
+              equal = this.css(j, cssprop) === otherArray.css(j, cssprop);
               if (!equal) { return false; }
             }
           }
         } else { // if not array, expect it to be a property name string
           cssprop = opts.css;
           for (i = 0; i < len; i++) {
-            equal = this.css(i, cssprop) == otherArray.css(i, cssprop);
+            equal = this.css(i, cssprop) === otherArray.css(i, cssprop);
             if (!equal) { return false; }
           }
         }
@@ -306,7 +310,7 @@
       return true; // if tests passed, arrays are equal
     }
     
-    // default: return false    
+    // default: return false
     return false;
   };
   arrproto.clear = function() {
@@ -314,7 +318,7 @@
   };
   
   // events to register as functions on array
-  var events = ["click", "dblclick", "mousedown", "mousemove", "mouseup", 
+  var events = ["click", "dblclick", "mousedown", "mousemove", "mouseup",
                 "mouseenter", "mouseleave"];
   // returns a function for the passed eventType that binds a passed
   // function to that eventType for indices in the array
@@ -357,12 +361,12 @@
   arrproto.toggleLine = JSAV.anim(function(index, options) {
       // Toggles a marker line above a given array index for bar layout
       // Options that can be passed:
-      //  - markStyle: style of the "ball" as an object of CSS property/value pairs.  
+      //  - markStyle: style of the "ball" as an object of CSS property/value pairs.
       //               Default style is first applied, then the given style. Passing
       //               null will disable the ball alltogether
       //  - lineStyle: style of the line, similarly to markStyle
       //  - startIndex: index in the array where the line will start. default 0
-      //  - endIndex: index in the array where the line will end, inclusive. default 
+      //  - endIndex: index in the array where the line will end, inclusive. default
       //              last index of the array
       if (this.options.layout !== "bar") { return; } // not bar layout
       var valelem = this.element.find("li .jsavvalue").eq(index),
@@ -377,7 +381,7 @@
           $mark = $("<div class='jsavmark' />");
           lielem.prepend($mark);
           if (opts.markStyle) { $mark.css(opts.markStyle); }
-          $mark.css({ bottom: valelem.height() - $mark.outerHeight()/2, 
+          $mark.css({ bottom: valelem.height() - $mark.outerHeight()/2,
                       left: valelem.position().left + valelem.width() / 2 - $mark.outerWidth()/2,
                       display: "block"});
         }
@@ -387,8 +391,8 @@
           if (opts.lineStyle) { $markline.css(opts.lineStyle); }
           var startelem = this.element.find("li:eq(" + opts.startIndex + ")"),
               endelem = this.element.find("li:eq(" + opts.endIndex + ")");
-          $markline.css({ width: endelem.position().left - startelem.position().left + 
-                                  endelem.width(),  
+          $markline.css({ width: endelem.position().left - startelem.position().left +
+                                  endelem.width(),
                           left:startelem.position().left - lielem.position().left,
                           bottom: valelem.height() - $markline.outerHeight()/2,
                           display: "block"});
@@ -401,21 +405,20 @@
     });
 
 
-
-
   JSAV._types.ds.AVArray = AVArray;
   // expose the data structures for the JSAV
   JSAV.ext.ds.array = function(element, options) {
       return new AVArray(this, element, options);
   };
 
-})(jQuery);
+}(jQuery));
 
 
 
 
 /// array layout
 (function($) {
+  "use strict";
   function centerArray(array, $lastItem, options) {
     var opts = $.extend({}, array.options, options);
     // center the array inside its parent container
@@ -479,10 +482,10 @@
  
   function barArray(array, options) {
     var $arr = $(array.element).addClass("jsavbararray"),
-      $items = $arr.find("li").css({"position":"relative", "float": "left"}), 
+      $items = $arr.find("li").css({"position":"relative", "float": "left"}),
       maxValue = Number.MIN_VALUE,
       indexed = !!array.options.indexed,
-      width = $items.first().outerWidth();
+      width = $items.first().outerWidth(),
       size = array.size();
     if (indexed) {
       $arr.addClass("jsavindexed");
@@ -518,4 +521,4 @@
     "array": horizontalArray,
     "vertical": verticalArray
   };
-})(jQuery);
+}(jQuery));

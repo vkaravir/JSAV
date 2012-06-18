@@ -1,4 +1,5 @@
 (function($) {
+  "use strict";
   var compareFunction = function(a, b) {
     return a - b;
   };
@@ -93,7 +94,7 @@
       this._treenodes[index].value(newValue);
       this._tree.layout();
     }
-  }
+  };
   
   bhproto.css = function(index, cssprop) {
     var val = this.arraycss(index, cssprop);
@@ -141,7 +142,7 @@
     if (smallest !== pos) {
       if (this.options.stats) {
         this.stats.swaps++;
-        if (smallest == lpos) { this.stats.leftswaps++; }
+        if (smallest === lpos) { this.stats.leftswaps++; }
         else { this.stats.rightswaps++; }
       }
       this.swap(smallest - 1, pos - 1);
@@ -162,7 +163,7 @@
     if (this.options.tree) {
       // wrap the swap in a function..
       var treeswap = function(index1, index2) {
-        this.jsav.effects.swap(this._treenodes[index1].element, this._treenodes[index2].element, true)
+        this.jsav.effects.swap(this._treenodes[index1].element, this._treenodes[index2].element, true);
       };
       // .. and make it an animatable operation
       // TODO: move this wrapping to interaction.swap as an option
@@ -200,4 +201,4 @@
                                                          'steps': true, 'tree': true,
                                                          'heapify': true, 'center': true}, options));
   };
-})(jQuery);
+}(jQuery));

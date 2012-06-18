@@ -1,6 +1,7 @@
 (function($) {
+  "use strict";
   // events to register as functions on tree
-  var events = ["click", "dblclick", "mousedown", "mousemove", "mouseup", 
+  var events = ["click", "dblclick", "mousedown", "mousemove", "mouseup",
                 "mouseenter", "mouseleave"];
   // returns a function for the passed eventType that binds a passed
   // function to that eventType nodes/edges in the tree
@@ -21,7 +22,7 @@
           if ($.isFunction(data)) { // if no data -> 1st arg is the handler function
             // bind this to the node and call handler
             // with the event as parameter
-            data.call(node, e); 
+            data.call(node, e);
           } else if ($.isFunction(handler)) { // data provided, 2nd arg is the handler function
             var params = $.isArray(data)?data.slice(0):[data]; // get a cloned array or data as array
             params.push(e); // jQuery event as the last parameter
@@ -61,4 +62,4 @@
       proto.on = on;
     }
   };
-})(jQuery);
+}(jQuery));

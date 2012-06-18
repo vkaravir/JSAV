@@ -4,12 +4,13 @@
 */
 /*global JSAV:true*/
 (function($) {
+  "use strict";
   if (typeof JSAV === "undefined") { return; }
   var Variable = function(jsav, value, options) {
     this.jsav = jsav;
     this.options = $.extend({visible: false, type: typeof value}, options);
     this.element = $('<div class="jsavvariable">' +
-                      '<span class="jsavvarlabel"></span> <span class="jsavvalue jsavvarvalue">' + 
+                      '<span class="jsavvarlabel"></span> <span class="jsavvalue jsavvarvalue">' +
                       value + '</span></div>');
     this.element.find(".jsavvarvalue").attr("data-value", value);
     if (this.options.before) {
@@ -56,11 +57,11 @@
   };
   varproto.equals = function(otherVariable) {
     if (!otherVariable || typeof otherVariable !== "object") { return false; }
-    return this.value() == otherVariable.value();
+    return this.value() === otherVariable.value();
   };
   
   JSAV.ext.variable = function(value, options) {
     return new Variable(this, value, options);
   };
 
-})(jQuery);
+}(jQuery));

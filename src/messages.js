@@ -3,6 +3,7 @@
 * Depends on core.js, anim.js
 */
 (function($) {
+  "use strict";
   if (typeof JSAV === "undefined") { return; }
   
   var MessageHandler = function(jsav, output) {
@@ -34,7 +35,7 @@
         if (this.output[0]) {
           this.output[0].scrollTop = this.output[0].scrollHeight;
         }
-      }      
+      }
     }
     return this;
   });

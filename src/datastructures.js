@@ -3,11 +3,12 @@
 * Depends on core.js, anim.js, utils.js, effects.js
 */
 (function($) {
+  "use strict";
   if (typeof JSAV === "undefined") { return; }
 
   // create a utility function as a jQuery "plugin"
   $.fn.getstyles = function() {
-    // Returns the values of CSS properties that are given as 
+    // Returns the values of CSS properties that are given as
     // arguments. For example, $elem.getstyles("background-color", "color")
     // could return an object {"background-color" : "rgb(255, 120, 120)",
     //                         "color" : "rgb(0, 0, 0)"}
@@ -30,8 +31,8 @@
   // to the prototype of a new DS using the addCommonProperties(prototype) function
   var common = {
       // gets or sets the id of the DS
-      'id': function(newId) { 
-        if (newId) { 
+      'id': function(newId) {
+        if (newId) {
           this.element[0].id = newId;
           return this;
         } else {
@@ -45,7 +46,7 @@
       },
       getSvg: function() {
         if (!this.svg) { // lazily create the SVG overlay only when needed
-          this.svg = Raphael(this.element[0]);
+          this.svg = new Raphael(this.element[0]);
           this.svg.renderfix();
           var style = this.svg.canvas.style;
           style.position = "absolute";
@@ -91,7 +92,7 @@
     $(this.g.rObj.node).data("edge", this);
     if (visible) {
       this.g.show();
-    }    
+    }
   };
   var edgeproto = Edge.prototype;
   $.extend(edgeproto, common);
@@ -167,7 +168,7 @@
       return false;
     }
     if (options && !options.checkNodes) {
-      if (!this.startnode.equals(otherEdge.startnode) || 
+      if (!this.startnode.equals(otherEdge.startnode) ||
         !this.endnode.equals(otherEdge.endnode)) {
           return false;
       }
@@ -177,12 +178,12 @@
       if ($.isArray(options.css)) { // array of property names
         for (var i = 0; i < options.css.length; i++) {
           cssprop = options.css[i];
-          equal = this.css(cssprop) == otherEdge.css(cssprop);
+          equal = this.css(cssprop) === otherEdge.css(cssprop);
           if (!equal) { return false; }
         }
       } else { // if not array, expect it to be a property name string
         cssprop = options.css;
-        equal = this.css(cssprop) == otherEdge.css(cssprop);
+        equal = this.css(cssprop) === otherEdge.css(cssprop);
         if (!equal) { return false; }
       }
     }
@@ -199,7 +200,9 @@
       newprops[cssprop] = value;
     } else {
       for (var i in cssprop) {
-        oldProps[i] = el.attr(i);
+        if (cssprop.hasOwnProperty(i)) {
+          oldProps[i] = el.attr(i);
+        }
       }
       newprops = cssprop;
     }
@@ -250,9 +253,9 @@
   };
   // TODO: these are so ugly, do something! soon!
   nodeproto.highlight = function(options) {
-    var testDiv = $('<div class="' + this.container.element[0].className + 
-        '" style="position:absolute;left:-10000px">' + 
-        '<div class="' + this.element[0].className + ' jsavhighlight"><span class="jsavvalue"></span></div><div class="' + 
+    var testDiv = $('<div class="' + this.container.element[0].className +
+        '" style="position:absolute;left:-10000px">' +
+        '<div class="' + this.element[0].className + ' jsavhighlight"><span class="jsavvalue"></span></div><div class="' +
         this.element[0].className + '" ><span class="jsavvalue"></span></div></div>'),
       styleDiv = testDiv.find(".jsavnode").filter(".jsavhighlight").find(".jsavvalue");
     // TODO: general way to get styles for the whole av system
@@ -261,9 +264,9 @@
     testDiv.remove();
   };
   nodeproto.unhighlight = function(options) {
-    var testDiv = $('<div class="' + this.container.element[0].className + 
-        '" style="position:absolute;left:-10000px">' + 
-        '<div class="' + this.element[0].className + ' jsavhighlight"><span class="jsavvalue"></span></div><div class="' + 
+    var testDiv = $('<div class="' + this.container.element[0].className +
+        '" style="position:absolute;left:-10000px">' +
+        '<div class="' + this.element[0].className + ' jsavhighlight"><span class="jsavvalue"></span></div><div class="' +
         this.element[0].className + '" ><span class="jsavvalue"></span></div></div>'),
       styleDiv = testDiv.find(".jsavnode").not(".jsavhighlight").find(".jsavvalue");
     // TODO: general way to get styles for the whole av system
@@ -273,14 +276,14 @@
   };
   
   nodeproto.isHighlight = function() {
-    var testDiv = $('<div class="' + this.container.element[0].className + 
-        '" style="position:absolute;left:-10000px">' + 
-        '<div class="' + this.element[0].className + ' jsavhighlight"><span class="jsavvalue"></span></div><div class="' + 
+    var testDiv = $('<div class="' + this.container.element[0].className +
+        '" style="position:absolute;left:-10000px">' +
+        '<div class="' + this.element[0].className + ' jsavhighlight"><span class="jsavvalue"></span></div><div class="' +
         this.element[0].className + '" ><span class="jsavvalue"></span></div></div>'),
       styleDiv = testDiv.find(".jsavnode").filter(".jsavhighlight").find(".jsavvalue");
     // TODO: general way to get styles for the whole av system
     $("body").append(testDiv);
-    var isHl = this.element.css("background-color") == styleDiv.css("background-color");
+    var isHl = this.element.css("background-color") === styleDiv.css("background-color");
     testDiv.remove();
     return isHl;
   };
@@ -289,7 +292,7 @@
   
   JSAV._types.ds = { "common": common, "Edge": Edge, "Node": Node };
   // expose the extend for the JSAV
-  JSAV.ext.ds = { 
+  JSAV.ext.ds = {
     layout: {}
   };
-})(jQuery);
+}(jQuery));
