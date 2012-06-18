@@ -1,3 +1,4 @@
+/*global ok,test,module,deepEqual,equal,expect,equals,notEqual */
 (function() {
   module("extras.binaryheap", {  });
   test("Binheap Basics", function() {

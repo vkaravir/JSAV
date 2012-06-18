@@ -1,8 +1,9 @@
+/*global ok,test,module,deepEqual,equal,expect,equals,notEqual */
 (function() {
   module("graphicals.circle", {  });
   test("Testing Circle", function() {
-	  var av = new JSAV("emptycontainer");
-	  
+    var av = new JSAV("emptycontainer");
+    
     var c = av.g.circle(50, 60, 70);
     ok(c, "circle created");
     equals(c.center().cx, 50, "circle center x");
@@ -91,8 +92,8 @@
   module("graphicals.ellipse", {  });
 
   test("Testing Ellipse", function() {
-	  var av = new JSAV("emptycontainer");
-	  
+    var av = new JSAV("emptycontainer");
+    
     var e = av.g.ellipse(70, 60, 50, 40);
     ok(e, "ellipse created");
     equals(e.center().cx, 70, "ellipse center x");
@@ -187,8 +188,8 @@
   module("graphicals.rect", {  });
 
   test("Testing Rectangle", function() {
-	  var av = new JSAV("emptycontainer");
-	  
+    var av = new JSAV("emptycontainer");
+    
     var r = av.g.rect(70, 60, 50, 40);
     ok(r, "rect created");
     equals(r.width(), 50, "rectangle width");
@@ -281,8 +282,8 @@
   module("graphicals.line", {  });
 
   test("Testing Line", function() {
-	  var av = new JSAV("emptycontainer");
-	  
+    var av = new JSAV("emptycontainer");
+    
     var l = av.g.line(10, 20, 150, 140);
     ok(l, "line created");
     var origBB = $.extend(true, {}, l.rObj.getBBox());
@@ -384,8 +385,8 @@
     ok(!av.forward()); // no more steps
   });
   test("Test line movePoints", function() {
-	  var av = new JSAV("emptycontainer");
-	  
+    var av = new JSAV("emptycontainer");
+    
     var l = av.g.line(10, 20, 150, 140);
     ok(l, "line created");
     var origBB = $.extend(true, {}, l.rObj.getBBox());
@@ -413,36 +414,36 @@
   });
   
   test("Test Label show/hide", function() {
-	  var av = new JSAV("emptycontainer"),
-	      label = av.label("label");
-	  equals(label.element.filter(":visible").size(), 1, "Label initially visible");
-	  label.hide();
-	  av.step();
-	  equals(label.element.filter(":visible").size(), 0, "Label not visible after hide");
-	  label.show();
-	  av.step();
-	  equals(label.element.filter(":visible").size(), 1, "Label again visible after show");
-	  label.show();
-	  av.step();
-	  equals(label.element.filter(":visible").size(), 1, "Label visible after another show");
-	  label.hide();
-	  av.step();
-	  equals(label.element.filter(":visible").size(), 0, "Label not visible after hide");
-	  label.hide();
-	  equals(label.element.filter(":visible").size(), 0, "Label not visible after another hide");
-	  av.recorded();
-	  jQuery.fx.off = true;
-	  av.end();
-	  equals(label.element.filter(":visible").size(), 0);
-	  av.backward();
-	  equals(label.element.filter(":visible").size(), 0, "Undoing hiding hidden should keep it hidden");
-	  av.begin();
-	  av.forward(); // redo hide
-	  av.forward(); // redo show
-	  av.forward(); // redo another show
-	  equals(label.element.filter(":visible").size(), 1, "Label visible after another show");
-	  av.backward(); // undo showing a visible Label
-	  equals(label.element.filter(":visible").size(), 1, "Undoing show of a visible should keep it visible");
+    var av = new JSAV("emptycontainer"),
+        label = av.label("label");
+    equals(label.element.filter(":visible").size(), 1, "Label initially visible");
+    label.hide();
+    av.step();
+    equals(label.element.filter(":visible").size(), 0, "Label not visible after hide");
+    label.show();
+    av.step();
+    equals(label.element.filter(":visible").size(), 1, "Label again visible after show");
+    label.show();
+    av.step();
+    equals(label.element.filter(":visible").size(), 1, "Label visible after another show");
+    label.hide();
+    av.step();
+    equals(label.element.filter(":visible").size(), 0, "Label not visible after hide");
+    label.hide();
+    equals(label.element.filter(":visible").size(), 0, "Label not visible after another hide");
+    av.recorded();
+    jQuery.fx.off = true;
+    av.end();
+    equals(label.element.filter(":visible").size(), 0);
+    av.backward();
+    equals(label.element.filter(":visible").size(), 0, "Undoing hiding hidden should keep it hidden");
+    av.begin();
+    av.forward(); // redo hide
+    av.forward(); // redo show
+    av.forward(); // redo another show
+    equals(label.element.filter(":visible").size(), 1, "Label visible after another show");
+    av.backward(); // undo showing a visible Label
+    equals(label.element.filter(":visible").size(), 1, "Undoing show of a visible should keep it visible");
   });
 
 })();

@@ -1,47 +1,48 @@
+/*global ok,test,module,deepEqual,equal,expect,equals,notEqual,arrayUtils */
 (function() {
   module("datastructures.array", {  });
 test("Initializing from HTML", function() {
   var values = [12, 22, "14", "39", false]; // array in HTML
   expect(9);
-	var av = new JSAV("arraycontainer");
-	ok( av, "JSAV initialized" );
-	ok( av.ds.array, "Array exists" );
-	var arr = av.ds.array($("#array"));
-	ok( arr, "Array initialized" );
-	for (var i = 0; i < values.length; i++) {
-	  deepEqual( arr.value(i), values[i], "Getting value of index " + i );
-	}
-	equals(arr.id(), "array");
+  var av = new JSAV("arraycontainer");
+  ok( av, "JSAV initialized" );
+  ok( av.ds.array, "Array exists" );
+  var arr = av.ds.array($("#array"));
+  ok( arr, "Array initialized" );
+  for (var i = 0; i < values.length; i++) {
+    deepEqual( arr.value(i), values[i], "Getting value of index " + i );
+  }
+  equals(arr.id(), "array");
 });
 
 
 test("Initializing from Array", function() {
   var values = [15, 26, 13, 139, 10];
   expect(8);
-	var av = new JSAV("emptycontainer");
-	ok( av, "JSAV initialized" );
-	ok( av.ds.array, "Array exists" );
-	var arr = av.ds.array(values);
-	ok( arr, "Array initialized" );
-	for (var i = 0; i < values.length; i++) {
-	  deepEqual( arr.value(i), values[i], "Getting value of index " + i );
-	}
+  var av = new JSAV("emptycontainer");
+  ok( av, "JSAV initialized" );
+  ok( av.ds.array, "Array exists" );
+  var arr = av.ds.array(values);
+  ok( arr, "Array initialized" );
+  for (var i = 0; i < values.length; i++) {
+    deepEqual( arr.value(i), values[i], "Getting value of index " + i );
+  }
 });
 
 test("Highlighting indices in Array", function() {
   // [12, 22, 14, 39, 10] array in HTML
-	var av = new JSAV("arraycontainer"),
-	  arr = av.ds.array($("#array")),
-	  props = ["color", "background-color"];
-	arr.highlight(0);
-	av.step();
-	arr.highlight([1]); // highlight with an array
-	av.step();
-	arr.highlight(function(index) { return index>3;}); // highlight with function
-	av.step();
+  var av = new JSAV("arraycontainer"),
+    arr = av.ds.array($("#array")),
+    props = ["color", "background-color"];
+  arr.highlight(0);
+  av.step();
+  arr.highlight([1]); // highlight with an array
+  av.step();
+  arr.highlight(function(index) { return index>3;}); // highlight with function
+  av.step();
   arr.highlight(); // highlight all
-	av.recorded(); // will do rewind, nothing should be highlighted
-	$.fx.off = true;
+  av.recorded(); // will do rewind, nothing should be highlighted
+  $.fx.off = true;
 
   arrayUtils.testArrayHighlights(arr, [0, 0, 0, 0, 0], props);
   
@@ -58,29 +59,29 @@ test("Highlighting indices in Array", function() {
   av.forward(); // apply last highlight (all should now be highlighted)
   arrayUtils.testArrayHighlights(arr, [1, 1, 1, 1, 1], props);
 
-	av.begin(); // going to beginning should remove all highlights
+  av.begin(); // going to beginning should remove all highlights
   arrayUtils.testArrayHighlights(arr, [0, 0, 0, 0, 0], props);
-	av.end(); // going to the end should reapply the highlights
+  av.end(); // going to the end should reapply the highlights
   arrayUtils.testArrayHighlights(arr, [1, 1, 1, 1, 1], props);
 });
 
 test("Unhighlighting indices in Array", function() {
   // [12, 22, 14, 39, 10] array in HTML
-	var av = new JSAV("arraycontainer"),
-	  arr = av.ds.array($("#array")),
-	  props = ["color", "background-color"];
+  var av = new JSAV("arraycontainer"),
+    arr = av.ds.array($("#array")),
+    props = ["color", "background-color"];
 
-	arr.highlight();
-	av.step();
-	arr.unhighlight(0);
-	av.step();
-	arr.unhighlight([1]); // highlight with an array
-	av.step();
-	arr.unhighlight(function(index) { return index>3;}); // highlight with function
-	av.step();
+  arr.highlight();
+  av.step();
+  arr.unhighlight(0);
+  av.step();
+  arr.unhighlight([1]); // highlight with an array
+  av.step();
+  arr.unhighlight(function(index) { return index>3;}); // highlight with function
+  av.step();
   arr.unhighlight(); // highlight all
-	av.recorded(); // will do rewind, nothing should be highlighted
-	$.fx.off = true;
+  av.recorded(); // will do rewind, nothing should be highlighted
+  $.fx.off = true;
 
   arrayUtils.testArrayHighlights(arr, [0, 0, 0, 0, 0], props);
   
@@ -99,35 +100,35 @@ test("Unhighlighting indices in Array", function() {
   av.forward(); // apply last unhighlight (all should now be unhighlighted)
   arrayUtils.testArrayHighlights(arr, [0, 0, 0, 0, 0], props);
 
-	av.begin(); // going to beginning should remove all highlights
+  av.begin(); // going to beginning should remove all highlights
   arrayUtils.testArrayHighlights(arr, [0, 0, 0, 0, 0], props);
-	av.end(); // going to the end should reapply the unhighlights
+  av.end(); // going to the end should reapply the unhighlights
   arrayUtils.testArrayHighlights(arr, [0, 0, 0, 0, 0], props);
 });
 
 test("Highlight without parameters", function() {
-	var av = new JSAV("arraycontainer"),
-	  arr = av.ds.array($("#array")),
-	  props = ["color", "background-color"];
-	arr.highlight();
-	av.recorded();
-	arrayUtils.testArrayHighlights(arr, [0, 0, 0, 0, 0], props);
-	$.fx.off = true;
-	av.forward();
-	arrayUtils.testArrayHighlights(arr, [1, 1, 1, 1, 1], props);
+  var av = new JSAV("arraycontainer"),
+    arr = av.ds.array($("#array")),
+    props = ["color", "background-color"];
+  arr.highlight();
+  av.recorded();
+  arrayUtils.testArrayHighlights(arr, [0, 0, 0, 0, 0], props);
+  $.fx.off = true;
+  av.forward();
+  arrayUtils.testArrayHighlights(arr, [1, 1, 1, 1, 1], props);
 });
 
 test("Test isHighlight", function() {
-	var av = new JSAV("arraycontainer"),
-	  arr = av.ds.array($("#array")),
-	  props = ["color", "background-color"];
-	arr.highlight([0, 3]);
-	av.recorded();
-	av.end();
-	ok(arr.isHighlight(0));
-	ok(!arr.isHighlight(1));
-	ok(!arr.isHighlight(2));
-	ok(arr.isHighlight(3));
+  var av = new JSAV("arraycontainer"),
+    arr = av.ds.array($("#array")),
+    props = ["color", "background-color"];
+  arr.highlight([0, 3]);
+  av.recorded();
+  av.end();
+  ok(arr.isHighlight(0));
+  ok(!arr.isHighlight(1));
+  ok(!arr.isHighlight(2));
+  ok(arr.isHighlight(3));
 });
 
 test("Simple swaps", function() {
@@ -152,23 +153,23 @@ test("Simple swaps", function() {
 test("Swaps with highlights", function() {
   var av = new JSAV("emptycontainer"),
     arr = av.ds.array([10, 20, 30, 40]),
-	  props = ["color", "background-color"];
-  arr.highlight(function(index) { return index%2 == 0;});
+    props = ["color", "background-color"];
+  arr.highlight(function(index) { return index%2 === 0;});
   av.step();
   arr.swap(0, 2);
   av.step();
-  arr.unhighlight(function(index) { return index%2 == 0;});
+  arr.unhighlight(function(index) { return index%2 === 0;});
   av.recorded();
   $.fx.off = true;
   arrayUtils.testArrayHighlights(arr, [0, 0, 0, 0, 0], props);
   arrayUtils.testArrayValues(arr, [10, 20, 30, 40]);
-	av.forward(); // apply highlight
-	arrayUtils.testArrayHighlights(arr, [1, 0, 1, 0, 0], props);
+  av.forward(); // apply highlight
+  arrayUtils.testArrayHighlights(arr, [1, 0, 1, 0, 0], props);
   arrayUtils.testArrayValues(arr, [10, 20, 30, 40]);
   av.forward(); // apply swap
-	arrayUtils.testArrayHighlights(arr, [1, 0, 1, 0, 0], props);
+  arrayUtils.testArrayHighlights(arr, [1, 0, 1, 0, 0], props);
   arrayUtils.testArrayValues(arr, [30, 20, 10, 40]);
-	av.forward(); // apply unhighlight
+  av.forward(); // apply unhighlight
   arrayUtils.testArrayHighlights(arr, [0, 0, 0, 0, 0], props);
   arrayUtils.testArrayValues(arr, [30, 20, 10, 40]);
 });
@@ -222,7 +223,7 @@ test("Comparing arrays", function() {
 test("Array data-attributes", function() {
   var av = new JSAV("arraycontainer"),
       arr = av.ds.array($("#arraywithoptions")),
-      arr2 = av.ds.array([10, 20, 30, 40], {layout: "bar", center: false, noop: function(){}});
+      arr2 = av.ds.array([10, 20, 30, 40], {layout: "bar", center: false, noop: function(){}}),
       data = arr.element.data(),
       data2 = arr2.element.data();
   ok(arr.equals(["6", "4", "2"]), "Array index value from data-attribute");
@@ -266,9 +267,9 @@ test("Array values", function() {
   var av = new JSAV("emptycontainer"),
     values = [-1, 0, 1, false, true, ""],
     arr = av.ds.array(values);
-	for (var i = 0; i < values.length; i++) {
-	  deepEqual( arr.value(i), values[i], "Getting value of index " + i );
-	}
+  for (var i = 0; i < values.length; i++) {
+    deepEqual( arr.value(i), values[i], "Getting value of index " + i );
+  }
   arr.value(0, 0);
   arr.value(1, "<span>html test</span>");
   arr.value(2, false);
@@ -284,42 +285,42 @@ test("Array values", function() {
   deepEqual( arr.value(5), "0");
   ok(av.backward());
   ok(av.backward());
- 	for (var i = 0; i < values.length; i++) {
-	  deepEqual( arr.value(i), values[i], "Getting value of index " + i );
-	}
+   for (var i = 0; i < values.length; i++) {
+    deepEqual( arr.value(i), values[i], "Getting value of index " + i );
+  }
 });
 
 test("Test show/hide", function() {
-	var av = new JSAV("arraycontainer"),
-	    arr = av.ds.array([0, 7, 4, 3]);
-	equals(arr.element.filter(":visible").size(), 1, "Array initially visible");
-	arr.hide();
-	av.step();
-	equals(arr.element.filter(":visible").size(), 0, "Array not visible after hide");
-	arr.show();
-	av.step();
-	equals(arr.element.filter(":visible").size(), 1, "Array again visible after show");
-	arr.show();
-	av.step();
-	equals(arr.element.filter(":visible").size(), 1, "Array visible after another show");
-	arr.hide();
-	av.step();
-	equals(arr.element.filter(":visible").size(), 0, "Array not visible after hide");
-	arr.hide();
-	equals(arr.element.filter(":visible").size(), 0, "Array not visible after another hide");
-	av.recorded();
-	jQuery.fx.off = true;
-	av.end();
-	equals(arr.element.filter(":visible").size(), 0);
-	av.backward();
-	equals(arr.element.filter(":visible").size(), 0, "Undoing hiding hidden should keep it hidden");
-	av.begin();
-	av.forward(); // redo hide
-	av.forward(); // redo show
-	av.forward(); // redo another show
-	equals(arr.element.filter(":visible").size(), 1, "Array visible after another show");
-	av.backward(); // undo showing a visible array
-	equals(arr.element.filter(":visible").size(), 1, "Undoing show of a visible should keep it visible");
+  var av = new JSAV("arraycontainer"),
+      arr = av.ds.array([0, 7, 4, 3]);
+  equals(arr.element.filter(":visible").size(), 1, "Array initially visible");
+  arr.hide();
+  av.step();
+  equals(arr.element.filter(":visible").size(), 0, "Array not visible after hide");
+  arr.show();
+  av.step();
+  equals(arr.element.filter(":visible").size(), 1, "Array again visible after show");
+  arr.show();
+  av.step();
+  equals(arr.element.filter(":visible").size(), 1, "Array visible after another show");
+  arr.hide();
+  av.step();
+  equals(arr.element.filter(":visible").size(), 0, "Array not visible after hide");
+  arr.hide();
+  equals(arr.element.filter(":visible").size(), 0, "Array not visible after another hide");
+  av.recorded();
+  jQuery.fx.off = true;
+  av.end();
+  equals(arr.element.filter(":visible").size(), 0);
+  av.backward();
+  equals(arr.element.filter(":visible").size(), 0, "Undoing hiding hidden should keep it hidden");
+  av.begin();
+  av.forward(); // redo hide
+  av.forward(); // redo show
+  av.forward(); // redo another show
+  equals(arr.element.filter(":visible").size(), 1, "Array visible after another show");
+  av.backward(); // undo showing a visible array
+  equals(arr.element.filter(":visible").size(), 1, "Undoing show of a visible should keep it visible");
 });
 
 test("Test click event", function() {
@@ -342,10 +343,10 @@ test("Test click event", function() {
     ok(event);
     equals(this.value(index), 12);
   }
-	var av = new JSAV("arraycontainer"),
-	    arr = av.ds.array([1, 2, 3, 4]),
-	    arr2 = av.ds.array([5, 6, 7, 8]),
-	    arr3 = av.ds.array([9, 10, 11, 12]);
+  var av = new JSAV("arraycontainer"),
+      arr = av.ds.array([1, 2, 3, 4]),
+      arr2 = av.ds.array([5, 6, 7, 8]),
+      arr3 = av.ds.array([9, 10, 11, 12]);
   arr.click(handler1);
   arr2.click("kissa", handler2);
   arr3.click(["kissa", "koira"], handler3);
@@ -374,10 +375,10 @@ test("Test on event binding and custom events", function() {
     ok(event);
     equals(this.value(index), 12);
   }
-	var av = new JSAV("arraycontainer"),
-	    arr = av.ds.array([1, 2, 3, 4]),
-	    arr2 = av.ds.array([5, 6, 7, 8]),
-	    arr3 = av.ds.array([9, 10, 11, 12]);
+  var av = new JSAV("arraycontainer"),
+      arr = av.ds.array([1, 2, 3, 4]),
+      arr2 = av.ds.array([5, 6, 7, 8]),
+      arr3 = av.ds.array([9, 10, 11, 12]);
   arr.on("jsavclick", handler1);
   arr2.on("jsavclick", "kissa", handler2);
   arr3.on("jsavclick", ["kissa", "koira"], handler3);

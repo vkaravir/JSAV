@@ -1,3 +1,4 @@
+/*global ok,test,module,deepEqual,equal,expect,equals,notEqual,arrayUtils */
 (function() {
   module("anim", {});
   
@@ -38,7 +39,7 @@
   test("animator control events", function() {
     var av = new JSAV("emptycontainer"),
       arr = av.ds.array([10, 20, 30, 40]),
-  	  props = ["color", "background-color"];
+      props = ["color", "background-color"];
     arr.highlight(0);
     av.step();
     arr.highlight(1);
@@ -64,7 +65,7 @@
   test("backward/forward filters", function() {
     var av = new JSAV("emptycontainer"),
       arr = av.ds.array([10, 20, 30, 40]),
-  	  props = ["color", "background-color"];
+      props = ["color", "background-color"];
     arr.highlight(0);
     av.stepOption("stop0", true);
     av.step();

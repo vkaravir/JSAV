@@ -1,4 +1,4 @@
-/*global ok,test,module,deepEqual,equal,expect,equals */
+/*global ok,test,module,deepEqual,equal,expect,equals,notEqual */
 (function() {
   "use strict";
   module("datastructures.list", {  });

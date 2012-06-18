@@ -1,3 +1,4 @@
+/*global ok,test,module,deepEqual,equal,expect,equals,notEqual,strictEqual */
 (function() {
   module("jsav.utils.rand", {  });
   test("seeding random", function() {
