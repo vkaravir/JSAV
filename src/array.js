@@ -6,18 +6,6 @@
   "use strict";
   if (typeof JSAV === "undefined") { return; }
 
-  // initializes a data structure
-  var initDs = function(dstr, element, options) {
-    dstr.options = $.extend(true, {}, options);
-    if ($.isArray(element)) {
-      dstr.initialize(element);
-    } else if (element) { // assume it's a DOM element
-      dstr.element = element;
-      dstr.initializeFromElement();
-    }
-  };
-
-
   // function that selects elements from $elems that match the indices
   // filter (number, array of numbers, or filter function)
   var getIndices = function($elems, indices) {
@@ -46,15 +34,20 @@
   /* Array data structure for JSAV library. */
   var AVArray = function(jsav, element, options) {
     this.jsav = jsav;
-    initDs(this, element, options);
+    this.options = $.extend(true, {}, options);
+    if ($.isArray(element)) {
+      this.initialize(element);
+    } else if (element) { // assume it's a DOM element
+      this.element = $(element);
+      this.initializeFromElement();
+    }
   };
   var arrproto = AVArray.prototype;
   $.extend(arrproto, JSAV._types.ds.common);
 
-  // sets/removes the highlight on given indices
-  // should be called withcall/apply and set this to an array instance
-  function setHighlight(indices, mode, options) {
-    var testDiv = $('<ol class="' + this.element[0].className +
+  // sets/removes the highlight on given indices of the array arr
+  function setHighlight(arr, indices, mode, options) {
+    var testDiv = $('<ol class="' + arr.element[0].className +
               '" style="position:absolute;left:-10000px">' +
               '<li class="jsavnode jsavindex jsavhighlight"><span class="jsavvalue"></span></li>' +
               '<li class="jsavnode jsavindex" ><span class="jsavvalue"></span></li></ol>'),
@@ -62,7 +55,7 @@
                     : testDiv.find(".jsavnode").not(".jsavhighlight").find(".jsavvalue"));
     // TODO: general way to get styles for the whole av system
     $("body").append(testDiv);
-    this.css(indices, {color: styleDiv.css("color"), "background-color": styleDiv.css("background-color")}, options);
+    arr.css(indices, {color: styleDiv.css("color"), "background-color": styleDiv.css("background-color")}, options);
     testDiv.remove();
   }
   
@@ -80,12 +73,12 @@
   };
   
   arrproto.highlight = function(indices, options) {
-    setHighlight.call(this, indices, "add", options);
+    setHighlight(this, indices, "add", options);
     return this;
   };
 
   arrproto.unhighlight = function(indices, options) {
-    setHighlight.call(this, indices, "remove", options);
+    setHighlight(this, indices, "remove", options);
     return this;
   };
   arrproto._setcss = JSAV.anim(function(indices, cssprop) {
@@ -190,14 +183,16 @@
   });
   arrproto.initialize = function(data) {
     var el = this.options.element || $("<ol/>"),
-      liel, liels = $();
+      liel, liels = $(),
+      key, val;
     el.addClass("jsavarray");
     this.options = jQuery.extend({visible: true}, this.options);
-    for (var key in this.options) {
-      var val = this.options[key];
-      if (this.options.hasOwnProperty(key) && typeof(val) === "string" ||
-            typeof(val) === "number" || typeof(val) === "boolean") {
-        el.attr("data-" + key, val);
+    for (key in this.options) {
+      if (this.options.hasOwnProperty(key)) {
+        val = this.options[key];
+        if (typeof(val) === "string" || typeof(val) === "number" || typeof(val) === "boolean") {
+          el.attr("data-" + key, val);
+        }
       }
     }
     for (var i=0; i < data.length; i++) {
@@ -515,7 +510,7 @@
     centerArray(array, $items.last(), options);
   }
   
-    JSAV.ext.ds.layout.array = {
+  JSAV.ext.ds.layout.array = {
     "_default": horizontalArray,
     "bar": barArray,
     "array": horizontalArray,
