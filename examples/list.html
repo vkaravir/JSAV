@@ -4,17 +4,14 @@
     <title>Linked List Example</title>
     <link rel="stylesheet" href="../css/JSAV.css" type="text/css" media="screen" title="no title" charset="utf-8" />
     <style>
-    .jsavcanvas { height: 500px;}
+    .jsavcanvas { height: 500px; }
     </style>
   </head>
   <body>
   <div id="container">
     <div class="jsavcontrols"></div>
     <p class="jsavoutput jsavline"></p>
-    <!-- ><ul data-layout="bar"><li>2</li><li>3</li></ul>-->
-    <div class="jsavcanvas">
-      <ul id="kissa"></ul>
-    </div>
+    <div class="jsavcanvas"></div>
   </div>
   <style>
   </style>
@@ -26,7 +23,7 @@
     <script src="../lib/raphael.js"></script>
     <script src="../build/JSAV.js"></script>
     <script>
-    var c1;
+  (function() {
     var av = new JSAV("container");
     var l = av.ds.list();
     av.umsg("We start by creating a list and adding some elements..");
@@ -35,12 +32,12 @@
       .addFirst(4);
     l.layout();
     av.displayInit();
-    av.umsg("Add a new item to the beginning with addFirst(..)");
+    av.umsg("Add a new item to the beginning with addFirst(..) and set a label on the edge");
     av.step();
     l.addFirst(7, {edgeLabel: "e1" });
     l.layout();
     av.step();
-    av.umsg("Add another item by first manually creating the new node");
+    av.umsg("Add another item by first manually creating the new node; looks the same visually, check the source code");
     av.step();
     l.addFirst(l.newNode(11));
     l.layout();
@@ -75,6 +72,8 @@
     n3.css({top: 0});
     l.layout();
     av.recorded();
+    
+}());
     </script>
   </body>
 </html>
