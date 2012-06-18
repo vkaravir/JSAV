@@ -4,6 +4,7 @@
 */
 if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
   (function($, R) {
+    "use strict";
     if (typeof JSAV === "undefined") { return; }
     
     var common = {
@@ -13,7 +14,7 @@ if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
         this.css({"opacity": 1}, options);
       },
       // animated hide function
-      hide: function(options) { 
+      hide: function(options) {
         this.css({"opacity": 0}, options);
       },
       transform: function(transform, options) {
@@ -52,13 +53,17 @@ if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
       _setattrs: JSAV.anim(function(props, options) {
         var oldProps = $.extend(true, {}, props);
         for (var i in props) {
-          oldProps[i] = this.rObj.attr(i);
+          if (props.hasOwnProperty(i)) {
+            oldProps[i] = this.rObj.attr(i);
+          }
         }
         if (this.jsav._shouldAnimate() && (!options || !options.dontAnimate)) { // only animate when playing, not when recording
           this.rObj.animate( props, this.jsav.SPEED);
         } else {
           for (i in props) {
-            this.rObj.attr(i, props[i]);
+            if (props.hasOwnProperty(i)) {
+              this.rObj.attr(i, props[i]);
+            }
           }
         }
         return [oldProps];
@@ -73,7 +78,9 @@ if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
       state: function(newState) {
         if (typeof newState !== "undefined") {
           for (var i in newState) {
-            this.rObj.attr(i, newState[i]);
+            if (newState.hasOwnProperty(i)) {
+              this.rObj.attr(i, newState[i]);
+            }
           }
           return this;
         } else {
@@ -117,7 +124,7 @@ if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
     var movePoints  = function(points, options) {
       var currPath = this.rObj.attrs.path,
           newPath = currPath.slice(),
-          pathElem, i;
+          pathElem, i, l;
       for (i = 0, l = points.length; i < l; i++) {
         var p = points[i];
         pathElem = currPath[p[0]];
@@ -142,7 +149,7 @@ if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
     cproto.center = function(x, y, options) {
       if (typeof x === "undefined") { // getting center
         return this.rObj.attr(["cx", "cy"]);
-      } else if ($.isArray(x) && x.length == 2) {
+      } else if ($.isArray(x) && x.length === 2) {
         this._setattrs({"cx": x[0], "cy": x[1]}, options);
       } else if (typeof y !== "undefined") {
         this._setattrs({"cx": x, "cy": y}, options);
@@ -205,7 +212,7 @@ if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
     ellproto.radius = function(x, y, options) {
       if (typeof x === "undefined") { // getting center
         return this.rObj.attr(["rx", "ry"]);
-      } else if ($.isArray(x) && x.length == 2) {
+      } else if ($.isArray(x) && x.length === 2) {
         this._setattrs({"rx": x[0], "ry": x[1]}, options);
       } else if (typeof y !== "undefined") {
         this._setattrs({"rx": x, "ry": y}, options);
@@ -277,15 +284,16 @@ if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
         var svgCanvas = getSvgCanvas(this, props);
         return new Polyline(this, svgCanvas, points, true, props);
       },
-      set: function() {
+      set: function(props) {
         var svgCanvas = getSvgCanvas(this, props);
         return new Set(this, svgCanvas);
       }
     };
-  })(jQuery, Raphael);
+  }(jQuery, Raphael));
 }
 
 (function($) {
+  "use strict";
   if (typeof JSAV === "undefined") { return; }
   
   var Label = function(jsav, text, options) {
@@ -335,4 +343,4 @@ if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
   JSAV.ext.label = function(text, options) {
     return new Label(this, text, options);
   };
-})(jQuery);
+}(jQuery));
