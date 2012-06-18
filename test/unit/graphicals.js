@@ -1,5 +1,6 @@
 /*global ok,test,module,deepEqual,equal,expect,equals,notEqual */
 (function() {
+  "use strict";
   module("graphicals.circle", {  });
   test("Testing Circle", function() {
     var av = new JSAV("emptycontainer");
@@ -320,10 +321,10 @@
     equals(Math.round(currBB.y), Math.round(origBB.y));
     equals(Math.round(currBB.width), Math.round(origBB.width), "horizontal scale undone correctly");
     equals(Math.round(currBB.height), Math.round(origBB.height), "vertical scale undone correctly");
-    equals(l.css("stroke"), "#000", "rectangle stroke color");
-    equals(l.css("stroke-width"), 1, "rectangle stroke width");
-    equals(l.css("fill"), "none", "rectangle fill");
-    equals(l.css("opacity"), 1, "rectangle opacity");
+    equals(l.css("stroke"), "#000", "line stroke color");
+    equals(l.css("stroke-width"), 1, "line stroke width");
+    equals(l.css("fill"), "none", "line fill");
+    equals(l.css("opacity"), 1, "line opacity");
 
     av.end();
     av.begin();
@@ -361,7 +362,7 @@
     av.forward(); // apply scale 0.5
     currBB = l.rObj.getBBox();
     equals(Math.round(currBB.x - origBB.x), 50);
-    equals(Math.round(currBB.y - origBB.y), 50);    
+    equals(Math.round(currBB.y - origBB.y), 50);
 
     av.forward(); // apply move points
     currBB = l.rObj.getBBox();
@@ -406,7 +407,7 @@
     equals(Math.round(currBB.height), Math.round(origBB.height));
     
     ok(av.forward());
-    var currBB = $.extend(true, {}, l.rObj.getBBox());
+    currBB = $.extend(true, {}, l.rObj.getBBox());
     equals(Math.round(currBB.x), Math.round(origBB.x) + 20);
     equals(Math.round(currBB.y), Math.round(origBB.y) + 20);
     equals(Math.round(currBB.width), Math.round(origBB.width));
@@ -446,4 +447,4 @@
     equals(label.element.filter(":visible").size(), 1, "Undoing show of a visible should keep it visible");
   });
 
-})();
+}());
