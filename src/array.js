@@ -449,7 +449,8 @@
     });
     $arr.height(maxHeight + (indexed?30:0));
     centerArray(array, $items.last(), options);
-    return { width: array.element.outerWidth(), height: array.element.outerHeight() };
+    return { width: array.element.outerWidth(), height: array.element.outerHeight(),
+              left: array.position().left, top: array.position().top };
   }
   
   function verticalArray(array, options) {
@@ -474,7 +475,8 @@
       $items.css("margin-left", maxWidth);
     }
     centerArray(array, $items.last(), options);
-    return { width: array.element.outerWidth(), height: array.element.outerHeight() };
+    return { width: array.element.outerWidth(), height: array.element.outerHeight(),
+              left: array.position().left, top: array.position().top };
   }
  
   function barArray(array, options) {
@@ -510,7 +512,8 @@
       }
     });
     centerArray(array, $items.last(), options);
-    return { width: array.element.outerWidth(), height: array.element.outerHeight() };
+    return { width: array.element.outerWidth(), height: array.element.outerHeight(),
+              left: array.position().left, top: array.position().top };
   }
   
   JSAV.ext.ds.layout.array = {
