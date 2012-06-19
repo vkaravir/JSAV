@@ -94,7 +94,7 @@
     this.jsav = container.jsav;
     this.container = container;
     this.parentnode = parent;
-    this.options = $.extend(true, {visible: true}, container.options, options);
+    this.options = $.extend(true, {visible: true}, options);
     var el = this.options.nodeelement || $("<div>" + this._valstring(value) + "</div>"),
       valtype = typeof(value);
     if (valtype === "object") { valtype = "string"; }
@@ -104,6 +104,9 @@
         .data("node", this);
     if (parent) {
       el.attr("data-parent", parent.id());
+    }
+    if (this.options.autoResize) {
+      el.addClass("jsavautoresize");
     }
     this.container.element.append(el);
 
@@ -375,10 +378,10 @@
 
   // add functions to jsav.ds to create tree, bintree, end edge
   JSAV.ext.ds.tree = function(options) {
-    return new Tree(this, $.extend(true, {visible: true}, options));
+    return new Tree(this, $.extend(true, {visible: true, autoResize: true}, options));
   };
   JSAV.ext.ds.bintree = function(options) {
-    return new BinaryTree(this, $.extend(true, {visible: true}, options));
+    return new BinaryTree(this, $.extend(true, {visible: true, autoResize: true}, options));
   };
   JSAV.ext.ds.edge = function(options) {
     return new Edge(this, $.extend(true, {}, options));
@@ -485,51 +488,56 @@
     calculateLayout(root);
     translateNodes(root, 20, 10 + NODEGAP);
     propagateTranslations(root);
-    var maxX = -1, maxY = -1, max = Math.max, previousLayout = tree._layoutDone;
+    var maxX = Number.MIN_VALUE, maxY = Number.MIN_VALUE,
+        max = Math.max, previousLayout = tree._layoutDone;
     $.each(results, function(key, value) {
       var oldPos = value.node.element.position();
-      if (!previousLayout || (oldPos.left === 0 && oldPos.top === 0)) {
-        value.node.element.css({left: value.translation.width + "px", top: value.translation.height + "px"});
-      } else {
-        value.node.css({left: value.translation.width + "px", top: value.translation.height + "px"});
+      if (!opts.boundsOnly) { // only change pos if we are not just calculating bounds
+        if (!previousLayout || (oldPos.left === 0 && oldPos.top === 0)) {
+          value.node.element.css({left: value.translation.width + "px", top: value.translation.height + "px"});
+        } else {
+          value.node.css({left: value.translation.width + "px", top: value.translation.height + "px"});
+        }
       }
       maxX = max(maxX, value.translation.width + value.node.element.outerWidth());
       maxY = max(maxY, value.translation.height + value.node.element.outerHeight());
     });
-    tree.element.width(maxX);
-    tree.element.height(maxY);
     
+    // calculate left coordinate to center the tree inside its parent container
     var centerTree = function() {
       // if options center is not set to truthy value, center it
       if (tree.options.hasOwnProperty("center") && !tree.options.center) {
-        return;
+        return tree.position().left;
       }
       var containerWidth = $(tree.jsav.canvas).width();
-      if (!previousLayout) {
-        tree.element.css({"left": (containerWidth - maxX)/2});
-      } else {
-        tree.css({"left": (containerWidth - maxX)/2}, opts);
-      }
+      return (containerWidth - maxX)/2;
     };
 
-    // center the tree inside its parent container
-    centerTree(tree);
-    tree._layoutDone = true;
+    var treeDims = { width: maxX, height: maxY,
+                    left: centerTree(tree)};
 
-    var offset = tree.element.position();
-    $.each(results, function(key, value) {
-      var node = value.node;
-      if (node._edgetoparent) {
-        var start = {left: value.translation.width,// + offset.left,
-                     top: value.translation.height},// + offset.top},
-            endnode = results[node.parent().id()].translation,
-            end = {left: endnode.width,// + offset.left,
-                   top: endnode.height};// + offset.top};
-        edgeLayout(node._edgetoparent, start, end, opts);
+    if (!opts.boundsOnly) { // only go through edges if we are not just calculating bounds
+      tree._layoutDone = true;
+      if (!previousLayout) {
+        tree.element.css(treeDims);
+      } else {
+        tree.css(treeDims, opts);
       }
-    });
+      $.each(results, function(key, value) {
+        var node = value.node;
+        if (node._edgetoparent) {
+          var start = {left: value.translation.width,
+                       top: value.translation.height},
+              endnode = results[node.parent().id()].translation,
+              end = {left: endnode.width,
+                     top: endnode.height};
+          edgeLayout(node._edgetoparent, start, end, opts);
+        }
+      });
+    }
 
-    return {width: tree.element.outerWidth(), height: tree.element.outerHeight() };
+    // return the dimensions of the tree
+    return $.extend({ top: tree.position().top }, treeDims);
   }
   
 
@@ -575,17 +583,13 @@
         eWidth = eElem.outerWidth()/2.0,
         sHeight = sElem.outerHeight()/2.0,
         eHeight = eElem.outerHeight()/2.0,
-        svgstyle = edge.jsav.getSvg().canvas.style,
-        svgleft = svgstyle.left || 0,
-        svgtop = svgstyle.top || 0,
-        pi = Math.PI,
         startpos = sElem.offset(),
         endpos = eElem.offset(),
-        fromX =  Math.round(start.left + sWidth - parseInt(svgleft, 10)),
-        fromY = Math.round(start.top - parseInt(svgtop, 10)),
-        toX = Math.round(end.left + eWidth - parseInt(svgleft, 10)),
-        toY = Math.round(end.top + eHeight - parseInt(svgtop, 10)),
-        toAngle = normalizeAngle(2*pi - Math.atan2(fromY - toY, fromX - toX)),
+        fromX =  Math.round(start.left + sWidth),
+        fromY = Math.round(start.top),
+        toX = Math.round(end.left + eWidth),
+        toY = Math.round(end.top + eHeight),
+        toAngle = normalizeAngle(2*Math.PI - Math.atan2(fromY - toY, fromX - toX)),
         fromPoint = [0, fromX, fromY], // from point is the lower node, position at top
         toPoint = getNodeBorderAtAngle(1, edge.endnode.element,
                   {width: eWidth, height: eHeight, x: toX, y: toY}, toAngle);
