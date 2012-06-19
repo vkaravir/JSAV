@@ -213,57 +213,122 @@
   listnodeproto.state = function(newState) {
     // TODO: implement state
   };
-  function centerList(list, options) {
+  function centerList(list, width, options) {
     // center the list inside its parent container
     if (list.options.hasOwnProperty("center") && !list.options.center) {
       // if options center is set to falsy value, return
       return;
     }
     // width of list expected to be last items position + its width
-    var width = list.element.outerWidth(),
-      containerWidth = $(list.jsav.canvas).width();
+    var containerWidth = $(list.jsav.canvas).width();
     list.css("left", (containerWidth - width)/2, options);
   }
 
-  var horizontalList = function(list, options) {
+  var horizontalNodePosUpdate = function(node, prevNode, prevPos, opts) {
+    // function for calculating node positions in horizontal list
+    var nodePos = node.element.position(),
+        newPos = { left: nodePos.left, top: nodePos.top }; // by default, don't move it
+    if (opts.updateLeft) { newPos.left = prevNode?(prevPos.left +
+                            prevNode.element.outerWidth() + opts.nodegap):0; }
+    if (opts.updateTop) { newPos.top = 0; }
+    var edge = prevNode?prevNode._edgetonext:undefined;
+    if (edge && opts.updateEdges) {
+      var start = [0, prevPos.left + prevNode.element.width() - 5,
+                  prevPos.top + Math.round(prevNode.element.height()/2)],
+          end = [1, newPos.left - 3,
+                  newPos.top + Math.round(node.element.height()/2)];
+      return [newPos, [start, end]];
+    }
+    return [newPos];
+  };
+  var verticalNodePosUpdate = function(node, prevNode, prevPos, opts) {
+    // function for calculating node positions in vertical list
+    var nodePos = node.element.position(),
+        newPos = { left: nodePos.left, top: nodePos.top };
+    if (opts.updateLeft) { newPos.left = 0; }
+    if (opts.updateTop) { newPos.top = prevNode?(prevPos.top +
+                          prevNode.element.outerHeight() + opts.nodegap):0; }
+    var edge = prevNode?prevNode._edgetonext:undefined;
+    if (edge && opts.updateEdges) {
+      var start = [0, prevPos.left + Math.round(prevNode.element.width()/2),
+                  prevPos.top + Math.round(prevNode.element.height()) + 2],
+          end = [1, newPos.left + Math.round(prevNode.element.width()/2),
+                  Math.round(newPos.top - 4)];
+      return [newPos, [start, end]];
+    }
+    return [newPos];
+  };
+  var listLayout = function(list, options, updateFunc) {
+    // a general list layout that goes through the nodes and calls given updateFunc
+    // to calculate the new node positions
     var curNode = list.first(),
         prevNode,
-        prevLeft = 0,
         opts = $.extend({updateLeft: true, updateTop: true, updateEdges: true}, list.options, options),
-        maxTop = 0;
-    // calculate and set the height of the list before animating the element positions
-    // this results in a smoother visualization
-    list.element.find(".jsavlistnode").each(function(index, elem) {
-      maxTop = Math.max($(elem).position().top + $(elem).outerHeight(), maxTop);
-    });
-    list.css("height", maxTop + "px", options);
-
+        prevPos = {},
+        minLeft = Number.MAX_VALUE,
+        minTop = Number.MAX_VALUE,
+        maxLeft = Number.MIN_VALUE,
+        maxTop = Number.MIN_VALUE,
+        posData = [],
+        nodePos;
+    // two phase layout: first go through all the nodes calculate positions
     while (curNode) {
-      var newPos = { };
-      if (opts.updateLeft) { newPos.left = prevLeft; }
-      if (opts.updateTop) { newPos.top = 0; }
-      curNode.css(newPos);
-      prevLeft += opts.nodegap + curNode.element.outerWidth();
-      var edge = prevNode?prevNode._edgetonext:undefined;
-      if (edge && opts.updateEdges) {
-        var start = [0, prevNode.element.position().left + prevNode.element.width() - 5,
-                    prevNode.element.position().top + Math.round(prevNode.element.height()/2)],
-            end = [1, curNode.element.position().left - 3,
-                    curNode.element.position().top + Math.round(curNode.element.height()/2)];
-        edge.g.movePoints([start, end], options);
+      nodePos = updateFunc(curNode, prevNode, prevPos, opts);
+      prevPos = nodePos[0];
+      // keep track of max and min coordinates to calculate the size of the container
+      minLeft = typeof(prevPos.left!=="undefined")?Math.min(prevPos.left, minLeft):minLeft;
+      minTop = typeof(prevPos.top!=="undefined")?Math.min(prevPos.top, minTop):minTop;
+      maxLeft = typeof(prevPos.left!=="undefined")?Math.max(prevPos.left + (prevNode?prevNode.element.outerWidth():0), maxLeft):maxLeft;
+      maxTop = typeof(prevPos.top!=="undefined")?Math.max(prevPos.top + (prevNode?prevNode.element.outerHeight():0), maxTop):maxTop;
+      posData.unshift({node: curNode, nodePos: prevPos});
+      // if we also have edge position data, store that
+      if (nodePos.length > 1) {
+        posData[0].edgePos = nodePos[1];
+        posData[0].edge = prevNode.edgeToNext();
       }
+      // go to next node and continue with that
       prevNode = curNode;
       curNode = curNode.next();
     }
-    list.css("width", prevLeft - opts.nodegap, options);
-    centerList(list, opts);
+    var width = maxLeft - minLeft,
+        height = maxTop - minTop;
+    if (opts.boundsOnly) {
+      return { width: width,
+              height: height,
+              left: list.element.position().left,
+              top: list.element.position().top };
+    }
+    // ..update list size and position..
+    list.css({width: width, height: height});
+    centerList(list, width, opts);
+    // .. and finally update the node and edge positions
+    // doing the size first makes the animation look smoother by reducing some flicker
+    for (var i = posData.length - 1; i >= 0; i--) {
+      var posItem = posData[i];
+      posItem.node.css(posItem.nodePos);
+      if (posItem.edge) {
+        posItem.edge.g.movePoints(posItem.edgePos, opts);
+      }
+    }
+  };
+  var verticalList = function(list, options) {
+    list.element.addClass("jsavverticallist");
+    // use the general list layout with verticalNodePosUpdate as the calculator
+    return listLayout(list, options, verticalNodePosUpdate);
+  };
+  var horizontalList = function(list, options) {
+    list.element.addClass("jsavhorizontallist");
+    // use the general list layout with horizontalNodePosUpdate as the calculator
+    return listLayout(list, options, horizontalNodePosUpdate);
   };
 
   JSAV.ext.ds.layout.list = {
-    "_default": horizontalList
+    "_default": horizontalList,
+    "horizontal": horizontalList,
+    "vertical": verticalList
   };
 
-  JSAV.ext.ds.list = function() {
-    return new List(this);
+  JSAV.ext.ds.list = function(options) {
+    return new List(this, options);
   };
 }(jQuery));

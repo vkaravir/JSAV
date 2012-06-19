@@ -412,14 +412,23 @@ a.jsavsettings {
 
 /******** LINKED LIST STRUCTURE ******/
 .jsavpointerarea {
-  width: 10px;
   background-color: #eee;
-  height: 100%;
   display: block;
+}
+.jsavhorizontallist .jsavpointerarea {
   border-left: 1px solid black;
   float: right;
+  width: 10px;
+  height: 100%;
 }
 
+.jsavverticallist .jsavpointerarea {
+  border-top: 1px solid black;
+  bottom: 0;
+  height: 10px;
+  position: absolute;
+  width: 100%;
+}
 .jsavlist {
   position: relative;
 }
