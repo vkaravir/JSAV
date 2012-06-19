@@ -378,10 +378,10 @@
 
   // add functions to jsav.ds to create tree, bintree, end edge
   JSAV.ext.ds.tree = function(options) {
-    return new Tree(this, $.extend(true, {visible: true, autoResize: true}, options));
+    return new Tree(this, $.extend(true, {visible: true}, options));
   };
   JSAV.ext.ds.bintree = function(options) {
-    return new BinaryTree(this, $.extend(true, {visible: true, autoResize: true}, options));
+    return new BinaryTree(this, $.extend(true, {visible: true}, options));
   };
   JSAV.ext.ds.edge = function(options) {
     return new Edge(this, $.extend(true, {}, options));

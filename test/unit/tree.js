@@ -1,4 +1,4 @@
-/*global ok,test,module,deepEqual,equal,expect,equals,notEqual */
+/*global ok,test,module,deepEqual,equal,expect,equals,notEqual,strictEqual */
 (function() {
   module("datastructures.tree", {  });
   test("Tree Root", function() {
@@ -271,7 +271,7 @@
     ok(av.forward()); // test that redo works
     equal(root.children().length, 1);
     equal(root.left().id(), n1.id());
-    equal(tree.height(), 2);        
+    equal(tree.height(), 2);
 
     ok(!root.right());
     av.step();
@@ -279,12 +279,12 @@
     equal(root.children().length, 2);
     equal(root.left().id(), n1.id());
     equal(root.right().value(), "Right");
-    equal(tree.height(), 2);        
+    equal(tree.height(), 2);
     
     ok(av.backward());
     equal(root.children().length, 1);
     equal(root.left().id(), n1.id());
-    equal(tree.height(), 2);        
+    equal(tree.height(), 2);
 
     ok(av.forward()); // test that redo works
     equal(root.children().length, 2);
@@ -372,6 +372,30 @@
     equal(lr.edgeToParent().end().id(), left.id());
   });
 
+  test("Test edge labels", function() {
+    var av = new JSAV("emptycontainer"),
+        tree = av.ds.bintree(),
+        root = tree.root();
+    root.value("R");
+    av.step();
+    root.left("L", {edgeLabel: "R-L"});
+    av.step();
+    root.right("R");
+    av.step();
+    root.edgeToRight().label("R-R");
+    av.recorded();
+
+    av.forward();
+    av.forward();
+    equal(root.edgeToLeft().label(), "R-L");
+    av.forward();
+    strictEqual(root.edgeToRight().label(), undefined);
+    av.forward();
+    equal(root.edgeToRight().label(), "R-R");
+    
+  });
+
+
 test("Test show/hide", function() {
   var av = new JSAV("emptycontainer"),
       tree = av.ds.bintree();
@@ -416,12 +440,12 @@ test("Test click event", function() {
   var handler2 = function(myval, event) {
     equals(myval, "kissa");
     ok(event);
-  }
+  };
   var handler3 = function(myval, myval2, event) {
     equals(myval, "kissa");
     equals(myval2, "koira");
     ok(event);
-  }
+  };
   var av = new JSAV("arraycontainer"),
       tree1 = av.ds.tree(),
       tree2 = av.ds.bintree(),
@@ -431,7 +455,7 @@ test("Test click event", function() {
     var r = tree.root();
     r.addChild(0);
     r.addChild(2);
-  }
+  };
   setup(tree1); setup(tree2); setup(tree3);
   tree1.click(handler1);
   tree2.click(["kissa"], handler2);
@@ -449,12 +473,12 @@ test("Test on event binding and custom events", function() {
   var handler2 = function(myval, event) {
     equals(myval, "kissa");
     ok(event);
-  }
+  };
   var handler3 = function(myval, myval2, event) {
     equals(myval, "kissa");
     equals(myval2, "koira");
     ok(event);
-  }
+  };
   var av = new JSAV("arraycontainer"),
       tree1 = av.ds.tree(),
       tree2 = av.ds.bintree(),
@@ -464,7 +488,7 @@ test("Test on event binding and custom events", function() {
     var r = tree.root();
     r.addChild(0);
     r.addChild(2);
-  }
+  };
   setup(tree1); setup(tree2); setup(tree3);
   tree1.on("jsavclick", handler1);
   tree2.on("jsavclick", "kissa", handler2);
@@ -473,4 +497,4 @@ test("Test on event binding and custom events", function() {
   tree2.element.find(".jsavnode:eq(0)").trigger("jsavclick");
   tree3.element.find(".jsavnode:eq(1)").trigger("jsavclick");
 });
-})();
+}());

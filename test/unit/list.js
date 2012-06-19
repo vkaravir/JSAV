@@ -1,4 +1,4 @@
-/*global ok,test,module,deepEqual,equal,expect,equals,notEqual */
+/*global ok,test,module,deepEqual,equal,expect,equals,notEqual,strictEqual */
 (function() {
   "use strict";
   module("datastructures.list", {  });
@@ -141,38 +141,60 @@
 
   });
 
-test("List node highlights", function() {
-  var av = new JSAV("emptycontainer"),
-      list = av.ds.list();
-  for (var i = 0; i < 6; i++) {
-    list.first(i);
-  }
-  var testHighlight = function(hlvals) {
-    for (i = 0; i < 6; i++) {
-      equal(list.get(i).isHighlight(), hlvals[i]);
+  test("List node highlights", function() {
+    var av = new JSAV("emptycontainer"),
+        list = av.ds.list();
+    for (var i = 0; i < 6; i++) {
+      list.first(i);
     }
-  };
-  testHighlight([false, false, false, false, false, false]);
-  av.step();
-  list.get(0).highlight();
-  list.get(3).highlight();
-  testHighlight([true, false, false, true, false, false]);
-  av.step();
-  list.get(3).unhighlight();
-  list.get(5).highlight();
-  testHighlight([true, false, false, false, false, true]);
-  av.recorded();
-  $.fx.off = true;
+    var testHighlight = function(hlvals) {
+      for (i = 0; i < 6; i++) {
+        equal(list.get(i).isHighlight(), hlvals[i]);
+      }
+    };
+    testHighlight([false, false, false, false, false, false]);
+    av.step();
+    list.get(0).highlight();
+    list.get(3).highlight();
+    testHighlight([true, false, false, true, false, false]);
+    av.step();
+    list.get(3).unhighlight();
+    list.get(5).highlight();
+    testHighlight([true, false, false, false, false, true]);
+    av.recorded();
+    $.fx.off = true;
 
-  ok(av.forward()); // recreate list nodes
-  testHighlight([false, false, false, false, false, false]);
-  ok(av.forward());
-  testHighlight([true, false, false, true, false, false]);
-  ok(av.forward());
-  testHighlight([true, false, false, false, false, true]);
-});
+    ok(av.forward()); // recreate list nodes
+    testHighlight([false, false, false, false, false, false]);
+    ok(av.forward());
+    testHighlight([true, false, false, true, false, false]);
+    ok(av.forward());
+    testHighlight([true, false, false, false, false, true]);
+  });
 
-// highlight
+  test("Test edge labels", function() {
+    var av = new JSAV("emptycontainer"),
+        list = av.ds.list();
+    list.addFirst(0);
+    list.addFirst(1, {edgeLabel: "1-0"});
+    av.step();
+    list.addFirst(2);
+    av.step();
+    list.first().edgeToNext().label("2-1");
+    av.recorded();
+
+    ok(!list.first());
+    av.forward();
+    equals(list.first().edgeToNext().label(), "1-0");
+
+    av.forward();
+    strictEqual(list.first().edgeToNext().label(), undefined);
+
+    av.forward();
+    equals(list.first().edgeToNext().label(), "2-1");
+  });
+
+
 // css
 
   test("Test click event", function() {

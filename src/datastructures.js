@@ -142,7 +142,12 @@
   };
   edgeproto.label = function(newLabel, options) {
     if (typeof newLabel === "undefined") {
-      return this._label?this._label.text():undefined;
+      if (this._label && this._label.element.filter(":visible").size() > 0) {
+        return this._label.text();
+      } else {
+        return undefined;
+      }
+      //return this._label?(this._label.text()):undefined;
     } else {
       var self = this;
       var positionUpdate = function() {
