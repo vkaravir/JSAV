@@ -253,10 +253,6 @@
   width: 45px;
   height: 45px;
   margin: 15px 40px;
-  /*margin-top: 15px;
-  margin-bottom: 15px;
-  margin-left: 40px;
-  margin-right: 40px;*/
   background-color: #aaa;
   -o-border-radius: 20px;
   -moz-border-radius: 20px;
@@ -265,6 +261,9 @@
   border-radius: 20px;
   background-repeat:no-repeat;
   background-position:50% 50%;
+}
+.jsavplaying a {
+  cursor: default;
 }
 .jsavcontrols .jsavbegin {
   background-image: url(images/begin.png);
