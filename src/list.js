@@ -213,6 +213,12 @@
   listnodeproto.state = function(newState) {
     // TODO: implement state
   };
+
+  // expose the list types
+  var dstypes = JSAV._types.ds;
+  dstypes.List = List;
+  dstypes.ListNode = ListNode;
+
   function centerList(list, width, options) {
     // center the list inside its parent container
     if (list.options.hasOwnProperty("center") && !list.options.center) {
