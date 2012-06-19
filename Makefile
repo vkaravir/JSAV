@@ -7,12 +7,8 @@ TARGET = build
 
 SOURCES = $(SRC)/front.js $(SRC)/core.js $(SRC)/utils.js $(SRC)/anim.js $(SRC)/messages.js $(SRC)/effects.js $(SRC)/events.js $(SRC)/graphicals.js $(SRC)/datastructures.js $(SRC)/array.js $(SRC)/tree.js $(SRC)/list.js $(SRC)/code.js $(SRC)/settings.js $(SRC)/questions.js $(SRC)/exercise.js $(SRC)/version.js 
 
-# If I am a submodule, the FETCH_HEAD might be in the main module
-ifeq (!$(wildcard ../.git/modules/JSAV),)
-	FETCH = .git/FETCH_HEAD
-else
+# This only works right when this is a submodule
 	FETCH = ../.git/modules/JSAV/FETCH_HEAD
-endif
 
 all: build
 
@@ -24,8 +20,6 @@ clean:
 	$(RM) css/*~
 
 build: $(TARGET)/JSAV.js $(TARGET)/JSAV-min.js
-	echo $(FETCH)
-	echo $(SRC)
 
 $(TARGET)/JSAV.js: $(SRC)/version.txt $(SRC)/front.js $(SRC)/version.js $(SOURCES)
 	-mkdir $(TARGET)
