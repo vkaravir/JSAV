@@ -235,7 +235,7 @@
   arrproto.layout = function(options) {
     var layoutAlg = this.options.layout || "_default";
     this.element.removeClass("jsavbararray");
-    this.jsav.ds.layout.array[layoutAlg](this, options);
+    return this.jsav.ds.layout.array[layoutAlg](this, options);
   };
   arrproto.state = function(newstate) {
     if (newstate) {
@@ -449,6 +449,7 @@
     });
     $arr.height(maxHeight + (indexed?30:0));
     centerArray(array, $items.last(), options);
+    return { width: array.element.outerWidth(), height: array.element.outerHeight() };
   }
   
   function verticalArray(array, options) {
@@ -473,6 +474,7 @@
       $items.css("margin-left", maxWidth);
     }
     centerArray(array, $items.last(), options);
+    return { width: array.element.outerWidth(), height: array.element.outerHeight() };
   }
  
   function barArray(array, options) {
@@ -508,6 +510,7 @@
       }
     });
     centerArray(array, $items.last(), options);
+    return { width: array.element.outerWidth(), height: array.element.outerHeight() };
   }
   
   JSAV.ext.ds.layout.array = {

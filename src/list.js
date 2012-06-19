@@ -137,7 +137,7 @@
   };
   listproto.layout = function(options) {
     var layoutAlg = $.extend({}, this.options, options).layout || "_default";
-    this.jsav.ds.layout.list[layoutAlg](this, options);
+    return this.jsav.ds.layout.list[layoutAlg](this, options);
   };
   listproto.state = function(newState) {
     // TODO: implement list.state
@@ -298,24 +298,21 @@
     }
     var width = maxLeft - minLeft,
         height = maxTop - minTop;
-    if (opts.boundsOnly) {
-      return { width: width,
-              height: height,
-              left: list.element.position().left,
-              top: list.element.position().top };
-    }
-    // ..update list size and position..
-    list.css({width: width, height: height});
-    centerList(list, width, opts);
-    // .. and finally update the node and edge positions
-    // doing the size first makes the animation look smoother by reducing some flicker
-    for (var i = posData.length - 1; i >= 0; i--) {
-      var posItem = posData[i];
-      posItem.node.css(posItem.nodePos);
-      if (posItem.edge) {
-        posItem.edge.g.movePoints(posItem.edgePos, opts);
+    if (!opts.boundsOnly) {
+      // ..update list size and position..
+      list.css({width: width, height: height});
+      centerList(list, width, opts);
+      // .. and finally update the node and edge positions
+      // doing the size first makes the animation look smoother by reducing some flicker
+      for (var i = posData.length - 1; i >= 0; i--) {
+        var posItem = posData[i];
+        posItem.node.css(posItem.nodePos);
+        if (posItem.edge) {
+          posItem.edge.g.movePoints(posItem.edgePos, opts);
+        }
       }
     }
+    return { width: width, height: height };
   };
   var verticalList = function(list, options) {
     list.element.addClass("jsavverticallist");

@@ -68,7 +68,7 @@
   };
   treeproto.layout = function(options) {
     var layoutAlg = this.options.layout || "_default";
-    this.jsav.ds.layout.tree[layoutAlg](this, options);
+    return this.jsav.ds.layout.tree[layoutAlg](this, options);
   };
   treeproto.equals = function(otherTree, options) {
     if (!otherTree instanceof Tree) {
@@ -94,7 +94,7 @@
     this.jsav = container.jsav;
     this.container = container;
     this.parentnode = parent;
-    this.options = $.extend(true, {visible: true}, options);
+    this.options = $.extend(true, {visible: true}, container.options, options);
     var el = this.options.nodeelement || $("<div>" + this._valstring(value) + "</div>"),
       valtype = typeof(value);
     if (valtype === "object") { valtype = "string"; }
@@ -528,6 +528,8 @@
         edgeLayout(node._edgetoparent, start, end, opts);
       }
     });
+
+    return {width: tree.element.outerWidth(), height: tree.element.outerHeight() };
   }
   
 
