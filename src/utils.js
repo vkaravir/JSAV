@@ -11,9 +11,13 @@
   $.support.inputTypeRange = (inp.prop("type") === "range");
   
   var objcommons = {};
-  objcommons.bounds = function() {
-    var pos = this.position();
-    return $.extend({width: this.element.width(), height: this.element.height()}, pos);
+  objcommons.bounds = function(recalculate, options) {
+    if (recalculate) {
+      return this.layout($.extend({boundsOnly: true}, options));
+    } else {
+      var pos = this.position();
+      return $.extend({width: this.element.width(), height: this.element.height()}, pos);
+    }
   };
   objcommons.position = function() {
     return JSAV.position(this.element);

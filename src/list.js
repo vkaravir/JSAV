@@ -223,11 +223,11 @@
     // center the list inside its parent container
     if (list.options.hasOwnProperty("center") && !list.options.center) {
       // if options center is set to falsy value, return
-      return;
+      return list.position().left;
     }
     // width of list expected to be last items position + its width
     var containerWidth = $(list.jsav.canvas).width();
-    list.css("left", (containerWidth - width)/2, options);
+    return (containerWidth - width)/2;
   }
 
   var horizontalNodePosUpdate = function(node, prevNode, prevPos, opts) {
@@ -297,11 +297,11 @@
       curNode = curNode.next();
     }
     var width = maxLeft - minLeft,
-        height = maxTop - minTop;
+        height = maxTop - minTop,
+        left = centerList(list, width, opts);
     if (!opts.boundsOnly) {
       // ..update list size and position..
-      list.css({width: width, height: height});
-      centerList(list, width, opts);
+      list.css({width: width, height: height, left: left});
       // .. and finally update the node and edge positions
       // doing the size first makes the animation look smoother by reducing some flicker
       for (var i = posData.length - 1; i >= 0; i--) {
@@ -312,7 +312,7 @@
         }
       }
     }
-    return { width: width, height: height };
+    return { width: width, height: height, left: left, top: list.element.position().top };
   };
   var verticalList = function(list, options) {
     list.element.addClass("jsavverticallist");
