@@ -1,10 +1,16 @@
 For changes before version 0.3.1, see 
   http://algoviz.org/algoviz-wiki/index.php/JSAV_Roadmap
 
-Changes in dev version
+Changes in version 0.5
 ----------------------
 * new features:
    - support for linked list data structure
+* numerous small bug fixes
+* new minor features:
+   - functions to access edges in a tree more easily
+   - possibility to call JSAV animation functions without recording the change
+   - support for gettings bounds() of a data structure
+   - support for 2-step layout; 1) calculating bounds without layout change, 2) update layout
 
 Changes in version 0.4.3
 ------------------------
