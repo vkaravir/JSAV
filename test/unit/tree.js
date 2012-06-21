@@ -1,5 +1,6 @@
 /*global ok,test,module,deepEqual,equal,expect,equals,notEqual,strictEqual */
 (function() {
+  "use strict";
   module("datastructures.tree", {  });
   test("Tree Root", function() {
     var av = new JSAV("emptycontainer");
@@ -430,6 +431,67 @@ test("Test show/hide", function() {
   equals(tree.element.filter(":visible").size(), 1, "Undoing show of a visible should keep it visible");
 });
 
+test("Tree show/hide recursive", function() {
+  var av = new JSAV("emptycontainer"),
+      tree = av.ds.bintree({visible: false});
+
+  var checkVisibility = function(values) {
+    equals(tree.element.filter(":visible").size(), values[0], "check tree visibility");
+    equals(tree.root().element.filter(":visible").size(), values[1], "check root visibility");
+    equals(tree.root().left().element.filter(":visible").size(), values[2], "check left child visibility");
+    equals(tree.root().right().element.filter(":visible").size(), values[3], "check right child visibility");
+    equals(tree.root().left().left().element.filter(":visible").size(), values[4]);
+  };
+  tree.root("Ro");
+  tree.root().left("L");
+  tree.root().right("R");
+  tree.root().left().left("LL");
+  checkVisibility([0, 0, 0, 0, 0]);
+
+  av.displayInit();
+  tree.show();
+  checkVisibility([1, 1, 1, 1, 1]);
+
+  av.step();
+  tree.root().hide(); // should recursively hide all nodes; not tree
+  checkVisibility([1, 0, 0, 0, 0]);
+
+  av.step();
+  tree.hide(); // hide everything
+
+  av.step();
+  tree.show({recursive: false}); // show tree, not recursive
+  tree.root().show({recursive: false}); // show root
+  tree.root().left().show(); // show left child of root
+  checkVisibility([1, 1, 1, 0, 1]);
+
+  av.step();
+  tree.show(); // show everything
+
+  av.step();
+  tree.root().hide({recursive: false}); // hide root
+  tree.root().left().hide(); // hide left child of root
+  checkVisibility([1, 0, 0, 1, 0]);
+  av.recorded();
+  $.fx.off = true;
+
+  av.begin();
+  av.end();
+  av.begin();
+
+  checkVisibility([0, 0, 0, 0, 0]);
+  av.forward(); // redo show tree
+  checkVisibility([1, 1, 1, 1, 1]);
+  av.forward(); // redo hide root recursively
+  checkVisibility([1, 0, 0, 0, 0]);
+  av.forward(); // redo hide tree
+  av.forward(); // redo show tree and root not recursively, show left child of root
+  checkVisibility([1, 1, 1, 0, 1]);
+  av.forward(); // show tree
+  av.forward(); // hide tree and root (non-recursive), hide left child of root
+  checkVisibility([1, 0, 0, 1, 0]);
+
+});
 
 
 test("Test click event", function() {

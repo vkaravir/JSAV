@@ -78,6 +78,27 @@
   };
   treeproto.css = JSAV.utils._helpers.css;
   treeproto._setcss = JSAV.anim(JSAV.utils._helpers._setcss);
+  treeproto.show = function(options) {
+    if (this.element.filter(":visible").size() === 0) {
+      this._toggleVisible(options);
+    }
+    var opts = $.extend({recursive: true}, options);
+    if (opts.recursive) {
+      this.root().show(options); // also show all the nodes
+    }
+    return this;
+  };
+  /* hides an element */
+  treeproto.hide = function(options) {
+    if (this.element.filter(":visible").size() > 0) {
+      this._toggleVisible(options);
+    }
+    var opts = $.extend({recursive: true}, options);
+    if (opts.recursive) {
+      this.root().hide(options); // also hide all the nodes
+    }
+    return this;
+  };
 
   treeproto.state = function(newState) {
     // TODO: Should tree.state be implemented??? Probably..
@@ -94,7 +115,7 @@
     this.jsav = container.jsav;
     this.container = container;
     this.parentnode = parent;
-    this.options = $.extend(true, {visible: true}, options);
+    this.options = $.extend(true, {visible: true}, parent?parent.options:{}, options);
     var el = this.options.nodeelement || $("<div>" + this._valstring(value) + "</div>"),
       valtype = typeof(value);
     if (valtype === "object") { valtype = "string"; }
@@ -273,6 +294,42 @@
   };
   nodeproto.children = function() {
     return this.childnodes;
+  };
+  nodeproto.show = function(options) {
+    if (this.element.filter(":visible").size() === 0) {
+      this._toggleVisible(options);
+    }
+    var opts = $.extend({recursive: true}, options);
+    if (this._edgetoparent) {
+      this._edgetoparent.show();
+    }
+    if (opts.recursive) {
+      var ch = this.children();
+      if (ch) {
+        for (var i = 0, l = ch.length; i < l; i++) {
+          ch[i].show(options); // also show the child nodes
+        }
+      }
+    }
+    return this;
+  };
+  nodeproto.hide = function(options) {
+    if (this.element.filter(":visible").size() > 0) {
+      this._toggleVisible(options);
+    }
+    var opts = $.extend({recursive: true}, options);
+    if (this._edgetoparent) {
+      this._edgetoparent.hide();
+    }
+    if (opts.recursive) {
+      var ch = this.children();
+      if (ch) {
+        for (var i = 0, l = ch.length; i < l; i++) {
+          ch[i].hide(options); // also hide the child nodes
+        }
+      }
+    }
+    return this;
   };
   nodeproto.state = function() {
     // TODO: Should this be implemented??? Probably..

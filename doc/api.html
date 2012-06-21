@@ -473,10 +473,12 @@ Currently, JSAV supports two types of trees: common tree and binary tree. The st
 <h3 class="apimethod">.layout()</h3>
 <p>This function (re)calculates the layout for the tree. Note, that the library does not do this automatically. That means that after changing the tree, you should call this manually at the end of each animation step. This function exists for all trees.</p>
 
-<h3 class="apimethod">.hide()</h3>
-<p>Make the tree invisible. This function exists for all trees.</p>
-<h3 class="apimethod">.show()</h3>
-<p>Make the tree visible.This function exists for all trees.</p>
+<h3 class="apimethod">.hide([options])</h3>
+<p>Make the tree invisible. This function exists for all trees. It recursively hides all the nodes and edges in the tree as well unless
+option <code>recursive</code> is set to <code>false</code>.</p>
+<h3 class="apimethod">.show([options])</h3>
+<p>Make the tree visible.This function exists for all trees. It recursively shows all the nodes and edges in the tree as well unless
+option <code>recursive</code> is set to <code>false</code>.</p>
 
 
 <h3 class="apitopic">Events</h3>
@@ -526,6 +528,13 @@ Currently, JSAV supports two types of trees: common tree and binary tree. The st
 <h3 class="apimethod">.addChild(node [,options])</h3>
 <p>Adds a child node to this node. The <var>node</var> can be a value or a node of correct type to the node.
   The <code>options</code> parameter works like above.</p>
+<h3 class="apimethod">.hide([options])</h3>
+<p>Hides the node and the edge connecting it to the parent node. Also recursively hides all child nodes unless 
+option <code>recursive</code> is set to <code>false</code>.</p>
+<h3 class="apimethod">.show([options])</h3>
+<p>Shows the node and the edge connecting it to the parent node. Also recursively shows all child nodes unless 
+option <code>recursive</code> is set to <code>false</code>. Note, that if the tree is not visible, showing nodes will not have
+any effect until the tree is set visible by calling show.</p>
 
 <h2>Binary Tree Node API</h2>
 <h3 class="apimethod">.left([node [, options]])</h3>
