@@ -181,13 +181,15 @@ override the default height and width.
 Add the given message <code>msg</code> to the message
 output. The optional <code>options</code> parameter
 can be an object whose properties specify the
-behavior. Currently, only <code>color</code> property is used (when
+behavior. The <code>color</code> property is used (when
 present) to change the color of the message.
 Use would look something like:
 </p>
 <pre>
 av.umsg("My message here", {"color": "blue"});
 </pre>
+<p>When "line-style" message buffer is used, option <code>preserve</code> can be used 
+  to append the new message after the previous one instead of clearing the buffer.</p>
 <p>
 Since the
 <code>msg</code> is output as standard HTML, the style of
@@ -207,7 +209,7 @@ for example, the <code>step</code> method.
 
 <p>
 JSAV will ultimately provide layout support for a number of standard
-data structures. Presently, only arrays and trees are supported.
+data structures. Presently, arrays, trees, and lists are supported.
 </p>
 
 <h3 class="apimethod">.ds.array(element[, options]) and
