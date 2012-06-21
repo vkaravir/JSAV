@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Findmax</title>
+  <link rel="stylesheet" href="../css/JSAV.css" type="text/css"
+        media="screen" title="no title" charset="utf-8" /> 
+</head>
+<body>
+<h1>Selecting the maximum</h1>
+<p>This is demonstration of supporting interactivity outside the
+  context of a slideshow. This might be useful, for example, in
+  connection with using JSAV within Khan Academy exercises.</p>
+
+<p>First we create and display a JSAV array with some random
+  numbers. You can click on values in the array to highlight or
+  unhighlight them. Your goal is to highlight (only the) array
+  position with the biggest element.</p>
+
+<div id="container">
+  <div class="jsavcanvas"></div>
+  <p class="jsavoutput jsavline"></p>
+</div>
+<script
+   src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js">
+</script>
+<script
+   src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js">
+</script>
+<script src="../lib/jquery.transform.light.js"></script>
+<script src="../lib/raphael.js"></script>
+<script src="../build/JSAV-min.js"></script>
+<script>
+// wrap everything in an anonymous function to not pollute global namespace 
+(function() {
+  var av = new JSAV("container");
+  var theArray = [];
+  var max = 0;
+    
+  // function to handle a click event on an array
+  var clickHandler = function(index, e) {
+    var HLcount = 0, HLpos = 0;
+    if (!arr.isHighlight(index)) {
+      arr.highlight(index);
+    } else {
+      arr.unhighlight(index);
+    }
+    // Figure out what the user has done, and report on it
+    for (i=0; i<10; i++) {
+      if (arr.isHighlight(i)) {
+        HLcount++;
+        HLpos = i;
+      }
+    }
+    if ((HLcount === 1) && (arr.isHighlight(HLpos)) &&
+        (theArray[HLpos] === max)) {
+      av.umsg("Clicked on " + index + ", max is " + max +
+              ", HLpos is " + HLpos + ": Now you have it!");
+    } else {
+      av.umsg("Clicked on " + index + ", max is " + max +
+              ", HLpos is " + HLpos + ": Not there yet.");
+    }
+  };
+    
+  // initialize the array
+  // Give random numbers in range 0..999
+  for (i=0; i < 10; i++) {
+    theArray[i] = Math.floor(Math.random()*1000);
+    if (theArray[i] > max) max = theArray[i];
+  }
+  arr = av.ds.array(theArray, {indexed: true});
+  // bind the clickHandler to handle click events on the array
+  arr.click(clickHandler);
+})();
+</script>
+</body>
+</html>
