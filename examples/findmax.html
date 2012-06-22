@@ -32,8 +32,7 @@
 <script>
 // wrap everything in an anonymous function to not pollute global namespace 
 (function() {
-  var av = new JSAV("container");
-  var theArray = [];
+  var av = new JSAV("container", {"animationMode": "none"});
   var max = 0;
     
   // function to handle a click event on an array
@@ -54,20 +53,18 @@
     av.umsg("Clicked on " + index + ", max is " + max +
             ", HLpos is " + HLpos);
     if ((HLcount === 1) && (arr.isHighlight(HLpos)) &&
-        (theArray[HLpos] === max)) {
+        (arr.value(HLpos) === max)) {
       av.umsg(". Now you have it!", {"preserve": true});
     } else {
       av.umsg(". Not there yet.", {"preserve": true});
     }
   };
     
-  // initialize the array
-  // Give random numbers in range 0..999
+  // initialize the array with random numbers in range 0..999
+  arr = av.ds.array(JSAV.utils.rand.numKeys(0, 999, 10));
   for (i=0; i < 10; i++) {
-    theArray[i] = Math.floor(Math.random()*1000);
-    if (theArray[i] > max) max = theArray[i];
+    if( arr.value(i) > max) max = arr.value(i);
   }
-  arr = av.ds.array(theArray, {indexed: true});
   // bind the clickHandler to handle click events on the array
   arr.click(clickHandler);
 })();
