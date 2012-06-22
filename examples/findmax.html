@@ -51,13 +51,13 @@
         HLpos = i;
       }
     }
+    av.umsg("Clicked on " + index + ", max is " + max +
+            ", HLpos is " + HLpos);
     if ((HLcount === 1) && (arr.isHighlight(HLpos)) &&
         (theArray[HLpos] === max)) {
-      av.umsg("Clicked on " + index + ", max is " + max +
-              ", HLpos is " + HLpos + ": Now you have it!");
+      av.umsg(". Now you have it!", {"preserve": true});
     } else {
-      av.umsg("Clicked on " + index + ", max is " + max +
-              ", HLpos is " + HLpos + ": Not there yet.");
+      av.umsg(". Not there yet.", {"preserve": true});
     }
   };
     
