@@ -637,26 +637,28 @@
     return angle;
   }
 
-  function getNodeBorderAtAngle(pos, node, dim, angle) {
+  function getNodeBorderAtAngle(pos, node, dim, angle, radius) {
     // dim: x, y coords of center and half of width and height
     var x, y, pi = Math.PI,
         urCornerA = Math.atan2(dim.height*2.0, dim.width*2.0),
         ulCornerA = pi - urCornerA,
         lrCornerA = 2*pi - urCornerA,
         llCornerA = urCornerA + pi;
-
+    if (!radius) { // everything but 0 radius is considered a circle
+      radius = dim.width;
+    }
     if (angle < urCornerA || angle > lrCornerA) { // on right side
-      x = dim.x + dim.width;
-      y = dim.y - (dim.width) * Math.tan(angle);
+      x = dim.x + radius * Math.cos(angle);
+      y = dim.y - radius * Math.sin(angle);
     } else if (angle > ulCornerA && angle < llCornerA) { // left
-      x = dim.x - dim.width;
-      y = dim.y + (dim.width) * Math.tan(angle - pi);
+      x = dim.x - radius * Math.cos(angle - pi);
+      y = dim.y + radius * Math.sin(angle - pi);
     } else if (angle <= ulCornerA) { // top
-      x = dim.x + (dim.height) / Math.tan(angle);
-      y = dim.y- dim.height;
+      x = dim.x + radius * Math.cos(angle);
+      y = dim.y - radius * Math.sin(angle);
     } else { // on bottom side
-      x = dim.x - (dim.height) / Math.tan(angle - pi);
-      y = dim.y + dim.height;
+      x = dim.x - radius * Math.cos(angle - pi);
+      y = dim.y + radius * Math.sin(angle - pi);
     }
     return [pos, Math.round(x), Math.round(y)];
   }
@@ -666,7 +668,6 @@
         eElem = edge.endnode.element,
         sWidth = sElem.outerWidth()/2.0,
         eWidth = eElem.outerWidth()/2.0,
-        sHeight = sElem.outerHeight()/2.0,
         eHeight = eElem.outerHeight()/2.0,
         startpos = sElem.offset(),
         endpos = eElem.offset(),
@@ -676,8 +677,16 @@
         toY = Math.round(end.top + eHeight),
         toAngle = normalizeAngle(2*Math.PI - Math.atan2(fromY - toY, fromX - toX)),
         fromPoint = [0, fromX, fromY], // from point is the lower node, position at top
-        toPoint = getNodeBorderAtAngle(1, edge.endnode.element,
-                  {width: eWidth, height: eHeight, x: toX, y: toY}, toAngle);
+        // arbitrarily choose to use bottom-right boder radius
+        endRadius = parseInt(eElem.css("borderBottomRightRadius"), 10) || 0,
+        toPoint;
+    if (endRadius < eElem.innerWidth()/2.0 || eWidth !== eHeight) { // position edge at bottom middle for non-circle nodes
+      toPoint = [1, toX, toY + eHeight];
+    } else { // for circle nodes, calculate position on the circle
+      toPoint = getNodeBorderAtAngle(1, edge.endnode.element,
+                {width: eWidth, height: eHeight, x: toX, y: toY}, toAngle,
+                endRadius);
+    }
     edge.g.movePoints([fromPoint, toPoint], opts);
     edge.layout(opts);
   };
