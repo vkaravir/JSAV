@@ -12,7 +12,6 @@
 This documentation reflects the current status of the library.
 It is a work-in-progress and subject to change!
 </p>
-
 <h2>Loading the Required Files</h2>
 <p>
 The easiest way to check the required files is to look at
@@ -525,7 +524,7 @@ option <code>recursive</code> is set to <code>false</code>.</p>
 <h3 class="apimethod">.child(pos)</h3>
 <p>Returns the <var>pos</var>:th child of this node.</p>
 <h3 class="apimethod">.child(pos, node [,options])</h3>
-<p>Sets the <var>pos</var>:th child to the given value. The <var>node</var> can be a value or a node of correct type to the node. If value <code>null</code> is given as <code>node</code>, the child at that position is removed. Note, that this only changes the state of the data structure and does not affect the visualization. That means you have to manually hide or move the removed node and the edge.</p>
+<p>Sets the <var>pos</var>:th child to the given value. The <var>node</var> can be a value or a node of correct type to the node. If value <code>null</code> is given as <code>node</code>, the child at that position is removed. Note, that this also hides the removed node and the edge.</p>
 <p>The optional third argument <code>options</code> should be an object. The following option(s) are supported:</p>
 <ul>
   <li><code>edgeLabel</code>: specify a label shown on the edge connecting the new node to its parent.</li>
@@ -533,17 +532,19 @@ option <code>recursive</code> is set to <code>false</code>.</p>
 <h3 class="apimethod">.addChild(node [,options])</h3>
 <p>Adds a child node to this node. The <var>node</var> can be a value or a node of correct type to the node.
   The <code>options</code> parameter works like above.</p>
+<h3 class="apimethod">.remove([options])</h3>
+<p>Removes the node from its parent.</p>
 <h3 class="apimethod">.hide([options])</h3>
 <p>Hides the node and the edge connecting it to the parent node. Also recursively hides all child nodes unless 
 option <code>recursive</code> is set to <code>false</code>.</p>
 <h3 class="apimethod">.show([options])</h3>
 <p>Shows the node and the edge connecting it to the parent node. Also recursively shows all child nodes unless 
-option <code>recursive</code> is set to <code>false</code>. Note, that if the tree is not visible, showing nodes will not have
+option <code>recursive false</code> is set to <code>false</code>. Note, that if the tree is not visible, showing nodes will not have
 any effect until the tree is set visible by calling show.</p>
 
 <h2>Binary Tree Node API</h2>
 <h3 class="apimethod">.left([node [, options]])</h3>
-<p>Returns the left child or undefined if node has no left child. If optional parameter <var>node</var> is given, sets the left child. The parameter can be a value or a binary tree node. If value <code>null</code> is given as <code>node</code>, the left child is removed. Note, that this only changes the state of the data structure and does not affect the visualization. That means you have to manually hide or move the removed node and the edge.
+<p>Returns the left child or undefined if node has no left child. If optional parameter <var>node</var> is given, sets the left child. The parameter can be a value or a binary tree node. If value <code>null</code> is given as <code>node</code>, the left child is removed. Note, that this also hides the removed node and the edge.
 The additional <code>options</code> parameter works like for <code>.child(...)</code> above. </p>
 <h3 class="apimethod">.right([node [,options]])</h3>
 <p>Returns the right child or undefined if node has no right child. If optional parameter <var>node</var> is given, sets the right child. The parameter can be a value or a binary tree node. Passing <code>null</code> as node works similarly to the left function. The additional <code>options</code> parameter works like for <code>.child(...)</code> above.</p>
@@ -612,7 +613,7 @@ The additional <code>options</code> parameter works like for <code>.child(...)</
 
 <h2>Label API</h2>
 
-UI elements such as arrays can take a label.
+<p>UI elements such as arrays can take a label.</p>
 
 <h3 class="apimethod">.label(msg, options)</h3>
 <p>
@@ -975,7 +976,6 @@ A visualization can then be embedded with a call such as:
    marginheight="0" scrolling="no">
 &lt;/iframe>
 </pre>
-
 
 </body>
 </html>

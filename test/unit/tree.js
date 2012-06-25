@@ -260,7 +260,7 @@
     var n1 = tree.newNode("1");
     av.step();
     root.left(n1); // add child
-    equal(root.children().length, 1);
+    equal(root.children().length, 2);
     equal(root.left().id(), n1.id());
     equal(tree.height(), 2);
     
@@ -270,7 +270,7 @@
     equal(tree.height(), 1, "Tree height");
     
     ok(av.forward()); // test that redo works
-    equal(root.children().length, 1);
+    equal(root.children().length, 2);
     equal(root.left().id(), n1.id());
     equal(tree.height(), 2);
 
@@ -283,7 +283,7 @@
     equal(tree.height(), 2);
     
     ok(av.backward());
-    equal(root.children().length, 1);
+    equal(root.children().length, 2);
     equal(root.left().id(), n1.id());
     equal(tree.height(), 2);
 
@@ -364,7 +364,8 @@
     equal(right.edgeToParent().end().id(), root.id());
     
     av.step();
-    left.right("LR").left("LRL");
+    left.right("LR");
+    left.right().left("LRL");
     var lr = left.right(),
         lrl = lr.left();
     equal(lr.value(), "LR");

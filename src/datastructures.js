@@ -71,23 +71,27 @@
     this.endnode = end;
     this.options = $.extend(true, {"display": true}, options);
     this.container = start.container;
-    var startOffset = start.element.offset(),
-        endOffset = end.element.offset();
+    var startOffset = start?start.element.offset():{left:0, top:0},
+        endOffset = end?end.element.offset():{left:0, top:0};
     if (startOffset.left === endOffset.left && startOffset.top === endOffset.top) {
       // layout not done yet
       this.g = this.jsav.g.line(-1, -1, -1, -1, $.extend({container: this.container}, this.options));
     } else {
-      this.g = this.jsav.g.line(start.element.offset().left,
-                              start.element.offset().top,
-                              end.element.offset().left,
-                              end.element.offset().top, $.extend({container: this.container}, this.options));
+      this.g = this.jsav.g.line(startOffset.left,
+                              startOffset.top,
+                              endOffset.left,
+                              endOffset.top, $.extend({container: this.container}, this.options));
     }
 
     var visible = (typeof this.options.display === "boolean" && this.options.display === true);
     this.g.rObj.attr({"opacity": 0});
     this.g.rObj.node.setAttribute("class", "jsavedge");
-    this.g.rObj.node.setAttribute("data-startnode", this.startnode.id());
-    this.g.rObj.node.setAttribute("data-endnode", this.endnode.id());
+    if (start) {
+      this.g.rObj.node.setAttribute("data-startnode", this.startnode.id());
+    }
+    if (end) {
+      this.g.rObj.node.setAttribute("data-endnode", this.endnode.id());
+    }
     this.g.rObj.node.setAttribute("data-container", this.container.id());
     $(this.g.rObj.node).data("edge", this);
     if (visible) {
