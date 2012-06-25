@@ -47,3 +47,6 @@ pre, code, var {
   border: 1px dashed #bbb;
   border-radius: 3px;
 }
+#toc {
+  font-size: 0.8em;
+}

@@ -12,6 +12,8 @@
 This documentation reflects the current status of the library.
 It is a work-in-progress and subject to change!
 </p>
+<h1>Contents</h1>
+<ol id="toc"></ol>
 <h2>Loading the Required Files</h2>
 <p>
 The easiest way to check the required files is to look at
@@ -977,5 +979,19 @@ A visualization can then be embedded with a call such as:
 &lt;/iframe>
 </pre>
 
+
+  <script
+     src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js">
+  </script>
+  <script>
+  $(function() {
+    // dynamically 
+    var toc = $("#toc");
+    $("h2").each(function(index, item) {
+      $(item).html("<a name='sect" + index + "'>" + $(item).text() + "</a>");
+      toc.append($("<li><a href='#sect" + index + "'>" + $(item).text() + "</a></li>"));
+    });
+  });
+  </script>
 </body>
 </html>
