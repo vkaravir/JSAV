@@ -75,15 +75,17 @@
           correct = true,
           forwStudent = true,
           forwModel = true,
-          modelTotal = this.modelav.totalSteps(), // "cache" the size
-          studentTotal = this.jsav.totalSteps(); // "cache" the size
+          modelAv = this.modelav,
+          studentAv = this.jsav,
+          modelTotal = modelAv.totalSteps(), // "cache" the size
+          studentTotal = studentAv.totalSteps(); // "cache" the size
 
       this.score.correct = 0;
       this.score.student = 0;
-      while (correct && forwStudent && forwModel && this.modelav.currentStep() < modelTotal &&
-            this.jsav.currentStep() < studentTotal) {
-        forwStudent = this.jsav.forward(gradeStepFunction);
-        forwModel = this.modelav.forward(gradeStepFunction);
+      while (correct && forwStudent && forwModel && modelAv.currentStep() < modelTotal &&
+            studentAv.currentStep() < studentTotal) {
+        forwStudent = studentAv.forward(gradeStepFunction);
+        forwModel = modelAv.forward(gradeStepFunction);
         if (forwStudent) { studentSteps++; }
         correct = false;
         if (forwModel) {
@@ -98,16 +100,16 @@
       }
       // figure out the total number of graded steps in model answer
       forwModel = true;
-      while (forwModel && this.modelav.currentStep() < modelTotal) {
-        forwModel = this.modelav.forward(gradeStepFunction);
+      while (forwModel && modelAv.currentStep() < modelTotal) {
+        forwModel = modelAv.forward(gradeStepFunction);
         if (forwModel) {
           totalSteps++;
         }
       }
       // figure out the total number of graded steps in student answer
       forwStudent = true;
-      while (forwStudent && this.jsav.currentStep() < studentTotal) {
-        forwStudent = this.jsav.forward(gradeStepFunction);
+      while (forwStudent && studentAv.currentStep() < studentTotal) {
+        forwStudent = studentAv.forward(gradeStepFunction);
         if (forwStudent) {
           studentSteps++;
         }
@@ -121,20 +123,22 @@
           cont = true,
           forwStudent = true,
           forwModel = true,
-          modelTotal = this.modelav.totalSteps(), // "cache" the size
-          studentTotal = this.jsav.totalSteps(); // "cache" the size
+          modelAv = this.modelav,
+          studentAv = this.jsav,
+          modelTotal = modelAv.totalSteps(), // "cache" the size
+          studentTotal = studentAv.totalSteps(); // "cache" the size
 
       this.score.correct = 0;
       this.score.student = 0;
-      while (forwModel && cont && this.modelav.currentStep() < modelTotal &&
-            this.jsav.currentStep() < studentTotal) {
-        forwModel = this.modelav.forward(gradeStepFunction);
+      while (forwModel && cont && modelAv.currentStep() < modelTotal &&
+            studentAv.currentStep() < studentTotal) {
+        forwModel = modelAv.forward(gradeStepFunction);
         if (forwModel) {
           totalSteps++;
           forwStudent = true;
           while (forwStudent && !allEqual(this.initialStructures, this.modelStructures, this.options.compare) &&
-            this.jsav.currentStep() < studentTotal) {
-              forwStudent = this.jsav.forward();
+            studentAv.currentStep() < studentTotal) {
+              forwStudent = studentAv.forward();
           }
           if (allEqual(this.initialStructures, this.modelStructures, this.options.compare)) {
             this.score.correct++;
@@ -145,8 +149,8 @@
       }
       // figure out the total number of graded steps in model answer
       forwModel = true;
-      while (forwModel && this.modelav.currentStep() < modelTotal) {
-        forwModel = this.modelav.forward(gradeStepFunction);
+      while (forwModel && modelAv.currentStep() < modelTotal) {
+        forwModel = modelAv.forward(gradeStepFunction);
         if (forwModel) {
           totalSteps++;
         }
