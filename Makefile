@@ -43,6 +43,6 @@ jshint:
 	-jshint src/
 
 csslint:
-	csslint --errors=empty-rules,import,errors --warnings=duplicate-background-images,compatible-vendor-prefixes,display-property-grouping,fallback-colors,duplicate-properties,shorthand,gradients,font-sizes,floats,overqualified-elements,import,regex-selectors,rules-count,unique-headings,unqualified-attributes,vendor-prefix,zero-units css/JSAV.css
+	csslint --errors=empty-rules,import,errors --warnings=duplicate-background-images,compatible-vendor-prefixes,display-property-grouping,fallback-colors,duplicate-properties,shorthand,gradients,font-sizes,floats,overqualified-elements,import,regex-selectors,rules-count,unqualified-attributes,vendor-prefix,zero-units css/JSAV.css
 
 lint: jshint csslint
