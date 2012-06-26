@@ -449,8 +449,9 @@
     });
     $arr.height(maxHeight + (indexed?30:0));
     centerArray(array, $items.last(), options);
-    return { width: array.element.outerWidth(), height: array.element.outerHeight(),
-              left: array.position().left, top: array.position().top };
+    var arrPos = $arr.position();
+    return { width: $arr.outerWidth(), height: $arr.outerHeight(),
+              left: arrPos.left, top: arrPos.top };
   }
   
   function verticalArray(array, options) {
@@ -475,8 +476,9 @@
       $items.css("margin-left", maxWidth);
     }
     centerArray(array, $items.last(), options);
-    return { width: array.element.outerWidth(), height: array.element.outerHeight(),
-              left: array.position().left, top: array.position().top };
+    var arrPos = $arr.position();
+    return { width: $arr.outerWidth(), height: $arr.outerHeight(),
+              left: arrPos.left, top: arrPos.top };
   }
  
   function barArray(array, options) {
