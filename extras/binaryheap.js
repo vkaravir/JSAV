@@ -16,11 +16,19 @@
       var lpos = pos * 2,
           rpos = lpos + 1;
       if (lpos <= size) {
-        node.left(binheap.value(lpos - 1));
+        if (!node.left()) {
+          node.left(binheap.value(lpos - 1));
+        } else {
+          node.left().value(binheap.value(lpos - 1));
+        }
         donode(node.left(), lpos);
       }
       if (rpos <= size) {
-        node.right(binheap.value(rpos - 1));
+        if (!node.right()) {
+          node.right(binheap.value(rpos - 1));
+        } else {
+          node.right().value(binheap.value(rpos - 1));
+        }
         donode(node.right(), rpos);
       }
     };
