@@ -6,30 +6,7 @@
   "use strict";
   if (typeof JSAV === "undefined") { return; }
 
-  // function that selects elements from $elems that match the indices
-  // filter (number, array of numbers, or filter function)
-  var getIndices = function($elems, indices) {
-    if (typeof indices === "undefined") { return $elems; } // use all if no restrictions are given
-    if ($.isFunction(indices)) { // use a filter function..
-      return $elems.filter(indices); // ..and let jQuery do the work
-    } else if ($.isArray(indices)) {
-      // return indices that are in the array
-      return $elems.filter(function(index, item) {
-        for (var i=0; i < indices.length; i++) {
-          if (indices[i] === index) { return true; }
-        }
-        return false;
-      });
-    } else if (typeof indices === "number"){
-      return $elems.eq(indices); // return the specific index
-    } else {
-      try { // last resort, try if the argument can be parsed into an int..
-        return $elems.eq(parseInt(indices, 10));
-      } catch (err) {
-        return $({}); // ..if not, return an empty set
-      }
-    }
-  };
+  var getIndices = JSAV.utils._helpers.getIndices;
 
   /* Array data structure for JSAV library. */
   var AVArray = function(jsav, element, options) {
