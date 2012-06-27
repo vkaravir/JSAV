@@ -646,6 +646,8 @@
         llCornerA = urCornerA + pi;
     if (!radius) { // everything but 0 radius is considered a circle
       radius = dim.width;
+    } else {
+      radius = Math.min(radius, dim.width);
     }
     if (angle < urCornerA || angle > lrCornerA) { // on right side
       x = dim.x + radius * Math.cos(angle);
