@@ -1,6 +1,12 @@
 For changes before version 0.3.1, see 
   http://algoviz.org/algoviz-wiki/index.php/JSAV_Roadmap
 
+Changes in development version
+------------------------------
+* new minor features:
+  - tree nodes now have a remove() function to remove that node
+  - tree node show/hide now work recursively and hide the whole subtree
+
 Changes in version 0.5
 ----------------------
 * new features:
