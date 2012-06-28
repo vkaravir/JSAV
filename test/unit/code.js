@@ -70,4 +70,60 @@
     av.backward(); // undo showing a visible Variable
     equals(var1.element.filter(":visible").size(), 1, "Undoing show of a visible should keep it visible");
   });
-})();
+
+  module("code.code");
+  test("Pseudocode initialization", function() {
+    var av = new JSAV("emptycontainer"),
+        lines = ["kissa", "istuu", "katolla"],
+        pseudo1 = av.code(lines),
+        pseudo2 = av.code("kissa\nistuu\nkatolla");
+    var testCodelines = function($elem) {
+      var $lines = $elem.find(".jsavcodeline");
+      $lines.each(function(index, item) {
+        equals($(item).text(), lines[index]);
+      });
+    };
+    testCodelines(pseudo1.element);
+    testCodelines(pseudo2.element);
+  });
+  test("Pseudocode setCurrentLine", function() {
+    var av = new JSAV("emptycontainer"),
+        lines = ["kissa", "istuu", "katolla", "yksin"],
+        pseudo = av.code(lines);
+    var testCurrents = function(curr, prev) {
+      var $lines = pseudo.element.find(".jsavcodeline"),
+          $curr = pseudo.element.find(".jsavcurrentline"),
+          $prev = pseudo.element.find(".jsavpreviousline");
+      equals($lines.index($curr), curr, "Testing index of current line");
+      equals($lines.index($prev), prev, "Testing index of previous line");
+      equals($curr.size(), curr === -1?0:1, "Testing number of current lines");
+      equals($prev.size(), prev === -1?0:1, "Testing number of previous lines");
+    };
+    av.displayInit();
+    testCurrents(-1, -1);
+    pseudo.setCurrentLine(0);
+    testCurrents(0, -1);
+    av.step();
+    pseudo.setCurrentLine(1);
+    testCurrents(1, 0);
+    av.step();
+    pseudo.setCurrentLine(2);
+    testCurrents(2, 1);
+    av.step();
+    pseudo.setCurrentLine(1);
+    testCurrents(1, 2);
+    av.step();
+    pseudo.setCurrentLine(1);
+    testCurrents(1, 1);
+    av.step();
+    pseudo.setCurrentLine(2);
+    testCurrents(2, 1);
+    av.step();
+    pseudo.setCurrentLine(2);
+    testCurrents(2, 2);
+    av.step();
+    pseudo.setCurrentLine(-1);
+    testCurrents(-1, -1);
+
+  });
+}());

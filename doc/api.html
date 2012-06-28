@@ -6,7 +6,7 @@
   </head>
 
 <body>
-<h1>Documentation for the JavaScript Algorithm Visualization API (JSAV) Version 0.5</h1>
+<h1>Documentation for the JavaScript Algorithm Visualization API (JSAV) Version 0.6dev</h1>
 
 <p class="note">
 This documentation reflects the current status of the library.
@@ -698,7 +698,46 @@ out, this method will return the current text of the label.
     out, this method will return the current value of the variable. The value is
     converted to the type specified when initializing the variable.
     </p>
-    
+
+    <h2>Pseudocode API</h2>
+    <p>The pseudocode API in JSAV is intended for showing a static set of codelines that can be show/hidden and
+      highlighted. There are two ways to initialize a pseudocode object in JSAV:</p>
+    <h3 class="apimethod">.code(codelines[, options]) or .code([options])</h3>
+    <p>Both of these are functions of a JSAV object instance. The first version takes either an array or a string 
+      to be used as the lines of code. If a string is passed, it will be split on newline characters (<code>\n</code>)
+      to get the codelines.</p>
+    <p>The options that can be specified:</p>
+    <ul>
+      <li> <code>{url: &lt;string>}</code> A URL where the code should be fetched. The fetched text will be split on
+        newline characters (<code>\n</code>). Note, that if the codelines parameter is given, this option is ignored. Also, same-origin
+        policies in browsers might prevent this from working across domains.</li>
+      <li> <code>{lineNumbers: &lt;boolean>} Determine whether linenumbers should be shown. Defaults to true.</code></li> 
+      <li> <code>{visible: &lt;boolean>}</code> Determine whether the pseudocode is visible on creation. Defaults to true.</li>
+      <li> <code>{before: &lt;UI element>}</code> Add the pseudocode before element <code>UI element</code></li>
+      <li> <code>{after: &lt;UI element>}</code> Add the pseudocode after element <code>UI element</code></li>
+    </ul>
+    <p>Pseudocode objects have the following functions.</p>
+    <h3 class="apimethod">.highlight(indices) and .unhighlight(indices)</h3>
+    <p>Highlight and unhighlight the codelines at given indices. Lines are numbered from 0, so first line could be highlighted with:</p>
+    <pre>pseudo.highlight(0)</pre>
+    <p>Similarly to the array (un)highlight, the <var>indices</var> parameter can be either a number, an array of numbers, or a function.</p>
+    <h3 class="apimethod">.show() and .hide()</h3>
+    <p>Show/hide the pseudocode object.</p>
+    <h3 class="apimethod">.show(indices) and .hide(indices)</h3>
+    <p>Show/hide the codelines at given indices. Again, indices can be a number, an array of numbers, or a function.</p>
+    <h3 class="apimethod">.css(indices, css)</h3>
+    <p>Apply the given CSS properties to the codelines at specified <code>indices</code>.
+      Parameter <code>indices</code> can be a number, array, or function like for 
+      the <code>highlight</code> method.
+      The argument <code>css</code> should be an object with property name-and-value pairs. For example, to make
+      lines 0 and 4 have green color and lightgray background:</p>
+    <pre>pseudo.css([0, 4], {"color": "green", "background-color": "#eee"});</pre>
+    <h3 class="apimethod">.setCurrentLine(index)</h3>
+    <p>Sets the line at given <var>index</var> as the current line. Also, if another line was previously set as current, it will be
+      marked as previous. If a line was also earlier marked as previous, that mark will be removed. This will help in creating a 
+      visual debugger-like code stepping functionality in visualizations.</p>
+
+
     <h2>Graphical Primitives API</h2>
     <p>JSAV supports the following graphical primitives: circle, rectangle, line,
       ellipse, polygon, and polyline. All these are in the JSAV.g namespace. A 

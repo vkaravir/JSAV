@@ -438,3 +438,34 @@ a.jsavsettings {
 .jsavlist .jsavedge {
   stroke-width: 2;
 }
+
+/******** PSEUDOCODE VIEW *******/
+.jsavcode {
+  font-family: monospace;
+  width: auto;
+  padding: 0;
+}
+ul.jsavcode {
+  list-style: none;
+}
+.jsavcodeline {
+  background-color: #FAFAFA;
+  border-bottom: 1px solid #DDD;
+  padding: 2px 10px;
+  white-space: pre;
+}
+.jsavcodeline:first-child {
+  border-top: 1px solid #DDD;
+}
+.jsavcodeline.jsavhighlight {
+  background-color: yellow;
+}
+.jsavcodeline.jsavcurrentline {
+  background-color: #ccc;
+}
+.jsavcodeline.jsavpreviousline {
+  background-color: #eee;
+}
+.jsavhiddencode {
+  display: none !important;
+}
