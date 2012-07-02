@@ -457,14 +457,14 @@ ul.jsavcode {
 .jsavcodeline:first-child {
   border-top: 1px solid #DDD;
 }
-.jsavcodeline.jsavhighlight {
-  background-color: yellow;
+.jsavcodeline.jsavpreviousline {
+  background-color: #eee;
 }
 .jsavcodeline.jsavcurrentline {
   background-color: #ccc;
 }
-.jsavcodeline.jsavpreviousline {
-  background-color: #eee;
+.jsavcodeline.jsavhighlight {
+  background-color: yellow;
 }
 .jsavhiddencode {
   display: none !important;
