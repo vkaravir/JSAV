@@ -69,23 +69,50 @@
     return new Variable(this, value, options);
   };
 
+  // regexps used for trimming
+  var trimRightRegexp = /\s+$/,
+      trimLeftRegexp = /^\s*\n/;
+
+  // Pseudocode objects for JSAV
   var Code = function(jsav, codelines, options) {
     this.jsav = jsav;
     if (typeof(codelines) === "string") {
+      // strings will be split at newline characters
       codelines = codelines.split("\n");
     } else if (typeof(codelines) === "object" && !$.isArray(codelines)) {
       options = codelines;
       // if no codelines are given, we assume options includes a URL
       $.ajax( {
-                url: codelines.url,
+                url: options.url,
                 async: false, // we need it now, so not asynchronous request
                 mimeType: "text/plain", // assume it is text
                 success: function(data) {
-                  codelines = data.split("\n");
+                  var code = data,
+                      tmp;
+                  if (options.tag) {
+                    options.startAfter = "/* *** ODSATag: " + options.tag + " *** */";
+                    options.endBefore = "/* *** ODSAendTag: " + options.tag + " *** */";
+                  }
+                  if (options.startAfter) {
+                    // split on the start tag
+                    tmp = code.split(options.startAfter);
+                    // if there are multiple instances, we'll use the last one
+                    code = tmp[tmp.length - 1];
+                  }
+                  if (options.endBefore) {
+                    // split on the end tag
+                    // in case of multiple instances of the marker, use the first part
+                    code = code.split(options.endBefore)[0];
+                  }
+
+                  // strip extra whitespace from beginning and end; not the whitespace on the
+                  // first line of code, though
+                  code = code.replace(trimRightRegexp, "").replace(trimLeftRegexp, "");
+                  codelines = code.split("\n");
                 }
               });
     }
-    this.options = $.extend({visible: true, lineNumbers: true}, options);
+    this.options = $.extend({visible: true, lineNumbers: true, htmlEscape: true}, options);
     // select correct HTML element type based on option lineNumbers
     var elem = this.options.lineNumbers?"ol":"ul";
     this.element = this.options.element || $('<' + elem + ' class="jsavcode"></' + elem + '>');
@@ -96,13 +123,21 @@
     } else {
       $(this.jsav.canvas).append(this.element);
     }
-    // generate the HTML for all lines...
-    var clHtml = "";
-    for (var i=0, l=codelines.length; i < l; i++) {
-      clHtml += '<li class="jsavcodeline">' + codelines[i] + '</li>';
+    // generate the elements for all lines...
+    var clElems = $(),
+      clElem;
+    for (var i = 0, l = codelines.length; i < l; i++) {
+      clElem = $('<li class="jsavcodeline">');
+      if (this.options.htmlEscape) {
+        // let jQuery do the HTML escaping
+        clElem.text(codelines[i]);
+      } else {
+        clElem.html(codelines[i]);
+      }
+      clElems = clElems.add(clElem);
     }
     // .. and change the DOM only once
-    this.element.html(clHtml);
+    this.element.append(clElems);
     JSAV.utils._helpers.handlePosition(this);
     JSAV.utils._helpers.handleVisibility(this, this.options);
   };

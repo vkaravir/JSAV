@@ -1,3 +1,7 @@
-line1 - from a URL
+setup code here, should not be shown in AV...
+/* *** ODSATag: Shellsort *** */
+  line1 <strong> from a URL</strong>
   line2
     line 3
+/* *** ODSAendTag: Shellsort *** */
+more setup... or cleanup...

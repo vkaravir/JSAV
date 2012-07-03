@@ -124,6 +124,23 @@
     av.step();
     pseudo.setCurrentLine(-1);
     testCurrents(-1, -1);
+  });
 
+  test("Pseudocode options", function() {
+    var av = new JSAV("emptycontainer"),
+        lines = ["line1", "  line2", "line3 <br/> line4"],
+        pseudo = av.code(lines, {lineNumbers: false}),
+        pseudoNoEscape = av.code(lines, {htmlEscape: false});
+    // no line numbers -> unordered list
+    equals(pseudo.element[0].nodeName.toLowerCase(), "ul");
+    // line numbers -> ordered list
+    equals(pseudoNoEscape.element[0].nodeName.toLowerCase(), "ol");
+
+    // by default, html is escaped
+    equals(pseudo.element.find(".jsavcodeline:eq(2)").html(), "line3 &lt;br/&gt; line4");
+    equals(pseudo.element.find(".jsavcodeline:eq(2)").text(), "line3 <br/> line4");
+    // html escaping disabled
+    equals(pseudoNoEscape.element.find(".jsavcodeline:eq(2)").html(), "line3 <br> line4");
+    equals(pseudoNoEscape.element.find(".jsavcodeline:eq(2)").text(), "line3  line4");
   });
 }());
