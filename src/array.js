@@ -237,7 +237,7 @@
           return false;
         }
         for (i = 0; i < len; i++) { // are the values equal
-          equal = this.value(i) === otherArray[i];
+          equal = this.value(i) == otherArray[i];
           if (!equal) { return false; }
         }
         return true; // if tests passed, arrays are equal
@@ -258,7 +258,7 @@
       }
       if (!('value' in opts) || opts.value) { // if comparing values
         for (i = 0; i < len; i++) {
-          equal = this.value(i) === otherArray.value(i);
+          equal = this.value(i) == otherArray.value(i);
           if (!equal) { return false; }
         }
       }
