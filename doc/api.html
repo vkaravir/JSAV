@@ -259,13 +259,13 @@ method is called on it.
 <h3 class="apimethod">.css(indices, cssPropertyName)</h3>
 <p>Returns the value of CSS property <code>cssPropertyName</code> for the first 
   index matching the <code>indices</code> parameter. Parameter <code>indices</code> 
-  can be a number, array, or function like for the <code>highlight</code> method.</p>
+  can be a number, array, <code>true</code>, or function like for the <code>highlight</code> method.</p>
 
 
 <h3 class="apimethod">.css(indices, css)</h3>
 <p>
 Apply the given CSS properties to the specified <code>indices</code>.
-Parameter <code>indices</code> can be a number, array, or function like for 
+Parameter <code>indices</code> can be a number, array, <code>true</code>, or function like for 
 the <code>highlight</code> method.
 The argument <code>css</code> should be an object with property
 name-and-value pairs.
@@ -329,6 +329,13 @@ For example, the following would highlight array positions 1, 2, and 5.
 Highlights all the indices that the passed function returns true.
 For example, to highlight all even indices:</p> 
 <pre>arr.highlight(function(index) { return index%2==0; });</pre>
+
+<h3 class="apimethod">.highlight(boolean)</h3>
+<p>
+If the given boolean value is <code>true</code>, all the indices are highlighted. 
+If <code>false</code>, none are.
+For example, to highlight all indices:</p> 
+<pre>arr.highlight(true);</pre>
 
 <h3 class="apimethod">.show()</h3>
 <p>
