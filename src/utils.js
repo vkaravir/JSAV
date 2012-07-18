@@ -470,8 +470,11 @@ mixkey(math.random(), pool);
         }
         return false;
       });
-    } else if (typeof indices === "number"){
+    } else if (typeof indices === "number") {
       return $elems.eq(indices); // return the specific index
+    } else if (typeof indices === "boolean") {
+      // return all elems if indices is true, empty set otherwise
+      return indices?$elems:$({});
     } else {
       try { // last resort, try if the argument can be parsed into an int..
         return $elems.eq(parseInt(indices, 10));
