@@ -259,18 +259,22 @@ method is called on it.
 <h3 class="apimethod">.css(indices, cssPropertyName)</h3>
 <p>Returns the value of CSS property <code>cssPropertyName</code> for the first 
   index matching the <code>indices</code> parameter. Parameter <code>indices</code> 
-  can be a number, array, <code>true</code>, or function like for the <code>highlight</code> method.</p>
+  can be a number, array, <code>true</code>, or function like for
+  the <code>highlight</code> method.</p>
 
 
 <h3 class="apimethod">.css(indices, css)</h3>
 <p>
 Apply the given CSS properties to the specified <code>indices</code>.
-Parameter <code>indices</code> can be a number, array, <code>true</code>, or function like for 
-the <code>highlight</code> method.
+Parameter <code>indices</code> can be a number, array,
+<code>true</code>, or function like for the <code>highlight</code>
+method.
+When <code>indices</code> is <code>true</code>, then <code>css</code>
+is applied to all elements of the array.
 The argument <code>css</code> should be an object with property
 name-and-value pairs.
-For example, to make
-positions 0 and 4 have green color and lightgray background:
+For example, to make positions 0 and 4 have green color and lightgray
+background:
 </p>
 <pre>
 arr.css([0, 4], {"color": "green", "background-color": "#eee"});
