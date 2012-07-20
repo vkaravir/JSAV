@@ -1,6 +1,6 @@
 .jsavcontainer {
   overflow:hidden;
-  width: 100%;
+  width: auto;
   padding: 0.7em;
   border: 1px solid black;
   background-color: white;
@@ -19,6 +19,10 @@
   color: black;
   opacity: 1;
   padding: 0;
+}
+.jsavcenter {
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .jsavhighlight .jsavvalue, .jsavarray.jsavbararray .jsavindex.jsavhighlight .jsavvalue{
@@ -49,6 +53,7 @@
   line-height: 20px;
   color: black;
   position: absolute;
+  vertical-align: middle;
 }
 .jsavindex span {
   z-index: 99;

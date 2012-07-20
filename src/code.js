@@ -112,7 +112,7 @@
                 }
               });
     }
-    this.options = $.extend({visible: true, lineNumbers: true, htmlEscape: true}, options);
+    this.options = $.extend({visible: true, lineNumbers: true, htmlEscape: true,  center: true}, options);
     // select correct HTML element type based on option lineNumbers
     var elem = this.options.lineNumbers?"ol":"ul";
     this.element = this.options.element || $('<' + elem + ' class="jsavcode"></' + elem + '>');
@@ -140,6 +140,12 @@
     this.element.append(clElems);
     JSAV.utils._helpers.handlePosition(this);
     JSAV.utils._helpers.handleVisibility(this, this.options);
+    if (this.options.center && !this.options.left && !this.options.right && !this.options.top && !this.options.bottom) {
+      this.element.css("display", "inline-block");
+      this.element.css("width", this.element.outerWidth());
+      this.element.css("display", "");
+      this.element.addClass("jsavcenter");
+    }
   };
   var codeproto = Code.prototype;
   codeproto._toggleVisible = JSAV.anim(JSAV.ext.effects._toggleVisible);
