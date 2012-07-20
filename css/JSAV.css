@@ -15,9 +15,10 @@
   text-align: center;
   line-height: 45px;
   border: 1px solid black;
-  background-color: white;
+  background: white;
   color: black;
   opacity: 1;
+  padding: 0;
 }
 
 .jsavhighlight .jsavvalue, .jsavarray.jsavbararray .jsavindex.jsavhighlight .jsavvalue{
