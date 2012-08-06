@@ -722,12 +722,16 @@ out, this method will return the current text of the label.
       <li> <code>{url: &lt;string>}</code> A URL where the code should be fetched. The fetched text will be split on
         newline characters (<code>\n</code>). Note, that if the codelines parameter is given, this option is ignored. Also, same-origin
         policies in browsers might prevent this from working across domains.</li>
-      <li> <code>{lineNumbers: &lt;boolean>} Determine whether linenumbers should be shown. Defaults to true.</code></li> 
+      <li> <code>{lineNumbers: &lt;boolean>}</code> Determine whether linenumbers should be shown. Defaults to true.</li> 
       <li> <code>{visible: &lt;boolean>}</code> Determine whether the pseudocode is visible on creation. Defaults to true.</li>
       <li> <code>{before: &lt;UI element>}</code> Add the pseudocode before element <code>UI element</code></li>
       <li> <code>{after: &lt;UI element>}</code> Add the pseudocode after element <code>UI element</code></li>
       <li> <code>{center: &lt;boolean>}</code> Boolean to determine if array should be automatically centered
   within its container. Defaults to true.</li>
+      <li> <code>{startAfter: &lt;string>}</code> Only the content after the last occurrence of the specified text will be included. Only
+        applied if the <code>url</code> parameter is also provided.</li>
+      <li> <code>{endBefore: &lt;string>}</code> Only the content before the first occurrence of the specified text will be included. Only
+        applied if the <code>url</code> parameter is also provided.</li>
     </ul>
     <p>Pseudocode objects have the following functions.</p>
     <h3 class="apimethod">.highlight(indices) and .unhighlight(indices)</h3>
