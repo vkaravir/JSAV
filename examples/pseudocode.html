@@ -26,7 +26,7 @@
     var pseudo2 = av.code(["line1 - from an array", "  line2", " line3"]);
     av.step();
     av.umsg(", and finally load a code from a url. You need to load this AV from a server for this to work!", {preserve: true});
-    var pseudo3 = av.code({url: "samplecode.txt", tag: "Shellsort", htmlEscape: false});
+    var pseudo3 = av.code({url: "samplecode.txt", htmlEscape: false});
 
     av.step();
     av.umsg("You can hide all the code with the .hide() function");

@@ -89,10 +89,6 @@
                 success: function(data) {
                   var code = data,
                       tmp;
-                  if (options.tag) {
-                    options.startAfter = "/* *** ODSATag: " + options.tag + " *** */";
-                    options.endBefore = "/* *** ODSAendTag: " + options.tag + " *** */";
-                  }
                   if (options.startAfter) {
                     // split on the start tag
                     tmp = code.split(options.startAfter);
