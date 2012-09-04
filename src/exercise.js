@@ -259,6 +259,13 @@
       this.undo();
       if (fixmode === "fix" && $.isFunction(this.options.fix)) {
         $.fx.off = true;
+        // make sure model answer is at the beginning..
+        this.modelav.begin();
+        // .. and forward it to the correct position
+        for (var i = 0; i <= grade.correct; i++) {
+          this.modelav.forward(gradeStepFunction);
+        }
+        // call the fix function of the exercise to correct the state
         this.fix(this.modelStructures);
         $.fx.off = false;
         this.score.fix++;
