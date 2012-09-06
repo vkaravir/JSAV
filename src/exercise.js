@@ -192,14 +192,15 @@
     window.alert(msg);
   };
   exerproto.modelanswer = function() {
-    var model = this.options.model;
+    var model = this.options.model,
+        modelOpts = $.extend({ 'title': 'Model Answer', "closeOnClick": false, "modal": false },
+                    this.options.modelDialog); // options passed for the model answer window
     if ($.isFunction(model)) {
       // behavior in a nutshell:
       // 1. create a new JSAV (and the HTML required for it)
       this.modelav = new JSAV($("<div><span class='jsavcounter'/><div class='jsavcontrols'/><p class='jsavoutput jsavline'></p></div>").addClass("jsavmodelanswer"));
       // 2. create a dialog for the model answer
-      this.modelDialog = JSAV.utils.dialog(this.modelav.container,
-                {'title': 'Model Answer', "closeOnClick": false, "modal": false});
+      this.modelDialog = JSAV.utils.dialog(this.modelav.container, modelOpts );
       // 3. generate the model structures and the state sequence
       var str = model(this.modelav);
       // 4. rewind the model answer and hide the dialog
