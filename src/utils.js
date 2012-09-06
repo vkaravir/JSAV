@@ -22,6 +22,10 @@
   objcommons.position = function() {
     return JSAV.position(this.element);
   };
+  objcommons.isVisible = function() {
+    // use the jquery :visible pseudo filter for checking for visibility
+    return this.element.filter(":visible").size() > 0;
+  };
   JSAV._types.common = objcommons;
   
   JSAV.utils = {};
@@ -74,7 +78,9 @@
     var d = {
       },
       modal = options.modal,
-      $dialog = $(dialogBase);
+      $dialog = $(dialogBase),
+      i, l, attr,
+      attrOptions = ["width", "height", "minWidth", "minHeight", "maxWidth", "maxHeight"];
     if (typeof html === "string") {
       $dialog.html(html);
     } else if ($.isFunction(html)) {
@@ -88,8 +94,9 @@
     if ("dialogClass" in options) {
       $dialog.addClass(options.dialogClass);
     }
-    for (var attr in ["width", "height", "minWidth", "minHeight", "maxWidth", "maxHeight"]) {
-      if (attr in options) {
+    for (i = 0, l = attrOptions.length; i < l; i++ ) {
+      attr = attrOptions[i];
+      if (options[attr] !== undefined) {
         $dialog.css(attr, options[attr]);
       }
     }
@@ -102,7 +109,7 @@
       scrollLeft = $doc.scrollLeft(),
       scrollTop = $doc.scrollTop();
     if (!("width" in options)) {
-      $dialog.css("width", Math.max(500, winWidth/2)); // min width 500px
+      $dialog.css("width", Math.max(500, winWidth*0.7)); // min width 500px, default 70% of window
     }
     var close = function(e) {
       if (e) { // if used as an event handler, prevent default behavior
