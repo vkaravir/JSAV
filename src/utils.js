@@ -62,6 +62,22 @@
       return "jsav-" + s.join("");
   };
   
+  JSAV.ext.logEvent = function(eventData) {
+    // if object, add default fields if they don't exist
+    if (typeof eventData === "object") {
+      if (!eventData.hasOwnProperty('tstamp')) {
+        eventData.tstamp = new Date().toISOString();
+      }
+      if (!eventData.hasOwnProperty('av')) {
+        eventData.av = this.id();
+      }
+    }
+    if ($.isFunction(this.options.logEvent)) {
+      this.options.logEvent(eventData);
+    } else {
+      $("body").trigger("jsav-log-event", [eventData]);
+    }
+  };
   
   var dialogBase = '<div class="jsavdialog"></div>',
     $modalElem = null;
@@ -74,6 +90,7 @@
     //  - closeText
     //  - dialogClass
     //  - title
+    //  - closeCallback
     options = $.extend({}, {modal: true, closeOnClick: true}, options);
     var d = {
       },
@@ -119,6 +136,9 @@
         $modalElem.detach();
       }
       $dialog.remove();
+      if ($.isFunction(options.closeCallback)) {
+        options.closeCallback();
+      }
     };
     if (modal) {
       $modalElem = $modalElem || $('<div class="jsavmodal" />');

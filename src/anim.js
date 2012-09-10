@@ -104,12 +104,21 @@
     return this;
   }
   
+
   JSAV.init(function() {
     this._redo = []; // stack for operations to redo
     this._undo = []; // stack for operations to undo
     var that = this,
       $controls = $(".jsavcontrols", this.container),
       playingCl = "jsavplaying"; // class used to mark controls when playing
+
+    function logAnimEvent(action) {
+      var eventData = {
+        "type": action,
+        "currentStep": that.currentStep()
+      };
+      that.logEvent(eventData);
+    }
 
     // function for clearing the playing flag
     function clearPlaying() {
@@ -132,6 +141,8 @@
       $controls.addClass(playingCl);
       that.begin(); // go to beginning
       clearPlaying(); // clear the flag
+      // log the event
+      logAnimEvent("jsav-begin");
     };
     var backwardHandler = function(e, filter) {
       e.preventDefault();
@@ -142,6 +153,8 @@
       that.backward(filter);
       // clear playing flag after a timeout for animations to end
       setTimeout(clearPlaying, 50);
+      // log the event
+      logAnimEvent("jsav-backward");
     };
     var forwardHandler = function(e, filter) {
       e.preventDefault();
@@ -150,6 +163,8 @@
       $controls.addClass(playingCl);
       that.forward(filter);
       setTimeout(clearPlaying, 50);
+      // log the event
+      logAnimEvent("jsav-forward");
     };
     var endHandler = function(e) {
       e.preventDefault();
@@ -158,6 +173,8 @@
       $controls.addClass(playingCl);
       that.end();
       clearPlaying();
+      // log the event
+      logAnimEvent("jsav-end");
     };
     if ($controls.size() !== 0) {
       $("<a class='jsavbegin' href='#' title='Begin'>Begin</a>").click(beginHandler).appendTo($controls);

@@ -24,6 +24,14 @@
     }
     return this.svg;
   };
+  jsavproto.id = function() {
+    var id = this.container[0].id;
+    if (!id) {
+      id = JSAV.utils.createUUID();
+      this.container[0].id = id;
+    }
+    return id;
+  };
   JSAV._types = {}; // for exposing types of JSAV for customization
   JSAV.ext = {}; // for extensions
   JSAV.init = function(f) { // for initialization functions

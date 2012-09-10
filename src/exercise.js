@@ -7,7 +7,6 @@
   if (typeof JSAV === "undefined") { return; }
   // function to filter the steps to those that should be graded
   var gradeStepFunction = function(step) { return step.options.grade; };
-  
   var Exercise = function(jsav, options) {
     this.jsav = jsav;
     this.options = jQuery.extend({reset: function() { }, controls: null, feedback: "atend",
@@ -22,18 +21,22 @@
     if (cont.size()) {
       var $reset = $('<input type="button" name="reset" value="Reset" />').click(
             function() {
+              self.jsav.logEvent({type: "jsav-exercise-reset"});
               self.reset();
             }),
           $model = $('<input type="button" name="answer" value="Model Answer" />').click(
             function() {
+              self.jsav.logEvent({type: "jsav-exercise-model-open"});
               self.showModelanswer();
             }),
           $grade = $('<input type="button" name="grade" value="Grade" />').click(
             function() {
               self.showGrade();
+              self.jsav.logEvent({type: "jsav-exercise-grade", score: $.extend({}, self.score)});
             }),
           $undo = $('<input type="button" name="undo" value="Undo" />"').click(
             function() {
+              self.jsav.logEvent({type: "jsav-exercise-undo"});
               self.undo();
             });
       cont.append($undo, $reset, $model, $grade);
@@ -193,12 +196,22 @@
   };
   exerproto.modelanswer = function() {
     var model = this.options.model,
-        modelOpts = $.extend({ 'title': 'Model Answer', "closeOnClick": false, "modal": false },
+        self = this,
+        modelOpts = $.extend({ "title": 'Model Answer', "closeOnClick": false, "modal": false,
+                              "closeCallback": function() { self.jsav.logEvent({type: "jsav-exercise-model-close"}); } },
                     this.options.modelDialog); // options passed for the model answer window
+    // function that will "catch" the model answer animator log events and rewrite
+    // their type to have the jsav-exercise-model prefix and the av id
+    var modelLogHandler = function(eventData) {
+      eventData.av = self.jsav.id();
+      eventData.type = eventData.type.replace("jsav-", "jsav-exercise-model-");
+      $("body").trigger("jsav-log-event", eventData);
+    };
     if ($.isFunction(model)) {
       // behavior in a nutshell:
       // 1. create a new JSAV (and the HTML required for it)
-      this.modelav = new JSAV($("<div><span class='jsavcounter'/><div class='jsavcontrols'/><p class='jsavoutput jsavline'></p></div>").addClass("jsavmodelanswer"));
+      this.modelav = new JSAV($("<div><span class='jsavcounter'/><div class='jsavcontrols'/><p class='jsavoutput jsavline'></p></div>").addClass("jsavmodelanswer"),
+              {logEvent: modelLogHandler });
       // 2. create a dialog for the model answer
       this.modelDialog = JSAV.utils.dialog(this.modelav.container, modelOpts );
       // 3. generate the model structures and the state sequence
