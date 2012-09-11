@@ -9,6 +9,7 @@
     return function(data, handler, options) {
       // default options; not enabled for edges by default
       var defaultopts = {edge: false},
+          jsav = this.jsav,
           opts = defaultopts; // by default, go with default options
       if (typeof options === "object") { // 3 arguments, last one is options
         opts = $.extend(defaultopts, options);
@@ -19,6 +20,7 @@
         // bind an event handler for nodes in this tree
         this.element.on(eventType, ".jsavnode", function(e) {
           var node = $(this).data("node"); // get the JSAV node object
+          jsav.logEvent({type: "jsav-node-" + eventType, nodeid: node.id(), nodevalue: node.value() });
           if ($.isFunction(data)) { // if no data -> 1st arg is the handler function
             // bind this to the node and call handler
             // with the event as parameter
@@ -34,6 +36,8 @@
         // find the SVG elements matching this tree's container
         this.jsav.canvas.on(eventType, '.jsavedge[data-container="' + this.id() + '"]', function(e) {
           var edge = $(this).data("edge"); // get the JSAV edge object
+          jsav.logEvent({type: "jsav-edge-" + eventType, startvalue: edge.start().value(),
+                        endvalue: edge.end().value(), startid: edge.start().id(), endid: edge.end().id() });
           if ($.isFunction(data)) { // no data
             // bind this to the edge and call handler
             // with the event as parameter

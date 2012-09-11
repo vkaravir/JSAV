@@ -302,6 +302,8 @@
       this.element.on(eventType, ".jsavindex", function(e) {
         // get the index of the clicked element
         var index = self.element.find(".jsavindex").index(this);
+        // log the event
+        self.jsav.logEvent({type: "jsav-array-" + eventType, arrayid: self.id(), index: index});
         if ($.isFunction(data)) { // if no custom data..
           // ..bind this to the array and call handler
           // with params array index and the event
