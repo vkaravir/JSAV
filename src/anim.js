@@ -115,7 +115,8 @@
     function logAnimEvent(action) {
       var eventData = {
         "type": action,
-        "currentStep": that.currentStep()
+        "currentStep": that.currentStep(),
+        "totalSteps": that.totalSteps()
       };
       that.logEvent(eventData);
     }
