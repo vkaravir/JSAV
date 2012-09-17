@@ -102,14 +102,10 @@
     sproto = Settings.prototype;
   sproto.show = function() {
     var $cont = $("<div class='jsavsettings'></div>"),
-      that = this,
-      $close = $('<button class="jsavrow">Close</button>').click(function() {
-        that.close();
-      });
+      that = this;
     for (var i = 0; i < this.components.length; i++) {
       $cont.append(this.components[i]);
     }
-    $cont.append($close);
     
     this.dialog = JSAV.utils.dialog($cont, {title: "Settings"});
   };
