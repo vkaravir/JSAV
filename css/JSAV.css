@@ -310,6 +310,9 @@
 .jsavdialog h2 {
   background-color: #eee;
   border-bottom: 1px dashed black;
+  color: black;
+  font-size: 1.5em;
+  font-weight: bold;
   margin: 0;
   padding: 5px;
   -moz-border-radius: 6px 6px 0 0;
@@ -375,7 +378,7 @@ a.jsavsettings {
 .jsavmodelanswer .jsavcontrols .jsavend {
   margin-right: 0;
 }
-.jsavdialogclose {
+a.jsavdialogclose {
   background-color: #AAA;
   border: 2px solid white;
   -ms-border-radius: 20px;
@@ -393,6 +396,7 @@ a.jsavsettings {
   text-align: center;
   text-decoration: none;
   width: 20px;
+  line-height: 1;
 }
 
 /********* TREE DATA STRUCTURE *******/
