@@ -266,6 +266,7 @@
       this.jsav.container.find(":animated").stop(false, true);
       var grade = this.grade();
       if (grade.student === grade.correct) { // all student's steps are correct
+        this.jsav.logEvent({ type: "jsav-exercise-grade-change", score: $.extend({}, grade)});
         return;
       }
       var fixmode = this.fixmode.val();
@@ -283,12 +284,14 @@
         this.fix(this.modelStructures);
         $.fx.off = false;
         this.score.fix++;
+        this.jsav.logEvent({type: "jsav-exercise-step-fixed", score: $.extend({}, grade)});
         window.alert("Your last step was incorrect. Your work has been replaced with the correct step so that you can continue on.");
       } else if (fixmode === "fix") {
         this.score.undo++;
         window.alert("Your last step was incorrect and I should fix your solution, but don't know how. So it was undone and you can try again.");
       } else {
         this.score.undo++;
+        this.jsav.logEvent({type: "jsav-exercise-step-undone", score: $.extend({}, grade)});
         window.alert("Your last step was incorrect. Things are reset to the beginning of the step so that you can try again.");
       }
     }
