@@ -150,6 +150,21 @@ For example, you can add
 to attach the counter.
 </p>
 
+<h3>Controlling Animation Outside of JSAV</h3>
+<p>Sometimes you might want to control a JSAV animation from JavaScript 
+ and not through the JSAV generated UI. There are two ways to do this:</p>
+ <ol>
+  <li>A JSAV instance has functions <code>.begin()</code>, <code>.backward()</code>,
+    <code>.forward()</code> and <code>.end()</code> that can be called to move in
+    the animation.</li>
+  <li>You can trigger events on the <code>container</code> element to have
+    JSAV move in the animation. The events are: <code>jsav-begin</code>,
+    <code>jsav-backward</code>, <code>jsav-forward</code>, and
+    <code>jsav-end</code>. For example, to move a step forward in the animation, 
+    one could write <code>$(".jsavcontainer").trigger("jsav-forward")</code>.
+    Note, that this example moves <em>all</em> JSAV animations on the page one
+    step forward.</li>
+ </ol>
 <h2>Messages API</h2>
 
 <p>
