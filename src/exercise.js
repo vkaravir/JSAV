@@ -7,6 +7,19 @@
   if (typeof JSAV === "undefined") { return; }
   // function to filter the steps to those that should be graded
   var gradeStepFunction = function(step) { return step.options.grade; };
+
+  var updateScore = function(exer) {
+    if (exer.options.feedback === "continuous") {
+      if (!exer.modelav) {
+        exer.modelanswer();
+        exer.grade();
+      }
+      exer.jsav.container.find(".jsavcurrentscore").text(exer.score.correct - exer.score.fix);
+      exer.jsav.container.find(".jsavcurrentmaxscore").text(exer.score.correct);
+      exer.jsav.container.find(".jsavmaxscore").text(exer.score.total);
+    }
+  };
+
   var Exercise = function(jsav, options) {
     this.jsav = jsav;
     this.options = jQuery.extend({reset: function() { }, controls: null, feedback: "atend",
@@ -52,6 +65,15 @@
       this.fixmode = this.jsav.settings.add("fixmode",
               {"type": "select", "options": {"undo": "Undo incorrect step", "fix": "Fix incorrect step"},
               "label": "Continuous feedback behaviour", "value": this.options.fixmode});
+    }
+
+    // if jsavscore element is present and empty, add default structure
+    var $jsavscore = this.jsav.container.find(".jsavscore");
+    if ($jsavscore.size() === 1 && $jsavscore.children().size() === 0 &&
+      this.options.feedback === "continuous") {
+      $jsavscore.html('Your current score is <span class="jsavcurrentscore"></span> of ' +
+          '<span class="jsavcurrentmaxscore" ></span>. Maximum score in this exercise is ' +
+          '<span class="jsavmaxscore" ></span>.');
     }
     
     // if custom showGrade function is given
@@ -237,6 +259,7 @@
       this.modelStructures = undefined;
     }
     this.jsav._undo = [];
+    updateScore(this);
   };
   exerproto.undo = function() {
     var oldFx = $.fx.off || false;
@@ -267,6 +290,7 @@
       var grade = this.grade();
       if (grade.student === grade.correct) { // all student's steps are correct
         this.jsav.logEvent({ type: "jsav-exercise-grade-change", score: $.extend({}, grade)});
+        updateScore(this);
         return;
       }
       var fixmode = this.fixmode.val();
@@ -294,6 +318,7 @@
         this.jsav.logEvent({type: "jsav-exercise-step-undone", score: $.extend({}, grade)});
         window.alert("Your last step was incorrect. Things are reset to the beginning of the step so that you can try again.");
       }
+      updateScore(this);
     }
   };
   exerproto.fix = function() {

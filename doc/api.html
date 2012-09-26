@@ -983,6 +983,28 @@ q.show();</pre>
   <h3 class="apimethod">exercise.gradeableStep()</h3>
   <p>Marks the current step in the student's solution as a step used in grading.</p>
 
+  <h3>Showing the Current Score and Maximum Score in Continuous Feedback Mode</h3>
+  <p>If the exercise is in the continuous feedback mode, it is possible to have JSAV show
+    the current score, current maximum score, and the total maximum score to student.
+    This can be done by adding HTML elements <em>inside</em> the JSAV container elements.
+    JSAV will search for elements with the following class attributes:</p>
+  <ul>
+    <li><code>jsavcurrentscore</code>: Inside this element, JSAv will update the current 
+      score achieved by the student.</li>
+    <li><code>jsavcurrentmaxscore</code>: The contents of this element will be updated to
+      contain the maximum score thus far in the exercise.</li>
+    <li><code>jsavmaxscore</code>: The maximum score available in this exercise.</li>
+  </ul>
+  <p>So you could use the following HTML:</p>
+  <pre>&lt;p>
+    Your current score is &lt;span class="jsavcurrentscore" /> of 
+    &lt;span class="jsavcurrentmaxscore" />. Maximum score in this exercise is
+    &lt;span class="jsavmaxscore" />.
+&lt;/p></pre>
+  <p>As a shorter convenience element, you can use <code>&lt;p class="jsavscore">&lt;p/></code>
+    that will be replaced automatically by JSAV with the HTML above if the exercise is
+    in continuous feedback mode.</p>
+
 <h2>Utility Functions</h2>
 <p>The module <code>JSAV.utils</code> includes some utility functions
   for working with HTML pages and visualizations.</p>
