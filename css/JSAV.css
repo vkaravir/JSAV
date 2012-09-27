@@ -209,17 +209,17 @@
 .jsavoutput {
   width:100%;
 }
-.jsavoutput.jsavscroll {
-  overflow: auto; 
-  background-color: white; 
-  border: 1px solid black;
-  height:220px;
-}
-.jsavoutput.jsavline {
+.jsavline {
   overflow: visible;
   border: none;
   background-color: inherit;
   height:50px;
+}
+.jsavscroll {
+  overflow: auto; 
+  background-color: white; 
+  border: 1px solid black;
+  height:220px;
 }
 .jsavoutput .jsavtitle {
   display:block;
