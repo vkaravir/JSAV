@@ -997,13 +997,14 @@ q.show();</pre>
   </ul>
   <p>So you could use the following HTML:</p>
   <pre>&lt;p>
-    Your current score is &lt;span class="jsavcurrentscore" /> of 
-    &lt;span class="jsavcurrentmaxscore" />. Maximum score in this exercise is
-    &lt;span class="jsavmaxscore" />.
+    Your current score is &lt;span class="jsavcurrentscore">&lt;/span> of 
+    &lt;span class="jsavcurrentmaxscore">&lt;/span>. Maximum score in this exercise is
+    &lt;span class="jsavmaxscore">&lt;/span>.
 &lt;/p></pre>
-  <p>As a shorter convenience element, you can use <code>&lt;p class="jsavscore">&lt;p/></code>
+  <p>As a shorter convenience notation, you can use <code>&lt;p class="jsavscore">&lt;p/></code>
     that will be replaced automatically by JSAV with the HTML above if the exercise is
-    in continuous feedback mode.</p>
+    in continuous feedback mode. Note, that in both cases, the elements can be anything, the
+    important thing is that they have the <code>class</code> attributes.</p>
 
 <h2>Utility Functions</h2>
 <p>The module <code>JSAV.utils</code> includes some utility functions
