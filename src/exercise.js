@@ -23,8 +23,8 @@
   var Exercise = function(jsav, options) {
     this.jsav = jsav;
     this.options = jQuery.extend({reset: function() { }, controls: null, feedback: "atend",
-                                  feedbackSelectable: true, fixmode: "undo",
-                                  fixmodeSelectable: true, grader: "default"}, options);
+                                  feedbackSelectable: false, fixmode: "undo",
+                                  fixmodeSelectable: false, grader: "default"}, options);
     // initialize controls
     var cont = $(this.options.controls),
         self = this;
@@ -285,7 +285,8 @@
   exerproto.gradeableStep = function() {
     this.jsav.stepOption("grade", true);
     this.jsav.step();
-    if (this.feedback && this.feedback.val() === "continuous") {
+    if ((this.feedback && this.feedback.val() === "continuous") ||
+        (!this.feedback && this.options.feedback === "continuous")) {
       this.jsav.container.find(":animated").stop(false, true);
       var grade = this.grade();
       if (grade.student === grade.correct) { // all student's steps are correct
@@ -293,7 +294,7 @@
         updateScore(this);
         return;
       }
-      var fixmode = this.fixmode.val();
+      var fixmode = this.fixmode?this.fixmode.val():this.options.fixmode;
       // undo until last graded step
       this.undo();
       if (fixmode === "fix" && $.isFunction(this.options.fix)) {
