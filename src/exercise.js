@@ -71,8 +71,8 @@
     var $jsavscore = this.jsav.container.find(".jsavscore");
     if ($jsavscore.size() === 1 && $jsavscore.children().size() === 0 &&
       this.options.feedback === "continuous") {
-      $jsavscore.html('Your current score is <span class="jsavcurrentscore"></span> of ' +
-          '<span class="jsavcurrentmaxscore" ></span>. Maximum score in this exercise is ' +
+      $jsavscore.html('Your current score is <span class="jsavcurrentscore"></span> out of ' +
+          '<span class="jsavcurrentmaxscore" ></span>. Maximum score will be out of ' +
           '<span class="jsavmaxscore" ></span>.');
     }
     
