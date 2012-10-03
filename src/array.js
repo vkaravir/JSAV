@@ -155,7 +155,9 @@
     if (valtype === "object") { valtype = "string"; }
     $index.attr("data-value", "" + newValue).attr("data-value-type", valtype);
     $index.find(".jsavvalue").html("" + newValue);
-    this.layout();
+    if (("" + newValue).length > ("" + oldval).length) {
+      this.layout();
+    }
     return [index, oldval];
   });
   arrproto.initialize = function(data) {
