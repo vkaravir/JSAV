@@ -240,8 +240,13 @@
     }
   };
   exerproto.showModelanswer = function() {
-    this.modelanswer();
+    // only regenerate model answer if it does not already exist
+    if (!this.modelav) {
+      this.modelanswer();
+    }
+    // rewind the model av
     this.modelav.begin();
+    // show the dialog
     this.modelDialog.show();
   };
   exerproto.reset = function() {
