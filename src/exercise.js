@@ -17,6 +17,8 @@
       exer.jsav.container.find(".jsavcurrentscore").text(exer.score.correct - exer.score.fix);
       exer.jsav.container.find(".jsavcurrentmaxscore").text(exer.score.correct);
       exer.jsav.container.find(".jsavmaxscore").text(exer.score.total);
+      exer.jsav.container.find(".jsavpointsleft").text(exer.score.total - exer.score.correct);
+      exer.jsav.container.find(".jsavpointslost").text(exer.score.fix || 0);
     }
   };
 
@@ -71,9 +73,9 @@
     var $jsavscore = this.jsav.container.find(".jsavscore");
     if ($jsavscore.size() === 1 && $jsavscore.children().size() === 0 &&
       this.options.feedback === "continuous") {
-      $jsavscore.html('Your current score is <span class="jsavcurrentscore"></span> out of ' +
-          '<span class="jsavcurrentmaxscore" ></span>. Maximum score will be out of ' +
-          '<span class="jsavmaxscore" ></span>.');
+      $jsavscore.html('Score: <span class="jsavcurrentscore"></span> / ' +
+          '<span class="jsavmaxscore" ></span>, Points remaining: <span class="jsavpointsleft"></span>, ' +
+          'Points lost: <span class="jsavpointslost" ></span>');
     }
     
     // if custom showGrade function is given
