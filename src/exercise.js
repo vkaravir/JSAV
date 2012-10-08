@@ -292,6 +292,9 @@
         updateScore(this);
         return;
       }
+      if (grade.correct === grade.total) { // student continues with the exercise even after done
+        return;
+      }
       var fixmode = this.fixmode?this.fixmode.val():this.options.fixmode;
       // undo until last graded step
       this.undo();
