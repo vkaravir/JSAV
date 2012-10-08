@@ -240,10 +240,8 @@
     }
   };
   exerproto.showModelanswer = function() {
-    // only regenerate model answer if it does not already exist
-    if (!this.modelav) {
-      this.modelanswer();
-    }
+    // regenerate the model answer
+    this.modelanswer();
     // rewind the model av
     this.modelav.begin();
     // show the dialog
