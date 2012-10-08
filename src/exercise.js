@@ -54,7 +54,11 @@
               self.jsav.logEvent({type: "jsav-exercise-undo"});
               self.undo();
             });
-      cont.append($undo, $reset, $model, $grade);
+      // only show undo button if not in continuous mode
+      if (this.options.feedback !== "continuous") {
+        cont.append($undo);
+      }
+      cont.append($reset, $model, $grade);
     }
     // if feedbacktype can be selected, add settings for it
     if (this.options.feedbackSelectable) {
