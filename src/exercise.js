@@ -6,7 +6,7 @@
   "use strict";
   if (typeof JSAV === "undefined") { return; }
   // function to filter the steps to those that should be graded
-  var gradeStepFunction = function(step) { return step.options.grade; };
+  var gradeStepFilterFunction = function(step) { return step.options.grade; };
 
   var updateScore = function(exer) {
     if (exer.options.feedback === "continuous") {
@@ -97,8 +97,7 @@
   };
   var graders = {
     "default": function() {
-      var totalSteps = 0,
-          studentSteps = 0,
+      var studentSteps = 0,
           correct = true,
           forwStudent = true,
           forwModel = true,
@@ -111,12 +110,11 @@
       this.score.student = 0;
       while (correct && forwStudent && forwModel && modelAv.currentStep() < modelTotal &&
             studentAv.currentStep() < studentTotal) {
-        forwStudent = studentAv.forward(gradeStepFunction);
-        forwModel = modelAv.forward(gradeStepFunction);
+        forwStudent = studentAv.forward(gradeStepFilterFunction);
+        forwModel = modelAv.forward(gradeStepFilterFunction);
         if (forwStudent) { studentSteps++; }
         correct = false;
         if (forwModel) {
-          totalSteps++;
           if (forwModel && forwStudent) {
             if (allEqual(this.initialStructures, this.modelStructures, this.options.compare)) {
               correct = true;
@@ -125,28 +123,18 @@
           }
         }
       }
-      // figure out the total number of graded steps in model answer
-      forwModel = true;
-      while (forwModel && modelAv.currentStep() < modelTotal) {
-        forwModel = modelAv.forward(gradeStepFunction);
-        if (forwModel) {
-          totalSteps++;
-        }
-      }
       // figure out the total number of graded steps in student answer
       forwStudent = true;
       while (forwStudent && studentAv.currentStep() < studentTotal) {
-        forwStudent = studentAv.forward(gradeStepFunction);
+        forwStudent = studentAv.forward(gradeStepFilterFunction);
         if (forwStudent) {
           studentSteps++;
         }
       }
-      this.score.total = totalSteps;
       this.score.student = studentSteps;
     },
     finder: function() {
-      var totalSteps = 0,
-          studentSteps = 0,
+      var studentSteps = 0,
           cont = true,
           forwStudent = true,
           forwModel = true,
@@ -159,9 +147,8 @@
       this.score.student = 0;
       while (forwModel && cont && modelAv.currentStep() < modelTotal &&
             studentAv.currentStep() < studentTotal) {
-        forwModel = modelAv.forward(gradeStepFunction);
+        forwModel = modelAv.forward(gradeStepFilterFunction);
         if (forwModel) {
-          totalSteps++;
           forwStudent = true;
           while (forwStudent && !allEqual(this.initialStructures, this.modelStructures, this.options.compare) &&
             studentAv.currentStep() < studentTotal) {
@@ -172,14 +159,6 @@
           } else {
             cont = false;
           }
-        }
-      }
-      // figure out the total number of graded steps in model answer
-      forwModel = true;
-      while (forwModel && modelAv.currentStep() < modelTotal) {
-        forwModel = modelAv.forward(gradeStepFunction);
-        if (forwModel) {
-          totalSteps++;
         }
       }
       this.score.total = totalSteps;
@@ -220,6 +199,7 @@
   };
   exerproto.modelanswer = function() {
     var model = this.options.model,
+        modelav,
         self = this,
         modelOpts = $.extend({ "title": 'Model Answer', "closeOnClick": false, "modal": false,
                               "closeCallback": function() { self.jsav.logEvent({type: "jsav-exercise-model-close"}); } },
@@ -234,16 +214,29 @@
     if ($.isFunction(model)) {
       // behavior in a nutshell:
       // 1. create a new JSAV (and the HTML required for it)
-      this.modelav = new JSAV($("<div><span class='jsavcounter'/><div class='jsavcontrols'/><p class='jsavoutput jsavline'></p></div>").addClass("jsavmodelanswer"),
+      modelav = new JSAV($("<div><span class='jsavcounter'/><div class='jsavcontrols'/><p class='jsavoutput jsavline'></p></div>").addClass("jsavmodelanswer"),
               {logEvent: modelLogHandler });
       // 2. create a dialog for the model answer
-      this.modelDialog = JSAV.utils.dialog(this.modelav.container, modelOpts );
+      this.modelDialog = JSAV.utils.dialog(modelav.container, modelOpts );
       // 3. generate the model structures and the state sequence
-      var str = model(this.modelav);
+      this.modelStructures = model(modelav);
       // 4. rewind the model answer and hide the dialog
-      this.modelav.recorded();
-      this.modelStructures = str;
+      modelav.recorded();
       this.modelDialog.hide();
+
+      // figure out the total number of graded steps in model answer
+      var forwModel = true,
+          modelTotal = modelav.totalSteps(),
+          totalSteps = 0;
+      while (forwModel && modelav.currentStep() < modelTotal) {
+        forwModel = modelav.forward(gradeStepFilterFunction);
+        if (forwModel) {
+          totalSteps++;
+        }
+      }
+      modelav.begin();
+      this.score.total = totalSteps;
+      this.modelav = modelav;
     }
   };
   exerproto.showModelanswer = function() {
@@ -270,7 +263,7 @@
     this.jsav.backward(); // the empty new step
     this.jsav.backward(); // the new graded step
     // undo until the previous graded step
-    if (this.options.grader === "default" && this.jsav.backward(gradeStepFunction)) {
+    if (this.options.grader === "default" && this.jsav.backward(gradeStepFilterFunction)) {
       // if such step was found, redo it
       this.jsav.forward();
       this.jsav.step();
@@ -305,7 +298,7 @@
         this.modelav.begin();
         // .. and forward it to the correct position
         for (var i = 0; i <= grade.correct; i++) {
-          this.modelav.forward(gradeStepFunction);
+          this.modelav.forward(gradeStepFilterFunction);
         }
         // call the fix function of the exercise to correct the state
         this.fix(this.modelStructures);
