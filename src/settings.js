@@ -6,22 +6,26 @@
   "use strict";
   if (typeof JSAV === "undefined") { return; }
   var speedChoices = [5000, 3000, 1500, 1000, 500, 400, 300, 200, 100, 50];
+  var getSpeedChoice = function(speedVal) {
+    var curval = speedChoices.length - 1;
+    while (curval && speedChoices[curval] < speedVal) {
+      curval--;
+    }
+    return curval + 1;
+  };
   var speedSetting = function() {
-    var curSpeed = JSAV.ext.SPEED;
     return function() {
+      var curSpeed = JSAV.ext.SPEED;
       var rangeSupported = !!$.support.inputTypeRange;
+      // get the closest speed choice to the current speed
+      var curval = getSpeedChoice(curSpeed);
       // add explanation if using range slider, help text otherwise
       var $elem = $('<div class="jsavrow">Animation speed' + (rangeSupported?' (slow - fast)':'') +
-          ': <input type="range" min="1" max="10" step="1" size="30"/></div> ' +
-          (rangeSupported?'':'<div class="jsavhelp">Value between 1 (Slow) and 10 (Fast).') +
+          ': <input type="range" min="1" max="10" step="1" size="30" value="' + curval + '"/> ' +
+          (rangeSupported?'':'<button>Save</button><div class="jsavhelp">Value between 1 (Slow) and 10 (Fast). ') +
           '</div>');
-      // get the closest speed choice to the current speed
-      var curval = speedChoices.length - 1;
-      while (curval && speedChoices[curval] < curSpeed) {
-        curval--;
-      }
-      // set the value and add a change event listener
-      $elem.find("input").val(curval + 1).change(function() {
+      // event handler function for storing the speed
+      var speedChangeHandler = function() {
         var speed = parseInt($(this).val(), 10);
         if (isNaN(speed) || speed < 1 || speed > 10) { return; }
         speed = speedChoices[speed - 1]; // speed in milliseconds
@@ -29,7 +33,23 @@
         JSAV.ext.SPEED = speed;
         //trigger speed change event to update all AVs on the page
         $(document).trigger("jsav-speed-change", speed);
-      });
+        if (localStorage) {
+          localStorage.setItem("jsav-speed", speed);
+        }
+      };
+      // set the value and add a change event listener
+      var $inputElem = $elem.find("input").val(curval);
+      if (rangeSupported) {
+        $inputElem.change(speedChangeHandler);
+      } else {
+        $elem.find("button").click(function() {
+          speedChangeHandler.call($inputElem);
+          var savedElem = $("<span>Saved..</span>");
+          setTimeout(function() { savedElem.fadeOut(); }, 1000);
+          $(this).after(savedElem);
+        });
+      }
+
       // return the element
       return $elem;
     };

@@ -5,6 +5,9 @@
 /*global JSAV:true */
 (function($) {
   "use strict";
+
+  var DEFAULT_SPEED = 300;
+
   if (typeof JSAV === "undefined") { return; }
 
   var AnimatableOperation = function(opts) {
@@ -260,7 +263,12 @@
     return true;
   }
   JSAV.anim = anim;
-  JSAV.ext.SPEED = 300;
+  if (localStorage) {
+
+    JSAV.ext.SPEED = localStorage.getItem("jsav-speed") || DEFAULT_SPEED;
+  } else {
+    JSAV.ext.SPEED = DEFAULT_SPEED;
+  }
   JSAV.ext.begin = begin;
   JSAV.ext.end = end;
   JSAV.ext.forward = function(filter) {
