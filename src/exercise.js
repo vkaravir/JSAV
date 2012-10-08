@@ -14,10 +14,14 @@
         exer.modelanswer();
         exer.grade();
       }
+      if (exer._defaultscoretext) {
+        exer.jsav.container.find(".jsavamidone").html((exer.score.total === exer.score.correct)?
+          "DONE":"Point remaining: <span class='jsavpointsleft'></span>");
+      }
       exer.jsav.container.find(".jsavcurrentscore").text(exer.score.correct - exer.score.fix);
       exer.jsav.container.find(".jsavcurrentmaxscore").text(exer.score.correct);
       exer.jsav.container.find(".jsavmaxscore").text(exer.score.total);
-      exer.jsav.container.find(".jsavpointsleft").text(exer.score.total - exer.score.correct);
+      exer.jsav.container.find(".jsavpointsleft").text((exer.score.total - exer.score.correct) || "DONE");
       exer.jsav.container.find(".jsavpointslost").text(exer.score.fix || 0);
     }
   };
@@ -78,8 +82,10 @@
     if ($jsavscore.size() === 1 && $jsavscore.children().size() === 0 &&
       this.options.feedback === "continuous") {
       $jsavscore.html('Score: <span class="jsavcurrentscore"></span> / ' +
-          '<span class="jsavmaxscore" ></span>, Points remaining: <span class="jsavpointsleft"></span>, ' +
+          '<span class="jsavmaxscore" ></span>, <span class="jsavamidone">Points remaining: ' +
+          '<span class="jsavpointsleft"></span></span>, ' +
           'Points lost: <span class="jsavpointslost" ></span>');
+      this._defaultscoretext = true;
     }
     
     // if custom showGrade function is given
