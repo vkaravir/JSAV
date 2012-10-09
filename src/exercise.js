@@ -143,6 +143,25 @@
       }
       this.score.student = studentSteps;
     },
+    "default-continuous": function() {
+      var modelAv = this.modelav,
+          studentAv = this.jsav,
+          forwStudent, forwModel;
+      console.log("Before:", modelAv.currentStep(), modelAv.totalSteps(), studentAv.currentStep(), studentAv.totalSteps());
+      if (modelAv.currentStep() < modelAv.totalSteps() &&
+        studentAv.currentStep() < studentAv.totalSteps()) {
+          forwModel = modelAv.forward(gradeStepFilterFunction);
+          forwStudent = studentAv.forward(gradeStepFilterFunction);
+          if (forwStudent) { this.score.student++; }
+          if (forwModel && forwStudent) {
+            if (allEqual(this.initialStructures, this.modelStructures, this.options.compare)) {
+              this.score.correct++;
+            }
+          }
+      }
+      studentAv.forward();
+      console.log("After:", modelAv.currentStep(), modelAv.totalSteps(), studentAv.currentStep(), studentAv.totalSteps());
+    },
     finder: function() {
       var studentSteps = 0,
           cont = true,
@@ -175,7 +194,7 @@
     }
   };
   var exerproto = Exercise.prototype;
-  exerproto.grade = function() {
+  exerproto.grade = function(continuousMode) {
     // behavior in a nutshell:
     // 1. get the student's solution
     // 2. get the model answer
@@ -185,15 +204,20 @@
     // 6. return result
     // 7. TODO: show comparison of own and model side by side (??)
     var origStep = this.jsav.currentStep();
-    this.jsav.begin();
     if (!this.modelav) {
       this.modelanswer();
     }
-    this.modelav.begin();
+    if (!continuousMode) {
+      this.jsav.begin();
+      this.modelav.begin();
+    } else {
+      this.jsav.backward(gradeStepFilterFunction);
+    }
     $.fx.off = true;
-    graders[this.options.grader].call(this);
-    this.modelav.begin();
-    this.jsav.jumpToStep(origStep);
+    graders[this.options.grader + (continuousMode?"-continuous":"")].call(this);
+    if (!continuousMode) {
+      this.jsav.jumpToStep(origStep);
+    }
     $.fx.off = false;
     return this.score;
   };
@@ -207,13 +231,20 @@
     }
     window.alert(msg);
   };
-  exerproto.modelanswer = function() {
+  exerproto.modelanswer = function(returnToStep) {
     var model = this.options.model,
         modelav,
         self = this,
         modelOpts = $.extend({ "title": 'Model Answer', "closeOnClick": false, "modal": false,
-                              "closeCallback": function() { self.jsav.logEvent({type: "jsav-exercise-model-close"}); } },
-                    this.options.modelDialog); // options passed for the model answer window
+                              "closeCallback": function() {
+                                self.jsav.logEvent({type: "jsav-exercise-model-close"});
+                                if (returnToStep) {
+                                  console.log("returning to step", returnToStep);
+                                  modelav.jumpToStep(returnToStep);
+                                }
+                              }
+                             },
+                            this.options.modelDialog); // options passed for the model answer window
     // function that will "catch" the model answer animator log events and rewrite
     // their type to have the jsav-exercise-model prefix and the av id
     var modelLogHandler = function(eventData) {
@@ -250,8 +281,9 @@
     }
   };
   exerproto.showModelanswer = function() {
+    var prevPosition = this.modelav?this.modelav.currentStep():0;
     // regenerate the model answer
-    this.modelanswer();
+    this.modelanswer(prevPosition);
     // rewind the model av
     this.modelav.begin();
     // show the dialog
@@ -296,7 +328,8 @@
     if ((this.feedback && this.feedback.val() === "continuous") ||
         (!this.feedback && this.options.feedback === "continuous")) {
       this.jsav.container.find(":animated").stop(false, true);
-      var grade = this.grade();
+      var grade = this.grade(true); // true is for continuous mode
+      console.log("correct", grade.correct, "student", grade.student, "total", grade.total);
       if (grade.student === grade.correct) { // all student's steps are correct
         this.jsav.logEvent({ type: "jsav-exercise-grade-change", score: $.extend({}, grade)});
         updateScore(this);
@@ -308,14 +341,15 @@
       var fixmode = this.fixmode?this.fixmode.val():this.options.fixmode;
       // undo until last graded step
       this.undo();
+      //this.modelav.backward(gradeStepFilterFunction);
       if (fixmode === "fix" && $.isFunction(this.options.fix)) {
         $.fx.off = true;
         // make sure model answer is at the beginning..
-        this.modelav.begin();
+//        this.modelav.begin();
         // .. and forward it to the correct position
-        for (var i = 0; i <= grade.correct; i++) {
+  /*      for (var i = 0; i <= grade.correct; i++) {
           this.modelav.forward(gradeStepFilterFunction);
-        }
+        }*/
         // call the fix function of the exercise to correct the state
         this.fix(this.modelStructures);
         $.fx.off = false;
@@ -330,6 +364,9 @@
         this.jsav.logEvent({type: "jsav-exercise-step-undone", score: $.extend({}, grade)});
         window.alert("Your last step was incorrect. Things are reset to the beginning of the step so that you can try again.");
       }
+      this.modelav.backward();
+      this.modelav.backward(gradeStepFilterFunction);
+      this.modelav.forward();
       updateScore(this);
     }
   };
