@@ -127,7 +127,6 @@
         if (forwModel) {
           if (forwModel && forwStudent) {
             if (allEqual(this.initialStructures, this.modelStructures, this.options.compare)) {
-              //console.log("All equal!");
               correct = true;
               this.score.correct++;
             }
@@ -147,21 +146,18 @@
     "default-continuous": function() {
       var modelAv = this.modelav,
           studentAv = this.jsav,
-          forwStudent = true, forwModel;
-      //console.log("Before:", modelAv.currentStep(), modelAv.totalSteps(), studentAv.currentStep(), studentAv.totalSteps());
+          forwModel;
       if (modelAv.currentStep() < modelAv.totalSteps() &&
         studentAv.currentStep() <= studentAv.totalSteps()) {
           forwModel = modelAv.forward(gradeStepFilterFunction);
-          //forwStudent = studentAv.forward(gradeStepFilterFunction);
-          if (forwStudent) { this.score.student++; }
-          if (forwModel && forwStudent) {
+          this.score.student++;
+          if (forwModel) {
             if (allEqual(this.initialStructures, this.modelStructures, this.options.compare)) {
               this.score.correct++;
             }
           }
       }
       studentAv.forward();
-      //console.log("After:", modelAv.currentStep(), modelAv.totalSteps(), studentAv.currentStep(), studentAv.totalSteps());
     },
     finder: function() {
       var studentSteps = 0,
@@ -191,7 +187,6 @@
           }
         }
       }
-      this.score.total = totalSteps;
     }
   };
   var exerproto = Exercise.prototype;
@@ -213,13 +208,14 @@
       this.jsav.begin();
       this.modelav.begin();
     }
+    var prevFx = $.fx.off || false;
     $.fx.off = true;
     graders[this.options.grader + (continuousMode?"-continuous":"")].call(this);
     if (!continuousMode) {
       this.jsav.jumpToStep(origStep);
       this.modelav.jumpToStep(origModelStep);
     }
-    $.fx.off = false;
+    $.fx.off = prevFx;
     return this.score;
   };
   exerproto.showGrade = function() {
@@ -240,7 +236,6 @@
                               "closeCallback": function() {
                                 self.jsav.logEvent({type: "jsav-exercise-model-close"});
                                 if (returnToStep) {
-                                  //console.log("returning to step", returnToStep);
                                   modelav.jumpToStep(returnToStep);
                                 }
                               }
@@ -326,15 +321,15 @@
     $.fx.off = oldFx;
   };
   var moveModelBackward = function(exer) {
-    var prevFx = $.fx.off || false;
-    $.fx.off = true;
     exer.modelav.backward();
-    exer.modelav.backward(gradeStepFilterFunction);
-    exer.modelav.forward();
-    $.fx.off = prevFx;
+    if (exer.modelav.backward(gradeStepFilterFunction)) {
+      exer.modelav.forward();
+    }
   };
   exerproto.gradeableStep = function() {
-    //console.log("========GRADEABLE STEP========", this._fixing?"fixing":"");
+    var prevFx = $.fx.off || false;
+    $.fx.off = true;
+    // if we are here because of fix function being called
     if (this._fixing) {
       moveModelBackward(this);
     }
@@ -343,9 +338,7 @@
     if ((this.feedback && this.feedback.val() === "continuous") ||
         (!this.feedback && this.options.feedback === "continuous")) {
       this.jsav.container.find(":animated").stop(false, true);
-      $.fx.off = true;
       var grade = this.grade(true); // true is for continuous mode
-      //console.log("correct", grade.correct, "student", grade.student, "total", grade.total);
       if (grade.student === grade.correct) { // all student's steps are correct
         this.jsav.logEvent({ type: "jsav-exercise-grade-change", score: $.extend({}, grade)});
         updateScore(this);
@@ -362,6 +355,7 @@
       if (fixmode === "fix" && $.isFunction(this.options.fix)) {
         // call the fix function of the exercise to correct the state
         this._fixing = true;
+        var modelAv = this.modelav, studentAv = this.jsav;
         this.fix(this.modelStructures);
         delete this._fixing;
         this.score.fix++;
@@ -379,6 +373,7 @@
       }
       updateScore(this);
     }
+    $.fx.off = prevFx;
   };
   exerproto.fix = function() {
     var fix = this.options.fix;
