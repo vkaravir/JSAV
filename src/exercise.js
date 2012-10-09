@@ -232,8 +232,8 @@
       this.modelStructures = model(modelav);
       // 4. rewind the model answer and hide the dialog
       modelav.recorded();
-      this.modelDialog.hide();
-
+      var oldFx = $.fx.off || false;
+      $.fx.off = true;
       // figure out the total number of graded steps in model answer
       var forwModel = true,
           modelTotal = modelav.totalSteps(),
@@ -244,7 +244,9 @@
           totalSteps++;
         }
       }
+      $.fx.off = oldFx;
       modelav.begin();
+      this.modelDialog.hide();
       this.score.total = totalSteps;
       this.modelav = modelav;
     }
