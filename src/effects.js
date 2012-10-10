@@ -60,7 +60,7 @@
 
     if (this._shouldAnimate()) {  // only animate when playing, not when recording
       $toValElem.position({of: $fromValElem}); // let jqueryUI position it on top of the from element
-      $toValElem.animate({"left": "0", top: 0}, this.speed, 'linear'); // animate to final position
+      $toValElem.animate({"left": "0", top: 0}, this.SPEED, 'linear'); // animate to final position
     }
 
     // return "reversed" parameters and the old value for undoing
