@@ -29,6 +29,74 @@
       }
       return this;
     },
+    moveValue: function() {
+      // first we parse the passed arguments
+      // possibilities are: 
+      //  - array, ind, array, ind
+      //  - array, ind, node
+      //  - node, array, ind
+      //  - node, node
+      var params = {
+        args1: [],
+        args2: [],
+        from: arguments[0] // first param is always 1st structure
+      };
+      if (arguments.length === 2) { // two nodes passed
+        params.to = arguments[1];
+      } else if (arguments.length === 4) { // case of two arrays
+        params.args1 = [ arguments[1] ];
+        params.to = arguments[2];
+        params.args2 = [ arguments[3] ];
+      } else { // one array, one node
+        if (typeof arguments[1] === "object") { // second param not number or string
+          params.to = arguments[1];
+          params.args2 = [ arguments[2] ];
+        } else { // 2nd param is an index
+          params.args1 = [ arguments[1] ];
+          params.to = arguments[2];
+        }
+      }
+      var doTheMove = function(opts) {
+        // get the values of the from and to elements
+        var val = opts.from.value.apply(opts.from, opts.args1),
+            oldValue = opts.to.value.apply(opts.to, opts.args2),
+            $fromValElem, $toValElem;
+        // get the HTML elements for the values, for arrays, use the index
+        if (opts.from.constructor === JSAV._types.ds.AVArray) {
+          $fromValElem = opts.from.element.find("li:eq(" + opts.args1[0] + ") .jsavvalue");
+        } else {
+          $fromValElem = opts.from.element.find(".jsavvalue");
+        }
+        if (opts.to.constructor === JSAV._types.ds.AVArray) {
+          $toValElem = opts.to.element.find("li:eq(" + opts.args2[0] + ") .jsavvalue");
+        } else {
+          $toValElem = opts.to.element.find(".jsavvalue");
+        }
+
+        // set the value in original structure to empty string or, if undoing, the old value
+        opts.from.value.apply(opts.from, opts.args1.concat([opts.old?opts.old:"", {record: false}]));
+
+        // set the value of the target structure
+        opts.to.value.apply(opts.to, opts.args2.concat([val, {record: false}]));
+
+        if (this._shouldAnimate()) {  // only animate when playing, not when recording
+          $toValElem.position({of: $fromValElem}); // let jqueryUI position it on top of the from element
+          $toValElem.animate({"left": "0", top: 0}, this.speed, 'linear'); // animate to final position
+        }
+
+        // return "reversed" parameters and the old value for undoing
+        return [{
+          from: opts.to,
+          args1: opts.args2,
+          to: opts.from,
+          args2: opts.args1,
+          old: oldValue
+        }];
+      };
+
+      // wrap the doTheMove function to JSAV animatable function
+      JSAV.anim(doTheMove).call(this, params);
+    },
     swap: function($str1, $str2, translateY) {
       var $val1 = $str1.find("span.jsavvalue"),
           $val2 = $str2.find("span.jsavvalue"),
