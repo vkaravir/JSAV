@@ -1050,6 +1050,38 @@ q.show();</pre>
   <li>title: title of the dialog</li>
 </ul>
 
+<h2>Animation Effects</h2>
+<p>The module <code>.effects</code> offers some useful animation effects for
+  AV developers.</p>
+<h3 class="apimethod">.moveValue(...)</h3>
+<p>Method <code>.moveValue</code> animates <em>moving</em> of a value from one structure
+  to another. Structure can be an array or a tree/list node. The following parameter
+  combinations are valid:</p>
+<ul>
+  <li><code>.moveValue(fromArray, fromIndex, toArray, toIndex)</code> Moves
+    value at <code>fromIndex</code> in <code>fromArray</code> to <code>toIndex</code>
+    in <code>toArray</code>. The value in <code>fromIndex</code> will be an empty
+    string after this operation.</li>
+  <li><code>.moveValue(fromArray, fromIndex, toNode)</code> Moves
+    value at <code>fromIndex</code> in <code>fromArray</code> to <code>toNode</code>. 
+    The value in <code>fromIndex</code> will be an empty
+    string after this operation.</li>
+  <li><code>.moveValue(fromNode, toArray, toIndex)</code> Moves
+    value in <code>fromNode</code> to <code>toIndex</code>
+    in <code>toArray</code>. The value in <code>fromNode</code> will be an empty
+    string after this operation.</li>
+  <li><code>.moveValue(fromNode, toNode)</code> Moves value in <code>fromNode</code>
+    to <code>toNode</code>. The value in <code>fromNode</code> will be an empty
+    string after this operation.</li>
+</ul>
+<p>In addition, <code>fromNode</code> and <code>toNode</code> can be an instance of
+  <code>jsav.variable</code>.</p>
+
+<h3 class="apimethod">.copyValue(...)</h3>
+<p>Method that animates <em>copying</em> a value from one structure to another. The same
+  parameter combinations are valid as for the <code>.moveValue</code> method. The only
+  difference is that the source value is not removed.</p>
+
 <h2>Best Practice for Modularity</h2>
 
 <p>
