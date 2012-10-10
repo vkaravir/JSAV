@@ -158,35 +158,6 @@
           }
       }
       studentAv.forward();
-    },
-    finder: function() {
-      var studentSteps = 0,
-          cont = true,
-          forwStudent = true,
-          forwModel = true,
-          modelAv = this.modelav,
-          studentAv = this.jsav,
-          modelTotal = modelAv.totalSteps(), // "cache" the size
-          studentTotal = studentAv.totalSteps(); // "cache" the size
-
-      this.score.correct = 0;
-      this.score.student = 0;
-      while (forwModel && cont && modelAv.currentStep() < modelTotal &&
-            studentAv.currentStep() < studentTotal) {
-        forwModel = modelAv.forward(gradeStepFilterFunction);
-        if (forwModel) {
-          forwStudent = true;
-          while (forwStudent && !allEqual(this.initialStructures, this.modelStructures, this.options.compare) &&
-            studentAv.currentStep() < studentTotal) {
-              forwStudent = studentAv.forward();
-          }
-          if (allEqual(this.initialStructures, this.modelStructures, this.options.compare)) {
-            this.score.correct++;
-          } else {
-            cont = false;
-          }
-        }
-      }
     }
   };
   var exerproto = Exercise.prototype;
@@ -309,9 +280,6 @@
     if (this.options.grader === "default" && this.jsav.backward(gradeStepFilterFunction)) {
       // if such step was found, redo it
       this.jsav.forward();
-      this.jsav.step();
-    } else if (this.options.grader !== "default") {
-      // other than default grader, finder grader does not use graded steps
       this.jsav.step();
     } else {
       // ..if not, the first student step was incorrent and we can rewind to beginning
