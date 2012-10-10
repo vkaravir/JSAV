@@ -188,6 +188,7 @@
       inittree(this);
       this._tree.layout();
     }
+    if (this.options.steps) { this.jsav.stepOption("grade", true); }
     step.apply(this.jsav);
     while (i > 1 && comp(this.value(parent - 1), val) > 0) {
       if (this.options.stats) {
