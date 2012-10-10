@@ -20,7 +20,7 @@
   AnimatableOperation.prototype.apply = function() {
     var self = this;
     var obj = self.obj,
-      state = obj.state();
+      state = obj.state?obj.state():null;
     var retVal = this.effect.apply(this.obj, this.args);
     if (typeof retVal === "undefined" || retVal === this.obj) {
       if (typeof this.undoeffect === "undefined" || !$.isFunction(this.undoeffect)) {
@@ -290,10 +290,10 @@
       i,
       effects = 0;
     for (i = this._undo.length; i--; ) {
-      effects += this._undo[i].length;
+      effects += this._undo[i].operations.length;
     }
     for (i = this._redo.length; i--; ) {
-      effects += this._redo[i].length;
+      effects += this._redo[i].operations.length;
     }
     info.effects = effects;
     return info;
