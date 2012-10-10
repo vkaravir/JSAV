@@ -4,7 +4,6 @@
 */
 (function($) {
   "use strict";
-  var jsanim = JSAV.anim;
   var parseValueEffectParameters = function() {
     // parse the passed arguments
     // possibilities are:
@@ -54,7 +53,9 @@
     }
 
     // set the value in original structure to empty string or, if undoing, the old value
-    from.value.apply(from, opts.args1.concat([opts.old?opts.old:"", {record: false}]));
+    if (opts.move || typeof opts.old !== "undefined") {
+      from.value.apply(from, opts.args1.concat([(typeof opts.old !== "undefined")?opts.old:"", {record: false}]));
+    }
     // set the value of the target structure
     to.value.apply(to, opts.args2.concat([val, {record: false}]));
 
@@ -98,12 +99,14 @@
       return this;
     },
     copyValue: function() {
-
+      var params = parseValueEffectParameters.apply(null, arguments);
+      // wrap the doValueEffect function to JSAV animatable function
+      JSAV.anim(doValueEffect).call(this, params);
     },
     moveValue: function() {
       var params = parseValueEffectParameters.apply(null, arguments);
-
-      // wrap the doTheMove function to JSAV animatable function
+      params.move = true;
+      // wrap the doValueEffect function to JSAV animatable function
       JSAV.anim(doValueEffect).call(this, params);
     },
     swap: function($str1, $str2, translateY) {
