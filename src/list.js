@@ -142,6 +142,9 @@
   listproto.state = function(newState) {
     // TODO: implement list.state
   };
+  listproto.clear = function() {
+    this.element.remove();
+  };
   listproto.size = function() {
     var curNode = this.first(),
       size = 0;
