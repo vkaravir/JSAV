@@ -73,7 +73,7 @@
   listproto.last = function(newLast, options) {
     if (typeof newLast === "undefined") {
       var curNode = this.first();
-      while (curNode.next()) {
+      while (curNode && curNode.next()) {
         curNode = curNode.next();
       }
       return curNode;
@@ -85,6 +85,10 @@
   listproto.addLast = function(newValue, options) {
     var last = this.last(),
         newNode;
+    if (typeof last === "undefined") { // if no last, add to first
+      this.first(newValue);
+      return this;
+    }
     if (newValue instanceof ListNode) {
       newNode = newValue;
     } else {
@@ -127,6 +131,7 @@
   listproto.removeFirst = function(options) {
     var oldFirst = this.first();
     this._setfirst(oldFirst.next(), options);
+    oldFirst.hide();
     return oldFirst;
   };
   listproto.removeLast = function(options) {
