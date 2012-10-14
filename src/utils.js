@@ -519,10 +519,69 @@ mixkey(math.random(), pool);
       var positions = ["right", "bottom", "top", "left"],
           posProps = {"position": "absolute"},
           pos;
-      for (var i = positions.length; i--; ) {
-        pos = positions[i];
-        if (options.hasOwnProperty(pos)) {
-          posProps[positions[i]] = options[positions[i]];
+      if ("relativeTo" in options) {
+        var relElem = options.relativeTo,
+            anchor = options.anchor || "center",
+            myAnchor = options.myAnchor || "center";
+          if (!(relElem instanceof jQuery)) {
+            if (relElem.nodeType === Node.ELEMENT_NODE) { // check if it's DOM element
+              relElem = $(relElem);
+            } else {
+              // if not jQuery object nor DOM element, assume JSAV object
+              relElem = relElem.element || relElem;
+            }
+          }
+          var offsetLeft = parseInt(options.left || 0, 10),
+              offsetTop = parseInt(options.top || 0, 10);
+          var relPos = relElem.position(),
+              relLeft = relPos.left,
+              relTop = relPos.top;
+          console.log(relPos, offsetLeft + " " + offsetTop, anchor, myAnchor, relElem, el);
+          // store relElems position
+          // calculate and store pos diff
+          // on update:
+          //  - check relElems position
+          //  - check elems position
+          //  - update elems position using jqUI
+          //  - store new pos and revert elems position change
+          //  - calculate new pos and animate
+          //options.center = false;
+          //el.css("position", "absolute");
+          el.position({my: myAnchor, at: anchor, of: relElem, offset: offsetLeft + " " + offsetTop});
+          var elemPos = el.position(),
+              elemLeft = elemPos.left,
+              elemTop = elemPos.top;
+
+          jsavobj.jsav.container.on("jsav-updaterelative", function() {
+            var elemCurPos = el.position(),
+                elemCurLeft = elemCurPos.left,
+                elemCurTop = elemCurPos.top,
+                offsetChangeLeft = elemCurLeft - elemLeft, // element position has been changed
+                offsetChangeTop = elemCurTop - elemTop; // element position has been changed
+            offsetLeft = offsetLeft + offsetChangeLeft;
+            offsetTop = offsetTop + offsetChangeTop;
+            console.log("new offset left", offsetLeft, "top", offsetTop, "offset change left", offsetChangeLeft, "top", offsetChangeTop);
+            el.position({my: myAnchor, at: anchor, of: relElem, offset: offsetLeft + " " + offsetTop});
+            elemPos = el.position();
+            elemLeft = elemPos.left;
+            elemTop = elemPos.top;
+            if (elemLeft === elemCurLeft && elemTop === elemCurTop && // relativeTo element has not changed pos
+                      offsetChangeLeft === 0 && offsetChangeTop === 0) { // this element has not changed pos
+              console.log("no change");
+              return; // no change to animate, just return
+            }
+            console.log("new elemLeft", elemLeft, "new elemTop", elemTop, "old elemLeft", elemCurLeft, "oldElemTop", elemCurTop);
+            el.css({left: elemCurLeft, top: elemCurTop}); // resture the element position
+            jsavobj.css({left: elemLeft, top: elemTop}); // .. and animate the change
+          });
+          //return;
+        //}
+      } else {
+        for (var i = positions.length; i--; ) {
+          pos = positions[i];
+          if (options.hasOwnProperty(pos)) {
+            posProps[positions[i]] = options[positions[i]];
+          }
         }
       }
       if (options.hasOwnProperty("left") || options.hasOwnProperty("right")) {
