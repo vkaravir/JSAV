@@ -153,6 +153,8 @@
 /* vertical array */
 .jsavverticalarray.jsavindexed .jsavindex {
   position: relative;
+}
+.jsavverticalarray .jsavindex {
   margin-bottom: -1px;
 }
 .jsavverticalarray .jsavindexlabel {
