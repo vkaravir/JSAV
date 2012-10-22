@@ -135,12 +135,13 @@
     }
   };
 
-  bhproto.heapify = function(pos) {
+  bhproto.heapify = function(pos, options) {
     var size = this.heapsize(),
       lpos = pos * 2,
       rpos = pos * 2 + 1,
       smallest = pos,
-      comp = this.options.compare;
+      comp = this.options.compare,
+      step = this.options.steps ? this.jsav.step : function() {};
     if (lpos <= size && comp(this.value(lpos - 1), this.value(pos - 1)) < 0) {
       smallest = lpos;
     }
@@ -153,9 +154,15 @@
         if (smallest === lpos) { this.stats.leftswaps++; }
         else { this.stats.rightswaps++; }
       }
-      this.swap(smallest - 1, pos - 1);
-      this.jsav.step();
-      if (this.heapify(smallest) && this.options.stats) {
+      if (options && options.noAnimation) {
+        var tmp = this.value(pos - 1);
+        this.value(pos - 1, this.value(smallest - 1));
+        this.value(smallest - 1, tmp);
+      } else {
+        this.swap(smallest - 1, pos - 1);
+      }
+      step.apply(this.jsav);
+      if (this.heapify(smallest, options) && this.options.stats) {
         this.stats.recursiveswaps++;
       } else if (this.options.stats) {
         this.stats.partlyrecursiveswaps++;
