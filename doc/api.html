@@ -262,6 +262,16 @@ JSAV rather than by the developer.
 <li>center: Boolean to determine if array should be automatically centered
   within its container. Defaults to true.</li>
   <li>left/top/right/bottom: Values to determine the absolute position of the array relative to its container.</li>
+  <li>relativeTo: A JSAV data structure object or DOM element that this structure should be positioned relative to.
+      If this option is specified, left and top options will change structure's position relative to the relativeTo
+      element. Note, that the element pointed by relativeTo needs to be visible.</li>
+  <li>anchor: Defines which position on the element being positioned to align with the target element. Should be in 
+      format <code>horizontal vertical</code>. Possible horizontal values are "left", "center", "right" and vertical values "top", "center", "bottom". Defaults to <code>center center</code>. Only has an effect if relativeTo is
+      specified.</li>
+  <li>myAnchor: Similar to anchor, but the position on this element. Defaults to <code>center center</code>. Only 
+      has an effect if relativeTo is specified.</li>
+  <li>relativeIndex: If relativeTo points to a JSAV array, this option can be used to position this structure relative
+      to an index in that array. Only has an effect if relativeTo is specified.</li>
 </ul>
 
 <h3 class="apimethod">.clone()</h3>
@@ -476,6 +486,16 @@ Currently, JSAV supports two types of trees: common tree and binary tree. The st
   within its container. Defaults to true.</li>
   <li>left/top/right/bottom: Values to determine the absolute position of the tree relative to its container.</li>
   <li>nodegap: Number to specify how big the gap between nodes in the tree should be. Defaults to 40.</li>
+  <li>relativeTo: A JSAV data structure object or DOM element that this structure should be positioned relative to.
+      If this option is specified, left and top options will change structure's position relative to the relativeTo
+      element. Note, that the element pointed by relativeTo needs to be visible.</li>
+  <li>anchor: Defines which position on the element being positioned to align with the target element. Should be in 
+      format <code>horizontal vertical</code>. Possible horizontal values are "left", "center", "right" and vertical values "top", "center", "bottom". Defaults to <code>center center</code>. Only has an effect if relativeTo is
+      specified.</li>
+  <li>myAnchor: Similar to anchor, but the position on this element. Defaults to <code>center center</code>. Only 
+      has an effect if relativeTo is specified.</li>
+  <li>relativeIndex: If relativeTo points to a JSAV array, this option can be used to position this structure relative
+      to an index in that array. Only has an effect if relativeTo is specified.</li>
 </ul>
 
 <h3 class="apimethod">.css(propertyName)</h3>
@@ -600,8 +620,17 @@ The additional <code>options</code> parameter works like for <code>.child(...)</
   <li>visible: Boolean to determine if initially the list is shown or not. Default true.</li>
   <li>center: Boolean to determine if list should be automatically centered within its container. Defaults to true.</li>
   <li>left/top/right/bottom: Values to determine the absolute position of the list relative to its container.</li>
-  <li>nodegap: Number to specify how big the gap between nodes in the list should be. Defaults to 40.
-</li>
+  <li>nodegap: Number to specify how big the gap between nodes in the list should be. Defaults to 40.</li>
+  <li>relativeTo: A JSAV data structure object or DOM element that this structure should be positioned relative to.
+      If this option is specified, left and top options will change structure's position relative to the relativeTo
+      element. Note, that the element pointed by relativeTo needs to be visible.</li>
+  <li>anchor: Defines which position on the element being positioned to align with the target element. Should be in 
+      format <code>horizontal vertical</code>. Possible horizontal values are "left", "center", "right" and vertical values "top", "center", "bottom". Defaults to <code>center center</code>. Only has an effect if relativeTo is
+      specified.</li>
+  <li>myAnchor: Similar to anchor, but the position on this element. Defaults to <code>center center</code>. Only 
+      has an effect if relativeTo is specified.</li>
+  <li>relativeIndex: If relativeTo points to a JSAV array, this option can be used to position this structure relative
+      to an index in that array. Only has an effect if relativeTo is specified.</li>
 </ul>
 <p>The returned list instance is controlled through a collection of methods explained next. In addition, the list has the common functions such as <code>.id()</code>, <code>.css(...)</code>, <code>.show()</code>, and <code>.hide()</code>.</p>
 
@@ -706,6 +735,16 @@ out, this method will return the current text of the label.
       number, or string. By default, the type is decided based on the type of the
       initial value.</li>
     <li><code>{left/top/right/bottom: &lt;lengthUnit>}</code> Values to determine the absolute position of the label relative to its container.</li>
+  <li>relativeTo: A JSAV data structure object or DOM element that this structure should be positioned relative to.
+      If this option is specified, left and top options will change structure's position relative to the relativeTo
+      element. Note, that the element pointed by relativeTo needs to be visible.</li>
+  <li>anchor: Defines which position on the element being positioned to align with the target element. Should be in 
+      format <code>horizontal vertical</code>. Possible horizontal values are "left", "center", "right" and vertical values "top", "center", "bottom". Defaults to <code>center center</code>. Only has an effect if relativeTo is
+      specified.</li>
+  <li>myAnchor: Similar to anchor, but the position on this element. Defaults to <code>center center</code>. Only 
+      has an effect if relativeTo is specified.</li>
+  <li>relativeIndex: If relativeTo points to a JSAV array, this option can be used to position this structure relative
+      to an index in that array. Only has an effect if relativeTo is specified.</li>
     </ul>
 
     <h3 class="apimethod">.hide()</h3>
@@ -747,6 +786,16 @@ out, this method will return the current text of the label.
         applied if the <code>url</code> parameter is also provided.</li>
       <li> <code>{endBefore: &lt;string>}</code> Only the content before the first occurrence of the specified text will be included. Only
         applied if the <code>url</code> parameter is also provided.</li>
+      <li>relativeTo: A JSAV data structure object or DOM element that this structure should be positioned relative to.
+      If this option is specified, left and top options will change structure's position relative to the relativeTo
+      element. Note, that the element pointed by relativeTo needs to be visible.</li>
+      <li>anchor: Defines which position on the element being positioned to align with the target element. Should be in 
+      format <code>horizontal vertical</code>. Possible horizontal values are "left", "center", "right" and vertical values "top", "center", "bottom". Defaults to <code>center center</code>. Only has an effect if relativeTo is
+      specified.</li>
+      <li>myAnchor: Similar to anchor, but the position on this element. Defaults to <code>center center</code>. Only 
+      has an effect if relativeTo is specified.</li>
+      <li>relativeIndex: If relativeTo points to a JSAV array, this option can be used to position this structure relative
+      to an index in that array. Only has an effect if relativeTo is specified.</li>
     </ul>
     <p>Pseudocode objects have the following functions.</p>
     <h3 class="apimethod">.highlight(indices) and .unhighlight(indices)</h3>
