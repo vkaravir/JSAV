@@ -526,6 +526,9 @@ mixkey(math.random(), pool);
           if (!(relElem instanceof jQuery)) {
             if (relElem.nodeType === Node.ELEMENT_NODE) { // check if it's DOM element
               relElem = $(relElem);
+            } else if (relElem.constructor === JSAV._types.ds.AVArray && "relativeIndex" in options)  {
+              // position relative to the given array index, so set relElem to that index element
+              relElem = relElem.element.find(".jsavindex:eq(" + options.relativeIndex + ")");
             } else {
               // if not jQuery object nor DOM element, assume JSAV object
               relElem = relElem.element || relElem;
@@ -545,8 +548,6 @@ mixkey(math.random(), pool);
           //  - update elems position using jqUI
           //  - store new pos and revert elems position change
           //  - calculate new pos and animate
-          //options.center = false;
-          //el.css("position", "absolute");
           el.position({my: myAnchor, at: anchor, of: relElem, offset: offsetLeft + " " + offsetTop});
           var elemPos = el.position(),
               elemLeft = elemPos.left,
