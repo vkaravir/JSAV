@@ -515,74 +515,73 @@ mixkey(math.random(), pool);
   _helpers.handlePosition = function(jsavobj) {
     var el = jsavobj.element,
         options = jsavobj.options;
-    if ("left" in options || "top" in options || "bottom" in options || "right" in options) {
+    if ("relativeTo" in options || "left" in options || "top" in options || "bottom" in options || "right" in options) {
       var positions = ["right", "bottom", "top", "left"],
           posProps = {"position": "absolute"},
           pos;
+      options.center = false;
       // if positioning relative to some other object
       if ("relativeTo" in options) {
         var relElem = options.relativeTo,
             anchor = options.anchor || "center",
             myAnchor = options.myAnchor || "center";
-          if (!(relElem instanceof jQuery)) {
-            if (relElem.nodeType === Node.ELEMENT_NODE) { // check if it's DOM element
-              relElem = $(relElem);
-            } else if (relElem.constructor === JSAV._types.ds.AVArray && "relativeIndex" in options)  {
-              // position relative to the given array index, so set relElem to that index element
-              relElem = relElem.element.find(".jsavindex:eq(" + options.relativeIndex + ")");
-            } else {
-              // if not jQuery object nor DOM element, assume JSAV object
-              relElem = relElem.element || relElem;
-            }
+        if (!(relElem instanceof jQuery)) {
+          if (relElem.nodeType === Node.ELEMENT_NODE) { // check if it's DOM element
+            relElem = $(relElem);
+          } else if (relElem.constructor === JSAV._types.ds.AVArray && "relativeIndex" in options)  {
+            // position relative to the given array index, so set relElem to that index element
+            relElem = relElem.element.find(".jsavindex:eq(" + options.relativeIndex + ")");
+          } else {
+            // if not jQuery object nor DOM element, assume JSAV object
+            relElem = relElem.element || relElem;
           }
-          var offsetLeft = parseInt(options.left || 0, 10),
-              offsetTop = parseInt(options.top || 0, 10);
-          // store relElems position
-          var relPos = relElem.position(),
-              relLeft = relPos.left,
-              relTop = relPos.top;
-          el.position({my: myAnchor, at: anchor, of: relElem, offset: offsetLeft + " " + offsetTop});
-          var elemPos = el.position(),
-              elemLeft = elemPos.left,
-              elemTop = elemPos.top;
-
-          jsavobj.jsav.container.on("jsav-updaterelative", function() {
-            // on update:
-            //  - check relElems position
-            //  - check elems position
-            //  - update elems position using jqUI
-            //  - store new pos and revert elems position change
-            //  - calculate new pos and animate
-            var elemCurPos = el.position(),
-                elemCurLeft = elemCurPos.left,
-                elemCurTop = elemCurPos.top,
-                offsetChangeLeft = elemCurLeft - elemLeft, // element position has been changed
-                offsetChangeTop = elemCurTop - elemTop; // element position has been changed
-            offsetLeft = offsetLeft + offsetChangeLeft;
-            offsetTop = offsetTop + offsetChangeTop;
-            el.position({my: myAnchor, at: anchor, of: relElem, offset: offsetLeft + " " + offsetTop});
-            elemPos = el.position();
-            elemLeft = elemPos.left;
+        }
+        el.css({ position: "absolute" });
+        var offsetLeft = parseInt(options.left || 0, 10),
+            offsetTop = parseInt(options.top || 0, 10);
+        // store relElems position
+        var relPos = relElem.position(),
+            relLeft = relPos.left,
+            relTop = relPos.top;
+        el.position({my: myAnchor, at: anchor, of: relElem, offset: offsetLeft + " " + offsetTop});
+        var elemPos = el.position(),
+            elemLeft = elemPos.left,
             elemTop = elemPos.top;
-            if (elemLeft === elemCurLeft && elemTop === elemCurTop && // relativeTo element has not changed pos
-                      offsetChangeLeft === 0 && offsetChangeTop === 0) { // this element has not changed pos
-              return; // no change to animate, just return
-            }
-            el.css({left: elemCurLeft, top: elemCurTop}); // restore the element position
-            jsavobj.css({left: elemLeft, top: elemTop}); // .. and animate the change
-          }); // end relative positioning
+
+        jsavobj.jsav.container.on("jsav-updaterelative", function() {
+          // on update:
+          //  - check relElems position
+          //  - check elems position
+          //  - update elems position using jqUI
+          //  - store new pos and revert elems position change
+          //  - calculate new pos and animate
+          var elemCurPos = el.position(),
+              elemCurLeft = elemCurPos.left,
+              elemCurTop = elemCurPos.top,
+              offsetChangeLeft = elemCurLeft - elemLeft, // element position has been changed
+              offsetChangeTop = elemCurTop - elemTop; // element position has been changed
+          offsetLeft = offsetLeft + offsetChangeLeft;
+          offsetTop = offsetTop + offsetChangeTop;
+          el.position({my: myAnchor, at: anchor, of: relElem, offset: offsetLeft + " " + offsetTop});
+          elemPos = el.position();
+          elemLeft = elemPos.left;
+          elemTop = elemPos.top;
+          if (elemLeft === elemCurLeft && elemTop === elemCurTop && // relativeTo element has not changed pos
+                    offsetChangeLeft === 0 && offsetChangeTop === 0) { // this element has not changed pos
+            return; // no change to animate, just return
+          }
+          el.css({left: elemCurLeft, top: elemCurTop}); // restore the element position
+          jsavobj.css({left: elemLeft, top: elemTop}); // .. and animate the change
+        }); // end relative positioning
       } else { // positioning absolutely
         for (var i = positions.length; i--; ) {
           pos = positions[i];
           if (options.hasOwnProperty(pos)) {
             posProps[positions[i]] = options[pos];
           }
+          el.css(posProps);
         }
       }
-      if (options.hasOwnProperty("left") || options.hasOwnProperty("right")) {
-        options.center = false;
-      }
-      el.css(posProps);
     }
   };
   _helpers.handleVisibility = function(jsavobj, options) {
