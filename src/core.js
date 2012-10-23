@@ -46,6 +46,7 @@
       } else {
         this.container = $(arguments[0]); // make sure it is jQuery object
       }
+      var initialHTML = this.container.clone().wrap("<p/>").parent().html();
       this.container.addClass("jsavcontainer");
       this.canvas = this.container.find(".jsavcanvas");
       if (this.canvas.size() === 0) {
@@ -59,6 +60,8 @@
       initializations(this, options);
       // add all plugins from ext namespace
       extensions(this, this, JSAV.ext);
+
+      this.logEvent({ type: "jsav-init", initialHTML: initialHTML });
     };
   function initializations(jsav, options) {
     var fs = JSAV.init.functions;
