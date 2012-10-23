@@ -366,6 +366,7 @@
     this.begin();
     this.RECORD = false;
     $.fx.off = false;
+    this.logEvent({type: "jsav-recorded"});
     return this;
   };
   JSAV.ext.isAnimating = function() {
