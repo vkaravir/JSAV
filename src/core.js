@@ -52,7 +52,7 @@
       if (this.canvas.size() === 0) {
         this.canvas = $("<div />").addClass("jsavcanvas").appendTo(this.container);
       }
-      this.options = arguments[1] || { };
+      this.options = $.extend({}, window.JSAV_OPTIONS, arguments[1]);
       this.RECORD = true;
       jQuery.fx.off = true; // by default we are recording changes, not animating them
       var options = arguments[1] || { }; // TODO: default options
