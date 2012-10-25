@@ -155,7 +155,8 @@
     if (valtype === "object") { valtype = "string"; }
     $index.attr("data-value", "" + newValue).attr("data-value-type", valtype);
     $index.find(".jsavvalue").html("" + newValue);
-    if (("" + newValue).length > ("" + oldval).length) {
+    if (("" + newValue).length > ("" + oldval).length || newli) {
+      // if the new value is longer than old, or new elements were added to array, re-layout
       this.layout();
     }
     return [index, oldval];
