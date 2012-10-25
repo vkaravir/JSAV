@@ -30,7 +30,9 @@
     this.jsav = jsav;
     this.options = jQuery.extend({reset: function() { }, controls: null, feedback: "atend",
                                   feedbackSelectable: false, fixmode: "undo",
-                                  fixmodeSelectable: false, grader: "default"}, options);
+                                  fixmodeSelectable: false, grader: "default"},
+                                  window.JSAV_EXERCISE_OPTIONS,
+                                  options);
     // initialize controls
     var cont = $(this.options.controls),
         self = this;
