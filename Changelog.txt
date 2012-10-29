@@ -3,11 +3,18 @@ For changes before version 0.3.1, see
 
 Changes in development version
 ------------------------------
+
+Changes in version 0.6
+------------------------------
 * new features:
   - support for pseudocode view
+* numerous bug fixes
 * new minor features:
   - tree nodes now have a remove() function to remove that node
   - tree node show/hide now work recursively and hide the whole subtree
+  - significant performance improvements in proficiency exercise grading
+  - customizable showing of score and a score widget in proficiency exercises
+  - enabled logging of student actions in JSAV visualizations
 
 Changes in version 0.5
 ----------------------
