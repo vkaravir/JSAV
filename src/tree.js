@@ -447,7 +447,11 @@
           .attr("data-value"),
         valtype = typeof(newValue);
     if (valtype === "object") { valtype = "string"; }
-    this.element.html(this._valstring(newValue)).attr({"data-value": newValue, "data-value-type": valtype});
+    this.element
+        .find(".jsavvalue")
+        .html(this._valstring(newValue))
+        .end()
+        .attr({"data-value": newValue, "data-value-type": valtype});
     if (newValue === "jsavnull") {
       this.element.addClass("jsavnullnode");
     }
