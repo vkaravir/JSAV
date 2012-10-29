@@ -6,7 +6,7 @@
   </head>
 
 <body>
-<h1>Documentation for the JavaScript Algorithm Visualization API (JSAV) Version 0.6</h1>
+<h1>Documentation for the JavaScript Algorithm Visualization API (JSAV) Version 0.7dev</h1>
 
 <p class="note">
 This documentation reflects the current status of the library.
@@ -412,6 +412,18 @@ Sets the value of the element at the given index to the given value.
   <li><code>startIndex</code>: Index in the array where the line will start. Default 0.</li>
   <li><code>endIndex</code>: Index in the array where the line will end, inclusive. Defaults to last index of the array.</li>
 </ul>
+<h3 class="apimethod">.addClass(index, className, [options])</h3>
+<p>Adds the CSS class <code>className</code> to given indices and animates the changes. Like for
+  the rest of array methods, <code>index</code> can be a number, array of numbers, or a function.</p>
+<h3 class="apimethod">.removeClass(index, className, [options])</h3>
+<p>Removes the CSS class <code>className</code> to given indices and animates the changes. Like for
+  the rest of array methods, <code>index</code> can be a number, array of numbers, or a function.</p>
+<h3 class="apimethod">.toggleClass(index, className, [options])</h3>
+<p>Toggles the CSS class <code>className</code> to given indices and animates the changes. Like for
+  the rest of array methods, <code>index</code> can be a number, array of numbers, or a function.</p>
+<h3 class="apimethod">.hasClass(index, className, [options])</h3>
+<p>Return true/false based on if the given index has the CSS class <code>className</code>. Parameter
+  <code>index</code> should be a number.</p>
 
 <h3 class="apitopic">Events</h3>
 <p>There are functions to attach event handlers for the array elements. The events that can be
@@ -535,6 +547,18 @@ option <code>recursive</code> is set to <code>false</code>.</p>
 <p>Make the tree visible.This function exists for all trees. It recursively shows all the nodes and edges in the tree as well unless
 option <code>recursive</code> is set to <code>false</code>.</p>
 
+<h3 class="apimethod">.addClass(className, [options])</h3>
+<p>Adds the CSS class <code>className</code> to the tree and animates the changes.</p>
+
+<h3 class="apimethod">.removeClass(className, [options])</h3>
+<p>Removes the CSS class <code>className</code> from the tree and animates the changes.</p>
+
+<h3 class="apimethod">.toggleClass(className, [options])</h3>
+<p>Toggles the CSS class <code>className</code> to the tree and animates the changes.</p>
+
+<h3 class="apimethod">.hasClass(className, [options])</h3>
+<p>Return true/false based on if the tree has the CSS class <code>className</code>.</p>
+
 
 <h3 class="apitopic">Events</h3>
 <p>There are functions to attach event handlers for the nodes and edges in the tree. The events 
@@ -592,6 +616,18 @@ option <code>recursive</code> is set to <code>false</code>.</p>
 <p>Shows the node and the edge connecting it to the parent node. Also recursively shows all child nodes unless 
 option <code>recursive false</code> is set to <code>false</code>. Note, that if the tree is not visible, showing nodes will not have
 any effect until the tree is set visible by calling show.</p>
+
+<h3 class="apimethod">.addClass(className, [options])</h3>
+<p>Adds the CSS class <code>className</code> to the node and animates the changes.</p>
+
+<h3 class="apimethod">.removeClass(className, [options])</h3>
+<p>Removes the CSS class <code>className</code> from the node and animates the changes.</p>
+
+<h3 class="apimethod">.toggleClass(className, [options])</h3>
+<p>Toggles the CSS class <code>className</code> of the node and animates the changes.</p>
+
+<h3 class="apimethod">.hasClass(className, [options])</h3>
+<p>Return true/false based on if the node has the CSS class <code>className</code>.</p>
 
 <h2>Binary Tree Node API</h2>
 <h3 class="apimethod">.left([node [, options]])</h3>
@@ -658,6 +694,18 @@ The additional <code>options</code> parameter works like for <code>.child(...)</
 <h3 class="apimethod">.newNode(value [, options])</h3>
 <p>Returns a new node that can be added to the list.</p>
 
+<h3 class="apimethod">.addClass(className, [options])</h3>
+<p>Adds the CSS class <code>className</code> to the list and animates the changes.</p>
+
+<h3 class="apimethod">.removeClass(className, [options])</h3>
+<p>Removes the CSS class <code>className</code> from the list and animates the changes.</p>
+
+<h3 class="apimethod">.toggleClass(className, [options])</h3>
+<p>Toggles the CSS class <code>className</code> of the list and animates the changes.</p>
+
+<h3 class="apimethod">.hasClass(className, [options])</h3>
+<p>Return true/false based on if the list has the CSS class <code>className</code>.</p>
+
 <h2>Linked List Node API</h2>
 <p>A node in a list has the same functions as a tree node: <code>.value([newValue])</code>, <code>.highlight()/unhighlight()</code>, <code>.show()/.hide()</code>, and <code>.css(...)</code>. In addition, it has the following functions.</p>
 <h3 class="apimethod">.next()</h3>
@@ -670,6 +718,18 @@ The additional <code>options</code> parameter works like for <code>.child(...)</
 
 <h3 class="apimethod">.edgeToNext()</h3>
 <p>Returns the JSAV Edge object that points to the next item in the list.</p>
+
+<h3 class="apimethod">.addClass(className, [options])</h3>
+<p>Adds the CSS class <code>className</code> to the node and animates the changes.</p>
+
+<h3 class="apimethod">.removeClass(className, [options])</h3>
+<p>Removes the CSS class <code>className</code> from the node and animates the changes.</p>
+
+<h3 class="apimethod">.toggleClass(className, [options])</h3>
+<p>Toggles the CSS class <code>className</code> of the node and animates the changes.</p>
+
+<h3 class="apimethod">.hasClass(className, [options])</h3>
+<p>Return true/false based on if the node has the CSS class <code>className</code>.</p>
 
 <h2>Label API</h2>
 
@@ -709,6 +769,18 @@ Make the label visible.
 Set the text for the label. If the <code>msg</code> parameter is left
 out, this method will return the current text of the label.
 </p>
+
+<h3 class="apimethod">.addClass(className, [options])</h3>
+<p>Adds the CSS class <code>className</code> to the label and animates the changes.</p>
+
+<h3 class="apimethod">.removeClass(className, [options])</h3>
+<p>Removes the CSS class <code>className</code> from the label and animates the changes.</p>
+
+<h3 class="apimethod">.toggleClass(className, [options])</h3>
+<p>Toggles the CSS class <code>className</code> of the label and animates the changes.</p>
+
+<h3 class="apimethod">.hasClass(className, [options])</h3>
+<p>Return true/false based on if the label has the CSS class <code>className</code>.</p>
 
     <h2>Variable API</h2>
 
@@ -767,6 +839,18 @@ out, this method will return the current text of the label.
     converted to the type specified when initializing the variable.
     </p>
 
+    <h3 class="apimethod">.addClass(className, [options])</h3>
+    <p>Adds the CSS class <code>className</code> to the variable and animates the changes.</p>
+
+    <h3 class="apimethod">.removeClass(className, [options])</h3>
+    <p>Removes the CSS class <code>className</code> from the variable and animates the changes.</p>
+
+    <h3 class="apimethod">.toggleClass(className, [options])</h3>
+    <p>Toggles the CSS class <code>className</code> of the variable and animates the changes.</p>
+
+    <h3 class="apimethod">.hasClass(className, [options])</h3>
+    <p>Return true/false based on if the variable has the CSS class <code>className</code>.</p>
+
     <h2>Pseudocode API</h2>
     <p>The pseudocode API in JSAV is intended for showing a static set of codelines that can be show/hidden and
       highlighted. There are two ways to initialize a pseudocode object in JSAV:</p>
@@ -820,6 +904,18 @@ out, this method will return the current text of the label.
     <p>Sets the line at given <var>index</var> as the current line. Also, if another line was previously set as current, it will be
       marked as previous. If a line was also earlier marked as previous, that mark will be removed. This will help in creating a 
       visual debugger-like code stepping functionality in visualizations.</p>
+    <h3 class="apimethod">.addClass(indices, className, [options])</h3>
+    <p>Adds the CSS class <code>className</code> to lines at given indices and animates the changes. Like for
+      the rest of pseudocode methods, <code>indices</code> can be a number, array of numbers, or a function.</p>
+    <h3 class="apimethod">.removeClass(indices, className, [options])</h3>
+    <p>Removes the CSS class <code>className</code> from lines at given indices and animates the changes. Like for
+      the rest of pseudocode methods, <code>indices</code> can be a number, array of numbers, or a function.</p>
+    <h3 class="apimethod">.toggleClass(indices, className, [options])</h3>
+    <p>Toggles the CSS class <code>className</code> of lines at  given indices and animates the changes. Like for
+      the rest of pseudocode methods, <code>indices</code> can be a number, array of numbers, or a function.</p>
+    <h3 class="apimethod">.hasClass(index, className, [options])</h3>
+    <p>Return true/false based on if the line at given index has the CSS class <code>className</code>. Parameter
+      <code>index</code> should be a number.</p>
 
 
     <h2>Graphical Primitives API</h2>
