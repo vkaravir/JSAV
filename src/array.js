@@ -291,7 +291,37 @@
   arrproto.clear = function() {
     this.element.remove();
   };
-  
+  arrproto.toggleClass = JSAV.anim(function(index, className, options) {
+    var $elems = getIndices($(this.element).find("li.jsavindex"), index);
+    if (this.jsav._shouldAnimate()) {
+      $elems.toggleClass(className, this.jsav.SPEED);
+    } else {
+      $elems.toggleClass(className);
+    }
+    return [index, className];
+  });
+  arrproto.addClass = function(index, className, options) {
+    var $elems = getIndices($(this.element).find("li.jsavindex"), index);
+    if (!$elems.hasClass(className)) {
+      return this.toggleClass(index, className, options);
+    } else {
+      return this;
+    }
+  };
+  arrproto.removeClass = function(index, className, options) {
+    var $elems = getIndices($(this.element).find("li.jsavindex"), index);
+    if ($elems.hasClass(className)) {
+      return this.toggleClass(index, className, options);
+    } else {
+      return this;
+    }
+  };
+  arrproto.hasClass = function(index, className) {
+    var $elems = getIndices($(this.element).find("li.jsavindex"), index);
+    return $elems.hasClass(className);
+  };
+
+
   // events to register as functions on array
   var events = ["click", "dblclick", "mousedown", "mousemove", "mouseup",
                 "mouseenter", "mouseleave"];

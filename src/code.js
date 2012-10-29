@@ -63,8 +63,14 @@
   varproto.equals = function(otherVariable) {
     if (!otherVariable || typeof otherVariable !== "object") { return false; }
     return this.value() === otherVariable.value();
-  };
-  
+  };  
+  varproto.css = JSAV.utils._helpers.css;
+  varproto._setcss = JSAV.anim(JSAV.utils._helpers._setcss);
+  varproto.addClass = JSAV.utils._helpers.addClass;
+  varproto.removeClass = JSAV.utils._helpers.removeClass;
+  varproto.hasClass = JSAV.utils._helpers.hasClass;
+  varproto.toggleClass = JSAV.anim(JSAV.utils._helpers._toggleClass);
+
   JSAV.ext.variable = function(value, options) {
     return new Variable(this, value, options);
   };

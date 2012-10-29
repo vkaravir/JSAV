@@ -591,4 +591,30 @@ mixkey(math.random(), pool);
       jsavobj.show(options);
     }
   };
+  _helpers._toggleClass = function(className) {
+    if (this.jsav._shouldAnimate()) {
+      this.element.toggleClass(className, this.jsav.SPEED);
+    } else {
+      this.element.toggleClass(className);
+    }
+    return [className];
+  };
+  _helpers.addClass = function(className, options) {
+    if (!this.element.hasClass(className)) {
+      return this.toggleClass(className, options);
+    } else {
+      return this;
+    }
+  };
+  _helpers.removeClass = function(className, options) {
+    if (this.element.hasClass(className)) {
+      return this.toggleClass(className, options);
+    } else {
+      return this;
+    }
+  };
+  _helpers.hasClass = function(className) {
+    return this.element.hasClass(className);
+  };
+
 }(jQuery));

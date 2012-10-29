@@ -56,6 +56,10 @@
       _toggleVisible: JSAV.anim(JSAV.ext.effects._toggleVisible),
       show: JSAV.ext.effects.show,
       hide: JSAV.ext.effects.hide,
+      addClass: JSAV.utils._helpers.addClass,
+      removeClass: JSAV.utils._helpers.removeClass,
+      hasClass: JSAV.utils._helpers.hasClass,
+      toggleClass: JSAV.anim(JSAV.utils._helpers._toggleClass),
       // dummy methods for initializing a DS, the DS should override these
       initialize: function() { },
       initializeFromElement: function() { },
@@ -236,7 +240,11 @@
     var bbox = this.g.bounds();
     return {left: bbox.left, top: bbox.top};
   };
- 
+  // the default versions won't work on Raphael nodes so just remove them
+  delete edgeproto.addClass;
+  delete edgeproto.hasClass;
+  delete edgeproto.toggleClass;
+  delete edgeproto.removeClass;
   
   var Node = function() {},
   nodeproto = Node.prototype;
