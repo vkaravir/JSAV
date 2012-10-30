@@ -270,7 +270,7 @@
     return [oldVal];
   });
   nodeproto._valstring = function(value) {
-    return "<span class='jsavvalue'>" + value + "</span>";
+    return "<span class='jsavvaluelabel'>" + value + "</span>";
   };
   // TODO: these are so ugly, do something! soon!
   nodeproto.highlight = function(options) {

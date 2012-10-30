@@ -116,7 +116,7 @@
     this.container = container;
     this.parentnode = parent;
     this.options = $.extend(true, {visible: true}, parent?parent.options:{}, options);
-    var el = this.options.nodeelement || $("<div>" + this._valstring(value) + "</div>"),
+    var el = this.options.nodeelement || $("<div><span class='jsavvalue'>" + this._valstring(value) + "</span></div>"),
       valtype = typeof(value);
     if (valtype === "object") { valtype = "string"; }
     this.element = el;
@@ -141,7 +141,7 @@
     this.childnodes = [];
   };
   nodeproto._valstring = function(value) {
-    var valstr = "<span class='jsavvalue'>";
+    var valstr = "<span class='jsavvaluelabel'>";
     if (value === "jsavnull") {
       return valstr + "</span>";
     }

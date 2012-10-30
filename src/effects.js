@@ -40,24 +40,24 @@
         val = from.value.apply(from, opts.args1),
         oldValue = to.value.apply(to, opts.args2),
         $fromValElem, $toValElem;
-    // get the HTML elements for the values, for arrays, use the index
-    if (from.constructor === JSAV._types.ds.AVArray) {
-      $fromValElem = from.element.find("li:eq(" + opts.args1[0] + ") .jsavvalue");
-    } else {
-      $fromValElem = from.element.find(".jsavvalue");
-    }
-    if (to.constructor === JSAV._types.ds.AVArray) {
-      $toValElem = to.element.find("li:eq(" + opts.args2[0] + ") .jsavvalue");
-    } else {
-      $toValElem = to.element.find(".jsavvalue");
-    }
-
     // set the value in original structure to empty string or, if undoing, the old value
     if (opts.move || typeof opts.old !== "undefined") {
       from.value.apply(from, opts.args1.concat([(typeof opts.old !== "undefined")?opts.old:"", {record: false}]));
     }
     // set the value of the target structure
     to.value.apply(to, opts.args2.concat([val, {record: false}]));
+
+    // get the HTML elements for the values, for arrays, use the index
+    if (from.constructor === JSAV._types.ds.AVArray) {
+      $fromValElem = from.element.find("li:eq(" + opts.args1[0] + ") .jsavvaluelabel");
+    } else {
+      $fromValElem = from.element.find(".jsavvaluelabel");
+    }
+    if (to.constructor === JSAV._types.ds.AVArray) {
+      $toValElem = to.element.find("li:eq(" + opts.args2[0] + ") .jsavvaluelabel");
+    } else {
+      $toValElem = to.element.find(".jsavvaluelabel");
+    }
 
     if (this._shouldAnimate()) {  // only animate when playing, not when recording
       $toValElem.position({of: $fromValElem}); // let jqueryUI position it on top of the from element

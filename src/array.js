@@ -136,8 +136,8 @@
     if (typeof value === "undefined") {
       value = "";
     }
-    var ind = $("<li class='jsavnode jsavindex'><span class='jsavvalue'>" + value + "</span></li>"),
-      valtype = typeof(value);
+    var ind = $("<li class='jsavnode jsavindex'><span class='jsavvalue'><span class='jsavvaluelabel'>" +
+          value + "</span></span></li>"), valtype = typeof(value);
     if (valtype === "object") { valtype = "string"; }
     ind.attr("data-value", value).attr("data-value-type", valtype);
     return ind;
@@ -154,7 +154,7 @@
       valtype = typeof(newValue);
     if (valtype === "object") { valtype = "string"; }
     $index.attr("data-value", "" + newValue).attr("data-value-type", valtype);
-    $index.find(".jsavvalue").html("" + newValue);
+    $index.find(".jsavvaluelabel").html("" + newValue);
     if (("" + newValue).length > ("" + oldval).length || newli) {
       // if the new value is longer than old, or new elements were added to array, re-layout
       this.layout();
@@ -208,7 +208,8 @@
       if (!$this.attr("data-value-type")) {
         $this.attr("data-value-type", "string");
       }
-      $this.addClass("jsavnode jsavindex").html("<span class='jsavvalue'>" + $this.html() + "</span>");
+      $this.addClass("jsavnode jsavindex").html("<span class='jsavvalue'><span class='jsavvaluelabel'>" + 
+          $this.html() + "</span></span>");
     });
     this.layout();
   };
@@ -515,8 +516,7 @@
         $valueBar = $i.find(".jsavvaluebar");
       }
       $valueBar.css({"height": "100%"});
-      $i.find(".jsavvalue").css("height", (100.0*array.value(index) / maxValue) + 15 + "%")
-        .html('<span>' + $i.find(".jsavvalue").text() + '</span>');
+      $i.find(".jsavvalue").css("height", (100.0*array.value(index) / maxValue) + 15 + "%");
       if (indexed) {
         var $indexLabel = $i.find(".jsavindexlabel");
         if ($indexLabel.size() === 0) {

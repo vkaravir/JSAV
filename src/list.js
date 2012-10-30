@@ -171,7 +171,7 @@
     this._next = options.next;
     this._value = value;
     this.options = $.extend(true, {visible: true}, options);
-    var el = $("<div>" + this._valstring(value) + "<span class='jsavpointerarea'></span></div>"),
+    var el = $("<div><span class='jsavvalue'>" + this._valstring(value) + "</span><span class='jsavpointerarea'></span></div>"),
       valtype = typeof(value);
     if (valtype === "object") { valtype = "string"; }
     this.element = el;

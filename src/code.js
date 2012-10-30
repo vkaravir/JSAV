@@ -13,8 +13,8 @@
     this.jsav = jsav;
     this.options = $.extend({visible: false, type: typeof value}, options);
     this.element = $('<div class="jsavvariable">' +
-                      '<span class="jsavvarlabel"></span> <span class="jsavvalue jsavvarvalue">' +
-                      value + '</span></div>');
+                      '<span class="jsavvarlabel"></span> <span class="jsavvalue">' +
+                      '<span class="jsavvaluelabel jsavvarvalue">' + value + '</span></span></div>');
     this.element.find(".jsavvarvalue").attr("data-value", value);
     if (this.options.before) {
       this.element.insertBefore(this.options.before.element);
