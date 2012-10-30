@@ -169,7 +169,7 @@
       };
       if (!this._label) {
         this._label = this.jsav.label(newLabel, {container: this.container.element});
-        this._label.element.css({position: "absolute", display: "inline-block"});
+        this._label.element.css({position: "absolute", display: "inline-block"}).addClass("jsavedgelabel");
       } else {
         this._label.text(newLabel, options);
       }

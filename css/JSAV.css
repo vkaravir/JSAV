@@ -427,6 +427,11 @@ a.jsavdialogclose {
   opacity: 0;
 }
 
+.jsavedgelabel {
+  text-shadow: 1px 1px 0 white, -1px -1px white;
+  z-index: 700;
+}
+
 /******** LINKED LIST STRUCTURE ******/
 .jsavpointerarea {
   background-color: #eee;
