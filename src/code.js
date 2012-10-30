@@ -232,7 +232,7 @@
   codeproto.css = function(index, cssprop, options) {
     var $elems = getIndices($(this.element).find("li.jsavcodeline"), index);
     if (typeof cssprop === "string") {
-      return $elems.find(".jsavvalue").css(cssprop);
+      return $elems.css(cssprop);
     } else if (typeof index === "string") {
       return this.element.css(index);
     } else {
