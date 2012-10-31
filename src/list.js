@@ -11,7 +11,7 @@
 
   var List = function(jsav, options) {
     this.jsav = jsav;
-    this.options = $.extend({visible: true, nodegap: 40}, options);
+    this.options = $.extend({visible: true, nodegap: 40, autoresize: true}, options);
     var el = this.options.element || $("<div/>");
     el.addClass("jsavlist");
     for (var key in this.options) {
@@ -25,6 +25,9 @@
     }
     this.element = el;
     this.element.attr({"id": this.id()});
+    if (this.options.autoresize) {
+      el.addClass("jsavautoresize");
+    }
     JSAV.utils._helpers.handlePosition(this);
     JSAV.utils._helpers.handleVisibility(this, this.options);
   };
@@ -247,10 +250,10 @@
     if (opts.updateTop) { newPos.top = 0; }
     var edge = prevNode?prevNode._edgetonext:undefined;
     if (edge && opts.updateEdges) {
-      var start = [0, prevPos.left + prevNode.element.width() - 5,
-                  prevPos.top + Math.round(prevNode.element.height()/2)],
+      var start = [0, prevPos.left + prevNode.element.outerWidth() - 5,
+                  prevPos.top + Math.round(prevNode.element.outerHeight()/2)],
           end = [1, newPos.left - 3,
-                  newPos.top + Math.round(node.element.height()/2)];
+                  newPos.top + Math.round(node.element.outerHeight()/2)];
       return [newPos, [start, end]];
     }
     return [newPos];

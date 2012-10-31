@@ -36,6 +36,13 @@
   width: 100%;
 }
 
+.jsavautoresize .jsavnode {
+  width: auto;
+  min-width: 45px;
+  height: auto;
+  min-height: 45px;
+}
+
 /***** STYLING OF THE ARRAY DATA STRUCTURE *****/
 .jsavarray {
   position: relative;
@@ -439,7 +446,9 @@ a.jsavdialogclose {
 }
 .jsavhorizontallist .jsavpointerarea {
   border-left: 1px solid black;
-  float: right;
+  position: absolute;
+  right: 0;
+  top: 0;
   width: 10px;
   height: 100%;
 }
@@ -454,7 +463,15 @@ a.jsavdialogclose {
 .jsavlist {
   position: relative;
 }
-
+.jsavhorizontallist.jsavautoresize .jsavnode {
+  min-width: 33px;
+  min-height: 45px;
+  padding-right: 12px;
+}
+.jsavverticallist.jsavautoresize .jsavnode {
+  min-width: 45px;
+  min-height: 33px;
+}
 .jsavlistnode {
   position: absolute;
 }
