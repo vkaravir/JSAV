@@ -60,7 +60,7 @@
   display: block;
 }
 .jsavindexlabel {
-  width: inherit;
+  width: 100%;
   height: 20px;
   line-height: 20px;
   color: black;
@@ -141,7 +141,7 @@
   line-height: 20px;
   padding: 0;
   position: absolute;
-  width: inherit;
+  width: 100%;
 }
 .jsavbararray .jsavvaluebar {
   top: 0;

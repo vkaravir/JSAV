@@ -11,12 +11,15 @@
   /* Array data structure for JSAV library. */
   var AVArray = function(jsav, element, options) {
     this.jsav = jsav;
-    this.options = $.extend(true, {}, options);
+    this.options = $.extend(true, {autoresize: true}, options);
     if ($.isArray(element)) {
       this.initialize(element);
     } else if (element) { // assume it's a DOM element
       this.element = $(element);
       this.initializeFromElement();
+    }
+    if (this.options.autoresize) {
+      this.element.addClass("jsavautoresize");
     }
   };
   var arrproto = AVArray.prototype;
