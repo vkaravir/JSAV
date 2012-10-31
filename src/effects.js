@@ -39,9 +39,11 @@
         to = opts.to,
         val = from.value.apply(from, opts.args1),
         oldValue = to.value.apply(to, opts.args2),
-        $fromValElem, $toValElem;
+        $fromValElem, $toValElem, toPos;
     // set the value in original structure to empty string or, if undoing, the old value
-    if (opts.move || typeof opts.old !== "undefined") {
+    if (opts.mode === "swap") {
+      from.value.apply(from, opts.args1.concat([ oldValue, {record: false} ]));
+    } else if (opts.mode === "move" || typeof opts.old !== "undefined") {
       from.value.apply(from, opts.args1.concat([(typeof opts.old !== "undefined")?opts.old:"", {record: false}]));
     }
     // set the value of the target structure
@@ -61,17 +63,25 @@
 
     if (this._shouldAnimate()) {  // only animate when playing, not when recording
       $toValElem.position({of: $fromValElem}); // let jqueryUI position it on top of the from element
-      $toValElem.animate({"left": "0", top: 0}, this.SPEED, 'linear'); // animate to final position
+      if (opts.mode === "swap") {
+        toPos = $.extend({}, $toValElem.position());
+        $toValElem.css({left: 0, top: 0});
+        $fromValElem.position({of: $toValElem});
+        $toValElem.css(toPos);
+        $fromValElem.animate({left: 0, top: 0}, this.SPEED, 'linear');
+      }
+      $toValElem.animate({left: 0, top: 0}, this.SPEED, 'linear'); // animate to final position
     }
 
     // return "reversed" parameters and the old value for undoing
-    return [{
-      from: to,
-      args1: opts.args2,
-      to: from,
-      args2: opts.args1,
-      old: oldValue
-    }];
+    return [ {
+          from: to,
+          args1: opts.args2,
+          to: from,
+          args2: opts.args1,
+          old: oldValue,
+          mode: opts.mode
+        } ];
   };
 
   JSAV.ext.effects = {
@@ -105,7 +115,13 @@
     },
     moveValue: function() {
       var params = parseValueEffectParameters.apply(null, arguments);
-      params.move = true;
+      params.mode = "move";
+      // wrap the doValueEffect function to JSAV animatable function
+      JSAV.anim(doValueEffect).call(this, params);
+    },
+    swapValues: function() {
+      var params = parseValueEffectParameters.apply(null, arguments);
+      params.mode = "swap";
       // wrap the doValueEffect function to JSAV animatable function
       JSAV.anim(doValueEffect).call(this, params);
     },

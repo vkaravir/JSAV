@@ -1224,11 +1224,16 @@ q.show();</pre>
 </ul>
 <p>In addition, <code>fromNode</code> and <code>toNode</code> can be an instance of
   <code>jsav.variable</code>.</p>
+<p><strong>Note:</strong> both from and to structures can be the same structure.</p>
 
 <h3 class="apimethod">.copyValue(...)</h3>
 <p>Method that animates <em>copying</em> a value from one structure to another. The same
   parameter combinations are valid as for the <code>.moveValue</code> method. The only
   difference is that the source value is not removed.</p>
+
+<h3 class="apimethod">.swapValues(...)</h3>
+<p>Method that animates <em>swapping</em> a value from one structure with another. The same
+  parameter combinations are valid as for the <code>.moveValue</code> method.</p>
 
 <h2>Best Practice for Modularity</h2>
 
