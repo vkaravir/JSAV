@@ -29,6 +29,9 @@
       $(this.jsav.canvas).append(el);
     }
     this.element = el;
+    if (this.options.autoresize) {
+      this.element.addClass("jsavautoresize");
+    }
     JSAV.utils._helpers.handlePosition(this);
     this.rootnode = this.newNode("", null);
     this.element.attr({"data-root": this.rootnode.id(), "id": this.id()});
@@ -467,10 +470,10 @@
 
   // add functions to jsav.ds to create tree, bintree, end edge
   JSAV.ext.ds.tree = function(options) {
-    return new Tree(this, $.extend(true, {visible: true}, options));
+    return new Tree(this, $.extend(true, {visible: true, autoresize: true}, options));
   };
   JSAV.ext.ds.bintree = function(options) {
-    return new BinaryTree(this, $.extend(true, {visible: true}, options));
+    return new BinaryTree(this, $.extend(true, {visible: true, autoresize: true}, options));
   };
   JSAV.ext.ds.edge = function(options) {
     return new Edge(this, $.extend(true, {}, options));
