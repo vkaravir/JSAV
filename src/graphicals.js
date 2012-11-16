@@ -210,7 +210,7 @@ if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
     $.extend(ellproto, common);
     ellproto.center = cproto.center;
     ellproto.radius = function(x, y, options) {
-      if (typeof x === "undefined") { // getting center
+      if (typeof x === "undefined") { // getting radius
         return this.rObj.attr(["rx", "ry"]);
       } else if ($.isArray(x) && x.length === 2) {
         this._setattrs({"rx": x[0], "ry": x[1]}, options);
@@ -240,6 +240,20 @@ if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
 
     Polyline.prototype.translatePoint = translatePoint;
     Polyline.prototype.movePoints = movePoints;
+
+    var Path = function(jsav, raphael, path, props) {
+      this.rObj = raphael.path(path);
+      init(this, jsav, props);
+      return this;
+    };
+    Path.prototype.path = function(newPath, options)  {
+      if (typeof newPath === "undefined") {
+        return this.rObj.attr("path");
+      } else {
+        return this._setattrs({ path: newPath }, options);
+      }
+    };
+    $.extend(Path.prototype, common);
 
     var Set = function(jsav, raphael, props) {
       this.rObj = raphael.set();
@@ -283,6 +297,10 @@ if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
       polygon: function(points, props) {
         var svgCanvas = getSvgCanvas(this, props);
         return new Polyline(this, svgCanvas, points, true, props);
+      },
+      path: function(path, props) {
+        var svgCanvas = getSvgCanvas(this, props);
+        return new Path(this, svgCanvas, path, props);
       },
       set: function(props) {
         var svgCanvas = getSvgCanvas(this, props);
