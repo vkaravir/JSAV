@@ -920,7 +920,7 @@ out, this method will return the current text of the label.
 
     <h2>Graphical Primitives API</h2>
     <p>JSAV supports the following graphical primitives: circle, rectangle, line,
-      ellipse, polygon, and polyline. All these are in the JSAV.g namespace. A 
+      ellipse, polygon, polyline, and path. All these are in the JSAV.g namespace. A 
       rectangle, for example, can be initialized like follows.</p>
     <pre>var rect = av.g.rect(70, 60, 50, 40);</pre>
     <p>This would initialize a rectangle with upper-left corner at point (70, 60) that
@@ -1000,6 +1000,15 @@ out, this method will return the current text of the label.
 
     <h3 class="apimethod">.movePoints(points)</h3>
     <p>Moves the given points to the given pixel positions. Parameter <code>points</code> should be an array of arrays with each item specifying point, px, and py.</p>
+
+    <h2>Path API</h2>
+    <h3 class="apimethod">jsav.g.path(path[, properties])</h3>
+    <p>Initializes a new path element with the given <code>path</code>. The path should be defined according
+      to the <a href="http://www.w3.org/TR/SVG/paths.html#PathData">SVG path string format</a>.</p>
+    <h3 class="apimethod">.path()</h3>
+    <p>Returns the current <code>path</code> of the object.</p>
+    <h3 class="apimethod">.path(newPath)</h3>
+    <p>Animates the objects path to the <code>newPath</code>.</p>
 
     <h2>Graphical Primitive Set</h2>
     <p>Sometimes there is a need to combine multiple graphical primitives to make up more complex shapes that can be changed simultaneously. Function <code>av.g.set()</code> can be used to create a set of graphical primitives. It has all the functions common to all graphical primitive listed above. In addition, it has one function:</p>

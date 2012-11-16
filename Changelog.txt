@@ -3,7 +3,9 @@ For changes before version 0.3.1, see
 
 Changes in development version
 ------------------------------
-
+* new minor features:
+  - added path graphical primitive
+  
 Changes in version 0.6
 ------------------------------
 * new features:
