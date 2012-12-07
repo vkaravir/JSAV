@@ -414,12 +414,12 @@ a.jsavdialogclose {
   line-height: 1;
 }
 
-/********* TREE DATA STRUCTURE *******/
+/********* TREE / GRAPH DATA STRUCTURE *******/
 
 .jsavtree {
   position: relative;
 }
-.jsavtreenode {
+.jsavtreenode, .jsavgraphnode {
   border-radius: 23px;
   position: absolute;
 }
