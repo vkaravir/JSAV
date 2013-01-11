@@ -10,8 +10,10 @@
   var Graph = function(jsav, options) {
     this._nodes = [];
     this._edges = [];
+    this._alledges = null;
     this.jsav = jsav;
-    this.options = $.extend({visible: true, nodegap: 40, autoresize: true}, options);
+    this.options = $.extend({visible: true, nodegap: 40, autoresize: true, width: 400, height: 400,
+                              directed: false}, options);
     var el = this.options.element || $("<div/>");
     el.addClass("jsavgraph");
     for (var key in this.options) {
@@ -24,7 +26,7 @@
       $(jsav.canvas).append(el);
     }
     this.element = el;
-    this.element.attr({"id": this.id()});
+    el.attr({"id": this.id()}).width(this.options.width).height(this.options.height);
     if (this.options.autoresize) {
       el.addClass("jsavautoresize");
     }
@@ -36,34 +38,148 @@
   graphproto.css = JSAV.utils._helpers.css;
   graphproto._setcss = JSAV.anim(JSAV.utils._helpers._setcss);
   graphproto.clear = function() {};
-  
+ 
+  graphproto._setnodes = JSAV.anim(function(newnodes, options) {
+    var oldnodes = this._nodes;
+    this._nodes = newnodes;
+    return [oldnodes, options];
+  });
+  graphproto._setadjs = JSAV.anim(function(newadjs, options) {
+    var oldadjs = this._edges;
+    this._edges = newadjs;
+    return [oldadjs, options];
+  });
+  graphproto._setadjlist = JSAV.anim(function(newadj, index, options) {
+    var oldadj = this._edges[index];
+    this._edges[index] = newadj;
+    this._alledges = null;
+    return [oldadj, index, options];
+  });
+ 
   // returns a new graph node
   graphproto.newNode = function(value, options) {
-    var newNode = new GraphNode(this, value, options);
-    this._nodes.push(newNode);
+    var newNode = new GraphNode(this, value, options), // create new node
+        newNodes = this._nodes.slice(0);
+    newNodes.push(newNode); // add new node to clone of node array
+    // set the nodes (makes the operation animatable
+    this._setnodes(newNodes, options);
+
+    var newAdjs = this._edges.slice(0);
+    newAdjs.push([]);
+    this._setadjs(newAdjs, options);
+
     return newNode;
   };
   graphproto.addNode = function(value, options) {
     return this.newNode(value, options);
   };
-  
+   // removes the given node
+  graphproto.removeNode = function(node, options) {
+    var nodeIndex = this._nodes.indexOf(node);
+    if (nodeIndex === -1) { return; } // no such node
+    // create a new array of nodes without the removed node
+    var firstNodes = this._nodes.slice(0, nodeIndex),
+        newNodes = firstNodes.concat(this._nodes.slice(nodeIndex + 1));
+    // set the nodes (makes the operation animated)
+    this._setnodes(newNodes, options);
+
+    // TODO: remove all edges connected to the removed node ??
+
+    // update the adjacency lists
+    var firstAdjs = this._edges.slice(0, nodeIndex),
+        newAdjs = firstAdjs.concat(this._edges.slice(nodeIndex + 1));
+    this._setadjs(newAdjs, options);
+
+    node.hide();
+
+    // return this for chaining
+    return this;
+  };
+ 
   // adds an edge from fromNode to toNode
-  graphproto.addEdge = function(fromNode, toNode) {};
+  graphproto.addEdge = function(fromNode, toNode, options) {
+    // get indices of the nodes
+    var fromIndex = this._nodes.indexOf(fromNode),
+        toIndex = this._nodes.indexOf(toNode);
+    if (fromIndex === -1 || toIndex === -1) { return; } // no such nodes
+
+    // create new edge
+    var edge = new Edge(this.jsav, fromNode, toNode, options),
+        adjlist = this._edges[fromIndex].slice(0);
+    // add new edge to adjlist
+    adjlist.push(edge);
+    // set the adjlist (makes the operation animated)
+    this._setadjlist(adjlist, fromIndex, options);
+
+    if (!this.options.directed) {
+      adjlist = this._edges[toIndex].slice(0);
+      adjlist.push(edge);
+      this._setadjlist(adjlist, toIndex, options);
+    }
+    return edge;
+  };
   
   // removes an edge from fromNode to toNode
-  graphproto.removeEdge = function(fromNode, toNode) {};
+  graphproto.removeEdge = function(fromNode, toNode, options) {
+    var edge = this.getEdge(fromNode, toNode);
+    if (!edge) { return; } // no such edge
+
+    var fromIndex = this._nodes.indexOf(fromNode),
+        toIndex = this._nodes.indexOf(toNode),
+        adjlist = this._edges[fromIndex],
+        edgeIndex = adjlist.indexOf(edge),
+        newAdjlist = adjlist.slice(0, edgeIndex).concat(adjlist.slice(edgeIndex + 1));
+    this._setadjlist(newAdjlist, fromIndex, options);
+
+    if (!this.options.directed) {
+      adjlist = this._edges[toIndex];
+      edgeIndex = adjlist.indexOf(edge);
+      newAdjlist = adjlist.slice(0, edgeIndex).concat(adjlist.slice(edgeIndex + 1));
+      this._setadjlist(newAdjlist, toIndex, options);
+    }
+
+    // we "remove" the edge by hiding it
+    edge.hide();
+  };
 
   // returns true/false whether an edge from fromNode to toNode exists
-  graphproto.hasEdge = function(fromNode, toNode) {};
+  graphproto.hasEdge = function(fromNode, toNode) {
+    return !!this.getEdge(fromNode, toNode);
+  };
 
-  // removes the given node
-  graphproto.removeNode = function(node) {};
+  graphproto.getEdge = function(fromNode, toNode) {
+    var fromIndex = this._nodes.indexOf(fromNode),
+        adjlist = this._edges[fromIndex];
+    for (var i = 0, l = adjlist.length; i < l; i++) {
+      var edge = adjlist[i];
+      if (edge.end() === toNode) {
+        return edge;
+      }
+    }
+    return undefined;
+  };
   
-  // returns an array of nodes in the graph
-  graphproto.nodes = function() { return this._nodes; };
+  // returns an iterable array of nodes in the graph
+  graphproto.nodes = function() {
+    return JSAV.utils.iterable(this._nodes);
+  };
   
   // returns an array of edges in the graph
-  graphproto.edges = function() { return []; };
+  graphproto.edges = function() {
+    if (!this._alledges) {
+       var alledges = [];
+      for (var i = 0, l = this._edges.length; i < l; i++) {
+        for (var j = 0, ll = this._edges[i].length; j < ll; j++) {
+          var edge = this._edges[i][j];
+          if (alledges.indexOf(edge) === -1) {
+            alledges.push(edge);
+          }
+        }
+      }
+      this._alledges = alledges;
+    }
+    return JSAV.utils.iterable(this._alledges);
+  };
 
   // do the graph layout
   graphproto.layout = function() {
@@ -80,7 +196,25 @@ var SpringLayout = function(graph) {
   this.c = 0.01;
   this.maxVertexMovement = 0.5;
   this.results = {};
+  this.nodes = graph.nodes();
+  this.edges = graph.edges();
   this.layout();
+  var factorX = (graph.element.width()) / (this.layoutMaxX - this.layoutMinX),
+      factorY = (graph.element.height()) / (this.layoutMaxY - this.layoutMinY),
+      node, edge, res;
+  for (var i = 0, l = this.nodes.length; i < l; i++) {
+    node = this.nodes[i];
+    res = this.results[node.id()];
+    node.css({left: (res.layoutPosX - this.layoutMinX) * factorX + "px",
+             top: (res.layoutPosY - this.layoutMinY) * factorY + "px"});
+    console.log("node", node.value(), {left: (res.layoutPosX - this.layoutMinX) * factorX + "px",
+             top: (res.layoutPosY - this.layoutMinY) * factorY + "px"});
+  }
+  for (i = 0, l = this.edges.length; i < l; i++) {
+    edge = this.edges[i];
+    console.log(edge.start().position());
+    graph.jsav.ds.layout.edge._default(edge, edge.start().position(), edge.end().position());
+  }
 };
 SpringLayout.prototype = {
   layout: function() {
@@ -92,14 +226,13 @@ SpringLayout.prototype = {
   },
 
   layoutPrepare: function() {
-    var nodes = this.graph.nodes();
-    for (var i = 0, l = nodes.length; i < l; i++) {
+    for (var i = 0, l = this.nodes.length; i < l; i++) {
       var node = {};
       node.layoutPosX = 0;
       node.layoutPosY = 0;
       node.layoutForceX = 0;
       node.layoutForceY = 0;
-      this.results[nodes[i].id()] = node;
+      this.results[this.nodes[i].id()] = node;
     }
   },
 
@@ -108,7 +241,7 @@ SpringLayout.prototype = {
         maxx = -Infinity,
         miny = Infinity,
         maxy = -Infinity,
-        nodes = this.graph.nodes(),
+        nodes = this.nodes,
         i, x, y, l;
 
     for (i = 0, l = nodes.length; i < l; i++) {
@@ -131,7 +264,7 @@ SpringLayout.prototype = {
     var prev = [],
         nodes, edges,
         i, l, j, k;
-    nodes = this.graph.nodes();
+    nodes = this.nodes;
     for (i = 0, l = nodes.length; i < l; i++) {
       var node1 = nodes[i];
       for (j = 0, k = prev.length; j < k; j++) {
@@ -142,14 +275,14 @@ SpringLayout.prototype = {
     }
 
     // Forces on nodes due to edge attractions
-    edges = this.graph.edges();
+    edges = this.edges;
     for (i = 0, l = edges.length; i < l; i++) {
       var edge = edges[i];
       this.layoutAttractive(edge);
     }
 
     // Move by the given force
-    nodes = this.graph.nodes();
+    nodes = this.nodes;
     for (i = 0, l = nodes.length; i < l; i++) {
       var node = this.results[nodes[i].id()];
       var xmove = this.c * node.layoutForceX;
@@ -243,14 +376,18 @@ SpringLayout.prototype = {
     this.container.element.append(el);
 
     JSAV.utils._helpers.handleVisibility(this, this.options);
-    this._successors = [];
   };
   var nodeproto = GraphNode.prototype;
   $.extend(nodeproto, JSAV._types.ds.Node.prototype);
   nodeproto.css = JSAV.utils._helpers.css;
   nodeproto._setcss = JSAV.anim(JSAV.utils._helpers._setcss);
 
-  nodeproto.edgeTo = function(node) {};
+  nodeproto.neighbors = function() {
+    return JSAV.utils.iterable(this.container._edges[this.container._nodes.indexOf(this)]);
+  };
+  nodeproto.edgeTo = function(node) {
+    return this._container.getEdge(this, node);
+  };
   nodeproto.edgeFrom = function(node) {
     return node.edgeTo(this);
   };
