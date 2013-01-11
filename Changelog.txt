@@ -1,10 +1,13 @@
-For changes before version 0.3.1, see 
-  http://algoviz.org/algoviz-wiki/index.php/JSAV_Roadmap
-
 Changes in development version
 ------------------------------
-* new minor features:
+* new features:
   - added path graphical primitive
+  - added support for relative positioning of objects
+* new minor features:
+  - new functions add/remove/has/toggleClass() to data structures
+  - added general move/copy/swap effects
+  - new events jsav-init and jsav-recorded triggered
+  - enabled global options for JSAV and JSAV exercises
   
 Changes in version 0.6
 ------------------------------
@@ -62,3 +65,6 @@ Changes in version 0.4
 * Styling improvements to array visualization
 * General swap effect added; swap now shows an arrow for the swapped elements
 * License changed to MIT license.
+
+For changes before version 0.3.1, see 
+  http://algoviz.org/algoviz-wiki/index.php/JSAV_Roadmap

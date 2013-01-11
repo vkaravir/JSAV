@@ -325,6 +325,13 @@
     return $elems.hasClass(className);
   };
 
+  // Returns true if the array contains no values
+  arrproto.isEmpty = function () {
+    for (var i = 0; i < this.size(); i++) {
+      if (this.value(i) !== "") { return false; }
+    }
+    return true;
+  };
 
   // events to register as functions on array
   var events = ["click", "dblclick", "mousedown", "mousemove", "mouseup",
