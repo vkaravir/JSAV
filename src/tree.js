@@ -676,16 +676,20 @@
     var sElem = edge.startnode.element,
         eElem = edge.endnode.element,
         sWidth = sElem.outerWidth()/2.0,
+        sHeight = sElem.outerHeight()/2.0,
         eWidth = eElem.outerWidth()/2.0,
         eHeight = eElem.outerHeight()/2.0,
         startpos = sElem.offset(),
         endpos = eElem.offset(),
         fromX =  Math.round(start.left + sWidth),
-        fromY = Math.round(start.top),
+        fromY = Math.round(start.top + sHeight),
         toX = Math.round(end.left + eWidth),
         toY = Math.round(end.top + eHeight),
+        fromAngle = normalizeAngle(2*Math.PI - Math.atan2(toY - fromY, toX - fromX)),
         toAngle = normalizeAngle(2*Math.PI - Math.atan2(fromY - toY, fromX - toX)),
-        fromPoint = [0, fromX, fromY], // from point is the lower node, position at top
+        fromPoint = getNodeBorderAtAngle(0, edge.startnode.element,
+                    {width: sWidth, height: sHeight, x: fromX, y: fromY}, fromAngle),
+        //fromPoint = [0, fromX, fromY], // from point is the lower node, position at top
         // arbitrarily choose to use bottom-right boder radius
         endRadius = parseInt(eElem.css("borderBottomRightRadius"), 10) || 0,
         toPoint;
