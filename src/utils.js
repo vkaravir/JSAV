@@ -61,6 +61,21 @@
       s[16] = ((s[16] & 3) | 8).toString(16);  // bits 6-7 of the clock_seq_hi_and_reserved to 01
       return "jsav-" + s.join("");
   };
+
+  /** Returns an iterable version of the passed array that has functions .next() and
+    * .hasNext(). Note, that the array is a clone of the original array! */
+  u.iterable = function(array) {
+    var i = 0,
+      array_clone = array.slice(0);
+    array_clone.next = function() {
+      return this[i++];
+    };
+    array_clone.hasNext = function() {
+      return i < this.length;
+    };
+    return array_clone;
+  };
+
   
   JSAV.ext.logEvent = function(eventData) {
     // if object, add default fields if they don't exist
