@@ -414,6 +414,20 @@ a.jsavdialogclose {
   line-height: 1;
 }
 
+.jsavexercisecontrols {
+  position: relative;
+}
+
+.jsavexercisecontrols .actionIndicator {
+  display: inline-block;
+  width: 15px;
+  height: 15px;
+  position: absolute;
+}
+.jsavexercisecontrols.active .actionIndicator {
+  background-image: url(images/spinner.gif);
+}
+
 /********* TREE / GRAPH DATA STRUCTURE *******/
 
 .jsavtree {
