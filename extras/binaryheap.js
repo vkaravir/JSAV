@@ -38,7 +38,7 @@
   
   var BinaryHeap = function(jsav, element, options) {
     this.jsav = jsav;
-    this.options = options;
+    this.options = $.extend({indexed: true}, options);
     if ($.isArray(element)) {
       var arrsize = element.length;
       if ('size' in options) {
@@ -63,6 +63,11 @@
       
       this.initializeFromElement();
     }
+    if (this.options.indexed) {
+      $.each(this.element.find(".jsavindexlabel"), function(index, item) {
+        $(item).html(index + 1);
+      });
+    }
     var oldfx = $.fx.off || false;
     $.fx.off = true;
     
@@ -70,6 +75,7 @@
       this.stats = {"swaps": 0, "leftswaps": 0, "rightswaps": 0,
                     "recursiveswaps": 0, "partlyrecursiveswaps": 0};
     }
+
     if (options.tree) {
       this._tree = jsav.ds.bintree(options);
       inittree(this);
