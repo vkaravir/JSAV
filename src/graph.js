@@ -112,6 +112,7 @@
     this._setadjlist(adjlist, fromIndex, options);
 
     if (!this.options.directed) {
+      edge = new Edge(this.jsav, toNode, fromNode, options);
       adjlist = this._edges[toIndex].slice(0);
       adjlist.push(edge);
       this._setadjlist(adjlist, toIndex, options);
@@ -185,7 +186,6 @@
   graphproto.layout = function() {
     // TODO: check the layout option
     var spring = new SpringLayout(this);
-    console.log(spring);
   };
 
 var SpringLayout = function(graph) {
@@ -207,12 +207,9 @@ var SpringLayout = function(graph) {
     res = this.results[node.id()];
     node.css({left: (res.layoutPosX - this.layoutMinX) * factorX + "px",
              top: (res.layoutPosY - this.layoutMinY) * factorY + "px"});
-    console.log("node", node.value(), {left: (res.layoutPosX - this.layoutMinX) * factorX + "px",
-             top: (res.layoutPosY - this.layoutMinY) * factorY + "px"});
   }
   for (i = 0, l = this.edges.length; i < l; i++) {
     edge = this.edges[i];
-    console.log(edge.start().position());
     graph.jsav.ds.layout.edge._default(edge, edge.start().position(), edge.end().position());
   }
 };
@@ -393,7 +390,7 @@ SpringLayout.prototype = {
     var edges = this.container._edges[this.container._nodes.indexOf(this)],
         neighbors = [];
     for (var i = 0, l = edges.length; i < l; i++) {
-      neighbors.unshift(edges[i].end());
+      neighbors.push(edges[i].end());
     }
     return JSAV.utils.iterable(neighbors);
   };
