@@ -216,6 +216,12 @@ var SpringLayout = function(graph) {
     graph.jsav.ds.layout.edge._default(edge, edge.start().position(), edge.end().position());
   }
 };
+
+/*!
+ * Graph layout algorithm based on Graph Dracula
+ * https://github.com/strathausen/dracula
+ * Graph Dracula is "released under the MIT license"
+ */
 SpringLayout.prototype = {
   layout: function() {
     this.layoutPrepare();
@@ -357,7 +363,8 @@ SpringLayout.prototype = {
     lay1.layoutForceY += attractiveForce * dy / d;
   }
 };
-
+/*! End Graph Dracula -based code 
+*/
 
   var GraphNode = function(container, value, options) {
     this.jsav = container.jsav;
@@ -383,10 +390,15 @@ SpringLayout.prototype = {
   nodeproto._setcss = JSAV.anim(JSAV.utils._helpers._setcss);
 
   nodeproto.neighbors = function() {
-    return JSAV.utils.iterable(this.container._edges[this.container._nodes.indexOf(this)]);
+    var edges = this.container._edges[this.container._nodes.indexOf(this)],
+        neighbors = [];
+    for (var i = 0, l = edges.length; i < l; i++) {
+      neighbors.unshift(edges[i].end());
+    }
+    return JSAV.utils.iterable(neighbors);
   };
   nodeproto.edgeTo = function(node) {
-    return this._container.getEdge(this, node);
+    return this.container.getEdge(this, node);
   };
   nodeproto.edgeFrom = function(node) {
     return node.edgeTo(this);
