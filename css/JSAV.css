@@ -430,7 +430,7 @@ a.jsavdialogclose {
 
 /********* TREE / GRAPH DATA STRUCTURE *******/
 
-.jsavtree {
+.jsavtree, .jsavgraph {
   position: relative;
 }
 .jsavtreenode, .jsavgraphnode {

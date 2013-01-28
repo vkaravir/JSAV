@@ -12,8 +12,8 @@
     this._edges = [];
     this._alledges = null;
     this.jsav = jsav;
-    this.options = $.extend({visible: true, nodegap: 40, autoresize: true, width: 400, height: 400,
-                              directed: false}, options);
+    this.options = $.extend({visible: true, nodegap: 40, autoresize: true, width: 400, height: 200,
+                              directed: false, center: true}, options);
     var el = this.options.element || $("<div/>");
     el.addClass("jsavgraph");
     for (var key in this.options) {
@@ -29,6 +29,9 @@
     el.attr({"id": this.id()}).width(this.options.width).height(this.options.height);
     if (this.options.autoresize) {
       el.addClass("jsavautoresize");
+    }
+    if (this.options.center) {
+      el.addClass("jsavcenter");
     }
     JSAV.utils._helpers.handlePosition(this);
     JSAV.utils._helpers.handleVisibility(this, this.options);
