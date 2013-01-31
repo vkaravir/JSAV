@@ -209,7 +209,7 @@ var SpringLayout = function(graph) {
     node = this.nodes[i];
     res = this.results[node.id()];
     node.css({left: (res.layoutPosX - this.layoutMinX) * factorX + "px",
-             top: (res.layoutPosY - this.layoutMinY) * factorY + "px"});
+             top: Math.max(0, (res.layoutPosY - this.layoutMinY) * factorY - node.element.outerHeight())+ "px"});
   }
   for (i = 0, l = this.edges.length; i < l; i++) {
     edge = this.edges[i];
