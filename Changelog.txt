@@ -1,6 +1,7 @@
 Changes in development version
 ------------------------------
 * new features:
+  - support for graph data structure
   - added path graphical primitive
   - added support for relative positioning of objects
 * new minor features:
