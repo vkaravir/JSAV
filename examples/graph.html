@@ -4,7 +4,15 @@
     <title>Depth-First Search</title>
     <link rel="stylesheet" href="../css/JSAV.css" type="text/css" media="screen" title="no title" charset="utf-8" />
     <style>
-    #av { width: 98%;}
+    #av {
+      width: 98%;
+      position: relative;
+    }
+    .jsavcounter {
+      position: absolute;
+      float: left;
+      top: 15px;
+    }
     .jsavcanvas { height: 300px;}
     .visited {
       background-color: #ddd;
@@ -20,6 +28,7 @@
     </style>
   </head>
   <body>
+    <h1>JSAV slideshow for graphs</h1>
     <div id="av">
       <div class="jsavcontrols"></div><span class="jsavcounter"></span>
       <p class="jsavoutput jsavline"></p>

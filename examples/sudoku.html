@@ -3,13 +3,31 @@
   <head>
     <title>Sudoku</title>
     <link rel="stylesheet" href="../css/JSAV.css" type="text/css" media="screen" title="no title" charset="utf-8" />
+    <style>
+    #container {
+      width: 98%;
+      position: relative;
+    }
+    .jsavcounter {
+      position: absolute;
+      float: left;
+      top: 15px;
+    }
+    </style>
   </head>
   <body>
     <h1>JSAV Sudoku Grid</h1>
-    <p>This is a simple example of the flexibility of JSAV arrays. The example creates a sudoku game using nine
-      JSAV arrays. View the source to see how this is done in CSS and JavaScript.</p>
+    <p>This is a simple example of the flexibility of JSAV arrays.
+      It also illustrated updating slideshows interactively,
+      on-the-fly.
+      The example creates a sudoku game using nine JSAV arrays.
+      If you click on cells, they highlight the first time you click.
+      Each click adds a new slide, which you can see by resetting the
+      slideshow with the << control.
+      View the source to see how this is done in CSS and JavaScript.
+    </p>
   <div id="container">
-    <div class="jsavcontrols"></div>
+    <div class="jsavcontrols"></div><span class="jsavcounter"></span>
     <p class="jsavoutput jsavline"></p>
     <div class="jsavcanvas">
     </div>

@@ -4,12 +4,22 @@
     <title>Linked List Example</title>
     <link rel="stylesheet" href="../css/JSAV.css" type="text/css" media="screen" title="no title" charset="utf-8" />
     <style>
+    #container {
+      width: 98%;
+      position: relative;
+    }
+    .jsavcounter {
+      position: absolute;
+      float: left;
+      top: 15px;
+    }
     .jsavcanvas { height: 500px; }
     </style>
   </head>
   <body>
+    <h1>JSAV slideshow for lists</h1>
   <div id="container">
-    <div class="jsavcontrols"></div>
+    <div class="jsavcontrols"></div><span class="jsavcounter"></span>
     <p class="jsavoutput jsavline"></p>
     <div class="jsavcanvas"></div>
   </div>
@@ -19,7 +29,7 @@
        src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js">
     </script>
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js"></script>
-    <script src="http://algoviz.org/OpenDSA/JSAV/lib/jquery.transform.light.js"></script>
+    <script src="../lib/jquery.transform.light.js"></script>
     <script src="../lib/raphael.js"></script>
     <script src="../build/JSAV.js"></script>
     <script>

@@ -4,7 +4,15 @@
     <title>Example of Binary Tree</title>
     <link rel="stylesheet" href="../css/JSAV.css" type="text/css" media="screen" title="no title" charset="utf-8" />
     <style>
-    #av { width: 98%;}
+    #av {
+      width: 98%;
+      position: relative;
+    }
+    .jsavcounter {
+      position: absolute;
+      float: left;
+      top: 15px;
+    }
     .jsavtree {
       position: relative;
       width: 500px;
@@ -19,9 +27,9 @@
     </style>
   </head>
   <body>
+    <h1>JSAV slideshow for binary trees</h1>
     <div id="av">
-      <div class="jsavcontrols"></div>
-      <p class="jsavoutput jsavline"></p>
+      <div class="jsavcontrols"></div><span class="jsavcounter"></span>
     </div>
     <script
        src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js">
