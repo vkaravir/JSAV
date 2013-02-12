@@ -187,6 +187,9 @@
     return JSAV.utils.iterable(this._alledges);
   };
 
+  // add the event handler registering functions
+  JSAV.utils._events._addEventSupport(graphproto);
+
   // do the graph layout
   graphproto.layout = function() {
     // TODO: check the layout option

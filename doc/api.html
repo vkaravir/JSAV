@@ -708,6 +708,11 @@ The additional <code>options</code> parameter works like for <code>.child(...)</
 <h3 class="apimethod">.hasClass(className, [options])</h3>
 <p>Return true/false based on if the list has the CSS class <code>className</code>.</p>
 
+<h3 class="apitopic">Events</h3>
+<p>There are functions to attach event handlers for the nodes and edges in the list. The events 
+  that can be listened for are: click, dblclick, mousedown, mousemove, mouseup, mouseenter, and mouseleave.
+  See the tree documentation for details.</p>
+
 <h2>Linked List Node API</h2>
 <p>A node in a list has the same functions as a tree node: <code>.value([newValue])</code>, <code>.highlight()/unhighlight()</code>, <code>.show()/.hide()</code>, and <code>.css(...)</code>. In addition, it has the following functions.</p>
 <h3 class="apimethod">.next()</h3>
@@ -776,6 +781,11 @@ The additional <code>options</code> parameter works like for <code>.child(...)</
   it has methods <code>.next()</code> and <code>.hasNext()</code> for iterating over the values.</p>
 <h3 class="apimethod">.edges()</h3>
 <p>Returns an iterable array of edges in the graph. The returned structure is similar to the one returned by <code>.nodes()</code>.</p>
+<h3 class="apitopic">Events</h3>
+<p>There are functions to attach event handlers for the nodes and edges in the graph. The events 
+  that can be listened for are: click, dblclick, mousedown, mousemove, mouseup, mouseenter, and mouseleave.
+  See the tree documentation for details.</p>
+
 
 <h2>Graph Node API</h2>
 <p>A node in a graph has the same functions as a tree node: <code>.value([newValue])</code>, <code>.highlight()/unhighlight()</code>, <code>.show()/.hide()</code>, and <code>.css(...)</code>. In addition, it has the following functions.</p>
