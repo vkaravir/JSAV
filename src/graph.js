@@ -101,6 +101,8 @@
  
   // adds an edge from fromNode to toNode
   graphproto.addEdge = function(fromNode, toNode, options) {
+    // only allow one edge between two nodes
+    if (this.hasEdge(fromNode, toNode)) { return; }
     // get indices of the nodes
     var fromIndex = this._nodes.indexOf(fromNode),
         toIndex = this._nodes.indexOf(toNode);
