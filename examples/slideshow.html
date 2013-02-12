@@ -10,10 +10,9 @@
     }
     .jsavcounter {
       position: absolute;
-      float: left;
       top: 15px;
     }
-    .jsavcanvas { height: 500px; }
+    .jsavcanvas { height: 150px; }
     </style>
   </head>
   <body>
@@ -50,7 +49,8 @@
     av.recorded();
     // If you add av.umsg after av.recorded, it will add new slides in
     // ways that you probably do not expect and probably cannot
-    // control in the way that you want.
+    // control in the way that you want. As av.recorded() rewinds the
+    // slideshow, the new slides would go to the beginning of the slideshow.
     // So, unless you are trying to add slides on-the-fly
     // interactively, you don't want to do this.
     // av.umsg("Text after av.recorded()");
