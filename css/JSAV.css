@@ -224,7 +224,7 @@
 
 /*** OUTPUT STYLING ***/
 .jsavoutput {
-  width:100%;
+  /*width:100%;*/
 }
 .jsavline {
   overflow: visible;
