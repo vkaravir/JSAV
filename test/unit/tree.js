@@ -416,6 +416,7 @@ test("Test show/hide", function() {
   av.step();
   equal(tree.element.filter(":visible").size(), 0, "Tree not visible after hide");
   tree.hide();
+  av.step(); // need to add another step, since the empty last step is pruned
   equal(tree.element.filter(":visible").size(), 0, "Tree not visible after another hide");
   av.recorded();
   jQuery.fx.off = true;

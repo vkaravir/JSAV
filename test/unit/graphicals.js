@@ -414,6 +414,7 @@
     equal(Math.round(currBB.height), Math.round(origBB.height));
   });
   
+  module("label", {  });
   test("Test Label show/hide", function() {
     var av = new JSAV("emptycontainer"),
         label = av.label("label");
@@ -431,6 +432,7 @@
     av.step();
     equal(label.element.filter(":visible").size(), 0, "Label not visible after hide");
     label.hide();
+    av.step(); // need to add another step, since the empty last step is pruned
     equal(label.element.filter(":visible").size(), 0, "Label not visible after another hide");
     av.recorded();
     jQuery.fx.off = true;

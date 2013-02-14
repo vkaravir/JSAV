@@ -57,6 +57,7 @@
     av.step();
     equal(var1.element.filter(":visible").size(), 0, "Variable not visible after hide");
     var1.hide();
+    av.step(); // need to add another step, since the empty last step is pruned
     equal(var1.element.filter(":visible").size(), 0, "Variable not visible after another hide");
     av.recorded();
     jQuery.fx.off = true;

@@ -286,7 +286,7 @@ test("Array values", function() {
   deepEqual( arr.value(5), "0");
   ok(av.backward());
   ok(av.backward());
-   for (var i = 0; i < values.length; i++) {
+  for (i = 0; i < values.length; i++) {
     deepEqual( arr.value(i), values[i], "Getting value of index " + i );
   }
 });
@@ -308,6 +308,7 @@ test("Test show/hide", function() {
   av.step();
   equal(arr.element.filter(":visible").size(), 0, "Array not visible after hide");
   arr.hide();
+  av.step(); // need to add another step, since the empty last step is pruned
   equal(arr.element.filter(":visible").size(), 0, "Array not visible after another hide");
   av.recorded();
   jQuery.fx.off = true;
@@ -315,6 +316,7 @@ test("Test show/hide", function() {
   equal(arr.element.filter(":visible").size(), 0);
   av.backward();
   equal(arr.element.filter(":visible").size(), 0, "Undoing hiding hidden should keep it hidden");
+  console.log(arr.element.filter(":visible").size());
   av.begin();
   av.forward(); // redo hide
   av.forward(); // redo show
