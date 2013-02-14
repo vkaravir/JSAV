@@ -34,8 +34,8 @@
   </div>
   <style>
   /** change size and margins of arrays */
-  .jsavarray { margin: 0; height: 20px; min-height: 20px; }
-  .jsavarray li { border-radius: 0 !important; height: 20px; width: 20px; font-size: 8px; line-height: 20px;}
+  .jsavarray { margin: 0 auto; height: 20px; min-height: 20px; }
+  .jsavarray li.jsavnode { border-radius: 0 !important; min-height: 20px; height: 20px; width: 20px; min-width: 20px; font-size: 8px; line-height: 20px;}
   
   /** change the borders of the elements to create 3x3 grids **/
   .jsavarray:nth-of-type(3n+1) { border-width: 2px;}
@@ -61,8 +61,8 @@
     
     // function to handle a click event on an array
     var clickHandler = function(index, e) {
-      this.css(index, {"background-color": "yellow", "transform": "scale(1.2)", "zIndex": 700});
       av.step();
+      this.css(index, {"background-color": "yellow", "transform": "scale(1.2)", "zIndex": 700});
     };
     
     // initialize nine arrays
@@ -71,6 +71,7 @@
       // bind the clickHandler to handle click events on the array
       arrays[i].click(clickHandler);
     }
+    av.displayInit();
     av.recorded();
   })();
     </script>
