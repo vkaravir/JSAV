@@ -460,20 +460,30 @@ Sets the value of the element at the given index to the given value.
 There are various options and style effects that can be controlled via
 CSS.
 
-<h3 class="apimethod">width</h3>
+<h3 class="apimethod">width and height</h3>
 
-<p>Controls the width of a bar or array element. Example:</p>
+<p>By default, array elements are at minimum 45 pixels wide and will automatically expand if the content
+  is wider than that. Width and height can be controlled with the width/height CSS properties. Example:</p>
 
+<pre>
+.jsavarray .jsavindex {
+  width: 60px;
+}
+</pre>
+<p>Note, that JSAV has specified <code>min-width</code> for array indices to be 45 pixels. If you want to
+  make the indices smaller than that, you will also need to specify the <code>min-width</code> property. For 
+  example, to make indices 20px wide:<p>
 <pre>
 .jsavarray .jsavindex {
   width: 20px;
+  min-width: 20px;
 }
 </pre>
-<p>Note, that if you change the height of array elements, you should probably also change the line-height of the text inside. Example:</p>
+<p>If you change the height of array elements, you should probably also change the line-height of the text inside. Example:</p>
 <pre>
 .jsavarray .jsavindex {
-  height: 30px;
-  line-height: 30px
+  height: 20px;
+  line-height: 20px
 }
 </pre>
 
