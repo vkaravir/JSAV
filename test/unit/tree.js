@@ -1,4 +1,4 @@
-/*global ok,test,module,deepEqual,equal,expect,equals,notEqual,strictEqual */
+/*global ok,test,module,deepEqual,equal,expect,notEqual,strictEqual */
 (function() {
   "use strict";
   module("datastructures.tree", {  });
@@ -402,34 +402,34 @@ test("Test show/hide", function() {
   var av = new JSAV("emptycontainer"),
       tree = av.ds.bintree();
 
-  equals(tree.element.filter(":visible").size(), 1, "Tree initially visible");
+  equal(tree.element.filter(":visible").size(), 1, "Tree initially visible");
   tree.hide();
   av.step();
-  equals(tree.element.filter(":visible").size(), 0, "Tree not visible after hide");
+  equal(tree.element.filter(":visible").size(), 0, "Tree not visible after hide");
   tree.show();
   av.step();
-  equals(tree.element.filter(":visible").size(), 1, "Tree again visible after show");
+  equal(tree.element.filter(":visible").size(), 1, "Tree again visible after show");
   tree.show();
   av.step();
-  equals(tree.element.filter(":visible").size(), 1, "Tree visible after another show");
+  equal(tree.element.filter(":visible").size(), 1, "Tree visible after another show");
   tree.hide();
   av.step();
-  equals(tree.element.filter(":visible").size(), 0, "Tree not visible after hide");
+  equal(tree.element.filter(":visible").size(), 0, "Tree not visible after hide");
   tree.hide();
-  equals(tree.element.filter(":visible").size(), 0, "Tree not visible after another hide");
+  equal(tree.element.filter(":visible").size(), 0, "Tree not visible after another hide");
   av.recorded();
   jQuery.fx.off = true;
   av.end();
-  equals(tree.element.filter(":visible").size(), 0);
+  equal(tree.element.filter(":visible").size(), 0);
   av.backward();
-  equals(tree.element.filter(":visible").size(), 0, "Undoing hiding hidden should keep it hidden");
+  equal(tree.element.filter(":visible").size(), 0, "Undoing hiding hidden should keep it hidden");
   av.begin();
   av.forward(); // redo hide
   av.forward(); // redo show
   av.forward(); // redo another show
-  equals(tree.element.filter(":visible").size(), 1, "Tree visible after another show");
+  equal(tree.element.filter(":visible").size(), 1, "Tree visible after another show");
   av.backward(); // undo showing a visible Tree
-  equals(tree.element.filter(":visible").size(), 1, "Undoing show of a visible should keep it visible");
+  equal(tree.element.filter(":visible").size(), 1, "Undoing show of a visible should keep it visible");
 });
 
 test("Tree show/hide recursive", function() {
@@ -437,11 +437,11 @@ test("Tree show/hide recursive", function() {
       tree = av.ds.bintree({visible: false});
 
   var checkVisibility = function(values) {
-    equals(tree.element.filter(":visible").size(), values[0], "check tree visibility");
-    equals(tree.root().element.filter(":visible").size(), values[1], "check root visibility");
-    equals(tree.root().left().element.filter(":visible").size(), values[2], "check left child visibility");
-    equals(tree.root().right().element.filter(":visible").size(), values[3], "check right child visibility");
-    equals(tree.root().left().left().element.filter(":visible").size(), values[4]);
+    equal(tree.element.filter(":visible").size(), values[0], "check tree visibility");
+    equal(tree.root().element.filter(":visible").size(), values[1], "check root visibility");
+    equal(tree.root().left().element.filter(":visible").size(), values[2], "check left child visibility");
+    equal(tree.root().right().element.filter(":visible").size(), values[3], "check right child visibility");
+    equal(tree.root().left().left().element.filter(":visible").size(), values[4]);
   };
   tree.root("Ro");
   tree.root().left("L");
@@ -501,12 +501,12 @@ test("Test click event", function() {
     ok(event);
   };
   var handler2 = function(myval, event) {
-    equals(myval, "kissa");
+    equal(myval, "kissa");
     ok(event);
   };
   var handler3 = function(myval, myval2, event) {
-    equals(myval, "kissa");
-    equals(myval2, "koira");
+    equal(myval, "kissa");
+    equal(myval2, "koira");
     ok(event);
   };
   var av = new JSAV("arraycontainer"),
@@ -534,12 +534,12 @@ test("Test on event binding and custom events", function() {
     ok(event);
   };
   var handler2 = function(myval, event) {
-    equals(myval, "kissa");
+    equal(myval, "kissa");
     ok(event);
   };
   var handler3 = function(myval, myval2, event) {
-    equals(myval, "kissa");
-    equals(myval2, "koira");
+    equal(myval, "kissa");
+    equal(myval2, "koira");
     ok(event);
   };
   var av = new JSAV("arraycontainer"),

@@ -1,12 +1,13 @@
-/*global ok,test,module,deepEqual,equal,expect,equals,notEqual,strictEqual */
+/*global ok,test,module,deepEqual,equal,expect,notEqual,strictEqual */
 (function() {
+  "use strict";
   module("code.variable", {  });
   test("Variable init and animation", function() {
     var values = [12, 22, 14, 39, 10];
     var av = new JSAV("emptycontainer"),
       variable = av.variable(0);
     ok(!!variable);
-    equals(variable.value(), 0, "Testing initial value");
+    equal(variable.value(), 0, "Testing initial value");
     for (var i = 0; i < values.length; i++) {
       variable.value(values[i]);
       av.step();
@@ -15,7 +16,7 @@
     jQuery.fx.off = true;
 
     equal(variable.value(), 0);
-    for (var i = 0; i < values.length; i++) {
+    for (i = 0; i < values.length; i++) {
       av.forward();
       equal(variable.value(), values[i], "Testing changing of value");
     }
@@ -45,30 +46,30 @@
   test("Test show/hide", function() {
     var av = new JSAV("emptycontainer"),
         var1 = av.variable(7);
-    equals(var1.element.filter(":visible").size(), 0, "Variable initially invisible");
+    equal(var1.element.filter(":visible").size(), 0, "Variable initially invisible");
     var1.show();
     av.step();
-    equals(var1.element.filter(":visible").size(), 1, "Variable again visible after show");
+    equal(var1.element.filter(":visible").size(), 1, "Variable again visible after show");
     var1.show();
     av.step();
-    equals(var1.element.filter(":visible").size(), 1, "Variable visible after another show");
+    equal(var1.element.filter(":visible").size(), 1, "Variable visible after another show");
     var1.hide();
     av.step();
-    equals(var1.element.filter(":visible").size(), 0, "Variable not visible after hide");
+    equal(var1.element.filter(":visible").size(), 0, "Variable not visible after hide");
     var1.hide();
-    equals(var1.element.filter(":visible").size(), 0, "Variable not visible after another hide");
+    equal(var1.element.filter(":visible").size(), 0, "Variable not visible after another hide");
     av.recorded();
     jQuery.fx.off = true;
     av.end();
-    equals(var1.element.filter(":visible").size(), 0);
+    equal(var1.element.filter(":visible").size(), 0);
     av.backward();
-    equals(var1.element.filter(":visible").size(), 0, "Undoing hiding hidden should keep it hidden");
+    equal(var1.element.filter(":visible").size(), 0, "Undoing hiding hidden should keep it hidden");
     av.begin();
     av.forward(); // redo show
     av.forward(); // redo another show
-    equals(var1.element.filter(":visible").size(), 1, "Variable visible after another show");
+    equal(var1.element.filter(":visible").size(), 1, "Variable visible after another show");
     av.backward(); // undo showing a visible Variable
-    equals(var1.element.filter(":visible").size(), 1, "Undoing show of a visible should keep it visible");
+    equal(var1.element.filter(":visible").size(), 1, "Undoing show of a visible should keep it visible");
   });
 
   module("code.code");
@@ -80,7 +81,7 @@
     var testCodelines = function($elem) {
       var $lines = $elem.find(".jsavcodeline");
       $lines.each(function(index, item) {
-        equals($(item).text(), lines[index]);
+        equal($(item).text(), lines[index]);
       });
     };
     testCodelines(pseudo1.element);
@@ -94,10 +95,10 @@
       var $lines = pseudo.element.find(".jsavcodeline"),
           $curr = pseudo.element.find(".jsavcurrentline"),
           $prev = pseudo.element.find(".jsavpreviousline");
-      equals($lines.index($curr), curr, "Testing index of current line");
-      equals($lines.index($prev), prev, "Testing index of previous line");
-      equals($curr.size(), curr === -1?0:1, "Testing number of current lines");
-      equals($prev.size(), prev === -1?0:1, "Testing number of previous lines");
+      equal($lines.index($curr), curr, "Testing index of current line");
+      equal($lines.index($prev), prev, "Testing index of previous line");
+      equal($curr.size(), curr === -1?0:1, "Testing number of current lines");
+      equal($prev.size(), prev === -1?0:1, "Testing number of previous lines");
     };
     av.displayInit();
     testCurrents(-1, -1);
@@ -132,15 +133,15 @@
         pseudo = av.code(lines, {lineNumbers: false}),
         pseudoNoEscape = av.code(lines, {htmlEscape: false});
     // no line numbers -> unordered list
-    equals(pseudo.element[0].nodeName.toLowerCase(), "ul");
+    equal(pseudo.element[0].nodeName.toLowerCase(), "ul");
     // line numbers -> ordered list
-    equals(pseudoNoEscape.element[0].nodeName.toLowerCase(), "ol");
+    equal(pseudoNoEscape.element[0].nodeName.toLowerCase(), "ol");
 
     // by default, html is escaped
-    equals(pseudo.element.find(".jsavcodeline:eq(2)").html(), "line3 &lt;br/&gt; line4");
-    equals(pseudo.element.find(".jsavcodeline:eq(2)").text(), "line3 <br/> line4");
+    equal(pseudo.element.find(".jsavcodeline:eq(2)").html(), "line3 &lt;br/&gt; line4");
+    equal(pseudo.element.find(".jsavcodeline:eq(2)").text(), "line3 <br/> line4");
     // html escaping disabled
-    equals(pseudoNoEscape.element.find(".jsavcodeline:eq(2)").html(), "line3 <br> line4");
-    equals(pseudoNoEscape.element.find(".jsavcodeline:eq(2)").text(), "line3  line4");
+    equal(pseudoNoEscape.element.find(".jsavcodeline:eq(2)").html(), "line3 <br> line4");
+    equal(pseudoNoEscape.element.find(".jsavcodeline:eq(2)").text(), "line3  line4");
   });
 }());

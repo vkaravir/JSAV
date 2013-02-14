@@ -185,13 +185,13 @@
 
     ok(!list.first());
     av.forward();
-    equals(list.first().edgeToNext().label(), "1-0");
+    equal(list.first().edgeToNext().label(), "1-0");
 
     av.forward();
     strictEqual(list.first().edgeToNext().label(), undefined);
 
     av.forward();
-    equals(list.first().edgeToNext().label(), "2-1");
+    equal(list.first().edgeToNext().label(), "2-1");
   });
 
 
@@ -201,18 +201,18 @@
     expect(9);
     var handler1 = function(event) {
       ok(event);
-      equals(this.value(), 0);
+      equal(this.value(), 0);
     };
     var handler2 = function(myval, event) {
-      equals(myval, "kissa");
+      equal(myval, "kissa");
       ok(event);
-      equals(this.value(), 2);
+      equal(this.value(), 2);
     };
     var handler3 = function(myval, myval2, event) {
-      equals(myval, "kissa");
-      equals(myval2, "koira");
+      equal(myval, "kissa");
+      equal(myval2, "koira");
       ok(event);
-      equals(this.value(), 1);
+      equal(this.value(), 1);
     };
     var av = new JSAV("arraycontainer"),
         list1 = av.ds.list(),
@@ -236,18 +236,18 @@
     expect(9);
     var handler1 = function(event) {
       ok(event);
-      equals(this.value(), 0);
+      equal(this.value(), 0);
     };
     var handler2 = function(myval, event) {
-      equals(myval, "kissa");
+      equal(myval, "kissa");
       ok(event);
-      equals(this.value(), 2);
+      equal(this.value(), 2);
     };
     var handler3 = function(myval, myval2, event) {
-      equals(myval, "kissa");
-      equals(myval2, "koira");
+      equal(myval, "kissa");
+      equal(myval2, "koira");
       ok(event);
-      equals(this.value(), 1);
+      equal(this.value(), 1);
     };
     var av = new JSAV("arraycontainer"),
         list1 = av.ds.list(),

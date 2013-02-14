@@ -1,5 +1,6 @@
-/*global ok,test,module,deepEqual,equal,expect,equals,notEqual,arrayUtils */
+/*global ok,test,module,deepEqual,equal,expect,notEqual,arrayUtils */
 (function() {
+  "use strict";
   module("datastructures.array", {  });
 test("Initializing from HTML", function() {
   var values = [12, 22, "14", "39", false]; // array in HTML
@@ -12,7 +13,7 @@ test("Initializing from HTML", function() {
   for (var i = 0; i < values.length; i++) {
     deepEqual( arr.value(i), values[i], "Getting value of index " + i );
   }
-  equals(arr.id(), "array");
+  equal(arr.id(), "array");
 });
 
 
@@ -184,12 +185,12 @@ test("Swaps with indices", function() {
   ind0 = $($(".jsavindexed li")[0]);
   ind2 = $($(".jsavindexed li")[2]);
   // indices in the beginning should be 0 and 2
-  equals(ind0.find(".jsavindexlabel").text(), "0");
-  equals(ind2.find(".jsavindexlabel").text(), "2");
+  equal(ind0.find(".jsavindexlabel").text(), "0");
+  equal(ind2.find(".jsavindexlabel").text(), "2");
   av.forward();
   // .. as they should after the swap
-  equals(ind0.find(".jsavindexlabel").text(), "0");
-  equals(ind2.find(".jsavindexlabel").text(), "2");
+  equal(ind0.find(".jsavindexlabel").text(), "0");
+  equal(ind2.find(".jsavindexlabel").text(), "2");
 });
 
 test("Comparing arrays", function() {
@@ -198,26 +199,26 @@ test("Comparing arrays", function() {
     arr2 = av.ds.array([10, 30, 20, 40]),
     arr3 = av.ds.array([10, 30, 20, 40]),
     arr4 = av.ds.array([10, 30, 20, 40, 50]);
-  equals(arr1.equals([10, 20, 30, 40, 50]), false, "Different lengths should not match");
-  equals(arr1.equals([10, 20, 30, 40]), true, "Equal arrays");
-  equals(arr1.equals(arr2), false, "Arrays with different values");
-  equals(arr2.equals(arr3), true, "Equal JSAV arrays");
-  equals(arr3.equals(arr4), false, "Different lengths should not match"); 
-  equals(arr2.equals(arr3, {'css': 'background-color'}), true, "Equals values and background-colors");
-  equals(arr2.equals(arr3, {'css': ['color', 'background-color']}), true, "Equal values, background-colors and colors");
-  equals(arr1.equals(arr2, {'css': 'background-color', 'value': false}), true, "Ignoring values, equal background-colors");
+  ok(!arr1.equals([10, 20, 30, 40, 50]), "Different lengths should not match");
+  ok(arr1.equals([10, 20, 30, 40]), "Equal arrays");
+  ok(!arr1.equals(arr2), "Arrays with different values");
+  ok(arr2.equals(arr3), "Equal JSAV arrays");
+  ok(!arr3.equals(arr4), "Different lengths should not match"); 
+  ok(arr2.equals(arr3, {'css': 'background-color'}), "Equals values and background-colors");
+  ok(arr2.equals(arr3, {'css': ['color', 'background-color']}), "Equal values, background-colors and colors");
+  ok(arr1.equals(arr2, {'css': 'background-color', 'value': false}), "Ignoring values, equal background-colors");
   arr2.highlight(2);
   av.step();
-  equals(arr2.equals(arr3, {'css': 'background-color'}), false, "Unequal background-colors");
+  ok(!arr2.equals(arr3, {'css': 'background-color'}), "Unequal background-colors");
 
-  equals(arr2.equals(arr3, {'css': ['color', 'background-color']}), false, "Unequal background-colors and colors");
+  ok(!arr2.equals(arr3, {'css': ['color', 'background-color']}), "Unequal background-colors and colors");
   
   var testDiv= $('<ol class="' + arr1.element[0].className + '"><li class="jsavnode jsavindex jsavhighlight"></li><li class="jsavnode jsavindex" ></li></ol>'),
     hlDiv = testDiv.find(".jsavnode").filter(".jsavhighlight"),
     unhlDiv = testDiv.find(".jsavnode").not(".jsavhighlight"),
     hlBg = hlDiv.css("background-color"),
     unhlBg = unhlDiv.css("background-color");
-  equals(arr2.equals([unhlBg, unhlBg, hlBg, unhlBg], {'css': 'background-color'}), true, "Equal background-colors as array.");
+  ok(arr2.equals([unhlBg, unhlBg, hlBg, unhlBg], {'css': 'background-color'}), "Equal background-colors as array.");
 });
 
 test("Array data-attributes", function() {
@@ -227,40 +228,40 @@ test("Array data-attributes", function() {
       data = arr.element.data(),
       data2 = arr2.element.data();
   ok(arr.equals(["6", "4", "2"]), "Array index value from data-attribute");
-  equals(arr.options.layout, data.layout);
-  equals(arr.options.layout, "bar");
-  equals(arr.options.foo, data.foo);
-  equals(arr.options.foo, "barber");
+  equal(arr.options.layout, data.layout);
+  equal(arr.options.layout, "bar");
+  equal(arr.options.foo, data.foo);
+  equal(arr.options.foo, "barber");
   
-  equals(data2.layout, "bar");
-  equals(data2.center, false);
-  equals(data2.noop, undefined);
+  equal(data2.layout, "bar");
+  equal(data2.center, false);
+  equal(data2.noop, undefined);
 });
 
 test("Array CSS", function() {
   var av = new JSAV("emptycontainer"),
     arr1 = av.ds.array([10, 20, 30, 40], {indexed: true});
-  equals(arr1.css("color"), "rgb(0, 0, 0)");
+  equal(arr1.css("color"), "rgb(0, 0, 0)");
   arr1.css({color: "red"});
   av.step();
-  equals(arr1.css("color"), "rgb(255, 0, 0)");
+  equal(arr1.css("color"), "rgb(255, 0, 0)");
   arr1.css({color: "blue", left: "20px"});
   av.step();
-  equals(arr1.css("color"), "rgb(0, 0, 255)");
-  equals(arr1.css("left"), "20px");
+  equal(arr1.css("color"), "rgb(0, 0, 255)");
+  equal(arr1.css("left"), "20px");
   
   av.backward();
   av.backward();
-  equals(arr1.css("color"), "rgb(255, 0, 0)");
+  equal(arr1.css("color"), "rgb(255, 0, 0)");
   ok(arr1.css("left") !== "20px");
   
   av.begin();
-  equals(arr1.css("color"), "rgb(0, 0, 0)");
+  equal(arr1.css("color"), "rgb(0, 0, 0)");
   ok(arr1.css("left") !== "20px");
   
   av.end();
-  equals(arr1.css("color"), "rgb(0, 0, 255)");
-  equals(arr1.css("left"), "20px");
+  equal(arr1.css("color"), "rgb(0, 0, 255)");
+  equal(arr1.css("left"), "20px");
 });
 
 test("Array values", function() {
@@ -293,56 +294,56 @@ test("Array values", function() {
 test("Test show/hide", function() {
   var av = new JSAV("arraycontainer"),
       arr = av.ds.array([0, 7, 4, 3]);
-  equals(arr.element.filter(":visible").size(), 1, "Array initially visible");
+  equal(arr.element.filter(":visible").size(), 1, "Array initially visible");
   arr.hide();
   av.step();
-  equals(arr.element.filter(":visible").size(), 0, "Array not visible after hide");
+  equal(arr.element.filter(":visible").size(), 0, "Array not visible after hide");
   arr.show();
   av.step();
-  equals(arr.element.filter(":visible").size(), 1, "Array again visible after show");
+  equal(arr.element.filter(":visible").size(), 1, "Array again visible after show");
   arr.show();
   av.step();
-  equals(arr.element.filter(":visible").size(), 1, "Array visible after another show");
+  equal(arr.element.filter(":visible").size(), 1, "Array visible after another show");
   arr.hide();
   av.step();
-  equals(arr.element.filter(":visible").size(), 0, "Array not visible after hide");
+  equal(arr.element.filter(":visible").size(), 0, "Array not visible after hide");
   arr.hide();
-  equals(arr.element.filter(":visible").size(), 0, "Array not visible after another hide");
+  equal(arr.element.filter(":visible").size(), 0, "Array not visible after another hide");
   av.recorded();
   jQuery.fx.off = true;
   av.end();
-  equals(arr.element.filter(":visible").size(), 0);
+  equal(arr.element.filter(":visible").size(), 0);
   av.backward();
-  equals(arr.element.filter(":visible").size(), 0, "Undoing hiding hidden should keep it hidden");
+  equal(arr.element.filter(":visible").size(), 0, "Undoing hiding hidden should keep it hidden");
   av.begin();
   av.forward(); // redo hide
   av.forward(); // redo show
   av.forward(); // redo another show
-  equals(arr.element.filter(":visible").size(), 1, "Array visible after another show");
+  equal(arr.element.filter(":visible").size(), 1, "Array visible after another show");
   av.backward(); // undo showing a visible array
-  equals(arr.element.filter(":visible").size(), 1, "Undoing show of a visible should keep it visible");
+  equal(arr.element.filter(":visible").size(), 1, "Undoing show of a visible should keep it visible");
 });
 
 test("Test click event", function() {
   expect(12);
   var handler1 = function(index, event) {
-    equals(index, 2);
+    equal(index, 2);
     ok(event);
-    equals(this.value(index), 3);
+    equal(this.value(index), 3);
   };
   var handler2 = function(index, myval, event) {
-    equals(myval, "kissa");
-    equals(index, 0);
+    equal(myval, "kissa");
+    equal(index, 0);
     ok(event);
-    equals(this.value(index), 5);
-  }
+    equal(this.value(index), 5);
+  };
   var handler3 = function(index, myval, myval2, event) {
-    equals(myval, "kissa");
-    equals(myval2, "koira");
-    equals(index, 3);
+    equal(myval, "kissa");
+    equal(myval2, "koira");
+    equal(index, 3);
     ok(event);
-    equals(this.value(index), 12);
-  }
+    equal(this.value(index), 12);
+  };
   var av = new JSAV("arraycontainer"),
       arr = av.ds.array([1, 2, 3, 4]),
       arr2 = av.ds.array([5, 6, 7, 8]),
@@ -358,23 +359,23 @@ test("Test click event", function() {
 test("Test on event binding and custom events", function() {
   expect(12);
   var handler1 = function(index, event) {
-    equals(index, 2);
+    equal(index, 2);
     ok(event);
-    equals(this.value(index), 3);
+    equal(this.value(index), 3);
   };
   var handler2 = function(index, myval, event) {
-    equals(myval, "kissa");
-    equals(index, 0);
+    equal(myval, "kissa");
+    equal(index, 0);
     ok(event);
-    equals(this.value(index), 5);
-  }
+    equal(this.value(index), 5);
+  };
   var handler3 = function(index, myval, myval2, event) {
-    equals(myval, "kissa");
-    equals(myval2, "koira");
-    equals(index, 3);
+    equal(myval, "kissa");
+    equal(myval2, "koira");
+    equal(index, 3);
     ok(event);
-    equals(this.value(index), 12);
-  }
+    equal(this.value(index), 12);
+  };
   var av = new JSAV("arraycontainer"),
       arr = av.ds.array([1, 2, 3, 4]),
       arr2 = av.ds.array([5, 6, 7, 8]),

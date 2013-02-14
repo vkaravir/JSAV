@@ -9,16 +9,16 @@ var arrayUtils = {
       var el = hlIndices[i]?hlDiv:unhlDiv,
         hlText = hlIndices[i]?"highlighted":"not highlighted";
       for (var j=0; j < props.length; j++) {
-        equals(arr.css(i, props[j]), el.css(props[j]), "index " + i + " " + props[j] + " " + hlText);
+        equal(arr.css(i, props[j]), el.css(props[j]), "index " + i + " " + props[j] + " " + hlText);
       }
     }
     testDiv.remove();
   },
 
   testArrayValues: function(arr, values) {
-    equals(arr.size(), values.length, "Equal array sizes");
+    equal(arr.size(), values.length, "Equal array sizes");
     for (var i = 0; i < values.length; i++) {
-      equals(arr.value(i), values[i], "Values in index " + i);
+      equal(arr.value(i), values[i], "Values in index " + i);
     }
   }
 };

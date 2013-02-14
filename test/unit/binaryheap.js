@@ -1,5 +1,6 @@
-/*global ok,test,module,deepEqual,equal,expect,equals,notEqual */
+/*global ok,test,module,deepEqual,equal,expect,notEqual */
 (function() {
+  "use strict";
   module("extras.binaryheap", {  });
   test("Binheap Basics", function() {
     // this is a pretty lame test, but main point is to make sure nothing major is broken
@@ -10,11 +11,11 @@
         bh1 = av.ds.binheap(ordered_values),
         bh2 = av.ds.binheap(reversed_values),
         bh3 = av.ds.binheap([,,,,,,,,,]);
-    equals(9, bh1.heapsize());
-    equals(9, bh2.heapsize());
-    equals(9, bh3.heapsize());
-    equals(1, bh1.value(0));
-    equals(1, bh2.value(0));
-    equals(bh3.value(0), "");
+    equal(9, bh1.heapsize());
+    equal(9, bh2.heapsize());
+    equal(9, bh3.heapsize());
+    equal(1, bh1.value(0));
+    equal(1, bh2.value(0));
+    equal(bh3.value(0), "");
   });
 })();

@@ -1,4 +1,4 @@
-/*global ok,test,module,deepEqual,equal,expect,equals,notEqual */
+/*global ok,test,module,deepEqual,equal,expect,notEqual */
 (function() {
   "use strict";
   module("graphicals.circle", {  });
@@ -7,13 +7,13 @@
     
     var c = av.g.circle(50, 60, 70);
     ok(c, "circle created");
-    equals(c.center().cx, 50, "circle center x");
-    equals(c.center().cy, 60, "circle center y");
-    equals(c.radius(), 70, "circle radius");
-    equals(c.css("stroke"), "#000", "circle stroke color");
-    equals(c.css("stroke-width"), 1, "circle stroke width");
-    equals(c.css("fill"), "none", "circle fill");
-    equals(c.css("opacity"), 1, "circle opacity");
+    equal(c.center().cx, 50, "circle center x");
+    equal(c.center().cy, 60, "circle center y");
+    equal(c.radius(), 70, "circle radius");
+    equal(c.css("stroke"), "#000", "circle stroke color");
+    equal(c.css("stroke-width"), 1, "circle stroke width");
+    equal(c.css("fill"), "none", "circle fill");
+    equal(c.css("opacity"), 1, "circle opacity");
     var origBB = $.extend(true, {}, c.rObj.getBBox());
     av.step();
     c.center({cx: 80, cy: 90});
@@ -32,59 +32,59 @@
     av.recorded();
     $.fx.off = true;
 
-    equals(c.center().cx, 50, "circle center x");
-    equals(c.center().cy, 60, "circle center y");
-    equals(c.radius(), 70, "circle radius");
-    equals(c.css("stroke"), "#000", "circle stroke color");
-    equals(c.css("stroke-width"), 1, "circle stroke width");
-    equals(c.css("fill"), "none", "circle fill");
-    equals(c.css("opacity"), 1, "circle opacity");
+    equal(c.center().cx, 50, "circle center x");
+    equal(c.center().cy, 60, "circle center y");
+    equal(c.radius(), 70, "circle radius");
+    equal(c.css("stroke"), "#000", "circle stroke color");
+    equal(c.css("stroke-width"), 1, "circle stroke width");
+    equal(c.css("fill"), "none", "circle fill");
+    equal(c.css("opacity"), 1, "circle opacity");
 
     av.end();
     av.begin();
 
     var currBB = c.rObj.getBBox();
-    equals(Math.round(currBB.x), Math.round(origBB.x));
-    equals(Math.round(currBB.y), Math.round(origBB.y));
-    equals(Math.round(currBB.width), Math.round(origBB.width), "scale undone correctly");
+    equal(Math.round(currBB.x), Math.round(origBB.x));
+    equal(Math.round(currBB.y), Math.round(origBB.y));
+    equal(Math.round(currBB.width), Math.round(origBB.width), "scale undone correctly");
 
     
     av.forward(); // apply center
-    equals(c.center().cx, 80, "circle center x");
-    equals(c.center().cy, 90, "circle center y");
+    equal(c.center().cx, 80, "circle center x");
+    equal(c.center().cy, 90, "circle center y");
     currBB = c.rObj.getBBox();
-    equals(Math.round(currBB.x - origBB.x), 30);
-    equals(Math.round(currBB.y - origBB.y), 30);
+    equal(Math.round(currBB.x - origBB.x), 30);
+    equal(Math.round(currBB.y - origBB.y), 30);
     
     av.forward(); // apply radius
-    equals(c.radius(), 90, "circle radius");
+    equal(c.radius(), 90, "circle radius");
     currBB = c.rObj.getBBox();
-    equals(Math.round(currBB.x - origBB.x), 10);
-    equals(Math.round(currBB.y - origBB.y), 10);
+    equal(Math.round(currBB.x - origBB.x), 10);
+    equal(Math.round(currBB.y - origBB.y), 10);
     
     av.forward(); // apply translate
     currBB = c.rObj.getBBox();
-    equals(Math.round(currBB.x - origBB.x), 40);
-    equals(Math.round(currBB.y - origBB.y), 50);
+    equal(Math.round(currBB.x - origBB.x), 40);
+    equal(Math.round(currBB.y - origBB.y), 50);
     
     av.forward(); // apply scale
     currBB = c.rObj.getBBox();
-    equals(Math.floor(currBB.width), Math.round((origBB.width+40)*2), "scale redone correctly");
+    equal(Math.floor(currBB.width), Math.round((origBB.width+40)*2), "scale redone correctly");
     
     av.forward(); // apply css
-    equals(c.center().cx, 80, "circle center x");
-    equals(c.center().cy, 90, "circle center y");
-    equals(c.radius(), 90, "circle radius");
-    equals(c.css("stroke"), "red", "circle stroke color");
-    equals(c.css("stroke-width"), 4, "circle stroke width");
-    equals(c.css("fill"), "rgb(120,120,120)", "circle fill");
-    equals(c.css("opacity"), 1, "circle opacity");
+    equal(c.center().cx, 80, "circle center x");
+    equal(c.center().cy, 90, "circle center y");
+    equal(c.radius(), 90, "circle radius");
+    equal(c.css("stroke"), "red", "circle stroke color");
+    equal(c.css("stroke-width"), 4, "circle stroke width");
+    equal(c.css("fill"), "rgb(120,120,120)", "circle fill");
+    equal(c.css("opacity"), 1, "circle opacity");
     
     av.forward(); // apply hide
-    equals(c.css("opacity"), 0, "circle opacity");
+    equal(c.css("opacity"), 0, "circle opacity");
     
     av.forward(); // apply show
-    equals(c.css("opacity"), 1, "circle opacity");
+    equal(c.css("opacity"), 1, "circle opacity");
     
     ok(!av.forward()); // no more steps
   });
@@ -97,14 +97,14 @@
     
     var e = av.g.ellipse(70, 60, 50, 40);
     ok(e, "ellipse created");
-    equals(e.center().cx, 70, "ellipse center x");
-    equals(e.center().cy, 60, "ellipse center y");
-    equals(e.radius().rx, 50, "ellipse radius x");
-    equals(e.radius().ry, 40, "ellipse radius y");
-    equals(e.css("stroke"), "#000", "ellipse stroke color");
-    equals(e.css("stroke-width"), 1, "ellipse stroke width");
-    equals(e.css("fill"), "none", "ellipse fill");
-    equals(e.css("opacity"), 1, "ellipse opacity");
+    equal(e.center().cx, 70, "ellipse center x");
+    equal(e.center().cy, 60, "ellipse center y");
+    equal(e.radius().rx, 50, "ellipse radius x");
+    equal(e.radius().ry, 40, "ellipse radius y");
+    equal(e.css("stroke"), "#000", "ellipse stroke color");
+    equal(e.css("stroke-width"), 1, "ellipse stroke width");
+    equal(e.css("fill"), "none", "ellipse fill");
+    equal(e.css("opacity"), 1, "ellipse opacity");
     var origBB = $.extend(true, {}, e.rObj.getBBox());
     av.step();
     e.center({cx: 80, cy: 90});
@@ -122,65 +122,65 @@
     e.show();
     av.recorded();
 
-    equals(e.center().cx, 70, "ellipse center x");
-    equals(e.center().cy, 60, "ellipse center y");
-    equals(e.radius().rx, 50, "ellipse radius x");
-    equals(e.radius().ry, 40, "ellipse radius y");
-    equals(e.css("stroke"), "#000", "ellipse stroke color");
-    equals(e.css("stroke-width"), 1, "ellipse stroke width");
-    equals(e.css("fill"), "none", "ellipse fill");
-    equals(e.css("opacity"), 1, "ellipse opacity");
+    equal(e.center().cx, 70, "ellipse center x");
+    equal(e.center().cy, 60, "ellipse center y");
+    equal(e.radius().rx, 50, "ellipse radius x");
+    equal(e.radius().ry, 40, "ellipse radius y");
+    equal(e.css("stroke"), "#000", "ellipse stroke color");
+    equal(e.css("stroke-width"), 1, "ellipse stroke width");
+    equal(e.css("fill"), "none", "ellipse fill");
+    equal(e.css("opacity"), 1, "ellipse opacity");
 
     av.end();
     av.begin();
 
     var currBB = e.rObj.getBBox();
-    equals(Math.round(currBB.x), Math.round(origBB.x));
-    equals(Math.round(currBB.y), Math.round(origBB.y));
-    equals(Math.round(currBB.width), Math.round(origBB.width), "horizontal scale undone correctly");
-    equals(Math.round(currBB.height), Math.round(origBB.height), "vertical scale undone correctly");
+    equal(Math.round(currBB.x), Math.round(origBB.x));
+    equal(Math.round(currBB.y), Math.round(origBB.y));
+    equal(Math.round(currBB.width), Math.round(origBB.width), "horizontal scale undone correctly");
+    equal(Math.round(currBB.height), Math.round(origBB.height), "vertical scale undone correctly");
 
     $.fx.off = true;
     
     av.forward(); // apply center
-    equals(e.center().cx, 80, "ellipse center x");
-    equals(e.center().cy, 90, "ellipse center y");
+    equal(e.center().cx, 80, "ellipse center x");
+    equal(e.center().cy, 90, "ellipse center y");
     currBB = e.rObj.getBBox();
-    equals(Math.round(currBB.x - origBB.x), 10);
-    equals(Math.round(currBB.y - origBB.y), 30);
+    equal(Math.round(currBB.x - origBB.x), 10);
+    equal(Math.round(currBB.y - origBB.y), 30);
     
     av.forward(); // apply radius
-    equals(e.radius().rx, 30, "ellipse radius x");
-    equals(e.radius().ry, 20, "ellipse radius y");
+    equal(e.radius().rx, 30, "ellipse radius x");
+    equal(e.radius().ry, 20, "ellipse radius y");
     currBB = e.rObj.getBBox();
-    equals(Math.round(currBB.x - origBB.x), 30);
-    equals(Math.round(currBB.y - origBB.y), 50);
+    equal(Math.round(currBB.x - origBB.x), 30);
+    equal(Math.round(currBB.y - origBB.y), 50);
     
     av.forward(); // apply translate
     currBB = e.rObj.getBBox();
-    equals(Math.round(currBB.x - origBB.x), 60);
-    equals(Math.round(currBB.y - origBB.y), 90);
+    equal(Math.round(currBB.x - origBB.x), 60);
+    equal(Math.round(currBB.y - origBB.y), 90);
     
     av.forward(); // apply scale
     currBB = e.rObj.getBBox();
-    equals(Math.floor(currBB.width), Math.round((origBB.width-40)*2), "hor scale redone correctly");
-    equals(Math.floor(currBB.height), Math.round((origBB.height-40)*2), "vert scale redone correctly");
+    equal(Math.floor(currBB.width), Math.round((origBB.width-40)*2), "hor scale redone correctly");
+    equal(Math.floor(currBB.height), Math.round((origBB.height-40)*2), "vert scale redone correctly");
     
     av.forward(); // apply css
-    equals(e.center().cx, 80, "ellipse center x");
-    equals(e.center().cy, 90, "ellipse center y");
-    equals(e.radius().rx, 30, "ellipse radius x");
-    equals(e.radius().ry, 20, "ellipse radius y");
-    equals(e.css("stroke"), "red", "ellipse stroke color");
-    equals(e.css("stroke-width"), 4, "ellipse stroke width");
-    equals(e.css("fill"), "rgb(120,120,120)", "ellipse fill");
-    equals(e.css("opacity"), 1, "ellipse opacity");
+    equal(e.center().cx, 80, "ellipse center x");
+    equal(e.center().cy, 90, "ellipse center y");
+    equal(e.radius().rx, 30, "ellipse radius x");
+    equal(e.radius().ry, 20, "ellipse radius y");
+    equal(e.css("stroke"), "red", "ellipse stroke color");
+    equal(e.css("stroke-width"), 4, "ellipse stroke width");
+    equal(e.css("fill"), "rgb(120,120,120)", "ellipse fill");
+    equal(e.css("opacity"), 1, "ellipse opacity");
     
     av.forward(); // apply hide
-    equals(e.css("opacity"), 0, "ellipse opacity");
+    equal(e.css("opacity"), 0, "ellipse opacity");
     
     av.forward(); // apply show
-    equals(e.css("opacity"), 1, "ellipse opacity");
+    equal(e.css("opacity"), 1, "ellipse opacity");
     
     ok(!av.forward()); // no more steps
   });
@@ -193,12 +193,12 @@
     
     var r = av.g.rect(70, 60, 50, 40);
     ok(r, "rect created");
-    equals(r.width(), 50, "rectangle width");
-    equals(r.height(), 40, "rectangle height");
-    equals(r.css("stroke"), "#000", "rectangle stroke color");
-    equals(r.css("stroke-width"), 1, "rectangle stroke width");
-    equals(r.css("fill"), "none", "rectangle fill");
-    equals(r.css("opacity"), 1, "rectangle opacity");
+    equal(r.width(), 50, "rectangle width");
+    equal(r.height(), 40, "rectangle height");
+    equal(r.css("stroke"), "#000", "rectangle stroke color");
+    equal(r.css("stroke-width"), 1, "rectangle stroke width");
+    equal(r.css("fill"), "none", "rectangle fill");
+    equal(r.css("opacity"), 1, "rectangle opacity");
     var origBB = $.extend(true, {}, r.rObj.getBBox());
     av.step();
     r.width(80);
@@ -216,65 +216,65 @@
     r.show();
     av.recorded();
 
-    equals(r.width(), 50, "rectangle width");
-    equals(r.height(), 40, "rectangle height");
-    equals(r.css("stroke"), "#000", "rectangle stroke color");
-    equals(r.css("stroke-width"), 1, "rectangle stroke width");
-    equals(r.css("fill"), "none", "rectangle fill");
-    equals(r.css("opacity"), 1, "rectangle opacity");
+    equal(r.width(), 50, "rectangle width");
+    equal(r.height(), 40, "rectangle height");
+    equal(r.css("stroke"), "#000", "rectangle stroke color");
+    equal(r.css("stroke-width"), 1, "rectangle stroke width");
+    equal(r.css("fill"), "none", "rectangle fill");
+    equal(r.css("opacity"), 1, "rectangle opacity");
 
     av.end();
     av.begin();
 
     var currBB = r.rObj.getBBox();
-    equals(Math.round(currBB.x), Math.round(origBB.x));
-    equals(Math.round(currBB.y), Math.round(origBB.y));
-    equals(Math.round(currBB.width), Math.round(origBB.width), "horizontal scale undone correctly");
-    equals(Math.round(currBB.height), Math.round(origBB.height), "vertical scale undone correctly");
+    equal(Math.round(currBB.x), Math.round(origBB.x));
+    equal(Math.round(currBB.y), Math.round(origBB.y));
+    equal(Math.round(currBB.width), Math.round(origBB.width), "horizontal scale undone correctly");
+    equal(Math.round(currBB.height), Math.round(origBB.height), "vertical scale undone correctly");
 
     $.fx.off = true;
     
     av.forward(); // apply width
-    equals(r.width(), 80, "rectangle width");
-    equals(r.height(), 40, "rectangle height");
+    equal(r.width(), 80, "rectangle width");
+    equal(r.height(), 40, "rectangle height");
     currBB = r.rObj.getBBox();
-    equals(Math.round(currBB.x), Math.round(origBB.x));
-    equals(Math.round(currBB.y), Math.round(origBB.y));
-    equals(Math.round(currBB.width), Math.round(origBB.width) + 30);
-    equals(Math.round(currBB.height), Math.round(origBB.height));
+    equal(Math.round(currBB.x), Math.round(origBB.x));
+    equal(Math.round(currBB.y), Math.round(origBB.y));
+    equal(Math.round(currBB.width), Math.round(origBB.width) + 30);
+    equal(Math.round(currBB.height), Math.round(origBB.height));
     
     av.forward(); // apply height
-    equals(r.width(), 80, "rectangle width");
-    equals(r.height(), 30, "rectangle height");
+    equal(r.width(), 80, "rectangle width");
+    equal(r.height(), 30, "rectangle height");
     currBB = r.rObj.getBBox();
-    equals(Math.round(currBB.x), Math.round(origBB.x));
-    equals(Math.round(currBB.y), Math.round(origBB.y));
-    equals(Math.round(currBB.width), Math.round(origBB.width) + 30);
-    equals(Math.round(currBB.height), Math.round(origBB.height) - 10);
+    equal(Math.round(currBB.x), Math.round(origBB.x));
+    equal(Math.round(currBB.y), Math.round(origBB.y));
+    equal(Math.round(currBB.width), Math.round(origBB.width) + 30);
+    equal(Math.round(currBB.height), Math.round(origBB.height) - 10);
     
     av.forward(); // apply translate
     currBB = r.rObj.getBBox();
-    equals(Math.round(currBB.x - origBB.x), 30);
-    equals(Math.round(currBB.y - origBB.y), 40);
+    equal(Math.round(currBB.x - origBB.x), 30);
+    equal(Math.round(currBB.y - origBB.y), 40);
     
     av.forward(); // apply scale
     currBB = r.rObj.getBBox();
-    equals(Math.floor(currBB.width), Math.round((origBB.width+30)*2), "hor scale redone correctly");
-    equals(Math.floor(currBB.height), Math.round((origBB.height-10)*2), "vert scale redone correctly");
+    equal(Math.floor(currBB.width), Math.round((origBB.width+30)*2), "hor scale redone correctly");
+    equal(Math.floor(currBB.height), Math.round((origBB.height-10)*2), "vert scale redone correctly");
     
     av.forward(); // apply css
-    equals(r.width(), 80, "rectangle width");
-    equals(r.height(), 30, "rectangle height");
-    equals(r.css("stroke"), "red", "rectangle stroke color");
-    equals(r.css("stroke-width"), 4, "rectangle stroke width");
-    equals(r.css("fill"), "rgb(120,120,120)", "rectangle fill");
-    equals(r.css("opacity"), 1, "rectangle opacity");
+    equal(r.width(), 80, "rectangle width");
+    equal(r.height(), 30, "rectangle height");
+    equal(r.css("stroke"), "red", "rectangle stroke color");
+    equal(r.css("stroke-width"), 4, "rectangle stroke width");
+    equal(r.css("fill"), "rgb(120,120,120)", "rectangle fill");
+    equal(r.css("opacity"), 1, "rectangle opacity");
     
     av.forward(); // apply hide
-    equals(r.css("opacity"), 0, "rectangle opacity");
+    equal(r.css("opacity"), 0, "rectangle opacity");
     
     av.forward(); // apply show
-    equals(r.css("opacity"), 1, "rectangle opacity");
+    equal(r.css("opacity"), 1, "rectangle opacity");
     
     ok(!av.forward()); // no more steps
   });
@@ -288,12 +288,12 @@
     var l = av.g.line(10, 20, 150, 140);
     ok(l, "line created");
     var origBB = $.extend(true, {}, l.rObj.getBBox());
-    equals(origBB.width, 140, "line BB width");
-    equals(origBB.height, 120, "line BB height");
-    equals(l.css("stroke"), "#000", "line stroke color");
-    equals(l.css("stroke-width"), 1, "line stroke width");
-    equals(l.css("fill"), "none", "line fill");
-    equals(l.css("opacity"), 1, "line opacity");
+    equal(origBB.width, 140, "line BB width");
+    equal(origBB.height, 120, "line BB height");
+    equal(l.css("stroke"), "#000", "line stroke color");
+    equal(l.css("stroke-width"), 1, "line stroke width");
+    equal(l.css("fill"), "none", "line fill");
+    equal(l.css("opacity"), 1, "line opacity");
     av.step();
     l.translatePoint(0, 20, 10);
     av.step();
@@ -317,71 +317,71 @@
     $.fx.off = true;
 
     var currBB = l.rObj.getBBox();
-    equals(Math.round(currBB.x), Math.round(origBB.x));
-    equals(Math.round(currBB.y), Math.round(origBB.y));
-    equals(Math.round(currBB.width), Math.round(origBB.width), "horizontal scale undone correctly");
-    equals(Math.round(currBB.height), Math.round(origBB.height), "vertical scale undone correctly");
-    equals(l.css("stroke"), "#000", "line stroke color");
-    equals(l.css("stroke-width"), 1, "line stroke width");
-    equals(l.css("fill"), "none", "line fill");
-    equals(l.css("opacity"), 1, "line opacity");
+    equal(Math.round(currBB.x), Math.round(origBB.x));
+    equal(Math.round(currBB.y), Math.round(origBB.y));
+    equal(Math.round(currBB.width), Math.round(origBB.width), "horizontal scale undone correctly");
+    equal(Math.round(currBB.height), Math.round(origBB.height), "vertical scale undone correctly");
+    equal(l.css("stroke"), "#000", "line stroke color");
+    equal(l.css("stroke-width"), 1, "line stroke width");
+    equal(l.css("fill"), "none", "line fill");
+    equal(l.css("opacity"), 1, "line opacity");
 
     av.end();
     av.begin();
 
     currBB = l.rObj.getBBox();
-    equals(Math.round(currBB.x), Math.round(origBB.x));
-    equals(Math.round(currBB.y), Math.round(origBB.y));
-    equals(Math.round(currBB.width), Math.round(origBB.width), "horizontal scale undone correctly");
-    equals(Math.round(currBB.height), Math.round(origBB.height), "vertical scale undone correctly");
+    equal(Math.round(currBB.x), Math.round(origBB.x));
+    equal(Math.round(currBB.y), Math.round(origBB.y));
+    equal(Math.round(currBB.width), Math.round(origBB.width), "horizontal scale undone correctly");
+    equal(Math.round(currBB.height), Math.round(origBB.height), "vertical scale undone correctly");
 
     av.forward(); // apply translate point 0
     currBB = l.rObj.getBBox();
-    equals(Math.round(currBB.x), Math.round(origBB.x) + 20);
-    equals(Math.round(currBB.y), Math.round(origBB.y) + 10);
-    equals(Math.round(currBB.width), Math.round(origBB.width) - 20);
-    equals(Math.round(currBB.height), Math.round(origBB.height) - 10);
+    equal(Math.round(currBB.x), Math.round(origBB.x) + 20);
+    equal(Math.round(currBB.y), Math.round(origBB.y) + 10);
+    equal(Math.round(currBB.width), Math.round(origBB.width) - 20);
+    equal(Math.round(currBB.height), Math.round(origBB.height) - 10);
         
     av.forward(); // apply translate point 1
     currBB = l.rObj.getBBox();
-    equals(Math.round(currBB.x), Math.round(origBB.x) + 20);
-    equals(Math.round(currBB.y), Math.round(origBB.y) + 10);
-    equals(Math.round(currBB.width), Math.round(origBB.width) - 10);
-    equals(Math.round(currBB.height), Math.round(origBB.height) + 10);
+    equal(Math.round(currBB.x), Math.round(origBB.x) + 20);
+    equal(Math.round(currBB.y), Math.round(origBB.y) + 10);
+    equal(Math.round(currBB.width), Math.round(origBB.width) - 10);
+    equal(Math.round(currBB.height), Math.round(origBB.height) + 10);
 
     av.forward(); // apply translate
     currBB = l.rObj.getBBox();
-    equals(Math.round(currBB.x - origBB.x), 50);
-    equals(Math.round(currBB.y - origBB.y), 50);
+    equal(Math.round(currBB.x - origBB.x), 50);
+    equal(Math.round(currBB.y - origBB.y), 50);
     
     av.forward(); // apply scale
     currBB = l.rObj.getBBox();
-    equals(Math.floor(currBB.width), Math.round((origBB.width-10)*2), "hor scale redone correctly");
-    equals(Math.floor(currBB.height), Math.round((origBB.height+10)*2), "vert scale redone correctly");
+    equal(Math.floor(currBB.width), Math.round((origBB.width-10)*2), "hor scale redone correctly");
+    equal(Math.floor(currBB.height), Math.round((origBB.height+10)*2), "vert scale redone correctly");
 
     av.forward(); // apply scale 0.5
     currBB = l.rObj.getBBox();
-    equals(Math.round(currBB.x - origBB.x), 50);
-    equals(Math.round(currBB.y - origBB.y), 50);
+    equal(Math.round(currBB.x - origBB.x), 50);
+    equal(Math.round(currBB.y - origBB.y), 50);
 
     av.forward(); // apply move points
     currBB = l.rObj.getBBox();
-    equals(Math.round(currBB.x), Math.round(origBB.x) + 30);
-    equals(Math.round(currBB.y), Math.round(origBB.y) + 40);
-    equals(Math.round(currBB.width), Math.round(origBB.width));
-    equals(Math.round(currBB.height), Math.round(origBB.height));
+    equal(Math.round(currBB.x), Math.round(origBB.x) + 30);
+    equal(Math.round(currBB.y), Math.round(origBB.y) + 40);
+    equal(Math.round(currBB.width), Math.round(origBB.width));
+    equal(Math.round(currBB.height), Math.round(origBB.height));
     
     av.forward(); // apply css
-    equals(l.css("stroke"), "red", "line stroke color");
-    equals(l.css("stroke-width"), 4, "line stroke width");
-    equals(l.css("fill"), "rgb(120,120,120)", "line fill");
-    equals(l.css("opacity"), 1, "line opacity");
+    equal(l.css("stroke"), "red", "line stroke color");
+    equal(l.css("stroke-width"), 4, "line stroke width");
+    equal(l.css("fill"), "rgb(120,120,120)", "line fill");
+    equal(l.css("opacity"), 1, "line opacity");
     
     av.forward(); // apply hide
-    equals(l.css("opacity"), 0, "line opacity");
+    equal(l.css("opacity"), 0, "line opacity");
     
     av.forward(); // apply show
-    equals(l.css("opacity"), 1, "line opacity");
+    equal(l.css("opacity"), 1, "line opacity");
     
     ok(!av.forward()); // no more steps
   });
@@ -401,50 +401,50 @@
     
     ok(av.forward());
     var currBB = $.extend(true, {}, l.rObj.getBBox());
-    equals(Math.round(currBB.x), Math.round(origBB.x));
-    equals(Math.round(currBB.y), Math.round(origBB.y));
-    equals(Math.round(currBB.width), Math.round(origBB.width));
-    equals(Math.round(currBB.height), Math.round(origBB.height));
+    equal(Math.round(currBB.x), Math.round(origBB.x));
+    equal(Math.round(currBB.y), Math.round(origBB.y));
+    equal(Math.round(currBB.width), Math.round(origBB.width));
+    equal(Math.round(currBB.height), Math.round(origBB.height));
     
     ok(av.forward());
     currBB = $.extend(true, {}, l.rObj.getBBox());
-    equals(Math.round(currBB.x), Math.round(origBB.x) + 20);
-    equals(Math.round(currBB.y), Math.round(origBB.y) + 20);
-    equals(Math.round(currBB.width), Math.round(origBB.width));
-    equals(Math.round(currBB.height), Math.round(origBB.height));
+    equal(Math.round(currBB.x), Math.round(origBB.x) + 20);
+    equal(Math.round(currBB.y), Math.round(origBB.y) + 20);
+    equal(Math.round(currBB.width), Math.round(origBB.width));
+    equal(Math.round(currBB.height), Math.round(origBB.height));
   });
   
   test("Test Label show/hide", function() {
     var av = new JSAV("emptycontainer"),
         label = av.label("label");
-    equals(label.element.filter(":visible").size(), 1, "Label initially visible");
+    equal(label.element.filter(":visible").size(), 1, "Label initially visible");
     label.hide();
     av.step();
-    equals(label.element.filter(":visible").size(), 0, "Label not visible after hide");
+    equal(label.element.filter(":visible").size(), 0, "Label not visible after hide");
     label.show();
     av.step();
-    equals(label.element.filter(":visible").size(), 1, "Label again visible after show");
+    equal(label.element.filter(":visible").size(), 1, "Label again visible after show");
     label.show();
     av.step();
-    equals(label.element.filter(":visible").size(), 1, "Label visible after another show");
+    equal(label.element.filter(":visible").size(), 1, "Label visible after another show");
     label.hide();
     av.step();
-    equals(label.element.filter(":visible").size(), 0, "Label not visible after hide");
+    equal(label.element.filter(":visible").size(), 0, "Label not visible after hide");
     label.hide();
-    equals(label.element.filter(":visible").size(), 0, "Label not visible after another hide");
+    equal(label.element.filter(":visible").size(), 0, "Label not visible after another hide");
     av.recorded();
     jQuery.fx.off = true;
     av.end();
-    equals(label.element.filter(":visible").size(), 0);
+    equal(label.element.filter(":visible").size(), 0);
     av.backward();
-    equals(label.element.filter(":visible").size(), 0, "Undoing hiding hidden should keep it hidden");
+    equal(label.element.filter(":visible").size(), 0, "Undoing hiding hidden should keep it hidden");
     av.begin();
     av.forward(); // redo hide
     av.forward(); // redo show
     av.forward(); // redo another show
-    equals(label.element.filter(":visible").size(), 1, "Label visible after another show");
+    equal(label.element.filter(":visible").size(), 1, "Label visible after another show");
     av.backward(); // undo showing a visible Label
-    equals(label.element.filter(":visible").size(), 1, "Undoing show of a visible should keep it visible");
+    equal(label.element.filter(":visible").size(), 1, "Undoing show of a visible should keep it visible");
   });
 
 }());
