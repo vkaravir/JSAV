@@ -463,14 +463,18 @@ CSS.
 <h3 class="apimethod">width and height</h3>
 
 <p>By default, array elements are at minimum 45 pixels wide and will automatically expand if the content
-  is wider than that. Width and height can be controlled with the width/height CSS properties. Example:</p>
+  is wider than that. Width and height can be controlled with
+  the <code>width</code>/<code>height</code> CSS properties. Example:</p>
 
 <pre>
 .jsavarray .jsavindex {
   width: 60px;
 }
 </pre>
-<p>Note, that JSAV has specified <code>min-width</code> for array indices to be 45 pixels. If you want to
+<p>Width and height will only produce a change if they fall within the
+range defined by <code>min-width</code> to <code>max-width</code>
+and <code>min-height</code> to <code>max-height</code>, respectively.
+Note, that JSAV has specified <code>min-width</code> for array indices to be 45 pixels. If you want to
   make the indices smaller than that, you will also need to specify the <code>min-width</code> property. For 
   example, to make indices 20px wide:<p>
 <pre>
