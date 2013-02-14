@@ -4,6 +4,7 @@
   padding: 0.7em;
   border: 1px solid black;
   background-color: white;
+  position: relative;
 }
 .jsavcanvas {
   position: relative;
@@ -223,9 +224,6 @@
 /***** END STYLING OF THE ARRAY DATA STRUCTURE *****/
 
 /*** OUTPUT STYLING ***/
-.jsavoutput {
-  /*width:100%;*/
-}
 .jsavline {
   overflow: visible;
   border: none;
@@ -519,4 +517,20 @@ ul.jsavcode {
 }
 .jsavhiddencode {
   display: none !important;
+}
+
+
+
+/******** Event prevention DIV shutter ******/
+.jsavshutter {
+  display: none;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 900;
+}
+.jsavplaying .jsavshutter {
+  display: block;
 }

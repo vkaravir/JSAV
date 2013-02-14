@@ -52,6 +52,10 @@
       if (this.canvas.size() === 0) {
         this.canvas = $("<div />").addClass("jsavcanvas").appendTo(this.container);
       }
+      // element used to block events when animating
+      var shutter = $("<div class='jsavshutter' />").appendTo(this.container);
+      this._shutter = shutter;
+
       this.options = $.extend({}, window.JSAV_OPTIONS, arguments[1]);
       this.RECORD = true;
       jQuery.fx.off = true; // by default we are recording changes, not animating them

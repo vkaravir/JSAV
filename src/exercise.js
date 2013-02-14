@@ -313,41 +313,48 @@
     this.jsav.step();
     if ((this.feedback && this.feedback.val() === "continuous") ||
         (!this.feedback && this.options.feedback === "continuous")) {
-      this.jsav.container.find(":animated").stop(false, true);
-      var grade = this.grade(true); // true is for continuous mode
-      if (grade.student === grade.correct) { // all student's steps are correct
-        this.jsav.logEvent({ type: "jsav-exercise-grade-change", score: $.extend({}, grade)});
-        updateScore(this);
-        return;
-      }
-      if (grade.correct === grade.total) { // student continues with the exercise even after done
-        return;
-      }
-      var fixmode = this.fixmode?this.fixmode.val():this.options.fixmode;
-      // undo until last graded step
-      this.undo();
-      this.score.student--;
-      //this.modelav.backward(gradeStepFilterFunction);
-      if (fixmode === "fix" && $.isFunction(this.options.fix)) {
-        // call the fix function of the exercise to correct the state
-        this._fixing = true;
-        var modelAv = this.modelav, studentAv = this.jsav;
-        this.fix(this.modelStructures);
-        delete this._fixing;
-        this.score.fix++;
-        this.jsav.logEvent({type: "jsav-exercise-step-fixed", score: $.extend({}, grade)});
-        window.alert("Your last step was incorrect. Your work has been replaced with the correct step so that you can continue on.");
-      } else if (fixmode === "fix") {
-        this.score.undo++;
-        moveModelBackward(this);
-        window.alert("Your last step was incorrect and I should fix your solution, but don't know how. So it was undone and you can try again.");
-      } else {
-        this.score.undo++;
-        this.jsav.logEvent({type: "jsav-exercise-step-undone", score: $.extend({}, grade)});
-        moveModelBackward(this);
-        window.alert("Your last step was incorrect. Things are reset to the beginning of the step so that you can try again.");
-      }
-      updateScore(this);
+      var that = this;
+      var doContinuousGrading = function() {
+        //that.jsav.container.find(":animated").stop(false, true);
+        var grade = that.grade(true); // true is for continuous mode
+        if (grade.student === grade.correct) { // all student's steps are correct
+          that.jsav.logEvent({ type: "jsav-exercise-grade-change", score: $.extend({}, grade)});
+          updateScore(that);
+          return;
+        }
+        if (grade.correct === grade.total) { // student continues with the exercise even after done
+          return;
+        }
+        var fixmode = that.fixmode?that.fixmode.val():that.options.fixmode;
+        // undo until last graded step
+        that.undo();
+        that.score.student--;
+        //this.modelav.backward(gradeStepFilterFunction);
+        if (fixmode === "fix" && $.isFunction(that.options.fix)) {
+          // call the fix function of the exercise to correct the state
+          that._fixing = true;
+          var modelAv = that.modelav, studentAv = that.jsav;
+          that.fix(that.modelStructures);
+          delete that._fixing;
+          that.score.fix++;
+          that.jsav.logEvent({type: "jsav-exercise-step-fixed", score: $.extend({}, grade)});
+          window.alert("Your last step was incorrect. Your work has been replaced with the correct step so that you can continue on.");
+        } else if (fixmode === "fix") {
+          that.score.undo++;
+          moveModelBackward(that);
+          window.alert("Your last step was incorrect and I should fix your solution, but don't know how. So it was undone and you can try again.");
+        } else {
+          that.score.undo++;
+          that.jsav.logEvent({type: "jsav-exercise-step-undone", score: $.extend({}, grade)});
+          moveModelBackward(that);
+          window.alert("Your last step was incorrect. Things are reset to the beginning of the step so that you can try again.");
+        }
+        updateScore(that);
+      };
+      that.jsav._clearPlaying(function() {
+        // set a timer to do the grading once animation is finished
+        doContinuousGrading();
+      });
     }
     $.fx.off = prevFx;
   };

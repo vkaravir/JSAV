@@ -6,7 +6,9 @@
 (function($) {
   "use strict";
 
-  var DEFAULT_SPEED = 300;
+  var DEFAULT_SPEED = 300,
+      playingCl = "jsavplaying"; // class used to mark controls when playing
+
 
   if (typeof JSAV === "undefined") { return; }
 
@@ -112,8 +114,7 @@
     this._redo = []; // stack for operations to redo
     this._undo = []; // stack for operations to undo
     var that = this,
-      $controls = $(".jsavcontrols", this.container),
-      playingCl = "jsavplaying"; // class used to mark controls when playing
+        $controls = $(".jsavcontrols", this.container);
 
     function logAnimEvent(action) {
       var eventData = {
@@ -124,27 +125,37 @@
       that.logEvent(eventData);
     }
 
-    // function for clearing the playing flag
-    function clearPlaying() {
-      // check to see if some elements are still animated
-      if (!that.isAnimating()) {
-        // if not, clear the playing flag
-        $controls.removeClass(playingCl);
-      } else {
-        // if still animating, set a new timeout
-        setTimeout(clearPlaying, 50);
-      }
+    // set a timer to remove the class indicating animation playing
+    // once the animation is completed. optional callback function that
+    // will be called once done.
+    function clearPlayingTimeout(jsav, callback) {
+      var timerid;
+      var timeouter = function() {
+        if (!jsav.isAnimating()) {
+          jsav.container.removeClass(playingCl);
+          if ($.isFunction(callback)) {
+            callback();
+          }
+          clearInterval(timerid);
+        }
+      };
+      timerid = setInterval(timeouter, 50);
     }
+
+    // function for clearing the playing flag
+    this._clearPlaying = function clearPlaying(callback) {
+      clearPlayingTimeout(this, callback);
+    };
     // reqister event handlers for the control buttons
     var beginHandler = function(e) {
       e.preventDefault();
       e.stopPropagation();
       // if playing flag is set, don't respond
-      if ($controls.hasClass(playingCl)) { return; }
+      if (that.container.hasClass(playingCl)) { return; }
       // set the playing flag, that is, a class on the controls
-      $controls.addClass(playingCl);
+      that.container.addClass(playingCl);
       that.begin(); // go to beginning
-      clearPlaying(); // clear the flag
+      that._clearPlaying(); // clear the flag
       // log the event
       logAnimEvent("jsav-begin");
     };
@@ -152,31 +163,31 @@
       e.preventDefault();
       e.stopPropagation();
       e.stopPropagation();
-      if ($controls.hasClass(playingCl)) { return; }
-      $controls.addClass(playingCl);
+      if (that.container.hasClass(playingCl)) { return; }
+      that.container.addClass(playingCl);
       that.backward(filter);
       // clear playing flag after a timeout for animations to end
-      setTimeout(clearPlaying, 50);
+      that._clearPlaying();
       // log the event
       logAnimEvent("jsav-backward");
     };
     var forwardHandler = function(e, filter) {
       e.preventDefault();
       e.stopPropagation();
-      if ($controls.hasClass(playingCl)) { return; }
-      $controls.addClass(playingCl);
+      if (that.container.hasClass(playingCl)) { return; }
+      that.container.addClass(playingCl);
       that.forward(filter);
-      setTimeout(clearPlaying, 50);
+      that._clearPlaying();
       // log the event
       logAnimEvent("jsav-forward");
     };
     var endHandler = function(e) {
       e.preventDefault();
       e.stopPropagation();
-      if ($controls.hasClass(playingCl)) { return; }
-      $controls.addClass(playingCl);
+      if (that.container.hasClass(playingCl)) { return; }
+      that.container.addClass(playingCl);
       that.end();
-      clearPlaying();
+      that._clearPlaying();
       // log the event
       logAnimEvent("jsav-end");
     };
@@ -233,7 +244,11 @@
         var oper = new AnimatableOperation({obj: this, effect: effect,
           args: arguments, undo: undo});
         stackTop.add(oper);
+        if (jsav._shouldAnimate()) {
+          jsav.container.addClass(playingCl);
+        }
         oper.apply();
+        jsav._clearPlaying();
       }
       return this;
     };
