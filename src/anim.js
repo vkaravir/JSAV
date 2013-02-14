@@ -378,6 +378,10 @@
   };
   JSAV.ext.recorded = function() {
     this.container.trigger("jsav-updaterelative");
+    // if there are more than one step, and the last step is empty, remove it
+    if (this._undo.length > 1 && this._undo[this._undo.length - 1].isEmpty()) {
+      this._undo.pop();
+    }
     this.begin();
     this.RECORD = false;
     $.fx.off = false;
