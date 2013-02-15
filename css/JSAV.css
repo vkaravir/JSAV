@@ -17,7 +17,7 @@
   text-align: center;
   line-height: 45px;
   border: 1px solid black;
-  background: white;
+  background-color: white;
   color: black;
   opacity: 1;
   padding: 0;
@@ -38,6 +38,7 @@
   width: 100%;
   min-height: inherit;
   min-width: inherit;
+  background-color: inherit;
 }
 
 .jsavautoresize .jsavnode {

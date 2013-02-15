@@ -315,7 +315,6 @@
         (!this.feedback && this.options.feedback === "continuous")) {
       var that = this;
       var doContinuousGrading = function() {
-        //that.jsav.container.find(":animated").stop(false, true);
         var grade = that.grade(true); // true is for continuous mode
         if (grade.student === grade.correct) { // all student's steps are correct
           that.jsav.logEvent({ type: "jsav-exercise-grade-change", score: $.extend({}, grade)});
@@ -354,9 +353,11 @@
       that.jsav._clearPlaying(function() {
         // set a timer to do the grading once animation is finished
         doContinuousGrading();
+        $.fx.off = prevFx;
       });
+    } else {
+      $.fx.off = prevFx;
     }
-    $.fx.off = prevFx;
   };
   exerproto.fix = function() {
     var fix = this.options.fix;

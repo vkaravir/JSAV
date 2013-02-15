@@ -144,7 +144,14 @@
 
     // function for clearing the playing flag
     this._clearPlaying = function clearPlaying(callback) {
-      clearPlayingTimeout(this, callback);
+      if (this.isAnimating()) {
+        clearPlayingTimeout(this, callback);
+      } else {
+        this.container.removeClass(playingCl);
+        if ($.isFunction(callback)) {
+          callback();
+        }
+      }
     };
     // reqister event handlers for the control buttons
     var beginHandler = function(e) {
@@ -248,7 +255,9 @@
           jsav.container.addClass(playingCl);
         }
         oper.apply();
-        jsav._clearPlaying();
+        if (jsav._shouldAnimate()) {
+          jsav._clearPlaying();
+        }
       }
       return this;
     };
@@ -377,10 +386,11 @@
     }
   };
   JSAV.ext.recorded = function() {
-    this.container.trigger("jsav-updaterelative");
     // if there are more than one step, and the last step is empty, remove it
     if (this._undo.length > 1 && this._undo[this._undo.length - 1].isEmpty()) {
       this._undo.pop();
+    } else {
+      this.container.trigger("jsav-updaterelative");
     }
     this.begin();
     this.RECORD = false;
