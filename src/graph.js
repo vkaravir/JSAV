@@ -101,6 +101,11 @@
  
   // adds an edge from fromNode to toNode
   graphproto.addEdge = function(fromNode, toNode, options) {
+    var opts = $.extend({}, this.options, options);
+    if (opts.directed && !opts["arrow-end"]) {
+        opts["arrow-end"] = "classic-wide-long";
+    }
+
     // only allow one edge between two nodes
     if (this.hasEdge(fromNode, toNode)) { return; }
     // get indices of the nodes
@@ -109,18 +114,18 @@
     if (fromIndex === -1 || toIndex === -1) { return; } // no such nodes
 
     // create new edge
-    var edge = new Edge(this.jsav, fromNode, toNode, options),
+    var edge = new Edge(this.jsav, fromNode, toNode, opts),
         adjlist = this._edges[fromIndex].slice(0);
     // add new edge to adjlist
     adjlist.push(edge);
     // set the adjlist (makes the operation animated)
-    this._setadjlist(adjlist, fromIndex, options);
+    this._setadjlist(adjlist, fromIndex, opts);
 
-    if (!this.options.directed) {
-      edge = new Edge(this.jsav, toNode, fromNode, options);
+    if (!opts.directed) {
+      edge = new Edge(this.jsav, toNode, fromNode, opts);
       adjlist = this._edges[toIndex].slice(0);
       adjlist.push(edge);
-      this._setadjlist(adjlist, toIndex, options);
+      this._setadjlist(adjlist, toIndex, opts);
     }
     return edge;
   };
@@ -191,14 +196,14 @@
   JSAV.utils._events._addEventSupport(graphproto);
 
   // do the graph layout
-  graphproto.layout = function() {
-    // TODO: check the layout option
-    var spring = new SpringLayout(this);
+  graphproto.layout = function(options) {
+    var layoutAlg = this.options.layout || "_default";
+    return this.jsav.ds.layout.graph[layoutAlg](this, options);
   };
 
-var SpringLayout = function(graph) {
+var SpringLayout = function(graph, options) {
   this.graph = graph;
-  this.iterations = 500;
+  this.iterations = 2000;
   this.maxRepulsiveForceDistance = 6;
   this.k = 2;
   this.c = 0.01;
@@ -368,13 +373,30 @@ SpringLayout.prototype = {
     lay1.layoutForceY += attractiveForce * dy / d;
   }
 };
-/*! End Graph Dracula -based code 
+/*! End Graph Dracula -based code
 */
+
+  var springLayout = function springLayout(graph, options) {
+    var layout = new SpringLayout(graph);
+  };
+  var manualLayout = function manualLayout(graph, options) {
+    var i, l, edge,
+        edges = graph.edges();
+    for (i = 0, l = edges.length; i < l; i++) {
+      edge = edges[i];
+      graph.jsav.ds.layout.edge._default(edge, edge.start().position(), edge.end().position());
+    }
+  };
+  JSAV.ext.ds.layout.graph = {
+    "_default": springLayout,
+    "automatic": springLayout,
+    "manual": manualLayout
+  };
 
   var GraphNode = function(container, value, options) {
     this.jsav = container.jsav;
     this.container = container;
-    this.options = $.extend(true, {visible: true}, options);
+    this.options = $.extend(true, {visible: true, left: 0, top: 0}, options);
     var el = this.options.nodeelement || $("<div><span class='jsavvalue'>" + this._valstring(value) + "</span></div>"),
       valtype = typeof(value);
     if (valtype === "object") { valtype = "string"; }
@@ -387,6 +409,7 @@ SpringLayout.prototype = {
     }
     this.container.element.append(el);
 
+    JSAV.utils._helpers.handlePosition(this);
     JSAV.utils._helpers.handleVisibility(this, this.options);
   };
   var nodeproto = GraphNode.prototype;

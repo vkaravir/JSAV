@@ -98,6 +98,11 @@
     }
     this.g.rObj.node.setAttribute("data-container", this.container.id());
     $(this.g.rObj.node).data("edge", this);
+
+    if (typeof this.options.weight !== "undefined") {
+      this._weight = this.options.weight;
+      this.label(this._weight);
+    }
     if (visible) {
       this.g.show();
     }
@@ -135,7 +140,18 @@
       return this;
     }
   };
+  edgeproto._setweight = JSAV.anim(function(newWeight) {
+    var oldWeight = this._weight;
+    this._weight = newWeight;
+    return [oldWeight];
+  });
   edgeproto.weight = function(newWeight) {
+    if (typeof newWeight === "undefined") {
+      return this._weight;
+    } else {
+      this._setweight(newWeight);
+      this.label(newWeight);
+    }
   };
   edgeproto.clear = function() {
     this.g.rObj.remove();
@@ -170,10 +186,10 @@
       if (!this._label) {
         this._label = this.jsav.label(newLabel, {container: this.container.element});
         this._label.element.css({position: "absolute", display: "inline-block"}).addClass("jsavedgelabel");
+        this.jsav.container.on("jsav-updaterelative", positionUpdate);
       } else {
         this._label.text(newLabel, options);
       }
-      this.jsav.container.on("jsav-updaterelative", positionUpdate);
     }
   };
   edgeproto.equals = function(otherEdge, options) {
