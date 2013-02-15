@@ -8,6 +8,7 @@
 }
 .jsavcanvas {
   position: relative;
+  background-color: inherit;
 }
 
 .jsavnode {
@@ -430,8 +431,9 @@ a.jsavdialogclose {
 
 /********* TREE / GRAPH DATA STRUCTURE *******/
 
-.jsavtree, .jsavgraph {
+.jsavtree, .jsavgraph, .jsavlist {
   position: relative;
+  background-color: inherit;
 }
 .jsavtreenode, .jsavgraphnode {
   border-radius: 23px;
@@ -449,7 +451,7 @@ a.jsavdialogclose {
 }
 
 .jsavedgelabel {
-  background-color: #fff;
+  background-color: inherit;
   z-index: 700;
 }
 
@@ -473,9 +475,6 @@ a.jsavdialogclose {
   height: 10px;
   position: absolute;
   width: 100%;
-}
-.jsavlist {
-  position: relative;
 }
 .jsavhorizontallist.jsavautoresize .jsavnode {
   min-width: 33px;
