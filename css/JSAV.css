@@ -446,7 +446,6 @@ a.jsavdialogclose {
   opacity: 0;
 }
 .jsavnulledge {
-  stroke: white;
   stroke: transparent;
   opacity: 0;
 }
