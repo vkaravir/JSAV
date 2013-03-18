@@ -6,7 +6,7 @@ if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
   (function($, R) {
     "use strict";
     if (typeof JSAV === "undefined") { return; }
-    
+
     var common = {
       // utility function that actually implements hide
       // animated show function
@@ -16,6 +16,9 @@ if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
       // animated hide function
       hide: function(options) {
         this.css({"opacity": 0}, options);
+      },
+      isVisible: function(options) {
+        return (this.css("opacity") !== 0);
       },
       transform: function(transform, options) {
         var oldTrans = this.rObj.transform();

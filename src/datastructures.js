@@ -157,12 +157,19 @@
     this.g.rObj.remove();
   };
   edgeproto.hide = function(options) {
-    this.g.hide(options);
-    if (this._label) { this._label.hide(options); }
+    if (this.g.isVisible()) {
+      this.g.hide(options);
+      if (this._label) { this._label.hide(options); }
+    }
   };
   edgeproto.show = function(options) {
-    this.g.show(options);
-    if (this._label) { this._label.show(options); }
+    if (!this.g.isVisible()) {
+      this.g.show(options);
+      if (this._label) { this._label.show(options); }
+    }
+  };
+  edgeproto.isVisible = function() {
+    return this.g.isVisible();
   };
   edgeproto.label = function(newLabel, options) {
     if (typeof newLabel === "undefined") {

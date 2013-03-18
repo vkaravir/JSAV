@@ -666,6 +666,12 @@ The additional <code>options</code> parameter works like for <code>.child(...)</
 <p>Returns the label attached to this edge.</p>
 <h3 class="apimethod">.label(newLabel)</h3>
 <p>Sets the value of the label attached to this edge.</p>
+<h3 class="apimethod">.show()</h3>
+<p>Shows this edge if it isn't visible already.</p>
+<h3 class="apimethod">.hide()</h3>
+<p>Hides this edge if it isn't hidden already.</p>
+<h3 class="apimethod">.isVisible()</h3>
+<p>Returns true if this edge is visible, false if hidden.</p>
 
 
 <h2>Linked List API</h2>
@@ -1010,6 +1016,8 @@ out, this method will return the current text of the label.
     <p>Make the shape visible. Essentially the same as calling <code>.css({opacity: 1})</code>.</p>
     <h3 class="apimethod">.hide()</h3>
     <p>Make the shape invisible. Essentially the same as calling <code>.css({opacity: 0})</code>.</p>
+    <h3 class="apimethod">.isVisible()</h3>
+    <p>Return true if the shape is visible, false if hidden.</p>
     <h3 class="apimethod">.rotate(deg)</h3>
     <p>Rotates the object by the given amount of degrees around the center of the shape.</p>
     <h3 class="apimethod">.scale(sx, sy), .scaleX(sx), .scaleY(sy)</h3>
