@@ -58,7 +58,7 @@
     this._alledges = null;
     return [oldadj, index, options];
   });
- 
+
   // returns a new graph node
   graphproto.newNode = function(value, options) {
     var newNode = new GraphNode(this, value, options), // create new node
@@ -98,12 +98,12 @@
     // return this for chaining
     return this;
   };
- 
+
   // adds an edge from fromNode to toNode
   graphproto.addEdge = function(fromNode, toNode, options) {
     var opts = $.extend({}, this.options, options);
     if (opts.directed && !opts["arrow-end"]) {
-        opts["arrow-end"] = "classic-wide-long";
+      opts["arrow-end"] = "classic-wide-long";
     }
 
     // only allow one edge between two nodes
@@ -129,7 +129,7 @@
     }
     return edge;
   };
-  
+
   // removes an edge from fromNode to toNode
   graphproto.removeEdge = function(fromNode, toNode, options) {
     var edge = this.getEdge(fromNode, toNode);
@@ -169,16 +169,16 @@
     }
     return undefined;
   };
-  
+
   // returns an iterable array of nodes in the graph
   graphproto.nodes = function() {
     return JSAV.utils.iterable(this._nodes);
   };
-  
+
   // returns an array of edges in the graph
   graphproto.edges = function() {
     if (!this._alledges) {
-       var alledges = [];
+      var alledges = [];
       for (var i = 0, l = this._edges.length; i < l; i++) {
         for (var j = 0, ll = this._edges[i].length; j < ll; j++) {
           var edge = this._edges[i][j];
@@ -201,180 +201,181 @@
     return this.jsav.ds.layout.graph[layoutAlg](this, options);
   };
 
-var SpringLayout = function(graph, options) {
-  this.graph = graph;
-  this.iterations = 2000;
-  this.maxRepulsiveForceDistance = 6;
-  this.k = 2;
-  this.c = 0.01;
-  this.maxVertexMovement = 0.5;
-  this.results = {};
-  this.nodes = graph.nodes();
-  this.edges = graph.edges();
-  this.layout();
-  var factorX = (graph.element.width()) / (this.layoutMaxX - this.layoutMinX),
-      factorY = (graph.element.height()) / (this.layoutMaxY - this.layoutMinY),
-      node, edge, res;
-  for (var i = 0, l = this.nodes.length; i < l; i++) {
-    node = this.nodes[i];
-    res = this.results[node.id()];
-    node.css({left: (res.layoutPosX - this.layoutMinX) * factorX + "px",
-             top: Math.max(0, (res.layoutPosY - this.layoutMinY) * factorY - node.element.outerHeight())+ "px"});
-  }
-  for (i = 0, l = this.edges.length; i < l; i++) {
-    edge = this.edges[i];
-    graph.jsav.ds.layout.edge._default(edge, edge.start().position(), edge.end().position());
-  }
-};
-
-/*!
- * Graph layout algorithm based on Graph Dracula
- * https://github.com/strathausen/dracula
- * Graph Dracula is "released under the MIT license"
- */
-SpringLayout.prototype = {
-  layout: function() {
-    this.layoutPrepare();
-    for (var i = 0; i < this.iterations; i++) {
-      this.layoutIteration();
-    }
-    this.layoutCalcBounds();
-  },
-
-  layoutPrepare: function() {
+  var SpringLayout = function(graph, options) {
+    this.graph = graph;
+    this.iterations = 2000;
+    this.maxRepulsiveForceDistance = 6;
+    this.k = 2;
+    this.c = 0.01;
+    this.maxVertexMovement = 0.5;
+    this.results = {};
+    this.nodes = graph.nodes();
+    this.edges = graph.edges();
+    this.layout();
+    var factorX = (graph.element.width()) / (this.layoutMaxX - this.layoutMinX),
+        factorY = (graph.element.height()) / (this.layoutMaxY - this.layoutMinY),
+        node, edge, res;
     for (var i = 0, l = this.nodes.length; i < l; i++) {
-      var node = {};
-      node.layoutPosX = 0;
-      node.layoutPosY = 0;
-      node.layoutForceX = 0;
-      node.layoutForceY = 0;
-      this.results[this.nodes[i].id()] = node;
+      node = this.nodes[i];
+      res = this.results[node.id()];
+      node.css({left: (res.layoutPosX - this.layoutMinX) * factorX + "px",
+               top: Math.max(0, (res.layoutPosY - this.layoutMinY) * factorY -
+                    node.element.outerHeight())+ "px"});
     }
-  },
-
-  layoutCalcBounds: function() {
-    var minx = Infinity,
-        maxx = -Infinity,
-        miny = Infinity,
-        maxy = -Infinity,
-        nodes = this.nodes,
-        i, x, y, l;
-
-    for (i = 0, l = nodes.length; i < l; i++) {
-      x = this.results[nodes[i].id()].layoutPosX;
-      y = this.results[nodes[i].id()].layoutPosY;
-      if (x > maxx) { maxx = x; }
-      if (x < minx) { minx = x; }
-      if (y > maxy) { maxy = y; }
-      if (y < miny) { miny = y; }
+    for (i = 0, l = this.edges.length; i < l; i++) {
+      edge = this.edges[i];
+      graph.jsav.ds.layout.edge._default(edge, edge.start().position(), edge.end().position());
     }
+  };
 
-    this.layoutMinX = minx;
-    this.layoutMaxX = maxx;
-    this.layoutMinY = miny;
-    this.layoutMaxY = maxy;
-  },
-
-  layoutIteration: function() {
-    // Forces on nodes due to node-node repulsions
-    var prev = [],
-        nodes, edges,
-        i, l, j, k;
-    nodes = this.nodes;
-    for (i = 0, l = nodes.length; i < l; i++) {
-      var node1 = nodes[i];
-      for (j = 0, k = prev.length; j < k; j++) {
-        var node2 = nodes[prev[j]];
-        this.layoutRepulsive(node1, node2);
+  /*!
+   * Graph layout algorithm based on Graph Dracula
+   * https://github.com/strathausen/dracula
+   * Graph Dracula is "released under the MIT license"
+   */
+  SpringLayout.prototype = {
+    layout: function() {
+      this.layoutPrepare();
+      for (var i = 0; i < this.iterations; i++) {
+        this.layoutIteration();
       }
-      prev.push(i);
-    }
+      this.layoutCalcBounds();
+    },
 
-    // Forces on nodes due to edge attractions
-    edges = this.edges;
-    for (i = 0, l = edges.length; i < l; i++) {
-      var edge = edges[i];
-      this.layoutAttractive(edge);
-    }
+    layoutPrepare: function() {
+      for (var i = 0, l = this.nodes.length; i < l; i++) {
+        var node = {};
+        node.layoutPosX = 0;
+        node.layoutPosY = 0;
+        node.layoutForceX = 0;
+        node.layoutForceY = 0;
+        this.results[this.nodes[i].id()] = node;
+      }
+    },
 
-    // Move by the given force
-    nodes = this.nodes;
-    for (i = 0, l = nodes.length; i < l; i++) {
-      var node = this.results[nodes[i].id()];
-      var xmove = this.c * node.layoutForceX;
-      var ymove = this.c * node.layoutForceY;
+    layoutCalcBounds: function() {
+      var minx = Infinity,
+          maxx = -Infinity,
+          miny = Infinity,
+          maxy = -Infinity,
+          nodes = this.nodes,
+          i, x, y, l;
 
-      var max = this.maxVertexMovement;
-      if (xmove > max) { xmove = max; }
-      if (xmove < -max) { xmove = -max; }
-      if (ymove > max) { ymove = max; }
-      if (ymove < -max) { ymove = -max; }
+      for (i = 0, l = nodes.length; i < l; i++) {
+        x = this.results[nodes[i].id()].layoutPosX;
+        y = this.results[nodes[i].id()].layoutPosY;
+        if (x > maxx) { maxx = x; }
+        if (x < minx) { minx = x; }
+        if (y > maxy) { maxy = y; }
+        if (y < miny) { miny = y; }
+      }
 
-      node.layoutPosX += xmove;
-      node.layoutPosY += ymove;
-      node.layoutForceX = 0;
-      node.layoutForceY = 0;
-    }
-  },
+      this.layoutMinX = minx;
+      this.layoutMaxX = maxx;
+      this.layoutMinY = miny;
+      this.layoutMaxY = maxy;
+    },
 
-  layoutRepulsive: function(node1, node2) {
-    if (typeof node1 === 'undefined' || typeof node2 === 'undefined') {
-      return;
-    }
-    var lay1 = this.results[node1.id()],
-        lay2 = this.results[node2.id()];
-    var dx = lay2.layoutPosX - lay1.layoutPosX;
-    var dy = lay2.layoutPosY - lay1.layoutPosY;
-    var d2 = dx * dx + dy * dy;
-    if (d2 < 0.01) {
-      dx = 0.1 * Math.random() + 0.1;
-      dy = 0.1 * Math.random() + 0.1;
-      d2 = dx * dx + dy * dy;
-    }
-    var d = Math.sqrt(d2);
-    if (d < this.maxRepulsiveForceDistance) {
-      var repulsiveForce = this.k * this.k / d;
-      lay2.layoutForceX += repulsiveForce * dx / d;
-      lay2.layoutForceY += repulsiveForce * dy / d;
-      lay1.layoutForceX -= repulsiveForce * dx / d;
-      lay1.layoutForceY -= repulsiveForce * dy / d;
-    }
-  },
+    layoutIteration: function() {
+      // Forces on nodes due to node-node repulsions
+      var prev = [],
+          nodes, edges,
+          i, l, j, k;
+      nodes = this.nodes;
+      for (i = 0, l = nodes.length; i < l; i++) {
+        var node1 = nodes[i];
+        for (j = 0, k = prev.length; j < k; j++) {
+          var node2 = nodes[prev[j]];
+          this.layoutRepulsive(node1, node2);
+        }
+        prev.push(i);
+      }
 
-  layoutAttractive: function(edge) {
-    var node1 = edge.start();
-    var node2 = edge.end();
+      // Forces on nodes due to edge attractions
+      edges = this.edges;
+      for (i = 0, l = edges.length; i < l; i++) {
+        var edge = edges[i];
+        this.layoutAttractive(edge);
+      }
+
+      // Move by the given force
+      nodes = this.nodes;
+      for (i = 0, l = nodes.length; i < l; i++) {
+        var node = this.results[nodes[i].id()];
+        var xmove = this.c * node.layoutForceX;
+        var ymove = this.c * node.layoutForceY;
+
+        var max = this.maxVertexMovement;
+        if (xmove > max) { xmove = max; }
+        if (xmove < -max) { xmove = -max; }
+        if (ymove > max) { ymove = max; }
+        if (ymove < -max) { ymove = -max; }
+
+        node.layoutPosX += xmove;
+        node.layoutPosY += ymove;
+        node.layoutForceX = 0;
+        node.layoutForceY = 0;
+      }
+    },
+
+    layoutRepulsive: function(node1, node2) {
+      if (typeof node1 === 'undefined' || typeof node2 === 'undefined') {
+        return;
+      }
+      var lay1 = this.results[node1.id()],
+          lay2 = this.results[node2.id()];
+      var dx = lay2.layoutPosX - lay1.layoutPosX;
+      var dy = lay2.layoutPosY - lay1.layoutPosY;
+      var d2 = dx * dx + dy * dy;
+      if (d2 < 0.01) {
+        dx = 0.1 * Math.random() + 0.1;
+        dy = 0.1 * Math.random() + 0.1;
+        d2 = dx * dx + dy * dy;
+      }
+      var d = Math.sqrt(d2);
+      if (d < this.maxRepulsiveForceDistance) {
+        var repulsiveForce = this.k * this.k / d;
+        lay2.layoutForceX += repulsiveForce * dx / d;
+        lay2.layoutForceY += repulsiveForce * dy / d;
+        lay1.layoutForceX -= repulsiveForce * dx / d;
+        lay1.layoutForceY -= repulsiveForce * dy / d;
+      }
+    },
+
+    layoutAttractive: function(edge) {
+      var node1 = edge.start();
+      var node2 = edge.end();
 
 
-    var lay1 = this.results[node1.id()],
-        lay2 = this.results[node2.id()];
-    var dx = lay2.layoutPosX - lay1.layoutPosX;
-    var dy = lay2.layoutPosY - lay1.layoutPosY;
-    var d2 = dx * dx + dy * dy;
-    if (d2 < 0.01) {
-      dx = 0.1 * Math.random() + 0.1;
-      dy = 0.1 * Math.random() + 0.1;
-      d2 = dx * dx + dy * dy;
-    }
-    var d = Math.sqrt(d2);
-    if (d > this.maxRepulsiveForceDistance) {
-      d = this.maxRepulsiveForceDistance;
-      d2 = d * d;
-    }
-    var attractiveForce = (d2 - this.k * this.k) / this.k;
-    if (edge.attraction === undefined) {
-      edge.attraction = 1;
-    }
-    attractiveForce *= Math.log(edge.attraction) * 0.5 + 1;
+      var lay1 = this.results[node1.id()],
+          lay2 = this.results[node2.id()];
+      var dx = lay2.layoutPosX - lay1.layoutPosX;
+      var dy = lay2.layoutPosY - lay1.layoutPosY;
+      var d2 = dx * dx + dy * dy;
+      if (d2 < 0.01) {
+        dx = 0.1 * Math.random() + 0.1;
+        dy = 0.1 * Math.random() + 0.1;
+        d2 = dx * dx + dy * dy;
+      }
+      var d = Math.sqrt(d2);
+      if (d > this.maxRepulsiveForceDistance) {
+        d = this.maxRepulsiveForceDistance;
+        d2 = d * d;
+      }
+      var attractiveForce = (d2 - this.k * this.k) / this.k;
+      if (edge.attraction === undefined) {
+        edge.attraction = 1;
+      }
+      attractiveForce *= Math.log(edge.attraction) * 0.5 + 1;
 
-    lay2.layoutForceX -= attractiveForce * dx / d;
-    lay2.layoutForceY -= attractiveForce * dy / d;
-    lay1.layoutForceX += attractiveForce * dx / d;
-    lay1.layoutForceY += attractiveForce * dy / d;
-  }
-};
-/*! End Graph Dracula -based code
-*/
+      lay2.layoutForceX -= attractiveForce * dx / d;
+      lay2.layoutForceY -= attractiveForce * dy / d;
+      lay1.layoutForceX += attractiveForce * dx / d;
+      lay1.layoutForceY += attractiveForce * dy / d;
+    }
+  };
+  /*! End Graph Dracula -based code
+  */
 
   var springLayout = function springLayout(graph, options) {
     var layout = new SpringLayout(graph);
