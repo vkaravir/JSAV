@@ -666,6 +666,10 @@ The additional <code>options</code> parameter works like for <code>.child(...)</
 <p>Returns the label attached to this edge.</p>
 <h3 class="apimethod">.label(newLabel)</h3>
 <p>Sets the value of the label attached to this edge.</p>
+<h3 class="apimethod">.weight()</h3>
+<p>Returns the weight of this edge.</p>
+<h3 class="apimethod">.weight(newWeight)</h3>
+<p>Sets the weight of this edge.</p>
 <h3 class="apimethod">.show()</h3>
 <p>Shows this edge if it isn't visible already.</p>
 <h3 class="apimethod">.hide()</h3>
@@ -790,7 +794,11 @@ The additional <code>options</code> parameter works like for <code>.child(...)</
 <h3 class="apimethod">.removeNode(node, [options])</h3>
 <p>Removes the given <code>node</code>.</p>
 <h3 class="apimethod">.addEdge(fromNode, toNode, [options])</h3>
-<p>Adds edge from <code>fromNode</code> to <code>toNode</code>. Returns the new edge.</p>
+<p>Adds edge from <code>fromNode</code> to <code>toNode</code>. Returns the new edge.
+  Supported options:</p>
+<ul>
+  <li>weight: the weight of the new edge</li>
+</ul>
 <h3 class="apimethod">.removeEdge(fromNode, toNode, [options])</h3>
 <p>Removes edge from <code>fromNode</code> to <code>toNode</code>.</p>
 <h3 class="apimethod">.hasEdge(fromNode, toNode)</h3>
