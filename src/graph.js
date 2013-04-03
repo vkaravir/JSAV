@@ -130,8 +130,23 @@
   };
 
   // removes an edge from fromNode to toNode
-  graphproto.removeEdge = function(fromNode, toNode, options) {
-    var edge = this.getEdge(fromNode, toNode);
+  graphproto.removeEdge = function(fNode, tNode, options) {
+    var edge,
+        fromNode,
+        toNode,
+        opts;
+    // first argument is an edge object
+    if (fNode.constructor === JSAV._types.ds.Edge) {
+      edge = fNode;
+      fromNode = edge.start();
+      toNode = edge.end();
+      opts = tNode;
+    } else { // if not edge, assume two nodes
+      fromNode = fNode;
+      toNode = tNode;
+      edge = this.getEdge(fromNode, toNode);
+      opts = options;
+    }
     if (!edge) { return; } // no such edge
 
     var fromIndex = this._nodes.indexOf(fromNode),
@@ -140,16 +155,18 @@
         edgeIndex = adjlist.indexOf(edge),
         newAdjlist = adjlist.slice(0, edgeIndex).concat(adjlist.slice(edgeIndex + 1));
     this._setadjlist(newAdjlist, fromIndex, options);
+    // we "remove" the edge by hiding it
+    edge.hide();
 
-    if (!this.options.directed) {
+    if (!this.options.directed) { // if not directed graph, remove the edge to other direction as well
+      edge = this.getEdge(toNode, fromNode);
       adjlist = this._edges[toIndex];
       edgeIndex = adjlist.indexOf(edge);
       newAdjlist = adjlist.slice(0, edgeIndex).concat(adjlist.slice(edgeIndex + 1));
       this._setadjlist(newAdjlist, toIndex, options);
+      // we "remove" the edge by hiding it
+      edge.hide();
     }
-
-    // we "remove" the edge by hiding it
-    edge.hide();
   };
 
   // returns true/false whether an edge from fromNode to toNode exists
