@@ -277,6 +277,10 @@ JSAV rather than by the developer.
       to an index in that array. Only has an effect if relativeTo is specified.</li>
 </ul>
 
+<h3 class="apimethod">.clear()</h3>
+<p>Removes the DOM element of this structure from the document. This is useful, for example, in 
+  re-initializing exercises when the existing structure needs to be removed.</p> 
+
 <h3 class="apimethod">.clone()</h3>
 <p>
 Create and return a clone of an array.
@@ -530,6 +534,10 @@ Currently, JSAV supports two types of trees: common tree and binary tree. The st
       to an index in that array. Only has an effect if relativeTo is specified.</li>
 </ul>
 
+<h3 class="apimethod">.clear()</h3>
+<p>Removes the DOM element of this structure from the document. This is useful, for example, in 
+  re-initializing exercises when the existing structure needs to be removed.</p> 
+
 <h3 class="apimethod">.css(propertyName)</h3>
 <p>Returns the value for the given CSS property. This function exists for all trees, nodes, and edges.</p>
 
@@ -721,6 +729,10 @@ The additional <code>options</code> parameter works like for <code>.child(...)</
 <h3 class="apimethod">.newNode(value [, options])</h3>
 <p>Returns a new node that can be added to the list.</p>
 
+<h3 class="apimethod">.clear()</h3>
+<p>Removes the DOM element of this structure from the document. This is useful, for example, in 
+  re-initializing exercises when the existing structure needs to be removed.</p> 
+
 <h3 class="apimethod">.addClass(className, [options])</h3>
 <p>Adds the CSS class <code>className</code> to the list and animates the changes.</p>
 
@@ -810,6 +822,10 @@ The additional <code>options</code> parameter works like for <code>.child(...)</
   it has methods <code>.next()</code> and <code>.hasNext()</code> for iterating over the values.</p>
 <h3 class="apimethod">.edges()</h3>
 <p>Returns an iterable array of edges in the graph. The returned structure is similar to the one returned by <code>.nodes()</code>.</p>
+<h3 class="apimethod">.clear()</h3>
+<p>Removes the DOM element of this structure from the document. This is useful, for example, in 
+  re-initializing exercises when the existing structure needs to be removed.</p> 
+
 <h3 class="apitopic">Events</h3>
 <p>There are functions to attach event handlers for the nodes and edges in the graph. The events 
   that can be listened for are: click, dblclick, mousedown, mousemove, mouseup, mouseenter, and mouseleave.
@@ -863,6 +879,10 @@ Make the label visible.
 Set the text for the label. If the <code>msg</code> parameter is left
 out, this method will return the current text of the label.
 </p>
+
+<h3 class="apimethod">.clear()</h3>
+<p>Removes the DOM element of this label from the document. This is useful, for example, in 
+  re-initializing exercises when the existing label needs to be removed.</p> 
 
 <h3 class="apimethod">.addClass(className, [options])</h3>
 <p>Adds the CSS class <code>className</code> to the label and animates the changes.</p>
@@ -933,6 +953,10 @@ out, this method will return the current text of the label.
     converted to the type specified when initializing the variable.
     </p>
 
+  <h3 class="apimethod">.clear()</h3>
+  <p>Removes the DOM element of this variable from the document. This is useful, for example, in 
+  re-initializing exercises when the existing variable needs to be removed.</p> 
+
     <h3 class="apimethod">.addClass(className, [options])</h3>
     <p>Adds the CSS class <code>className</code> to the variable and animates the changes.</p>
 
@@ -998,6 +1022,9 @@ out, this method will return the current text of the label.
     <p>Sets the line at given <var>index</var> as the current line. Also, if another line was previously set as current, it will be
       marked as previous. If a line was also earlier marked as previous, that mark will be removed. This will help in creating a 
       visual debugger-like code stepping functionality in visualizations.</p>
+    <h3 class="apimethod">.clear()</h3>
+    <p>Removes the DOM element of this object from the document. This is useful, for example, in 
+    re-initializing exercises when the existing object needs to be removed.</p> 
     <h3 class="apimethod">.addClass(indices, className, [options])</h3>
     <p>Adds the CSS class <code>className</code> to lines at given indices and animates the changes. Like for
       the rest of pseudocode methods, <code>indices</code> can be a number, array of numbers, or a function.</p>
