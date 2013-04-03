@@ -231,7 +231,7 @@ for example, the <code>step</code> method.
 
 <p>
 JSAV will ultimately provide layout support for a number of standard
-data structures. Presently, arrays, trees, and lists are supported.
+data structures. Presently, arrays, trees, lists, and graphs are supported.
 </p>
 
 <h3 class="apimethod">.ds.array(element[, options]) and
@@ -725,7 +725,7 @@ The additional <code>options</code> parameter works like for <code>.child(...)</
 <h3 class="apimethod">.size()</h3>
 <p>Returns the size of the list.</p>
 <h3 class="apimethod">.layout([options])</h3>
-<p>Positions the nodes and edges is the list.</p>
+<p>This function (re)calculates the layout for the list. Note, that the library does not do this automatically. That means that after changing the list, you should call this manually at the end of each animation step.</p>
 <h3 class="apimethod">.newNode(value [, options])</h3>
 <p>Returns a new node that can be added to the list.</p>
 
@@ -827,6 +827,9 @@ The additional <code>options</code> parameter works like for <code>.child(...)</
 <h3 class="apimethod">.clear()</h3>
 <p>Removes the DOM element of this structure from the document. This is useful, for example, in 
   re-initializing exercises when the existing structure needs to be removed.</p> 
+<h3 class="apimethod">.layout()</h3>
+<p>This function (re)calculates the layout for the graph. Note, that the library does not do this automatically. That means that after changing the graph, you should call this manually at the end of each animation step.
+</p>
 
 <h3 class="apitopic">Events</h3>
 <p>There are functions to attach event handlers for the nodes and edges in the graph. The events 
