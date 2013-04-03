@@ -1372,6 +1372,35 @@ q.show();</pre>
 <p>Method that animates <em>swapping</em> a value from one structure with another. The same
   parameter combinations are valid as for the <code>.moveValue</code> method.</p>
 
+<h2>Event Logging API</h2>
+<p>JSAV supports AVs to log student actions into an event log. It also provides mechanisms for
+  sites using the AVs to access a log of those events.</p>
+<h3 class="apimethod">Logging events with .logEvent(eventData)</h3>
+<p>AVs can log events on student actions using this function. The <code>eventData</code> can
+  be any data describing the event. If it is an object, properties <code>tstamp</code> and
+  <code>av</code> will be automatically added to it to mark the current time and the ID of
+  the AV.</p>
+<p>For example:</p>
+  <pre>jsav.logEvent({type: "jsav-heap-decrement", newSize: bh.heapsize()});</pre>
+<h3 class="apimethod">Listening to events</h3>
+<p>JSAV will trigger all events logged with the <code>.logEvent()</code> function as
+  <code>jsav-log-event</code> on the <code>body</code> element of the current document. To
+  attach a listener for those events, one can use the following code.</p>
+  <pre>$("body").on("jsav-log-event", function(event, eventData) {
+  console.log(eventData); // here you would do something sensible with the eventData
+});</pre>
+<p>JSAV will automatically trigger many events for actions such as student moving forward,
+  backward, etc in the animation.</p>
+<h3 class="apimethod">Custom event handler</h3>
+<p>Sometimes listening to the events on the <code>body</code> element might not be preferred.
+  To customize the way the events are handler, a function to handle all JSAV events can be
+  passed as an option to JSAv when initializing it. Name of the option is <code>logEvent</code>.
+  The event handler function will be passed the <code>eventData</code> as the first argument.
+  For example:</p>
+<pre>var jsav = new JSAV("avcontainerid", { logEvent: function(eventData) {
+  console.log(eventData); // here you would do something sensible with the eventData
+}});</pre>
+
 <h2>Best Practice for Modularity</h2>
 
 <p>
@@ -1403,7 +1432,7 @@ A visualization can then be embedded with a call such as:
   </script>
   <script>
   $(function() {
-    // dynamically 
+    // dynamically create a table of contents
     var toc = $("#toc");
     $("h2").each(function(index, item) {
       $(item).html("<a name='sect" + index + "'>" + $(item).text() + "</a>");
