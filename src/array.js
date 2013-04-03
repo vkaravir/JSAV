@@ -288,12 +288,9 @@
       }
       return true; // if tests passed, arrays are equal
     }
-    
+
     // default: return false
     return false;
-  };
-  arrproto.clear = function() {
-    this.element.remove();
   };
   arrproto.toggleClass = JSAV.anim(function(index, className, options) {
     var $elems = getIndices($(this.element).find("li.jsavindex"), index);

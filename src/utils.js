@@ -26,6 +26,12 @@
     // use the jquery :visible pseudo filter for checking for visibility
     return this.element.filter(":visible").size() > 0;
   };
+  objcommons.clear = function() {
+    if (this.element) {
+      this.element.remove();
+    }
+  };
+
   JSAV._types.common = objcommons;
   
   JSAV.utils = {};

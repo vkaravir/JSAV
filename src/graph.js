@@ -40,8 +40,7 @@
   $.extend(graphproto, JSAV._types.ds.common);
   graphproto.css = JSAV.utils._helpers.css;
   graphproto._setcss = JSAV.anim(JSAV.utils._helpers._setcss);
-  graphproto.clear = function() {};
- 
+
   graphproto._setnodes = JSAV.anim(function(newnodes, options) {
     var oldnodes = this._nodes;
     this._nodes = newnodes;
