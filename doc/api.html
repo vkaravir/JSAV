@@ -726,6 +726,16 @@ The additional <code>options</code> parameter works like for <code>.child(...)</
 <p>Returns the size of the list.</p>
 <h3 class="apimethod">.layout([options])</h3>
 <p>This function (re)calculates the layout for the list. Note, that the library does not do this automatically. That means that after changing the list, you should call this manually at the end of each animation step.</p>
+<p>Options supported by the layout function:</p>
+<ul>
+  <li><code>updateLeft</code> If true, the horizontal position (that is, left) of the nodes are calculated.
+    Defaults to true.</li>
+  <li><code>updateTop</code> If true, the vertical position (that is, top) of the nodes are calculated.
+    Defaults to true.</li>
+</ul>
+<p>If the call to layout is, for example, <code>list.layout({updateLeft: false, updateTop: false}), only the edges
+  in the list are redrawn.</code>
+
 <h3 class="apimethod">.newNode(value [, options])</h3>
 <p>Returns a new node that can be added to the list.</p>
 
