@@ -25,42 +25,20 @@
   var arrproto = AVArray.prototype;
   $.extend(arrproto, JSAV._types.ds.common);
 
-  // sets/removes the highlight on given indices of the array arr
-  function setHighlight(arr, indices, mode, options) {
-    var testDiv = $('<ol class="' + arr.element[0].className +
-              '" style="position:absolute;left:-10000px">' +
-              '<li class="jsavnode jsavindex jsavhighlight"><span class="jsavvalue"></span></li>' +
-              '<li class="jsavnode jsavindex" ><span class="jsavvalue"></span></li></ol>'),
-        styleDiv = (mode && mode === "add" ? testDiv.find(".jsavnode").filter(".jsavhighlight").find(".jsavvalue")
-                    : testDiv.find(".jsavnode").not(".jsavhighlight").find(".jsavvalue"));
-    // TODO: general way to get styles for the whole av system
-    $("body").append(testDiv);
-    arr.css(indices, {color: styleDiv.css("color"), "background-color": styleDiv.css("background-color")}, options);
-    testDiv.remove();
-  }
-  
   arrproto.isHighlight = function(index, options) {
-    var testDiv = $('<ol class="' + this.element[0].className +
-              '" style="position:absolute;left:-10000px">' +
-              '<li class="jsavnode jsavindex jsavhighlight"><span class="jsavvalue"></span></li>' +
-              '<li class="jsavnode jsavindex" ><span class="jsavvalue"></span></li></ol>'),
-        styleDiv = testDiv.find(".jsavnode").filter(".jsavhighlight").find(".jsavvalue");
-    // TODO: general way to get styles for the whole av system
-    $("body").append(testDiv);
-    var isHl = this.css(index, "background-color") === styleDiv.css("background-color");
-    testDiv.remove();
-    return isHl;
+    return this.hasClass(index, "jsavhighlight");
   };
-  
+
   arrproto.highlight = function(indices, options) {
-    setHighlight(this, indices, "add", options);
+    this.addClass(indices, "jsavhighlight", options);
     return this;
   };
 
   arrproto.unhighlight = function(indices, options) {
-    setHighlight(this, indices, "remove", options);
+    this.removeClass(indices, "jsavhighlight", options);
     return this;
   };
+
   arrproto._setcss = JSAV.anim(function(indices, cssprop) {
     var $elems = getIndices($(this.element).find("li"), indices);
     if (this.jsav._shouldAnimate()) { // only animate when playing, not when recording
@@ -293,7 +271,7 @@
     return false;
   };
   arrproto.toggleClass = JSAV.anim(function(index, className, options) {
-    var $elems = getIndices($(this.element).find("li.jsavindex"), index);
+    var $elems = getIndices($(this.element).find("li.jsavindex").find("span.jsavvalue"), index);
     if (this.jsav._shouldAnimate()) {
       $elems.toggleClass(className, this.jsav.SPEED);
     } else {
@@ -302,23 +280,23 @@
     return [index, className];
   });
   arrproto.addClass = function(index, className, options) {
-    var $elems = getIndices($(this.element).find("li.jsavindex"), index);
-    if (!$elems.hasClass(className)) {
-      return this.toggleClass(index, className, options);
+    var indices = JSAV.utils._helpers.normalizeIndices($(this.element).find("li.jsavindex").find("span.jsavvalue"), index, ":not(." + className + ")");
+    if (indices.length > 0) {
+      return this.toggleClass(indices, className, options);
     } else {
       return this;
     }
   };
   arrproto.removeClass = function(index, className, options) {
-    var $elems = getIndices($(this.element).find("li.jsavindex"), index);
-    if ($elems.hasClass(className)) {
-      return this.toggleClass(index, className, options);
+    var indices = JSAV.utils._helpers.normalizeIndices($(this.element).find("li.jsavindex").find("span.jsavvalue"), index, "." + className);
+    if (indices.length > 0) {
+      return this.toggleClass(indices, className, options);
     } else {
       return this;
     }
   };
   arrproto.hasClass = function(index, className) {
-    var $elems = getIndices($(this.element).find("li.jsavindex"), index);
+    var $elems = getIndices($(this.element).find("li.jsavindex").find("span.jsavvalue"), index);
     return $elems.hasClass(className);
   };
 
@@ -500,7 +478,7 @@
     return { width: $arr.outerWidth(), height: $arr.outerHeight(),
               left: arrPos.left, top: arrPos.top };
   }
- 
+
   function barArray(array, options) {
     var $arr = $(array.element).addClass("jsavbararray"),
       $items = $arr.find("li").css({"position":"relative", "float": "left"}),

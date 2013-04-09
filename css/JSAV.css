@@ -27,10 +27,9 @@
   margin-right: auto;
 }
 
-.jsavhighlight .jsavvalue, .jsavarray.jsavbararray .jsavindex.jsavhighlight .jsavvalue{
-  background-color: yellow;
-  border-width: 4px;
-  font-size: 120%;  
+.jsavhighlight, .jsavhighlight .jsavvalue, .jsavarray.jsavbararray .jsavindex.jsavhighlight .jsavvalue{
+  background-color: yellow !important;
+  color: black !important;
 }
 
 .jsavvalue {

@@ -531,6 +531,18 @@ mixkey(math.random(), pool);
       }
     }
   };
+  _helpers.normalizeIndices = function($elems, indices, test) {
+    var normIndices = [],
+        $normElems = this.getIndices($elems, indices),
+        i, l;
+    if (typeof test !== "undefined") {
+      $normElems = $normElems.filter(test);
+    }
+    for (i = 0, l = $normElems.size(); i < l; i++) {
+      normIndices.push($elems.index($normElems.get(i)));
+    }
+    return normIndices;
+  };
 
   /* Handles top, left, right, bottom options and positions the given element accordingly */
   _helpers.handlePosition = function(jsavobj) {

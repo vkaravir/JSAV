@@ -268,11 +268,11 @@
   delete edgeproto.hasClass;
   delete edgeproto.toggleClass;
   delete edgeproto.removeClass;
-  
+
   var Node = function() {},
   nodeproto = Node.prototype;
   $.extend(nodeproto, common);
-      
+
   nodeproto.value = function(newVal, options) {
     if (typeof newVal === "undefined") {
       return JSAV.utils.value2type(this.element.attr("data-value"), this.element.attr("data-value-type"));
@@ -295,45 +295,18 @@
   nodeproto._valstring = function(value) {
     return "<span class='jsavvaluelabel'>" + value + "</span>";
   };
-  // TODO: these are so ugly, do something! soon!
   nodeproto.highlight = function(options) {
-    var testDiv = $('<div class="' + this.container.element[0].className +
-        '" style="position:absolute;left:-10000px">' +
-        '<div class="' + this.element[0].className + ' jsavhighlight"><span class="jsavvalue"></span></div><div class="' +
-        this.element[0].className + '" ><span class="jsavvalue"></span></div></div>'),
-      styleDiv = testDiv.find(".jsavnode").filter(".jsavhighlight").find(".jsavvalue");
-    // TODO: general way to get styles for the whole av system
-    $("body").append(testDiv);
-    this._setcss({color: styleDiv.css("color"), "background-color": styleDiv.css("background-color")}, options);
-    testDiv.remove();
+    this.addClass("jsavhighlight");
   };
   nodeproto.unhighlight = function(options) {
-    var testDiv = $('<div class="' + this.container.element[0].className +
-        '" style="position:absolute;left:-10000px">' +
-        '<div class="' + this.element[0].className + ' jsavhighlight"><span class="jsavvalue"></span></div><div class="' +
-        this.element[0].className + '" ><span class="jsavvalue"></span></div></div>'),
-      styleDiv = testDiv.find(".jsavnode").not(".jsavhighlight").find(".jsavvalue");
-    // TODO: general way to get styles for the whole av system
-    $("body").append(testDiv);
-    this._setcss({color: styleDiv.css("color"), "background-color": styleDiv.css("background-color")}, options);
-    testDiv.remove();
+    this.removeClass("jsavhighlight");
   };
-  
   nodeproto.isHighlight = function() {
-    var testDiv = $('<div class="' + this.container.element[0].className +
-        '" style="position:absolute;left:-10000px">' +
-        '<div class="' + this.element[0].className + ' jsavhighlight"><span class="jsavvalue"></span></div><div class="' +
-        this.element[0].className + '" ><span class="jsavvalue"></span></div></div>'),
-      styleDiv = testDiv.find(".jsavnode").filter(".jsavhighlight").find(".jsavvalue");
-    // TODO: general way to get styles for the whole av system
-    $("body").append(testDiv);
-    var isHl = this.element.css("background-color") === styleDiv.css("background-color");
-    testDiv.remove();
-    return isHl;
+    return this.hasClass("jsavhighlight");
   };
   nodeproto.css = JSAV.utils._helpers.css;
   nodeproto._setcss = JSAV.anim(JSAV.utils._helpers._setcss);
-  
+
   JSAV._types.ds = { "common": common, "Edge": Edge, "Node": Node };
   // expose the extend for the JSAV
   JSAV.ext.ds = {
