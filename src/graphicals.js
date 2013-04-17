@@ -318,6 +318,19 @@ if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
         return new Set(this, svgCanvas);
       }
     };
+
+    // expose the types
+    var gTypes = {
+      Circle: Circle,
+      Rect: Rect,
+      Line: Line,
+      Ellipse: Ellipse,
+      Polyline: Polyline,
+      Path: Path,
+      Set: Set
+    };
+    JSAV._types.g = gTypes;
+
   }(jQuery, Raphael));
 
   jQuery(function() {
