@@ -98,7 +98,7 @@ if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
     };
     var init = function(obj, jsav, props) {
       obj.jsav = jsav;
-      obj.elem = $(obj.rObj.node).data("svgelem", obj.rObj);
+      obj.element = $(obj.rObj.node).data("svgelem", obj.rObj);
       for (var i in props) {
         if (props.hasOwnProperty(i)) {
           obj.rObj.attr(i, props[i]);
@@ -106,6 +106,10 @@ if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
       }
     };
 
+    // Function for translating one point in a path object such as line or polyline.
+    // Parameter point should be an index of a point, for example, 0 for the start
+    // point of a line. Parameters dx and dy tell how much the point should be
+    // translated.
     var translatePoint  = function(point, dx, dy, options) {
       var currPath = this.rObj.attrs.path,
           newPath = "",
@@ -124,6 +128,10 @@ if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
       return this;
     };
 
+    // A function for changing the points of a path such as a line of polyline
+    // Parameter points should be an array of points that should be changed.
+    // For example, to change points 0 and 3 in a polyline points should be:
+    //  [[0, new0X, new0Y], [3, new3X, new3Y]]
     var movePoints  = function(points, options) {
       var currPath = this.rObj.attrs.path,
           newPath = currPath.slice(),
@@ -141,7 +149,7 @@ if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
       this._setattrs({"path": np}, $.extend({dontAnimate: ("" + currPath) === "M-1,-1L-1,-1"}, options));
       return this;
     };
-    
+
     var Circle = function(jsav, raphael, x, y, r, props) {
       this.rObj = raphael.circle(x, y, r);
       init(this, jsav, props);
@@ -169,7 +177,7 @@ if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
         return this;
       }
     };
- 
+
     var Rect = function(jsav, raphael, x, y, w, h, r, props) {
       this.rObj = raphael.rect(x, y, w, h, r);
       init(this, jsav, props);
@@ -193,7 +201,7 @@ if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
         return this;
       }
     };
- 
+
     var Line = function(jsav, raphael, x1, y1, x2, y2, props) {
       this.rObj = raphael.path("M" + x1 + " "+ y1 + "L" + x2 + " " + y2);
       init(this, jsav, props);
@@ -224,8 +232,8 @@ if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
       }
       return this;
     };
-    
- 
+
+
     var Polyline = function(jsav, raphael, points, close, props) {
       var path = "M ";
       for (var i=0, l=points.length; i < l; i++) {
@@ -311,12 +319,44 @@ if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
       }
     };
   }(jQuery, Raphael));
+
+  jQuery(function() {
+    "use strict";
+    // jQuery incorrectly returns 0 for width and height of SVG elements
+    // this is a workaround for that bug and returns the correct values
+    // for SVG elements and uses default jQuery implementation for other
+    // elements. Note, that only get is fixed and set uses default jQuery
+    // implementation.
+    var svgElements = ["circle", "path", "rect", "ellipse", "line", "polyline", "polygon"],
+        origWidthHook = $.cssHooks.width,
+        origHeightHook = $.cssHooks.height;
+    jQuery.cssHooks.width = {
+      get: function( elem, computed, extra ) {
+        // if an SVG element, handle getting the width properly
+        if (svgElements.indexOf(elem.nodeName) !== -1) {
+          return elem.getBoundingClientRect().width;
+        }
+        return origWidthHook.get(elem, computed, extra);
+      },
+      set: origWidthHook.set
+    };
+    jQuery.cssHooks.height = {
+      get: function( elem, computed, extra ) {
+        // if an SVG element, handle getting the height properly
+        if (svgElements.indexOf(elem.nodeName) !== -1) {
+          return elem.getBoundingClientRect().height;
+        }
+        return origHeightHook.get(elem, computed, extra);
+      },
+      set: origHeightHook.set
+    };
+  });
 }
 
 (function($) {
   "use strict";
   if (typeof JSAV === "undefined") { return; }
-  
+
   var Label = function(jsav, text, options) {
     this.jsav = jsav;
     this.options = $.extend({visible: true}, options);
@@ -360,7 +400,8 @@ if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
   };
   labelproto.css = JSAV.utils._helpers.css;
   labelproto._setcss = JSAV.anim(JSAV.utils._helpers._setcss);
-  
+  JSAV._types.Label = Label; // expose the label type
+
   JSAV.ext.label = function(text, options) {
     return new Label(this, text, options);
   };
