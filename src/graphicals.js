@@ -331,10 +331,6 @@ if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
     };
     JSAV._types.g = gTypes;
 
-  }(jQuery, Raphael));
-
-  jQuery(function() {
-    "use strict";
     // jQuery incorrectly returns 0 for width and height of SVG elements
     // this is a workaround for that bug and returns the correct values
     // for SVG elements and uses default jQuery implementation for other
@@ -363,7 +359,8 @@ if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
       },
       set: origHeightHook.set
     };
-  });
+
+  }(jQuery, Raphael));
 }
 
 (function($) {
