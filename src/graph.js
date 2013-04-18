@@ -190,22 +190,35 @@
   graphproto.nodes = function() {
     return JSAV.utils.iterable(this._nodes);
   };
-
+  // returns the number of nodes in the graph
+  graphproto.nodeCount = function() {
+    return this._nodes.length;
+  };
+  var collectAllEdges = function(graph) {
+    var alledges = [];
+    for (var i = 0, l = graph._edges.length; i < l; i++) {
+      for (var j = 0, ll = graph._edges[i].length; j < ll; j++) {
+        var edge = graph._edges[i][j];
+        if (alledges.indexOf(edge) === -1) {
+          alledges.push(edge);
+        }
+      }
+    }
+    return alledges;
+  };
   // returns an array of edges in the graph
   graphproto.edges = function() {
     if (!this._alledges) {
-      var alledges = [];
-      for (var i = 0, l = this._edges.length; i < l; i++) {
-        for (var j = 0, ll = this._edges[i].length; j < ll; j++) {
-          var edge = this._edges[i][j];
-          if (alledges.indexOf(edge) === -1) {
-            alledges.push(edge);
-          }
-        }
-      }
-      this._alledges = alledges;
+      this._alledges = collectAllEdges(this);
     }
     return JSAV.utils.iterable(this._alledges);
+  };
+  // returns the number of edges in the graph
+  graphproto.edgeCount = function() {
+    if (!this._alledges) {
+      this._alledges = collectAllEdges(this);
+    }
+    return this._alledges.length;
   };
 
   // add the event handler registering functions

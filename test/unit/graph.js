@@ -14,6 +14,7 @@
         d = graph.addNode("D"),
         e = graph.addNode("E"),
         f = graph.addNode("F");
+    equal(graph.nodeCount(), 6);
     graph.addEdge(a, b);
     graph.addEdge(b, a);
     graph.addEdge(a, c);
@@ -21,6 +22,7 @@
     graph.addEdge(e, a);
     graph.addEdge(d, e);
     graph.addEdge(d, f);
+    equal(graph.edgeCount(), 12);
     ok(graph.hasEdge(a, b));
     ok(graph.hasEdge(b, a));
     ok(graph.hasEdge(a, c));
@@ -53,34 +55,42 @@
         e3 = graph.addEdge(c, d),
         e4 = graph.addEdge(d, a);
     equal(graph.edges().length, 8);
+    equal(graph.edgeCount(), 8);
     av.displayInit();
     graph.removeEdge(e1);
     graph.layout();
     equal(graph.edges().length, 6);
+    equal(graph.edgeCount(), 6);
     ok(!e1.isVisible());
     av.step();
     graph.removeEdge(graph.getEdge(c, b));
     graph.layout();
     equal(graph.edges().length, 4);
+    equal(graph.edgeCount(), 4);
     ok(!e2.isVisible());
     av.step();
     graph.removeEdge(e4);
     graph.layout();
     equal(graph.edges().length, 2);
+    equal(graph.edgeCount(), 2);
     ok(!e4.isVisible());
     av.recorded();
     $.fx.off = true;
 
     equal(graph.edges().length, 8);
+    equal(graph.edgeCount(), 8);
     ok(e1.isVisible() && e2.isVisible() && e4.isVisible());
     av.forward();
     equal(graph.edges().length, 6);
+    equal(graph.edgeCount(), 6);
     ok(!e1.isVisible() && e2.isVisible() && e4.isVisible());
     av.forward();
     equal(graph.edges().length, 4);
+    equal(graph.edgeCount(), 4);
     ok(!e1.isVisible() && !e2.isVisible() && e4.isVisible());
     av.forward();
     equal(graph.edges().length, 2);
+    equal(graph.edgeCount(), 2);
     ok(!e1.isVisible() && !e2.isVisible() && !e4.isVisible());
   });
 })();
