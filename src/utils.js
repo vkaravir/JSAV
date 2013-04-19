@@ -544,6 +544,78 @@ mixkey(math.random(), pool);
     return normIndices;
   };
 
+  // Returns an handler for the jsav-update-relative event
+  // to maintain scope.
+  var relativeUpdateHandlerFunction = function(jsavobj, relElem, offsetLeft, offsetTop, 
+                  elemPos, elemTop, elemLeft, anchor, myAnchor) {
+    return function() {
+      // on update:
+      //  - check relElems position
+      //  - check elems position
+      //  - update elems position using jqUI
+      //  - store new pos and revert elems position change
+      //  - calculate new pos and animate
+      var el = jsavobj.element,
+          elemCurPos = el.position(),
+          elemCurLeft = elemCurPos.left,
+          elemCurTop = elemCurPos.top,
+          offsetChangeLeft = elemCurLeft - elemLeft, // element position has been changed
+          offsetChangeTop = elemCurTop - elemTop; // element position has been changed
+      offsetLeft = offsetLeft + offsetChangeLeft;
+      offsetTop = offsetTop + offsetChangeTop;
+      // use jqueryui to position the el relative to the relElem
+      el.position({my: myAnchor, at: anchor, of: relElem, offset: offsetLeft + " " + offsetTop});
+      elemPos = el.position();
+      elemLeft = elemPos.left;
+      elemTop = elemPos.top;
+      if (elemLeft === elemCurLeft && elemTop === elemCurTop && // relativeTo element has not changed pos
+                offsetChangeLeft === 0 && offsetChangeTop === 0) { // this element has not changed pos
+        return; // no change to animate, just return
+      }
+      el.css({left: elemCurLeft, top: elemCurTop}); // restore the element position
+      jsavobj.css({left: elemLeft, top: elemTop}); // .. and animate the change
+    };
+  };
+
+  // Sets the given jsavobj to be positioned relative to the options.relativeTo object
+  _helpers.setRelativePositioning = function(jsavobj, options) {
+    var el = jsavobj.element,
+        relElem = options.relativeTo,
+        anchor = options.anchor || "center",
+        myAnchor = options.myAnchor || "center";
+    if (!(relElem instanceof jQuery)) {
+      if (relElem.nodeType === Node.ELEMENT_NODE) { // check if it's DOM element
+        relElem = $(relElem);
+      } else if (relElem.constructor === JSAV._types.ds.AVArray && "relativeIndex" in options)  {
+        // position relative to the given array index, so set relElem to that index element
+        relElem = relElem.element.find(".jsavindex:eq(" + options.relativeIndex + ")");
+      } else if (relElem.rObj) { // JSAV graphical primitive
+        relElem = $(relElem.rObj.node);
+      } else {
+        // if not jQuery object nor DOM element, assume JSAV object
+        relElem = relElem.element || relElem;
+      }
+    }
+    el.css({ position: "absolute" });
+    var offsetLeft = parseInt(options.left || 0, 10),
+        offsetTop = parseInt(options.top || 0, 10);
+    // store relElems position
+    var relPos = relElem.position(),
+        relLeft = relPos.left,
+        relTop = relPos.top;
+    // unbind previous event handler
+    if (jsavobj._relativehandle) {
+      jsavobj.jsav.container.off("jsav-updaterelative", jsavobj._relativehandle);
+    } else { // set the initial position to the current position (to prevent unnecessary animations)
+      el.position({my: myAnchor, at: anchor, of: relElem, offset: offsetLeft + " " + offsetTop});
+    }
+    var elemPos = el.position(),
+        elemLeft = elemPos.left,
+        elemTop = elemPos.top;
+    var hdanle = relativeUpdateHandlerFunction(jsavobj, relElem, offsetLeft, offsetTop, elemPos, elemTop, elemLeft, anchor, myAnchor) // end relative positioning
+    jsavobj.jsav.container.on("jsav-updaterelative", hdanle);
+    jsavobj._relativehandle = hdanle;
+  };
   /* Handles top, left, right, bottom options and positions the given element accordingly */
   _helpers.handlePosition = function(jsavobj) {
     var el = jsavobj.element,
@@ -555,57 +627,7 @@ mixkey(math.random(), pool);
       options.center = false;
       // if positioning relative to some other object
       if ("relativeTo" in options) {
-        var relElem = options.relativeTo,
-            anchor = options.anchor || "center",
-            myAnchor = options.myAnchor || "center";
-        if (!(relElem instanceof jQuery)) {
-          if (relElem.nodeType === Node.ELEMENT_NODE) { // check if it's DOM element
-            relElem = $(relElem);
-          } else if (relElem.constructor === JSAV._types.ds.AVArray && "relativeIndex" in options)  {
-            // position relative to the given array index, so set relElem to that index element
-            relElem = relElem.element.find(".jsavindex:eq(" + options.relativeIndex + ")");
-          } else {
-            // if not jQuery object nor DOM element, assume JSAV object
-            relElem = relElem.element || relElem;
-          }
-        }
-        el.css({ position: "absolute" });
-        var offsetLeft = parseInt(options.left || 0, 10),
-            offsetTop = parseInt(options.top || 0, 10);
-        // store relElems position
-        var relPos = relElem.position(),
-            relLeft = relPos.left,
-            relTop = relPos.top;
-        el.position({my: myAnchor, at: anchor, of: relElem, offset: offsetLeft + " " + offsetTop});
-        var elemPos = el.position(),
-            elemLeft = elemPos.left,
-            elemTop = elemPos.top;
-
-        jsavobj.jsav.container.on("jsav-updaterelative", function() {
-          // on update:
-          //  - check relElems position
-          //  - check elems position
-          //  - update elems position using jqUI
-          //  - store new pos and revert elems position change
-          //  - calculate new pos and animate
-          var elemCurPos = el.position(),
-              elemCurLeft = elemCurPos.left,
-              elemCurTop = elemCurPos.top,
-              offsetChangeLeft = elemCurLeft - elemLeft, // element position has been changed
-              offsetChangeTop = elemCurTop - elemTop; // element position has been changed
-          offsetLeft = offsetLeft + offsetChangeLeft;
-          offsetTop = offsetTop + offsetChangeTop;
-          el.position({my: myAnchor, at: anchor, of: relElem, offset: offsetLeft + " " + offsetTop});
-          elemPos = el.position();
-          elemLeft = elemPos.left;
-          elemTop = elemPos.top;
-          if (elemLeft === elemCurLeft && elemTop === elemCurTop && // relativeTo element has not changed pos
-                    offsetChangeLeft === 0 && offsetChangeTop === 0) { // this element has not changed pos
-            return; // no change to animate, just return
-          }
-          el.css({left: elemCurLeft, top: elemCurTop}); // restore the element position
-          jsavobj.css({left: elemLeft, top: elemTop}); // .. and animate the change
-        }); // end relative positioning
+        this.setRelativePositioning(jsavobj, options);
       } else { // positioning absolutely
         for (var i = positions.length; i--; ) {
           pos = positions[i];
@@ -624,6 +646,11 @@ mixkey(math.random(), pool);
       jsavobj.show(options);
     }
   };
+  // A helper function to attach to JSAV objects to animate and record
+  // toggling of a CSS class. Note, that when adding this to a JSAV
+  // object prototype, it should be wrapper with the JSAV.anim(..).
+  // For example:
+  // treenode.toggleClass = JSAV.anim(JSAV.utils._helpers._toggleClass);
   _helpers._toggleClass = function(className) {
     if (this.jsav._shouldAnimate()) {
       this.element.toggleClass(className, this.jsav.SPEED);
@@ -632,6 +659,10 @@ mixkey(math.random(), pool);
     }
     return [className];
   };
+  // A helper function to attach to JSAV objects to animate and record
+  // addition of a CSS class. This should not be wrapped with JSAV.anim(..).
+  // Note, that this function assumes there is a .toggleClass(..) function
+  // on the JSAV object.
   _helpers.addClass = function(className, options) {
     if (!this.element.hasClass(className)) {
       return this.toggleClass(className, options);
@@ -639,6 +670,10 @@ mixkey(math.random(), pool);
       return this;
     }
   };
+  // A helper function to attach to JSAV objects to animate and record
+  // removal of a CSS class. This should not be wrapped with JSAV.anim(..).
+  // Note, that this function assumes there is a .toggleClass(..) function
+  // on the JSAV object.
   _helpers.removeClass = function(className, options) {
     if (this.element.hasClass(className)) {
       return this.toggleClass(className, options);
@@ -646,6 +681,8 @@ mixkey(math.random(), pool);
       return this;
     }
   };
+  // A helper function to attach to JSAV objects to tell whether or not the
+  // object has a CSS class applied.
   _helpers.hasClass = function(className) {
     return this.element.hasClass(className);
   };
