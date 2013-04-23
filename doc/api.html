@@ -988,6 +988,37 @@ out, this method will return the current text of the label.
     <h3 class="apimethod">.hasClass(className, [options])</h3>
     <p>Return true/false based on if the variable has the CSS class <code>className</code>.</p>
 
+
+    <h2>Pointer API</h2>
+
+    <p>Pointers can be used to represent pointers of a programming language. The pointer is
+      visualized as a label with an arrow to the target of the pointer.</p>
+
+    <h3 class="apimethod">.pointer(name, target, [options])</h3>
+    <p>
+    This is a method of the AV object.
+    It creates a pointer that points to some JSAV element element.
+    Parameter <code>name</code> is the
+    (initial) name for the variable.
+    Parameter <code>options</code> include the following:
+    </p>
+    <ul>
+    <li> <code>{visible: &lt;boolean>}</code> Determine whether the pointer
+    is visible on creation. Defaults to true.</li>
+    <li><code>{left/top/right/bottom: &lt;lengthUnit>}</code> Values to determine the absolute position of the label relative to the pointer's target.</li>
+    <li>anchor: Defines which position on the element being positioned to align with the target element. Should be in 
+      format <code>horizontal vertical</code>. Possible horizontal values are "left", "center", "right" and vertical values "top", "center", "bottom". Defaults to <code>center center</code>.</li>
+    <li>myAnchor: Similar to anchor, but the position on this element. Defaults to <code>center center</code>.</li>
+    <li>targetIndex: If target is a JSAV array, this option can be used to target
+      an index in that array.</li>
+    </ul>
+    <p>A pointer instance has the functions of the Label object as well as the following functions.</p>
+    <h3 class="apimethod">.target([newTarget], [options])</h3>
+    <p>If <code>newTarget</code> is not specified, returns the JSAV object this pointer points to. If
+      <code>newTarget</code> is a JSAV object, the pointer will be updated to point to that structure.
+      Valid <code>options</code> are the same as for the pointer constructor. If setting a new target,
+      the change is recorded in the animationo and the function returns the pointer object.</p>
+
     <h2>Pseudocode API</h2>
     <p>The pseudocode API in JSAV is intended for showing a static set of codelines that can be show/hidden and
       highlighted. There are two ways to initialize a pseudocode object in JSAV:</p>

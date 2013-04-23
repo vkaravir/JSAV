@@ -63,7 +63,7 @@
   varproto.equals = function(otherVariable) {
     if (!otherVariable || typeof otherVariable !== "object") { return false; }
     return this.value() === otherVariable.value();
-  };  
+  };
   varproto.css = JSAV.utils._helpers.css;
   varproto._setcss = JSAV.anim(JSAV.utils._helpers._setcss);
   varproto.addClass = JSAV.utils._helpers.addClass;
@@ -74,6 +74,104 @@
   JSAV.ext.variable = function(value, options) {
     return new Variable(this, value, options);
   };
+
+
+  // A pointer object that can have a name and a target that it points to.
+  var Pointer = function(jsav, name, options) {
+    this.jsav = jsav;
+    var defaultOptions = {visible: true, // visible by default
+                          // positioned 20px above the object pointed to
+                          anchor: "left top",
+                          myAnchor: "left bottom",
+                          left: 0,
+                          top: "-20px" };
+    this.options = $.extend(defaultOptions, options);
+    this.element = $('<div class="jsavlabel jsavpointer">' + name + '</div>');
+    if (this.options.before) {
+      this.element.insertBefore(this.options.before.element);
+    } else if (this.options.after) {
+      this.element.insertAfter(this.options.before.element);
+    } else if (this.options.container) {
+      this.options.container.append(this.element);
+    } else {
+      $(this.jsav.canvas).append(this.element);
+    }
+    if (typeof(this.options.targetIndex) !== "undefined") {
+      this.options.relativeIndex = this.options.targetIndex;
+    }
+    JSAV.utils._helpers.handlePosition(this);
+    JSAV.utils._helpers.handleVisibility(this, this.options);
+    this._target = options.relativeTo;
+    var arrowPoints = this._arrowPoints();
+    this.arrow = jsav.g.line(arrowPoints[0][1], arrowPoints[0][2],
+                              arrowPoints[1][1], arrowPoints[1][2],
+                              {"arrow-end": "classic-wide",
+                                "stroke-width": 2,
+                                "opacity": 0});
+    if (this.isVisible()) {
+      this.arrow.show();
+    }
+  };
+  var pointerproto = Pointer.prototype;
+  // Extend the Label type
+  $.extend(pointerproto, JSAV._types.Label.prototype);
+  // Helper function to record the change of the pointer target.
+  pointerproto._setTarget = JSAV.anim(
+    function(newTarget, options) {
+      var oldTarget = this.target();
+      this._target = newTarget;
+      return [oldTarget];
+    }
+  );
+  // Calculates the start and end points of the arrow to be drawn for this pointer.
+  // Returns a structure compatible with the line.movePoints(..) function. That is,
+  // an array like [[0, startX, startY], [1, endX, endY]]
+  // Note, that this assumes that both the pointer and the target are inside the
+  // jsavcanvas HTML element.
+  pointerproto._arrowPoints = function(options) {
+    var opts = $.extend({}, this.options, options),
+        targetElem = this._target.element;
+    if (typeof(opts.targetIndex) !== "undefined") {
+      opts.relativeIndex = opts.targetIndex;
+    }
+    if (opts.relativeIndex) { // If target is an array index, find the DOM element for that index
+      targetElem = this._target.element.find(".jsavindex:eq(" + opts.relativeIndex + ") .jsavvalue");
+    }
+    var targetOffset = targetElem.offset(),
+        canvasOffset = this.jsav.canvas.offset(),
+        myBounds = this.bounds(),
+        targetBounds = {width: targetElem.outerWidth(),
+                                 height: targetElem.outerHeight,
+                                 left: targetOffset.left - canvasOffset.left,
+                                 top: targetOffset.top - canvasOffset.top},
+        newPoints = [[0, myBounds.left + myBounds.width/2,
+                        myBounds.top + myBounds.height],
+                     [1, targetBounds.left + targetBounds.width/2,
+                        targetBounds.top]];
+    return newPoints;
+  };
+  // Update the target of this pointer. Argument newTarget should be a JSAV object.
+  // Options available are the same as when positioning elements relative to each other.
+  pointerproto.target = function(newTarget, options) {
+    if (typeof newTarget === "undefined") {
+      return this._target;
+    } else {
+      this._setTarget(newTarget, options);
+      JSAV.utils._helpers.setRelativePositioning(this, $.extend({}, this.options, options, {relativeTo: newTarget}));
+      var that = this;
+      this.jsav.container.on("jsav-updaterelative", function() {
+        that.arrow.movePoints(pointerproto._arrowPoints.call(that, options), options);
+      });
+      return this;
+    }
+  };
+  // Expose the Pointer as the .pointer(...) function on JSAV instances.
+  JSAV.ext.pointer = function(name, target, options) {
+    return new Pointer(this, name, $.extend({}, options, {relativeTo: target}));
+  };
+  // Expose the Pointer type
+  JSAV._types.Pointer = Pointer;
+
 
   // regexps used for trimming
   var trimRightRegexp = /\s+$/,
