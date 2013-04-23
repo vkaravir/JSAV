@@ -57,15 +57,15 @@
   };
   /* from raphaeljs */
   u.createUUID = function() {
-      // http://www.ietf.org/rfc/rfc4122.txt
-      var s = [],
-          i = 0;
-      for (; i < 32; i++) {
-          s[i] = (~~(Math.random() * 16)).toString(16);
-      }
-      s[12] = 4;  // bits 12-15 of the time_hi_and_version field to 0010
-      s[16] = ((s[16] & 3) | 8).toString(16);  // bits 6-7 of the clock_seq_hi_and_reserved to 01
-      return "jsav-" + s.join("");
+    // http://www.ietf.org/rfc/rfc4122.txt
+    var s = [],
+        i = 0;
+    for (; i < 32; i++) {
+      s[i] = (~~(Math.random() * 16)).toString(16);
+    }
+    s[12] = 4;  // bits 12-15 of the time_hi_and_version field to 0010
+    s[16] = ((s[16] & 3) | 8).toString(16);  // bits 6-7 of the clock_seq_hi_and_reserved to 01
+    return "jsav-" + s.join("");
   };
 
   /** Returns an iterable version of the passed array that has functions .next() and
@@ -79,10 +79,13 @@
     array_clone.hasNext = function() {
       return i < this.length;
     };
+    array_clone.reset = function() {
+      i = 0;
+    };
     return array_clone;
   };
 
-  
+
   JSAV.ext.logEvent = function(eventData) {
     // if object, add default fields if they don't exist
     if (typeof eventData === "object") {

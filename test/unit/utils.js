@@ -41,11 +41,11 @@
     deepEqual(r.numKeys(1, 99, 10, {sorted: true}), [8, 9, 26, 31, 45, 49, 78, 89, 90, 94]);
     // custom sorting, same as default
     r.seedrandom(fixedseed);
-    deepEqual(r.numKeys(1, 99, 10, {sorted: true, sortfunc: function(a, b) {return a - b;}}), 
+    deepEqual(r.numKeys(1, 99, 10, {sorted: true, sortfunc: function(a, b) {return a - b;}}),
           [8, 9, 26, 31, 45, 49, 78, 89, 90, 94]);
     // custom sorting, desc order
     r.seedrandom(fixedseed);
-    deepEqual(r.numKeys(1, 99, 10, {sorted: true, sortfunc: function(a, b) {return b - a;}}), 
+    deepEqual(r.numKeys(1, 99, 10, {sorted: true, sortfunc: function(a, b) {return b - a;}}),
           [94, 90, 89, 78, 49, 45, 31, 26, 9, 8]);
   });
   test("sample", function() {
@@ -53,7 +53,7 @@
       seed = new Date().getTime(),
       fixedseed = "satunnaisuutta",
       values = [31, 94, 49, 8, 26, 90, 9, 45, 78, 89];
-      
+
     equal(r.sample([], 1), undefined, "Sampling more than there are items should return undefined");
     equal(r.sample([2, 4], 3), undefined);
     equal(r.sample([2, 4], -3), undefined, "Negative values should return undefined");
@@ -63,5 +63,28 @@
     var res = r.sample(values, 7);
     equal(res.length, 7);
     deepEqual(res, [8, 89, 90, 31, 49, 94, 9]);
+  });
+  test("iterable array", function() {
+    var arr = [9, 8, 7, 6],
+        iter = JSAV.utils.iterable(arr);
+    notEqual(arr, iter);
+    for (var i = 0, l = arr.length; i < l; i++) {
+      ok(iter.hasNext());
+      equal(arr[i], iter.next());
+    }
+    ok(!iter.hasNext());
+    for (i = 0, l = arr.length; i < l; i++) {
+      equal(arr[i], iter[i]);
+    }
+    // reset iterator
+    iter.reset();
+    for (i = 0, l = arr.length; i < l; i++) {
+      ok(iter.hasNext());
+      equal(arr[i], iter.next());
+    }
+    ok(!iter.hasNext());
+    for (i = 0, l = arr.length; i < l; i++) {
+      equal(arr[i], iter[i]);
+    }
   });
 })();
