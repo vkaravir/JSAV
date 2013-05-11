@@ -418,7 +418,7 @@
     }
   };
   JSAV.ext.ds.layout.graph = {
-    "_default": springLayout,
+    "_default": manualLayout,
     "automatic": springLayout,
     "manual": manualLayout
   };
