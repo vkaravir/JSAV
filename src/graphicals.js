@@ -11,11 +11,15 @@ if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
       // utility function that actually implements hide
       // animated show function
       show: function(options) {
-        this.css({"opacity": 1}, options);
+        if (this.css("opacity") !== 1) {
+          this.css({"opacity": 1}, options);
+        }
       },
       // animated hide function
       hide: function(options) {
-        this.css({"opacity": 0}, options);
+        if (this.css("opacity") !== 0) {
+          this.css({"opacity": 0}, options);
+        }
       },
       isVisible: function(options) {
         return (this.css("opacity") !== 0);
@@ -99,9 +103,20 @@ if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
     var init = function(obj, jsav, props) {
       obj.jsav = jsav;
       obj.element = $(obj.rObj.node).data("svgelem", obj.rObj);
-      for (var i in props) {
-        if (props.hasOwnProperty(i)) {
-          obj.rObj.attr(i, props[i]);
+      var prop = $.extend({'visible': true}, props);
+      for (var i in prop) {
+        if (prop.hasOwnProperty(i)) {
+          obj.rObj.attr(i, prop[i]);
+        }
+      }
+      // if opacity not set manually, we'll hide the object and show it if it
+      // should be visible
+      if (!('opacity' in prop)) {
+        obj.rObj.attr('opacity', 0);
+        var visible = (typeof prop.visible === "boolean" &&
+                      prop.visible === true);
+        if (visible) {
+          obj.show(prop);
         }
       }
     };
@@ -290,6 +305,11 @@ if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
         return new Circle(this, svgCanvas, x, y, r, props);
       },
       rect: function(x, y, w, h, r, props) {
+        // if border-radius not given, assume r is options and radius is 0
+        if (typeof(r) === "object") {
+          props = r;
+          r = 0;
+        }
         var svgCanvas = getSvgCanvas(this, props);
         return new Rect(this, svgCanvas, x, y, w, h, r, props);
       },

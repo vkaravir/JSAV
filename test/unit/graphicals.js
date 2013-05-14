@@ -4,7 +4,7 @@
   module("graphicals.circle", {  });
   test("Testing Circle", function() {
     var av = new JSAV("emptycontainer");
-    
+
     var c = av.g.circle(50, 60, 70);
     ok(c, "circle created");
     equal(c.center().cx, 50, "circle center x");
@@ -32,45 +32,48 @@
     av.recorded();
     $.fx.off = true;
 
+    equal(c.css("opacity"), 0, "circle opacity initially");
+    av.forward();
     equal(c.center().cx, 50, "circle center x");
     equal(c.center().cy, 60, "circle center y");
     equal(c.radius(), 70, "circle radius");
     equal(c.css("stroke"), "#000", "circle stroke color");
     equal(c.css("stroke-width"), 1, "circle stroke width");
     equal(c.css("fill"), "none", "circle fill");
+
     equal(c.css("opacity"), 1, "circle opacity");
 
     av.end();
     av.begin();
+    av.forward();
 
     var currBB = c.rObj.getBBox();
     equal(Math.round(currBB.x), Math.round(origBB.x));
     equal(Math.round(currBB.y), Math.round(origBB.y));
     equal(Math.round(currBB.width), Math.round(origBB.width), "scale undone correctly");
 
-    
     av.forward(); // apply center
     equal(c.center().cx, 80, "circle center x");
     equal(c.center().cy, 90, "circle center y");
     currBB = c.rObj.getBBox();
     equal(Math.round(currBB.x - origBB.x), 30);
     equal(Math.round(currBB.y - origBB.y), 30);
-    
+
     av.forward(); // apply radius
     equal(c.radius(), 90, "circle radius");
     currBB = c.rObj.getBBox();
     equal(Math.round(currBB.x - origBB.x), 10);
     equal(Math.round(currBB.y - origBB.y), 10);
-    
+
     av.forward(); // apply translate
     currBB = c.rObj.getBBox();
     equal(Math.round(currBB.x - origBB.x), 40);
     equal(Math.round(currBB.y - origBB.y), 50);
-    
+
     av.forward(); // apply scale
     currBB = c.rObj.getBBox();
     equal(Math.floor(currBB.width), Math.round((origBB.width+40)*2), "scale redone correctly");
-    
+
     av.forward(); // apply css
     equal(c.center().cx, 80, "circle center x");
     equal(c.center().cy, 90, "circle center y");
@@ -79,13 +82,13 @@
     equal(c.css("stroke-width"), 4, "circle stroke width");
     equal(c.css("fill"), "rgb(120,120,120)", "circle fill");
     equal(c.css("opacity"), 1, "circle opacity");
-    
+
     av.forward(); // apply hide
     equal(c.css("opacity"), 0, "circle opacity");
-    
+
     av.forward(); // apply show
     equal(c.css("opacity"), 1, "circle opacity");
-    
+
     ok(!av.forward()); // no more steps
   });
 
@@ -94,7 +97,7 @@
 
   test("Testing Ellipse", function() {
     var av = new JSAV("emptycontainer");
-    
+
     var e = av.g.ellipse(70, 60, 50, 40);
     ok(e, "ellipse created");
     equal(e.center().cx, 70, "ellipse center x");
@@ -121,7 +124,10 @@
     av.step();
     e.show();
     av.recorded();
+    $.fx.off = true;
 
+    // should be initially hidden
+    equal(e.css("opacity"), 0, "ellipse opacity initially");
     equal(e.center().cx, 70, "ellipse center x");
     equal(e.center().cy, 60, "ellipse center y");
     equal(e.radius().rx, 50, "ellipse radius x");
@@ -129,10 +135,14 @@
     equal(e.css("stroke"), "#000", "ellipse stroke color");
     equal(e.css("stroke-width"), 1, "ellipse stroke width");
     equal(e.css("fill"), "none", "ellipse fill");
+
+    av.forward();
     equal(e.css("opacity"), 1, "ellipse opacity");
 
     av.end();
     av.begin();
+
+    av.forward();
 
     var currBB = e.rObj.getBBox();
     equal(Math.round(currBB.x), Math.round(origBB.x));
@@ -141,31 +151,31 @@
     equal(Math.round(currBB.height), Math.round(origBB.height), "vertical scale undone correctly");
 
     $.fx.off = true;
-    
+
     av.forward(); // apply center
     equal(e.center().cx, 80, "ellipse center x");
     equal(e.center().cy, 90, "ellipse center y");
     currBB = e.rObj.getBBox();
     equal(Math.round(currBB.x - origBB.x), 10);
     equal(Math.round(currBB.y - origBB.y), 30);
-    
+
     av.forward(); // apply radius
     equal(e.radius().rx, 30, "ellipse radius x");
     equal(e.radius().ry, 20, "ellipse radius y");
     currBB = e.rObj.getBBox();
     equal(Math.round(currBB.x - origBB.x), 30);
     equal(Math.round(currBB.y - origBB.y), 50);
-    
+
     av.forward(); // apply translate
     currBB = e.rObj.getBBox();
     equal(Math.round(currBB.x - origBB.x), 60);
     equal(Math.round(currBB.y - origBB.y), 90);
-    
+
     av.forward(); // apply scale
     currBB = e.rObj.getBBox();
     equal(Math.floor(currBB.width), Math.round((origBB.width-40)*2), "hor scale redone correctly");
     equal(Math.floor(currBB.height), Math.round((origBB.height-40)*2), "vert scale redone correctly");
-    
+
     av.forward(); // apply css
     equal(e.center().cx, 80, "ellipse center x");
     equal(e.center().cy, 90, "ellipse center y");
@@ -175,13 +185,13 @@
     equal(e.css("stroke-width"), 4, "ellipse stroke width");
     equal(e.css("fill"), "rgb(120,120,120)", "ellipse fill");
     equal(e.css("opacity"), 1, "ellipse opacity");
-    
+
     av.forward(); // apply hide
     equal(e.css("opacity"), 0, "ellipse opacity");
-    
+
     av.forward(); // apply show
     equal(e.css("opacity"), 1, "ellipse opacity");
-    
+
     ok(!av.forward()); // no more steps
   });
 
@@ -190,7 +200,7 @@
 
   test("Testing Rectangle", function() {
     var av = new JSAV("emptycontainer");
-    
+
     var r = av.g.rect(70, 60, 50, 40);
     ok(r, "rect created");
     equal(r.width(), 50, "rectangle width");
@@ -215,16 +225,22 @@
     av.step();
     r.show();
     av.recorded();
+    $.fx.off = true;
 
     equal(r.width(), 50, "rectangle width");
     equal(r.height(), 40, "rectangle height");
     equal(r.css("stroke"), "#000", "rectangle stroke color");
     equal(r.css("stroke-width"), 1, "rectangle stroke width");
     equal(r.css("fill"), "none", "rectangle fill");
+    equal(r.css("opacity"), 0, "rectangle opacity");
+
+    av.forward();
     equal(r.css("opacity"), 1, "rectangle opacity");
 
     av.end();
     av.begin();
+
+    av.forward();
 
     var currBB = r.rObj.getBBox();
     equal(Math.round(currBB.x), Math.round(origBB.x));
@@ -233,7 +249,7 @@
     equal(Math.round(currBB.height), Math.round(origBB.height), "vertical scale undone correctly");
 
     $.fx.off = true;
-    
+
     av.forward(); // apply width
     equal(r.width(), 80, "rectangle width");
     equal(r.height(), 40, "rectangle height");
@@ -242,7 +258,7 @@
     equal(Math.round(currBB.y), Math.round(origBB.y));
     equal(Math.round(currBB.width), Math.round(origBB.width) + 30);
     equal(Math.round(currBB.height), Math.round(origBB.height));
-    
+
     av.forward(); // apply height
     equal(r.width(), 80, "rectangle width");
     equal(r.height(), 30, "rectangle height");
@@ -251,17 +267,17 @@
     equal(Math.round(currBB.y), Math.round(origBB.y));
     equal(Math.round(currBB.width), Math.round(origBB.width) + 30);
     equal(Math.round(currBB.height), Math.round(origBB.height) - 10);
-    
+
     av.forward(); // apply translate
     currBB = r.rObj.getBBox();
     equal(Math.round(currBB.x - origBB.x), 30);
     equal(Math.round(currBB.y - origBB.y), 40);
-    
+
     av.forward(); // apply scale
     currBB = r.rObj.getBBox();
     equal(Math.floor(currBB.width), Math.round((origBB.width+30)*2), "hor scale redone correctly");
     equal(Math.floor(currBB.height), Math.round((origBB.height-10)*2), "vert scale redone correctly");
-    
+
     av.forward(); // apply css
     equal(r.width(), 80, "rectangle width");
     equal(r.height(), 30, "rectangle height");
@@ -269,13 +285,13 @@
     equal(r.css("stroke-width"), 4, "rectangle stroke width");
     equal(r.css("fill"), "rgb(120,120,120)", "rectangle fill");
     equal(r.css("opacity"), 1, "rectangle opacity");
-    
+
     av.forward(); // apply hide
     equal(r.css("opacity"), 0, "rectangle opacity");
-    
+
     av.forward(); // apply show
     equal(r.css("opacity"), 1, "rectangle opacity");
-    
+
     ok(!av.forward()); // no more steps
   });
 
@@ -284,7 +300,7 @@
 
   test("Testing Line", function() {
     var av = new JSAV("emptycontainer");
-    
+
     var l = av.g.line(10, 20, 150, 140);
     ok(l, "line created");
     var origBB = $.extend(true, {}, l.rObj.getBBox());
@@ -324,10 +340,14 @@
     equal(l.css("stroke"), "#000", "line stroke color");
     equal(l.css("stroke-width"), 1, "line stroke width");
     equal(l.css("fill"), "none", "line fill");
+    equal(l.css("opacity"), 0, "line opacity");
+
+    av.forward();
     equal(l.css("opacity"), 1, "line opacity");
 
     av.end();
     av.begin();
+    av.forward();
 
     currBB = l.rObj.getBBox();
     equal(Math.round(currBB.x), Math.round(origBB.x));
@@ -341,7 +361,7 @@
     equal(Math.round(currBB.y), Math.round(origBB.y) + 10);
     equal(Math.round(currBB.width), Math.round(origBB.width) - 20);
     equal(Math.round(currBB.height), Math.round(origBB.height) - 10);
-        
+
     av.forward(); // apply translate point 1
     currBB = l.rObj.getBBox();
     equal(Math.round(currBB.x), Math.round(origBB.x) + 20);
@@ -353,7 +373,7 @@
     currBB = l.rObj.getBBox();
     equal(Math.round(currBB.x - origBB.x), 50);
     equal(Math.round(currBB.y - origBB.y), 50);
-    
+
     av.forward(); // apply scale
     currBB = l.rObj.getBBox();
     equal(Math.floor(currBB.width), Math.round((origBB.width-10)*2), "hor scale redone correctly");
@@ -370,42 +390,42 @@
     equal(Math.round(currBB.y), Math.round(origBB.y) + 40);
     equal(Math.round(currBB.width), Math.round(origBB.width));
     equal(Math.round(currBB.height), Math.round(origBB.height));
-    
+
     av.forward(); // apply css
     equal(l.css("stroke"), "red", "line stroke color");
     equal(l.css("stroke-width"), 4, "line stroke width");
     equal(l.css("fill"), "rgb(120,120,120)", "line fill");
     equal(l.css("opacity"), 1, "line opacity");
-    
+
     av.forward(); // apply hide
     equal(l.css("opacity"), 0, "line opacity");
-    
+
     av.forward(); // apply show
     equal(l.css("opacity"), 1, "line opacity");
-    
+
     ok(!av.forward()); // no more steps
   });
   test("Test line movePoints", function() {
     var av = new JSAV("emptycontainer");
-    
+
     var l = av.g.line(10, 20, 150, 140);
     ok(l, "line created");
     var origBB = $.extend(true, {}, l.rObj.getBBox());
-    av.step();
+    av.displayInit();
     l.movePoints([[0, 10, 20], [1, 150, 140]]);
     av.step();
     l.movePoints([[0, 30, 40], [1, 170, 160]]);
     av.recorded();
-    
+
     $.fx.off = true;
-    
+
     ok(av.forward());
     var currBB = $.extend(true, {}, l.rObj.getBBox());
     equal(Math.round(currBB.x), Math.round(origBB.x));
     equal(Math.round(currBB.y), Math.round(origBB.y));
     equal(Math.round(currBB.width), Math.round(origBB.width));
     equal(Math.round(currBB.height), Math.round(origBB.height));
-    
+
     ok(av.forward());
     currBB = $.extend(true, {}, l.rObj.getBBox());
     equal(Math.round(currBB.x), Math.round(origBB.x) + 20);
@@ -413,7 +433,7 @@
     equal(Math.round(currBB.width), Math.round(origBB.width));
     equal(Math.round(currBB.height), Math.round(origBB.height));
   });
-  
+
   module("label", {  });
   test("Test Label show/hide", function() {
     var av = new JSAV("emptycontainer"),
