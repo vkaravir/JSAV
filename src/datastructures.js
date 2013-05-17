@@ -26,24 +26,10 @@
     }
     return res;
   };
-    
+
   // common properties/functions for all data structures, these can be copied
   // to the prototype of a new DS using the addCommonProperties(prototype) function
   var common = {
-      // gets or sets the id of the DS
-      'id': function(newId) {
-        if (newId) {
-          this.element[0].id = newId;
-          return this;
-        } else {
-          var id = this.element[0].id;
-          if (!id) {
-            id = JSAV.utils.createUUID();
-            this.element[0].id = id;
-          }
-          return id;
-        }
-      },
       getSvg: function() {
         if (!this.svg) { // lazily create the SVG overlay only when needed
           this.svg = new Raphael(this.element[0]);
@@ -87,17 +73,19 @@
                               endOffset.top, $.extend({container: this.container}, this.options));
     }
 
+    this.element = $(this.g.rObj.node);
+
     var visible = (typeof this.options.display === "boolean" && this.options.display === true);
     this.g.rObj.attr({"opacity": 0});
-    this.g.rObj.node.setAttribute("class", "jsavedge");
+    this.element.addClass("jsavedge");
     if (start) {
-      this.g.rObj.node.setAttribute("data-startnode", this.startnode.id());
+      this.element[0].setAttribute("data-startnode", this.startnode.id());
     }
     if (end) {
-      this.g.rObj.node.setAttribute("data-endnode", this.endnode.id());
+      this.element[0].setAttribute("data-endnode", this.endnode.id());
     }
-    this.g.rObj.node.setAttribute("data-container", this.container.id());
-    $(this.g.rObj.node).data("edge", this);
+    this.element[0].setAttribute("data-container", this.container.id());
+    this.element.data("edge", this);
 
     if (typeof this.options.weight !== "undefined") {
       this._weight = this.options.weight;
@@ -109,17 +97,11 @@
   };
   var edgeproto = Edge.prototype;
   $.extend(edgeproto, common);
-  edgeproto._setclass = JSAV.anim(function(clazz) {
-    var line = this.g.rObj.node,
-      oldclass = line.getAttribute("class");
-    line.setAttribute("class", clazz);
-    return [oldclass];
-  });
   edgeproto.layout = function(options) {
     if (this.start().value() === "jsavnull" || this.end().value() === "jsavnull") {
-      this._setclass("jsavedge jsavnulledge", options);
+      this.addClass("jsavedge", options).addClass("jsavnulledge", options);
     } else {
-      this._setclass("jsavedge", options);
+      this.addClass("jsavedge", options).removeClass("jsavnulledge");
     }
   };
   edgeproto.start = function(node, options) {
@@ -178,7 +160,6 @@
       } else {
         return undefined;
       }
-      //return this._label?(this._label.text()):undefined;
     } else {
       var self = this;
       var positionUpdate = function() {
@@ -205,8 +186,8 @@
     }
     if (options && !options.checkNodes) {
       if (!this.startnode.equals(otherEdge.startnode) ||
-        !this.endnode.equals(otherEdge.endnode)) {
-          return false;
+                !this.endnode.equals(otherEdge.endnode)) {
+        return false;
       }
     }
     var cssprop, equal;
@@ -263,11 +244,35 @@
     var bbox = this.g.bounds();
     return {left: bbox.left, top: bbox.top};
   };
-  // the default versions won't work on Raphael nodes so just remove them
-  delete edgeproto.addClass;
-  delete edgeproto.hasClass;
-  delete edgeproto.toggleClass;
-  delete edgeproto.removeClass;
+  // add class handling functions
+  edgeproto.addClass = function(className, options) {
+    if (!this.element.hasClass(className)) {
+      return this.toggleClass(className, options);
+    } else {
+      return this;
+    }
+  };
+  edgeproto.removeClass = function(className, options) {
+    if (this.element.hasClass(className)) {
+      return this.toggleClass(className, options);
+    } else {
+      return this;
+    }
+  };
+  edgeproto.hasClass = function(className) {
+    return this.element.hasClass(className);
+  };
+  edgeproto.toggleClass = JSAV.anim(function(className, options) {
+    this.element.toggleClass(className);
+    return [className, options];
+  });
+  // add highlight/unhighlight functions, essentially only toggle jsavhighlight class
+  edgeproto.highlight = function(options) {
+    this.addClass("jsavhighlight", options);
+  };
+  edgeproto.unhighlight = function(options) {
+    this.removeClass("jsavhighlight", options);
+  };
 
   var Node = function() {},
   nodeproto = Node.prototype;

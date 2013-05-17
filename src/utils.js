@@ -9,8 +9,22 @@
   // Test if range type is supported and add to jQuery.support
   var inp = $("<input type='range' />");
   $.support.inputTypeRange = (inp.prop("type") === "range");
-  
+
   var objcommons = {};
+  // gets or sets the id of the object
+  objcommons.id = function(newId) {
+    if (newId) {
+      this.element[0].id = newId;
+      return this;
+    } else {
+      var id = this.element[0].id;
+      if (!id) {
+        id = JSAV.utils.createUUID();
+        this.element[0].id = id;
+      }
+      return id;
+    }
+  };
   objcommons.bounds = function(recalculate, options) {
     if (recalculate) {
       return this.layout($.extend({boundsOnly: true}, options));
