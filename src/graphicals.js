@@ -98,7 +98,8 @@ if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
       bounds: function() {
         var bbox = this.rObj.getBBox();
         return { left: bbox.x, top: bbox.y, width: bbox.width, height: bbox.height };
-      }
+      },
+      id: JSAV._types.common.id
     };
     var init = function(obj, jsav, props) {
       obj.jsav = jsav;
