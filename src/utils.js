@@ -99,6 +99,12 @@
     return array_clone;
   };
 
+  /** Returns true if the passed object is a graphical primitive, false otherwise. */
+  u.isGraphicalPrimitive = function(jsavobj) {
+    if (!jsavobj) { return false; }
+    return !!jsavobj.rObj;
+  };
+
 
   JSAV.ext.logEvent = function(eventData) {
     // if object, add default fields if they don't exist
@@ -606,7 +612,7 @@ mixkey(math.random(), pool);
       } else if (relElem.constructor === JSAV._types.ds.AVArray && "relativeIndex" in options)  {
         // position relative to the given array index, so set relElem to that index element
         relElem = relElem.element.find(".jsavindex:eq(" + options.relativeIndex + ")");
-      } else if (relElem.rObj) { // JSAV graphical primitive
+      } else if (JSAV.utils.isGraphicalPrimitive(relElem)) { // JSAV graphical primitive
         relElem = $(relElem.rObj.node);
       } else {
         // if not jQuery object nor DOM element, assume JSAV object
