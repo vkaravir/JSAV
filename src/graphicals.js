@@ -165,6 +165,10 @@ if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
       this._setattrs({"path": np}, $.extend({dontAnimate: ("" + currPath) === "M-1,-1L-1,-1"}, options));
       return this;
     };
+    // A function for getting the points of a path such as a line or polyline
+    var points = function() {
+      return this._points.slice(0);
+    };
 
     var Circle = function(jsav, raphael, x, y, r, props) {
       this.rObj = raphael.circle(x, y, r);
@@ -221,12 +225,14 @@ if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
     var Line = function(jsav, raphael, x1, y1, x2, y2, props) {
       this.rObj = raphael.path("M" + x1 + " "+ y1 + "L" + x2 + " " + y2);
       init(this, jsav, props);
+      this._points = [[x1, y1], [x2, y2]];
       return this;
     };
     $.extend(Line.prototype, common);
 
     Line.prototype.translatePoint = translatePoint;
     Line.prototype.movePoints = movePoints;
+    Line.prototype.points = points;
 
     var Ellipse = function(jsav, raphael, x, y, rx, ry, props) {
       this.rObj = raphael.ellipse(x, y, rx, ry);
@@ -261,12 +267,14 @@ if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
       }
       this.rObj = raphael.path(path);
       init(this, jsav, props);
+      this._points = points;
       return this;
     };
     $.extend(Polyline.prototype, common);
 
     Polyline.prototype.translatePoint = translatePoint;
     Polyline.prototype.movePoints = movePoints;
+    Polyline.prototype.points = points;
 
     var Path = function(jsav, raphael, path, props) {
       this.rObj = raphael.path(path);
@@ -360,8 +368,8 @@ if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
     var svgElements = ["circle", "path", "rect", "ellipse", "line", "polyline", "polygon"],
         origWidthHook = $.cssHooks.width,
         origHeightHook = $.cssHooks.height;
-    jQuery.cssHooks.width = {
-      get: function( elem, computed, extra ) {
+    $.cssHooks.width = {
+      get: function(elem, computed, extra) {
         // if an SVG element, handle getting the width properly
         if (svgElements.indexOf(elem.nodeName) !== -1) {
           return elem.getBoundingClientRect().width;
@@ -370,8 +378,8 @@ if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
       },
       set: origWidthHook.set
     };
-    jQuery.cssHooks.height = {
-      get: function( elem, computed, extra ) {
+    $.cssHooks.height = {
+      get: function(elem, computed, extra) {
         // if an SVG element, handle getting the height properly
         if (svgElements.indexOf(elem.nodeName) !== -1) {
           return elem.getBoundingClientRect().height;
@@ -380,7 +388,6 @@ if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
       },
       set: origHeightHook.set
     };
-
 
     /*!
     Following utility functions for handling SVG elements add/remove/toggle/hasClass
