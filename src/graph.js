@@ -177,10 +177,12 @@
   graphproto.getEdge = function(fromNode, toNode) {
     var fromIndex = this._nodes.indexOf(fromNode),
         adjlist = this._edges[fromIndex];
-    for (var i = 0, l = adjlist.length; i < l; i++) {
-      var edge = adjlist[i];
-      if (edge.end() === toNode) {
-        return edge;
+    if (adjlist) {
+      for (var i = 0, l = adjlist.length; i < l; i++) {
+        var edge = adjlist[i];
+        if (edge.end() === toNode) {
+          return edge;
+        }
       }
     }
     return undefined;
