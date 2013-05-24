@@ -11,25 +11,18 @@
     //  - array, ind, node
     //  - node, array, ind
     //  - node, node
-    var params = {
-        args1: [],
-        args2: [],
-        from: arguments[0] // first param is always 1st structure
-    };
-    if (arguments.length === 2) { // two nodes passed
-      params.to = arguments[1];
-    } else if (arguments.length === 4) { // case of two arrays
+    var params = { args1: [],
+                   args2: [],
+                   from: arguments[0] // first param is always 1st structure
+                 };
+    var secondstrPos = 1;
+    if (typeof arguments[1] === "number") { // array index
       params.args1 = [ arguments[1] ];
-      params.to = arguments[2];
-      params.args2 = [ arguments[3] ];
-    } else { // one array, one node
-      if (typeof arguments[1] === "object") { // second param not number or string
-        params.to = arguments[1];
-        params.args2 = [ arguments[2] ];
-      } else { // 2nd param is an index
-        params.args1 = [ arguments[1] ];
-        params.to = arguments[2];
-      }
+      secondstrPos = 2; // 2nd structure will be at arg index 2
+    }
+    params.to = arguments[secondstrPos];
+    if (typeof arguments[secondstrPos + 1] === "number") { // array index
+      params.args2 = [ arguments[secondstrPos + 1] ];
     }
     return params;
   };
