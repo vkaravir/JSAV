@@ -134,7 +134,8 @@
     if (typeof(opts.targetIndex) !== "undefined") {
       opts.relativeIndex = opts.targetIndex;
     }
-    if (opts.relativeIndex) { // If target is an array index, find the DOM element for that index
+    // If target is an array index, find the DOM element for that index
+    if (typeof(opts.relativeIndex) !== "undefined") {
       targetElem = this._target.element.find(".jsavindex:eq(" + opts.relativeIndex + ") .jsavvalue");
     }
     var targetOffset = targetElem.offset(),
@@ -224,17 +225,9 @@
       $(this.jsav.canvas).append(this.element);
     }
     // generate the elements for all lines...
-    var clElems = $(),
-      clElem;
+    var clElems = $();
     for (var i = 0, l = codelines.length; i < l; i++) {
-      clElem = $('<li class="jsavcodeline">');
-      if (this.options.htmlEscape) {
-        // let jQuery do the HTML escaping
-        clElem.text(codelines[i]);
-      } else {
-        clElem.html(codelines[i]);
-      }
-      clElems = clElems.add(clElem);
+      clElems = clElems.add(createCodeLine(codelines[i], this));
     }
     // .. and change the DOM only once
     this.element.append(clElems);
@@ -247,8 +240,22 @@
       this.element.addClass("jsavcenter");
     }
   };
+  var createCodeLine = function(code, container) {
+    var clElem = $('<li class="jsavcodeline">');
+    if (container.options.htmlEscape) {
+      // let jQuery do the HTML escaping
+      clElem.text(code);
+    } else {
+      clElem.html(code);
+    }
+    return clElem;
+  };
   var codeproto = Code.prototype;
+  $.extend(codeproto, JSAV._types.common);
   codeproto._toggleVisible = JSAV.anim(JSAV.ext.effects._toggleVisible);
+  codeproto.addCodeLine = JSAV.anim(function(newLine) {
+    this.element.append(createCodeLine(newLine, this));
+  });
   codeproto.highlight = function(index, options) {
     return this.addClass(index, "jsavhighlight");
   };
@@ -326,7 +333,7 @@
       this.toggleClass(index, "jsavcurrentline", options);
     }
     return this;
- };
+  };
   codeproto.css = function(index, cssprop, options) {
     var $elems = getIndices($(this.element).find("li.jsavcodeline"), index);
     if (typeof cssprop === "string") {
