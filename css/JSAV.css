@@ -127,8 +127,7 @@
   z-index: 100;
   bottom: 0;
   background-color: inherit;
-}
-.jsavbararray .jsavvalue {
+  min-height: 0;
   -moz-border-radius: 0;
   -o-border-radius: 0;
   -ms-border-radius: 0;

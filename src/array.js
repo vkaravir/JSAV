@@ -501,7 +501,7 @@
         $valueBar = $i.find(".jsavvaluebar");
       }
       $valueBar.css({"height": "100%"});
-      $i.find(".jsavvalue").css("height", (100.0*array.value(index) / maxValue) + 15 + "%");
+      $i.find(".jsavvalue").css("height", (100.0*array.value(index) / maxValue) + "%");
       if (indexed) {
         var $indexLabel = $i.find(".jsavindexlabel");
         if ($indexLabel.size() === 0) {
