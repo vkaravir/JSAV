@@ -17,10 +17,10 @@
   </head>
   <body>
     <h1>JSAV Sudoku Grid</h1>
-    <p>This is a simple example of the flexibility of JSAV arrays.
+    <p>This is a simple example of the JSAV matrix.
       It also illustrated updating slideshows interactively,
       on-the-fly.
-      The example creates a sudoku game using nine JSAV arrays.
+      The example creates a sudoku game using a JSAV matrix.
       If you click on cells, they highlight the first time you click.
       Each click adds a new slide, which you can see by resetting the
       slideshow with the << control.
@@ -33,22 +33,17 @@
     </div>
   </div>
   <style>
-  /** change size and margins of arrays */
-  .jsavarray { margin: 0 auto; height: 20px; min-height: 20px; }
-  .jsavarray li.jsavnode { border-radius: 0 !important; min-height: 20px; height: 20px; width: 20px; min-width: 20px; font-size: 8px; line-height: 20px;}
-  
   /** change the borders of the elements to create 3x3 grids **/
-  .jsavarray:nth-of-type(3n+1) { border-width: 2px;}
-  .jsavarray li:nth-of-type(3n) { border-right: 2px solid black;}
-  .jsavarray li:first-of-type { border-left: 2px solid black;}
-  .jsavarray:nth-of-type(3n-2) li { border-top: 2px solid black;}
-  .jsavarray:nth-of-type(9) li { border-bottom: 2px solid black;}
-  .jsavarray:not(first-of-type) li{ border-top: none;}
+  .jsavarray:nth-of-type(3n+1) { border-width: 2px !important;}
+  .jsavarray li:nth-of-type(3n) { border-right: 2px solid black !important;}
+  .jsavarray li:first-of-type { border-left: 2px solid black !important;}
+  .jsavarray:nth-of-type(3n-2) li { border-top: 2px solid black !important;}
+  .jsavarray:nth-of-type(9) li { border-bottom: 2px solid black !important;}
   </style>
     <script
-       src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js">
+       src="../lib/jquery.min.js">
     </script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js"></script>
+    <script src="../lib/jquery-ui.min.js"></script>
     <script src="../lib/jquery.transform.light.js"></script>
     <script src="../lib/raphael.js"></script>
     <script src="../build/JSAV-min.js"></script>
@@ -57,20 +52,20 @@
   (function() {
     var c1;
     var av = new JSAV("container");
-    var arrays = [];
+    var arr = [1, 2, 3, 4, 5, 6, 7, 8, 9];
     
-    // function to handle a click event on an array
-    var clickHandler = function(index, e) {
-      av.step();
-      this.css(index, {"background-color": "yellow", "transform": "scale(1.2)", "zIndex": 700});
+    // function to handle a click event on the matrix
+    var clickHandler = function(row, col, e) {
+      av.step(); // create new step in the animation
+      this.toggleClass(row, col, "jsavhighlight");
     };
     
-    // initialize nine arrays
-    for (var i = 0; i < 9; i++) {
-      arrays[i] = av.ds.array([1, 2, 3, 4, 5, 6, 7, 8, 9]);
-      // bind the clickHandler to handle click events on the array
-      arrays[i].click(clickHandler);
-    }
+    // initialize the matrix
+    m = av.ds.matrix([arr, arr, arr, arr, arr,
+                      arr, arr, arr, arr]);
+    m.layout();
+    // bind the clickHandler to handle click events on the matrix
+    m.click(clickHandler);
     av.displayInit();
     av.recorded();
   })();
