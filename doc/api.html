@@ -1088,6 +1088,44 @@ out, this method will return the current text of the label.
     <p>Return true/false based on if the line at given index has the CSS class <code>className</code>. Parameter
       <code>index</code> should be a number.</p>
 
+    <h2>Matrix (or 2D-Array) Data Structure API</h2>
+    <p>The Matrix data structures is essentially a 2-dimensional array.</p>
+    <h3 class="apimethod">.ds.matrix(data[, options]) or .ds.matrix(options)</h3>
+    <p>A matrix can be initialized with the <code>.ds.matrix()</code> function of a JSAV instance.
+      If the <code>data</code> argument is provided, it should be an array of arrays, all of the
+      same length. If only <code>options</code> argument is provided, it needs to specify options
+      <code>rows</code> and <code>columns</code> specifying the size of the matrix.</p>
+    <p>Options that can be specified:</p>
+    <ul>
+      <li>visible: Boolean to determine if initially the matrix is shown or not. Default true.</li>
+      <li>center: Boolean to determine if matrix should be automatically centered within its container. Defaults to true.</li>
+      <li>left/top/right/bottom: Values to determine the absolute position of the matrix relative to its container.</li>
+      <li>relativeTo: A JSAV data structure object or DOM element that this structure should be positioned relative to. If this option is specified, left and top options will change structure's position relative to the relativeTo element. Note, that the element pointed by relativeTo needs to be visible.</li>
+      <li>anchor: Defines which position on the element being positioned to align with the target element. Should be in format horizontal vertical. Possible horizontal values are "left", "center", "right" and vertical values "top", "center", "bottom". Defaults to center center. Only has an effect if relativeTo is specified.</li>
+      <li>myAnchor: Similar to anchor, but the position on this element. Defaults to center center. Only has an effect if relativeTo is specified.</li>
+      <li>relativeIndex: If relativeTo points to a JSAV array, this option can be used to position this structure relative to an index in that array. Only has an effect if relativeTo is specified.</li>
+      <li>style: The style of the array. Valid values are <code>plain</code>, <code>matrix</code>, and
+        <code>table</code>. Defaults to table.</li>
+      <li>element: The DOM element inside which the matrix should be added.</li>
+    </ul>
+    <p>For example, this would create a 2x2 matrix: <code>var m = jsav.ds.matrix([[0, 1], [2, 3]])</code>.
+      An empty 5x8 matrix using the matrix style could be created like this:</p>
+    <pre>var m = jsav.ds.matrix({rows: 5, columns: 8, style: "matrix"});</pre>
+
+    <h3 class="apimethod">.swap(row1, col1, row2, col2[, options])</h3>
+    <p>Swaps two values of the matrix, namely (row1, col1) with (ro2, col2).</p>
+
+    <h3 class="apimethod">.layout([options])</h3>
+    <p>Recalculates the layout for the data structure.</p>
+
+    <h3 class="apimethod">arrays methods</h3>
+    <p>Like for the array, there are similar functions in the matrix that take the row number as the
+    first argument and the rest of the arguments similarly than the corresponding array function.
+    These functions are <code>highlight</code>, <code>unhighlight</code>, <code>isHighlight</code>,
+    <code>css</code>, <code>value</code>, <code>addClass</code>, <code>hasClass</code>,
+    <code>removeClass</code>, and <code>toggleClass</code>. So, for example, whereas the array
+    has function <code>.addClass(col, className)</code>, the matrix has a function
+    <code>.addClass(row, col, className)</code>.
 
     <h2>Graphical Primitives API</h2>
     <p>JSAV supports the following graphical primitives: circle, rectangle, line,

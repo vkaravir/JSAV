@@ -73,10 +73,10 @@
 }
 .jsavindex span {
   z-index: 99;
-  display: block;
+  display: inline-block;
 }
 .jsavhorizontalarray .jsavindex {
-  float: left;
+  display: inline-block;
   position: relative;
 }
 /* remove right borders from everything but the last index */
@@ -85,6 +85,7 @@
 }
 .jsavhorizontalarray .jsavindexlabel {
   bottom: -25px;
+  left: 0;
 }
 .jsavhorizontalarray .jsavindex:first-of-type, .jsavhorizontalarray .jsavindex:first-of-type .jsavvalue {
   -ms-border-top-left-radius: 8px;
@@ -138,6 +139,7 @@
   position: absolute;
   width: inherit;
   bottom: 0;
+  left: 0;
 }
 .jsavbararray .jsavvalue, .jsavbararray .jsavvaluebar {
   display: block;
@@ -517,6 +519,36 @@ ul.jsavcode {
   display: none !important;
 }
 
+/******** MATRIX DATA STRUCTURE ****/
+.jsavmatrix .jsavarray {
+  margin: 0 auto;
+  height: 30px;
+  min-height: 30px;
+}
+.jsavmatrix .jsavarray li.jsavnode {
+  border-radius: 0;
+  min-height: 30px;
+  height: auto;
+  width: auto;
+  min-width: 30px;
+  font-size: 14px;
+  line-height: 30px;
+  border-top: none;
+}
+.jsavmatrix .jsavarray:first-child li {
+  border-top: 1px solid black;
+}
+
+.jsavmatrix.jsavmatrixplain .jsavarray li.jsavnode, 
+.jsavmatrix.jsavmatrixmatrix .jsavarray li.jsavnode {
+  border: none;
+}
+.jsavmatrix.jsavmatrixmatrix {
+  border-left: 2px solid black;
+  border-right: 2px solid black;
+  border-radius: 10px;
+  padding: 10px;
+}
 
 
 /******** Event prevention DIV shutter ******/

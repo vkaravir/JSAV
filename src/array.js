@@ -11,7 +11,7 @@
   /* Array data structure for JSAV library. */
   var AVArray = function(jsav, element, options) {
     this.jsav = jsav;
-    this.options = $.extend(true, {autoresize: true}, options);
+    this.options = $.extend(true, {autoresize: true, center: true}, options);
     if ($.isArray(element)) {
       this.initialize(element);
     } else if (element) { // assume it's a DOM element
@@ -20,6 +20,9 @@
     }
     if (this.options.autoresize) {
       this.element.addClass("jsavautoresize");
+    }
+    if (this.options.center) {
+      this.element.addClass("jsavcenter");
     }
   };
   var arrproto = AVArray.prototype;
@@ -346,7 +349,7 @@
     eventhandler(eventName).call(this, data, handler);
     return this;
   };
- 
+
   arrproto.toggleArrow = JSAV.anim(function(indices) {
     var $elems = getIndices($(this.element).find("li"), indices);
     $elems.toggleClass("jsavarrow");
@@ -366,7 +369,7 @@
           lielem = valelem.parent();
       if (valelem.size() === 0 ) { return; } // no such index
       var opts = $.extend({startIndex: 0, endIndex: this.size() - 1}, options);
-      
+
       var $mark = lielem.find(".jsavmark"),
           $markline = lielem.find(".jsavmarkline");
       if ($markline.size() === 0 && $mark.size() === 0) { // no mark exists yet
@@ -401,7 +404,7 @@
   JSAV._types.ds.AVArray = AVArray;
   // expose the data structures for the JSAV
   JSAV.ext.ds.array = function(element, options) {
-      return new AVArray(this, element, options);
+    return new AVArray(this, element, options);
   };
 
 }(jQuery));
@@ -412,19 +415,16 @@
 /// array layout
 (function($) {
   "use strict";
-  function centerArray(array, $lastItem, options) {
-    var opts = $.extend({}, array.options, options);
-    // center the array inside its parent container
-    if (opts.hasOwnProperty("center") && !opts.center) {
-      // if options center is set to falsy value, return
-      return;
+  function setArrayWidth(array, $lastItem, options) {
+    var width = 0;
+    array.element.find("li").each(function(index, item) {
+      width += $(this).outerWidth(true);
+    });
+    if (width !== array.element.width()) {
+      array.css({"width": width + "px"});
     }
-    // width of array expected to be last items position + its width
-    var width = $lastItem.position().left + $lastItem.outerWidth(),
-      containerWidth = $(array.jsav.canvas).width();
-    array.element.css("left", (containerWidth - width)/2);
   }
-  
+
   function horizontalArray(array, options) {
     var $arr = $(array.element).addClass("jsavhorizontalarray"),
       // rely on browser doing the calculation, float everything to the left..
@@ -446,12 +446,12 @@
       }
     });
     $arr.height(maxHeight + (indexed?30:0));
-    centerArray(array, $items.last(), options);
+    setArrayWidth(array, $items.last(), options);
     var arrPos = $arr.position();
     return { width: $arr.outerWidth(), height: $arr.outerHeight(),
               left: arrPos.left, top: arrPos.top };
   }
-  
+
   function verticalArray(array, options) {
     var $arr = $(array.element).addClass("jsavverticalarray"),
       $items = $arr.find("li"),
@@ -473,7 +473,7 @@
       });
       $items.css("margin-left", maxWidth);
     }
-    centerArray(array, $items.last(), options);
+    setArrayWidth(array, $items.last(), options);
     var arrPos = $arr.position();
     return { width: $arr.outerWidth(), height: $arr.outerHeight(),
               left: arrPos.left, top: arrPos.top };
@@ -510,11 +510,11 @@
         }
       }
     });
-    centerArray(array, $items.last(), options);
+    setArrayWidth(array, $items.last(), options);
     return { width: array.element.outerWidth(), height: array.element.outerHeight(),
               left: array.position().left, top: array.position().top };
   }
-  
+
   JSAV.ext.ds.layout.array = {
     "_default": horizontalArray,
     "bar": barArray,
