@@ -61,8 +61,8 @@ The HTML section typical includes something like this:
 
 <pre>
   &lt;div id="container">
-  &lt;div class="jsavcontrols">&lt;/div>
-  &lt;p class="jsavoutput jsavline">&lt;/p>
+    &lt;div class="jsavcontrols">&lt;/div>
+    &lt;p class="jsavoutput jsavline">&lt;/p>
   &lt;/div>
 </pre>
 <dl>
@@ -78,6 +78,11 @@ The HTML section typical includes something like this:
       class <code>jsavline</code> or <code>jsavscroll</code>.
       See the Messages API for more details.</dd>
 </dl>
+<p>
+  If you want a finer control on where inside the JSAV container the
+  data structures are added, you can also add
+  <code>&lt;div class="jsavcanvas">&lt;/div></code>. Then, all DOM
+  elements created by JSAV will be added inside this element.</p>
 
 <h2>Creating A Visualization</h2>
 <p>Initializing the visualization container is simple:</p>
