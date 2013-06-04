@@ -354,7 +354,7 @@
   module("effects.swapValues", {  });
   test("Swapping between arrays", function() {
     var values1 = [15, 26, 13, 19, 10],
-        values2 = [152, 262, 132, 192, 102],
+        values2 = [152, 262, 12, 192, 102],
         emptyStrings = ["", "", "", "", ""],
         av = new JSAV("emptycontainer"),
         arr1 = av.ds.array(values1),
@@ -369,9 +369,8 @@
     av.step();
     av.effects.swapValues(arr1, 0, arr1, 2);
     checkArrayValues(arr2, values1);
-    checkArrayValues(arr1, [132, 262, 152, 192, 102]);
+    checkArrayValues(arr1, [12, 262, 152, 192, 102]);
     av.recorded();
-
     $.fx.off = true;
 
     checkArrayValues(arr1, values1);
@@ -380,9 +379,9 @@
     ok(av.forward());
     checkArrayValues(arr1, values2);
     checkArrayValues(arr2, values1);
-    
+
     ok(av.forward());
-    checkArrayValues(arr1, [132, 262, 152, 192, 102]);
+    checkArrayValues(arr1, [12, 262, 152, 192, 102]);
     checkArrayValues(arr2, values1);
 
     ok(!av.forward());
