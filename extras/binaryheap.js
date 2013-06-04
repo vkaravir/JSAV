@@ -86,7 +86,10 @@
         this.heapify(i);
       }
     }
-    $.fx.off = oldfx;
+     if (this.options.center) {
+      this.element.addClass("jsavcenter");
+    }
+   $.fx.off = oldfx;
   };
   var bhproto = BinaryHeap.prototype;
   $.extend(bhproto, JSAV._types.ds.AVArray.prototype);
