@@ -76,6 +76,25 @@
   };
 
 
+  // helper function to create the arrow for the pointer
+  var _createArrow = function(pointer, options) {
+    var arrowPoints = pointer._arrowPoints();
+    var arrow = pointer.jsav.g.line(arrowPoints[0][1], arrowPoints[0][2],
+                              arrowPoints[1][1], arrowPoints[1][2],
+                              {"arrow-end": "classic-wide",
+                                "stroke-width": 2,
+                                "opacity": 0});
+    if (pointer.isVisible()) {
+      arrow.show();
+    }
+    // set up an event handler to update the arrow position whenever the target
+    // changes or the target moves
+    pointer.jsav.container.on("jsav-updaterelative", function() {
+      pointer.arrow.movePoints(pointer._arrowPoints(options), options);
+    });
+    return arrow;
+  };
+
   // A pointer object that can have a name and a target that it points to.
   var Pointer = function(jsav, name, options) {
     this.jsav = jsav;
@@ -102,14 +121,8 @@
     JSAV.utils._helpers.handlePosition(this);
     JSAV.utils._helpers.handleVisibility(this, this.options);
     this._target = options.relativeTo;
-    var arrowPoints = this._arrowPoints();
-    this.arrow = jsav.g.line(arrowPoints[0][1], arrowPoints[0][2],
-                              arrowPoints[1][1], arrowPoints[1][2],
-                              {"arrow-end": "classic-wide",
-                                "stroke-width": 2,
-                                "opacity": 0});
-    if (this.isVisible()) {
-      this.arrow.show();
+    if (this._target) {
+      this.arrow = _createArrow(this);
     }
   };
   var pointerproto = Pointer.prototype;
@@ -158,6 +171,9 @@
       return this._target;
     } else {
       this._setTarget(newTarget, options);
+      if (!this.arrow) {
+        this.arrow = _createArrow(this, options);
+      }
       JSAV.utils._helpers.setRelativePositioning(this, $.extend({}, this.options, options, {relativeTo: newTarget}));
       var that = this;
       this.jsav.container.on("jsav-updaterelative", function() {
@@ -165,6 +181,16 @@
       });
       return this;
     }
+  };
+  pointerproto._orighide = pointerproto.hide;
+  pointerproto.hide = function(options) {
+    this._orighide(options);
+    if (this.arrow) { this.arrow.hide(); }
+  };
+  pointerproto._origshow = pointerproto.show;
+  pointerproto.show = function(options) {
+    this._origshow(options);
+    if (this.arrow) { this.arrow.show(); }
   };
   // Expose the Pointer as the .pointer(...) function on JSAV instances.
   JSAV.ext.pointer = function(name, target, options) {

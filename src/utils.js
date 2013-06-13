@@ -649,7 +649,7 @@ mixkey(math.random(), pool);
           pos;
       options.center = false;
       // if positioning relative to some other object
-      if ("relativeTo" in options) {
+      if ("relativeTo" in options && options.relativeTo) {
         this.setRelativePositioning(jsavobj, options);
       } else { // positioning absolutely
         for (var i = positions.length; i--; ) {
