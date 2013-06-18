@@ -584,6 +584,12 @@ mixkey(math.random(), pool);
           elemCurTop = elemCurPos.top,
           offsetChangeLeft = elemCurLeft - elemLeft, // element position has been changed
           offsetChangeTop = elemCurTop - elemTop; // element position has been changed
+
+      // if the element is not visible, setting position won't work so simply return
+      if (el.filter(":visible").size() === 0) {
+        return;
+      }
+      
       offsetLeft = offsetLeft + offsetChangeLeft;
       offsetTop = offsetTop + offsetChangeTop;
       // use jqueryui to position the el relative to the relElem

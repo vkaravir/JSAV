@@ -90,6 +90,7 @@
     // set up an event handler to update the arrow position whenever the target
     // changes or the target moves
     pointer.jsav.container.on("jsav-updaterelative", function() {
+      if (!pointer.isVisible()) { return; }
       pointer.arrow.movePoints(pointer._arrowPoints(options), options);
     });
     return arrow;
@@ -177,6 +178,7 @@
       JSAV.utils._helpers.setRelativePositioning(this, $.extend({}, this.options, options, {relativeTo: newTarget}));
       var that = this;
       this.jsav.container.on("jsav-updaterelative", function() {
+        if (!that.isVisible()) { return; }
         that.arrow.movePoints(pointerproto._arrowPoints.call(that, options), options);
       });
       return this;
