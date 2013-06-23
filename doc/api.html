@@ -1023,6 +1023,8 @@ out, this method will return the current text of the label.
       <code>newTarget</code> is a JSAV object, the pointer will be updated to point to that structure.
       Valid <code>options</code> are the same as for the pointer constructor. If setting a new target,
       the change is recorded in the animationo and the function returns the pointer object.</p>
+    <p><strong>Note:</strong> the position of the pointer is only updated once the <code>jsav.step()</code>
+      <code>jsav.displayInit()</code>, or <code>jsav.recorded()</code> function is called.</p>
 
     <h2>Pseudocode API</h2>
     <p>The pseudocode API in JSAV is intended for showing a static set of codelines that can be show/hidden and
