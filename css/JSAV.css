@@ -168,12 +168,14 @@
 }
 .jsavverticalarray .jsavindex {
   margin-bottom: -1px;
+  float: left;
+  clear: left;
 }
 .jsavverticalarray .jsavindexlabel {
   position: absolute;
   text-align: right;
   width: auto;
-  right: 55px;
+  left: -17px;
 }
 .jsavverticalarray .jsavindex:first-of-type, .jsavverticalarray .jsavindex:first-of-type .jsavvalue {
   -ms-border-top-left-radius: 8px;
