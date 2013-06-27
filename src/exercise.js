@@ -126,8 +126,8 @@
 
       this.score.correct = 0;
       this.score.student = 0;
-      while (correct && forwStudent && forwModel && modelAv.currentStep() < modelTotal &&
-            studentAv.currentStep() < studentTotal) {
+      while (correct && forwStudent && forwModel && modelAv.currentStep() <= modelTotal &&
+            studentAv.currentStep() <= studentTotal) {
         forwStudent = studentAv.forward(gradeStepFilterFunction);
         forwModel = modelAv.forward(gradeStepFilterFunction);
         if (forwStudent) { studentSteps++; }
@@ -156,14 +156,14 @@
           studentAv = this.jsav,
           forwModel;
       if (modelAv.currentStep() < modelAv.totalSteps() &&
-        studentAv.currentStep() <= studentAv.totalSteps()) {
-          forwModel = modelAv.forward(gradeStepFilterFunction);
-          this.score.student++;
-          if (forwModel) {
-            if (allEqual(this.initialStructures, this.modelStructures, this.options.compare)) {
-              this.score.correct++;
-            }
+              studentAv.currentStep() <= studentAv.totalSteps()) {
+        forwModel = modelAv.forward(gradeStepFilterFunction);
+        this.score.student++;
+        if (forwModel) {
+          if (allEqual(this.initialStructures, this.modelStructures, this.options.compare)) {
+            this.score.correct++;
           }
+        }
       }
       studentAv.forward();
     }
@@ -214,7 +214,7 @@
         modelOpts = $.extend({ "title": 'Model Answer', "closeOnClick": false, "modal": false,
                               "closeCallback": function() {
                                 self.jsav.logEvent({type: "jsav-exercise-model-close"});
-                                if (returnToStep) {
+                                if (typeof returnToStep === "number") {
                                   modelav.jumpToStep(returnToStep);
                                 }
                               }
