@@ -593,7 +593,11 @@ mixkey(math.random(), pool);
       offsetLeft = offsetLeft + offsetChangeLeft;
       offsetTop = offsetTop + offsetChangeTop;
       // use jqueryui to position the el relative to the relElem
-      el.position({my: myAnchor, at: anchor, of: relElem, offset: offsetLeft + " " + offsetTop});
+      el.position({my: myAnchor,
+                   at: anchor,
+                   of: relElem,
+                   offset: offsetLeft + " " + offsetTop,
+                   collision: "none"});
       elemPos = el.position();
       elemLeft = elemPos.left;
       elemTop = elemPos.top;
@@ -636,7 +640,11 @@ mixkey(math.random(), pool);
     if (jsavobj._relativehandle) {
       jsavobj.jsav.container.off("jsav-updaterelative", jsavobj._relativehandle);
     } else { // set the initial position to the current position (to prevent unnecessary animations)
-      el.position({my: myAnchor, at: anchor, of: relElem, offset: offsetLeft + " " + offsetTop});
+      el.position({my: myAnchor,
+                   at: anchor,
+                   of: relElem,
+                   offset: offsetLeft + " " + offsetTop,
+                   collision: "none"});
     }
     var elemPos = el.position(),
         elemLeft = elemPos.left,
