@@ -16,8 +16,12 @@
     this.obj = opts.obj;
     this.effect = opts.effect;
     this.args = opts.args;
-    this.undoeffect = opts.undo;
-    this.undoargs = opts.undoargs;
+    if (opts.undo) {
+      this.undoeffect = opts.undo;
+    }
+    if (opts.undoargs) {
+      this.undoArgs = opts.undoargs;
+    }
   };
   AnimatableOperation.prototype.apply = function() {
     var self = this;
