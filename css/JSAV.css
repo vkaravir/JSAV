@@ -132,6 +132,8 @@
   border: none;
   background-color: #ddd;
   margin-left: 2px;
+  float: left;
+  position: relative;
 }
 .jsavbararray .jsavvalue {
   z-index: 100;

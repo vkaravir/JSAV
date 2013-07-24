@@ -316,7 +316,6 @@ test("Test show/hide", function() {
   equal(arr.element.filter(":visible").size(), 0);
   av.backward();
   equal(arr.element.filter(":visible").size(), 0, "Undoing hiding hidden should keep it hidden");
-  console.log(arr.element.filter(":visible").size());
   av.begin();
   av.forward(); // redo hide
   av.forward(); // redo show

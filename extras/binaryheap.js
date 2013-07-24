@@ -35,10 +35,14 @@
     binheap._treenodes = nodes;
     donode(bt.root(), 1);
   };
-  
+
   var BinaryHeap = function(jsav, element, options) {
     this.jsav = jsav;
-    this.options = $.extend({indexed: true}, options);
+    this.options = $.extend({indexed: true, layout: "array"}, options);
+    if (!this.options.template) {
+      var tmplName = this.options.layout + (this.options.indexed?"-indexed":"");
+      this.options.template = JSAV._types.ds.AVArray._templates[tmplName];
+    }
     if ($.isArray(element)) {
       var arrsize = element.length;
       if ('size' in options) {

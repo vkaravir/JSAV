@@ -8,10 +8,25 @@
 
   var getIndices = JSAV.utils._helpers.getIndices;
 
+  // templates used to create new elements into the array, depending on the layout options
+  var templates = { };
+  templates.array =  '<span class="jsavvalue">' +
+                            '<span class="jsavvaluelabel">{{value}}</span>' +
+                          '</span>';
+  templates["array-indexed"] = templates.array +
+                          '<span class="jsavindexlabel">{{index}}</span>';
+  templates.vertical = templates.array;
+  templates["vertical-indexed"] = templates["array-indexed"];
+  templates.bar = '<span class="jsavvaluebar"></span>' + templates.array;
+  templates["bar-indexed"] = templates.bar + '<span class="jsavindexlabel">{{index}}</span>';
+
   /* Array data structure for JSAV library. */
   var AVArray = function(jsav, element, options) {
     this.jsav = jsav;
-    this.options = $.extend(true, {autoresize: true, center: true}, options);
+    this.options = $.extend(true, {autoresize: true, center: true, layout: "array"}, options);
+    if (!this.options.template) {
+      this.options.template = templates[this.options.layout + (this.options.indexed?"-indexed":"")];
+    }
     if ($.isArray(element)) {
       this.initialize(element);
     } else if (element) { // assume it's a DOM element
@@ -24,7 +39,11 @@
     if (this.options.center) {
       this.element.addClass("jsavcenter");
     }
+    if (this.options.indexed) {
+      this.element.addClass("jsavindexed");
+    }
   };
+  AVArray._templates = templates;
   var arrproto = AVArray.prototype;
   $.extend(arrproto, JSAV._types.ds.common);
 
@@ -116,12 +135,18 @@
       return this.setvalue(index, newValue, options);
     }
   };
-  arrproto._newindex = function(value) {
+  arrproto._newindex = function(value, index) {
     if (typeof value === "undefined") {
       value = "";
     }
-    var ind = $("<li class='jsavnode jsavindex'><span class='jsavvalue'><span class='jsavvaluelabel'>" +
-          value + "</span></span></li>"), valtype = typeof(value);
+    if (typeof index === "undefined") {
+      index = "";
+    }
+    var indHtml = this.options.template
+                    .replace("{{value}}", value)
+                    .replace("{{index}}", index);
+    var ind = $("<li class='jsavnode jsavindex'>" + indHtml + "</li>"),
+        valtype = typeof(value);
     if (valtype === "object") { valtype = "string"; }
     ind.attr("data-value", value).attr("data-value-type", valtype);
     return ind;
@@ -130,7 +155,7 @@
     var size = this.size(),
       oldval = this.value(index);
     while (index > size - 1) {
-      var newli = this._newindex();
+      var newli = this._newindex("", size - 1);
       this.element.append(newli);
       size = this.size();
     }
@@ -160,7 +185,7 @@
       }
     }
     for (var i=0; i < data.length; i++) {
-      liel = this._newindex(data[i]);
+      liel = this._newindex(data[i], i);
       liels = liels.add(liel);
     }
     el.append(liels);
@@ -427,25 +452,13 @@
 
   function horizontalArray(array, options) {
     var $arr = $(array.element).addClass("jsavhorizontalarray"),
-      // rely on browser doing the calculation, float everything to the left..
-      $items = $arr.find("li"),//.css({"float": "left", "position":"static"}),
-      maxHeight = -1,
-      indexed = !!array.options.indexed;
-    if (indexed) {
-      $arr.addClass("jsavindexed");
-    }
+      $items = $arr.find("li"),
+      maxHeight = -1;
     $items.each(function(index, item) {
       var $i = $(this);
       maxHeight = Math.max(maxHeight, $i.outerHeight());
-      if (indexed) {
-        var $indexLabel = $i.find(".jsavindexlabel");
-        if ($indexLabel.size() === 0) {
-          $i.append('<span class="jsavindexlabel">' + index + '</span>');
-          $indexLabel = $i.find(".jsavindexlabel");
-        }
-      }
     });
-    $arr.height(maxHeight + (indexed?30:0));
+    $arr.height(maxHeight + (array.options.indexed?30:0));
     setArrayWidth(array, $items.last(), options);
     var arrPos = $arr.position();
     return { width: $arr.outerWidth(), height: $arr.outerHeight(),
@@ -458,14 +471,9 @@
       maxWidth = -1,
       indexed = !!array.options.indexed;
     if (indexed) {
-      $arr.addClass("jsavindexed");
       $items.each(function(index, item) {
         var $i = $(this);
         var $indexLabel = $i.find(".jsavindexlabel");
-        if ($indexLabel.size() === 0) {
-          $i.append('<span class="jsavindexlabel">' + index + '</span>');
-          $indexLabel = $i.find(".jsavindexlabel");
-        }
         maxWidth = Math.max(maxWidth, $indexLabel.innerWidth());
         $indexLabel.css({
           top: $i.innerHeight() / 2 - $indexLabel.outerHeight() / 2
@@ -481,14 +489,10 @@
 
   function barArray(array, options) {
     var $arr = $(array.element).addClass("jsavbararray"),
-      $items = $arr.find("li").css({"position":"relative", "float": "left"}),
+      $items = $arr.find("li.jsavindex"),//.css({"position":"relative", "float": "left"}),
       maxValue = Number.MIN_VALUE,
-      indexed = !!array.options.indexed,
       width = $items.first().outerWidth(),
       size = array.size();
-    if (indexed) {
-      $arr.addClass("jsavindexed");
-    }
     for (var i = 0; i < size; i++) {
       maxValue = Math.max(maxValue, array.value(i));
     }
@@ -509,24 +513,12 @@
     $items.each(function(index, item) {
       var $i = $(this);
       var $valueBar = $i.find(".jsavvaluebar"),
-          $value = $i.find(".jsavvalue");
-      if ($valueBar.size() === 0) {
-        $i.prepend('<span class="jsavvaluebar" />');
-        $valueBar = $i.find(".jsavvaluebar");
-      }
-
-      var valueBarHeight = $valueBar.height(),
+          $value = $i.find(".jsavvalue"),
+          valueBarHeight = $valueBar.height(),
           newBarHeight = Math.round(valueBarHeight*(array.value(index) / maxValue));
       // only if height has changed should it be recorded
       if (newBarHeight !== $value.height()) {
         setBarHeight.call(array.jsav, $value, newBarHeight);
-      }
-      if (indexed) {
-        var $indexLabel = $i.find(".jsavindexlabel");
-        if ($indexLabel.size() === 0) {
-          $i.append('<span class="jsavindexlabel">' + index + '</span>');
-          $indexLabel = $i.find(".jsavindexlabel");
-        }
       }
     });
     setArrayWidth(array, $items.last(), options);
