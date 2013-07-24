@@ -493,15 +493,34 @@
       maxValue = Math.max(maxValue, array.value(i));
     }
     maxValue *= 1.15;
+
+    // a function which will animate and record the change of height of an element
+    var setBarHeight = JSAV.anim(function(elem, newHeight) {
+      // the JSAV.anim wrapper will make sure this points to jsav instance
+      var oldHeight = elem.height();
+      if (this._shouldAnimate()) {
+        elem.animate({height: newHeight}, this.SPEED);
+      } else {
+        elem.css({height: newHeight});
+      }
+      return [elem, oldHeight];
+    });
+
     $items.each(function(index, item) {
       var $i = $(this);
-      var $valueBar = $i.find(".jsavvaluebar");
+      var $valueBar = $i.find(".jsavvaluebar"),
+          $value = $i.find(".jsavvalue");
       if ($valueBar.size() === 0) {
         $i.prepend('<span class="jsavvaluebar" />');
         $valueBar = $i.find(".jsavvaluebar");
       }
-      $valueBar.css({"height": "100%"});
-      $i.find(".jsavvalue").css("height", (100.0*array.value(index) / maxValue) + "%");
+
+      var valueBarHeight = $valueBar.height(),
+          newBarHeight = Math.round(valueBarHeight*(array.value(index) / maxValue));
+      // only if height has changed should it be recorded
+      if (newBarHeight !== $value.height()) {
+        setBarHeight.call(array.jsav, $value, newBarHeight);
+      }
       if (indexed) {
         var $indexLabel = $i.find(".jsavindexlabel");
         if ($indexLabel.size() === 0) {

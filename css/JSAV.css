@@ -158,6 +158,7 @@
   width: 100%;
 }
 .jsavbararray .jsavvaluebar {
+  height: 100%;
   top: 0;
   background-color: #fff;
 }
