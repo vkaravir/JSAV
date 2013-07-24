@@ -5,7 +5,7 @@
 (function($) {
   "use strict";
   if (typeof JSAV === "undefined") { return; }
-  
+
   // Test if range type is supported and add to jQuery.support
   var inp = $("<input type='range' />");
   $.support.inputTypeRange = (inp.prop("type") === "range");
@@ -26,7 +26,7 @@
     }
   };
   objcommons.bounds = function(recalculate, options) {
-    if (recalculate) {
+    if (recalculate && $.isFunction(this.layout)) {
       return this.layout($.extend({boundsOnly: true}, options));
     } else {
       var pos = this.position();
@@ -47,10 +47,10 @@
   };
 
   JSAV._types.common = objcommons;
-  
+
   JSAV.utils = {};
   var u = JSAV.utils; // shortcut for easier and faster access
-  
+
   u.getQueryParameter = function(name) {
     var params = window.location.search,
       vars = {},

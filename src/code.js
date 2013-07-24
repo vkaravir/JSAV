@@ -33,6 +33,7 @@
     JSAV.utils._helpers.handleVisibility(this, this.options);
   };
   var varproto = Variable.prototype;
+  $.extend(varproto, JSAV._types.common);
   varproto._toggleVisible = JSAV.anim(JSAV.ext.effects._toggleVisible);
   varproto.show = JSAV.ext.effects.show;
   varproto.hide = JSAV.ext.effects.hide;
