@@ -41,6 +41,7 @@
   treeproto._setrootnode = JSAV.anim(function(node) {
     var oldroot = this.rootnode;
     this.rootnode = node;
+    node.edgeToParent(null);
     this.element.attr("data-root", node.id());
     node.element.attr("data-child-role", "root");
     return [oldroot];
@@ -48,7 +49,7 @@
   treeproto.root = function(newRoot, options) {
     if (typeof newRoot === "undefined") {
       return this.rootnode;
-    } else if (newRoot.constructor === TreeNode) {
+    } else if (newRoot.constructor === TreeNode || newRoot.constructor === BinaryTreeNode) {
       this._setrootnode(newRoot, options);
     } else {
       if (this.rootnode) {
