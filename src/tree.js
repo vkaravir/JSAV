@@ -48,8 +48,9 @@
   treeproto.root = function(newRoot, options) {
     if (typeof newRoot === "undefined") {
       return this.rootnode;
-    } else if (newRoot.constructor === TreeNode) {
+    } else if (newRoot.constructor === TreeNode || newRoot.constructor === BinaryTreeNode) {
       this._setrootnode(newRoot, options);
+      this.rootnode.edgeToParent(null);
     } else {
       if (this.rootnode) {
         this.rootnode.value(newRoot, options);
@@ -165,7 +166,7 @@
       return this.parentnode;
     } else {
       if (!this._edgetoparent) {
-        this._edgetoparent = new Edge(this.jsav, this, newParent, options);
+        this._setEdgeToParent(new Edge(this.jsav, this, newParent, options));
       }
       return this._setparent(newParent, options);
     }
