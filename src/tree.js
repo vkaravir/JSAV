@@ -432,6 +432,16 @@
   binnodeproto.right = function(node, options) {
     return setchild(this, 1, node, options);
   };
+  binnodeproto.child = function(pos, node, options) {
+    if (typeof node === "undefined") {
+      return this.childnodes[pos];
+    } else {
+      if (typeof node === "string" || typeof node === "number") {
+        node = this.container.newNode(node, this, options);
+      }
+      return setchild(this, pos, node, options);
+    }
+  };
   binnodeproto.remove = function(options) {
     var parent = this.parent();
     if (parent.left() === this) {
