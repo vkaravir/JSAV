@@ -46,11 +46,14 @@
     return [oldroot];
   });
   treeproto.root = function(newRoot, options) {
+    var opts = $.extend({hide: true}, options);
     if (typeof newRoot === "undefined") {
       return this.rootnode;
     } else if (newRoot.constructor === TreeNode || newRoot.constructor === BinaryTreeNode) {
+      var oldroot = this.rootnode;
       this._setrootnode(newRoot, options);
       this.rootnode.edgeToParent(null);
+      if (opts.hide && rootnode) { oldroot.hide(); }
     } else {
       if (this.rootnode) {
         this.rootnode.value(newRoot, options);
@@ -180,6 +183,7 @@
     if (typeof edge === "undefined") {
       return this._edgetoparent;
     } else {
+      if (!edge && this._edgetoparent) { this._edgetoparent.hide(); }
       return this._setEdgeToParent(edge, options);
     }
   };
