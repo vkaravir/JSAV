@@ -227,7 +227,6 @@
       node.parent(self);
       self._setchildnodes(newchildnodes, options);
     } else {
-      self.childnodes[pos].hide();
       self._setchildnodes($.map(self.childnodes, function(item, index) {
         if (index !== pos) { return item; }
         else { return null; }
