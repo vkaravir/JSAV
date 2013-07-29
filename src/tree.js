@@ -166,7 +166,7 @@
       return this.parentnode;
     } else {
       if (!this._edgetoparent) {
-        this._edgetoparent = new Edge(this.jsav, this, newParent, options);
+        this._setEdgeToParent(new Edge(this.jsav, this, newParent, options));
       }
       return this._setparent(newParent, options);
     }
