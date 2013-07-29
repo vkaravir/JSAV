@@ -218,7 +218,7 @@
   var setchildhelper = function(self, pos, node, options) {
     var oldval = self.childnodes[pos];
     if (oldval) {
-      oldval.hide();
+      if (options && options.hide) { oldval.hide(); }
       oldval.parent(null);
     }
     if (node) {
@@ -247,9 +247,10 @@
   nodeproto.remove = function(options) {
     var parent = this.parent(),
         children = parent.children();
+        opts = $.extend({hide: true}, options)
     for (var i = 0, l = children.length; i < l; i++) {
       if (children[i] === this) {
-        return parent.child(i, null, options);
+        return parent.child(i, null, opts);
       }
     }
     return this;
