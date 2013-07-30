@@ -46,11 +46,14 @@
     return [oldroot];
   });
   treeproto.root = function(newRoot, options) {
+    var opts = $.extend({hide: true}, options);
     if (typeof newRoot === "undefined") {
       return this.rootnode;
     } else if (newRoot.constructor === TreeNode || newRoot.constructor === BinaryTreeNode) {
+      var oldroot = this.rootnode;
       this._setrootnode(newRoot, options);
       this.rootnode.edgeToParent(null);
+      if (opts.hide && oldroot) { oldroot.hide(); }
     } else {
       if (this.rootnode) {
         this.rootnode.value(newRoot, options);
@@ -180,6 +183,7 @@
     if (typeof edge === "undefined") {
       return this._edgetoparent;
     } else {
+      if (!edge && this._edgetoparent) { this._edgetoparent.hide(); }
       return this._setEdgeToParent(edge, options);
     }
   };
@@ -217,22 +221,22 @@
     return [oldChildren, options];
   });
   var setchildhelper = function(self, pos, node, options) {
-    var oldval = self.childnodes[pos];
+    var oldval = self.childnodes[pos],
+        opts = $.extend({hide: true}, options);
     if (oldval) {
-      oldval.hide();
+      if (opts.hide) { oldval.hide(); }
       oldval.parent(null);
     }
     if (node) {
       var newchildnodes = self.childnodes.slice(0);
       newchildnodes[pos] = node;
       node.parent(self);
-      self._setchildnodes(newchildnodes, options);
+      self._setchildnodes(newchildnodes, opts);
     } else {
-      self.childnodes[pos].hide();
       self._setchildnodes($.map(self.childnodes, function(item, index) {
         if (index !== pos) { return item; }
         else { return null; }
-      }), options);
+      }), opts);
     }
     return self;
   };
@@ -373,7 +377,8 @@
         other,
         newchildnodes,
         child = self.child(pos),
-        oChild = self.child(oPos);
+        oChild = self.child(oPos),
+        opts = $.extend({hide: true}, options);
     if (typeof node === "undefined") {
       if (child && child.value() !== "jsavnull") {
         return child;
@@ -381,29 +386,29 @@
         return undefined;
       }
     } else {
-      var nullopts = $.extend({}, options);
+      var nullopts = $.extend({}, opts);
       nullopts.edgeLabel = undefined;
       if (node === null) { // node is null, remove child
         if (child && child.value() !== "jsavnull") {
           child.parent(null);
           // child exists
           if (!oChild || oChild.value() === "jsavnull") { // ..but no other child
-            child.hide();
+            if (opts.hide) { child.hide(); }
             self._setchildnodes([]);
           } else { // other child exists
             // create a null node and set it as other child
             other = self.container.newNode("jsavnull", self, nullopts);
             other.element.addClass("jsavnullnode").attr("data-binchildrole", pos?"right":"left");
-            child.hide();
+            if (opts.hide) { child.hide(); }
             newchildnodes = [];
             newchildnodes[pos] = other;
             newchildnodes[oPos] = oChild;
-            self._setchildnodes(newchildnodes, options);
+            self._setchildnodes(newchildnodes, opts);
           }
         }
       } else { // create a new node and set the child
         if (node.constructor !== BinaryTreeNode) {
-          node = self.container.newNode(node, self, options);
+          node = self.container.newNode(node, self, opts);
         } else {
           node.parent(self);
         }
@@ -411,7 +416,7 @@
         newchildnodes = [];
         newchildnodes[pos] = node;
         if (child) {
-          child.hide();
+          if (opts.hide) { child.hide(); }
         }
         if (!oChild) {
           other = self.container.newNode("jsavnull", self, nullopts);
@@ -420,7 +425,7 @@
         } else {
           newchildnodes[oPos] = oChild;
         }
-        self._setchildnodes(newchildnodes, options);
+        self._setchildnodes(newchildnodes, opts);
         return node;
       }
     }
@@ -432,12 +437,22 @@
   binnodeproto.right = function(node, options) {
     return setchild(this, 1, node, options);
   };
+  binnodeproto.child = function(pos, node, options) {
+    if (typeof node === "undefined") {
+      return this.childnodes[pos];
+    } else {
+      if (typeof node === "string" || typeof node === "number") {
+        node = this.container.newNode(node, this, options);
+      }
+      return setchild(this, pos, node, options);
+    }
+  };
   binnodeproto.remove = function(options) {
     var parent = this.parent();
     if (parent.left() === this) {
-      return setchild(parent, 0, null);
+      return setchild(parent, 0, null, options);
     } else if (parent.right() === this) {
-      return setchild(parent, 1, null);
+      return setchild(parent, 1, null, options);
     }
   };
   binnodeproto.edgeToLeft = function() {
