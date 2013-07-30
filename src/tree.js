@@ -43,6 +43,8 @@
     this.rootnode = node;
     this.element.attr("data-root", node.id());
     node.element.attr("data-child-role", "root");
+    node.element.removeAttr("data-parent data-binchildrole data-child-pos");
+    if (oldroot) { oldroot.element.removeAttr("data-child-role"); }
     return [oldroot];
   });
   treeproto.root = function(newRoot, options) {
