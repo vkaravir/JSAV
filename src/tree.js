@@ -53,7 +53,7 @@
       var oldroot = this.rootnode;
       this._setrootnode(newRoot, options);
       this.rootnode.edgeToParent(null);
-      if (opts.hide && rootnode) { oldroot.hide(); }
+      if (opts.hide && oldroot) { oldroot.hide(); }
     } else {
       if (this.rootnode) {
         this.rootnode.value(newRoot, options);
