@@ -136,7 +136,7 @@
     this.container.element.append(el);
 
     JSAV.utils._helpers.handleVisibility(this, this.options);
-    if (parent) {
+    if (parent && value !== "jsavnull") {
       this._edgetoparent = new Edge(this.jsav, this, parent);
       if (this.options.edgeLabel) {
         this._edgetoparent.label(this.options.edgeLabel);
