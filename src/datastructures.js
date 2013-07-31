@@ -61,16 +61,23 @@
     this.endnode = end;
     this.options = $.extend(true, {"display": true}, options);
     this.container = start.container;
-    var startOffset = start?start.element.offset():{left:0, top:0},
-        endOffset = end?end.element.offset():{left:0, top:0};
-    if (startOffset.left === endOffset.left && startOffset.top === endOffset.top) {
+    var startPos = start?start.element.position():{left:0, top:0},
+        endPos = end?end.element.position():{left:0, top:0};
+    if (startPos.left === endPos.left && startPos.top === endPos.top) {
       // layout not done yet
       this.g = this.jsav.g.line(-1, -1, -1, -1, $.extend({container: this.container}, this.options));
     } else {
-      this.g = this.jsav.g.line(startOffset.left,
-                              startOffset.top,
-                              endOffset.left,
-                              endOffset.top, $.extend({container: this.container}, this.options));
+      if (end) {
+        endPos.left += end.element.outerWidth() / 2;
+        endPos.top += end.element.outerHeight();
+      }
+      if (!startPos.left && !startPos.top) {
+        startPos = endPos;
+      }
+      this.g = this.jsav.g.line(startPos.left,
+                              startPos.top,
+                              endPos.left,
+                              endPos.top, $.extend({container: this.container}, this.options));
     }
 
     this.element = $(this.g.rObj.node);
