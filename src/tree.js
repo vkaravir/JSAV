@@ -437,6 +437,18 @@
     }
     return child;
   }
+  binnodeproto.addChild = function(node, options) {
+    var pos = -1;
+    if (!this.left()) { // try left child
+      pos = 0;
+    } else if (!this.right()) { // try right child
+      pos = 1;
+    } else {
+      console.error("Binarytree node already has two children, cannot add more");
+      return;
+    }
+    return this.child(pos, node, options);
+  };
   binnodeproto.left = function(node, options) {
     return setchild(this, 0, node, options);
   };
