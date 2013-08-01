@@ -251,6 +251,10 @@
     }
   };
   nodeproto.remove = function(options) {
+    if (this === this.container.rootnode) {
+      this.container.root(this.container.newNode("", null), options);
+      return this;
+    }
     var parent = this.parent(),
         children = parent.children();
     for (var i = 0, l = children.length; i < l; i++) {
@@ -448,6 +452,10 @@
     }
   };
   binnodeproto.remove = function(options) {
+    if (this === this.container.rootnode) {
+      this.container.root(this.container.newNode("", null), options);
+      return this;
+    }
     var parent = this.parent();
     if (parent.left() === this) {
       return setchild(parent, 0, null, options);
