@@ -47,6 +47,10 @@ pre, code, var {
   border: 1px dashed #bbb;
   border-radius: 3px;
 }
+pre code {
+  padding: 0px;
+  border: none;
+}
 #toc {
   font-size: 0.8em;
 }
