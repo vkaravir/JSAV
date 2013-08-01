@@ -558,8 +558,8 @@ Currently, JSAV supports two types of trees: common tree and binary tree. The st
 <h3 class="apimethod">.id([newId])</h3>
 <p>Returns the ID of the structure. If optional parameter <var>newId</var> is given, sets the ID of the structure. The given ID should be unique. This function exists for all trees, nodes, and edges.</p>
 
-<h3 class="apimethod">.root([node])</h3>
-<p>Returns the root of this tree. If the optional <var>node</var> parameter is given, the root of the tree is set. This function exists for all trees.</p>
+<h3 class="apimethod">.root([node [, options]])</h3>
+<p>Returns the root of this tree. If the optional <var>node</var> parameter is given, the root of the tree is set. This function exists for all trees. If <var>node</var> is a node the old root is replaced. The replaced root will also be hidden, unless option <code>hide</code> is set to <code>false</code>. If <var>node</var> is a value the old value will be replaced in the root.</p>
 
 <h3 class="apimethod">.newNode(value)</h3>
 <p>Creates a new node that can be added to this tree. "Subclasses" override this to create nodes suited for the tree, so this method should be used when creating new nodes. This function exists for all trees.</p>
@@ -638,7 +638,7 @@ option <code>recursive</code> is set to <code>false</code>.</p>
 <p>Adds a child node to this node. The <var>node</var> can be a value or a node of correct type to the node.
   The <code>options</code> parameter works like above.</p>
 <h3 class="apimethod">.remove([options])</h3>
-<p>Removes the node from its parent.</p>
+<p>Removes the node from its parent. The node and its child nodes are hidden recursively, unless option <code>hide</code> is set to <code>false</code>.</p>
 <h3 class="apimethod">.hide([options])</h3>
 <p>Hides the node and the edge connecting it to the parent node. Also recursively hides all child nodes unless 
 option <code>recursive</code> is set to <code>false</code>.</p>
