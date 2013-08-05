@@ -202,7 +202,8 @@
     if (!this.element) { return; }
     var $elem = this.element,
       $elems = $elem.find("li"),
-      data = $elem.data();
+      data = $elem.data(),
+      that = this;
     for (var key in data) {
       if (data.hasOwnProperty(key)) {
         this.options[key] = data[key];
@@ -210,15 +211,13 @@
     }
     $elem.addClass("jsavarray");
     $elems.each(function(index, item) {
-      var $this = $(this);
-      if (typeof $this.attr("data-value") === "undefined") {
-        $this.attr("data-value", $this.html());
-      }
-      if (!$this.attr("data-value-type")) {
-        $this.attr("data-value-type", "string");
-      }
-      $this.addClass("jsavnode jsavindex").html("<span class='jsavvalue'><span class='jsavvaluelabel'>" + 
-          $this.html() + "</span></span>");
+      var $this = $(this),
+          value = JSAV.utils.value2type($this.attr("data-value") || $this.html(), // value
+                                        $this.attr("data-value-type") || "string"), // value type
+          $newElem = that._newindex(value, index); // create a new element using th etemplate of the layout
+
+      // replace the li element with the new generated element
+      $this.replaceWith($newElem);
     });
     this.layout();
   };
