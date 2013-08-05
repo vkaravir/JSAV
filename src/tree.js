@@ -484,9 +484,9 @@
     return this.edgeToChild(1);
   };
   binnodeproto._setvalue = JSAV.anim(function(newValue) {
-    var oldVal = this.element.removeClass("jsavnullnode")
-          .attr("data-value"),
+    var oldVal = this.value(),
         valtype = typeof(newValue);
+    if (typeof oldVal === "undefined") {oldVal = ""};
     if (valtype === "object") { valtype = "string"; }
     this.element
         .find(".jsavvalue")
