@@ -489,6 +489,7 @@
     if (typeof oldVal === "undefined") {oldVal = ""};
     if (valtype === "object") { valtype = "string"; }
     this.element
+        .removeClass("jsavnullnode")
         .find(".jsavvalue")
         .html(this._valstring(newValue))
         .end()
