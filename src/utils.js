@@ -273,6 +273,21 @@
       } while (tries-- && !opts.test(dupl));
       return dupl.slice(0, num);
     }
+
+
+  };
+  /*  Makes constructor inherit superConstructor
+   *  from Golimojo: http://www.golimojo.com/etc/js-subclass.html
+   */
+  u.extend = function(constructor, superConstructor) {
+    function surrogateConstructor() {}
+
+    surrogateConstructor.prototype = superConstructor.prototype;
+
+    var prototypeObject = new surrogateConstructor();
+    prototypeObject.constructor = constructor;
+
+    constructor.prototype = prototypeObject;
   };
 
 /*!
