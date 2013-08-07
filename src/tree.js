@@ -51,7 +51,7 @@
     var opts = $.extend({hide: true}, options);
     if (typeof newRoot === "undefined") {
       return this.rootnode;
-    } else if (newRoot.constructor === TreeNode || newRoot.constructor === BinaryTreeNode) {
+    } else if (newRoot instanceof TreeNode) {
       var oldroot = this.rootnode;
       this._setrootnode(newRoot, options);
       this.rootnode.edgeToParent(null);
@@ -118,8 +118,8 @@
   var TreeNode = function(container, value, parent, options) {
     this.init(container, value, parent, options);
   };
+  JSAV.utils.extend(TreeNode, JSAV._types.ds.Node);
   var nodeproto = TreeNode.prototype;
-  $.extend(nodeproto, JSAV._types.ds.Node.prototype);
   nodeproto.init = function(container, value, parent, options) {
     this.jsav = container.jsav;
     this.container = container;
@@ -361,8 +361,8 @@
     this.init(jsav, options);
     this.element.addClass("jsavbinarytree");
   };
+  JSAV.utils.extend(BinaryTree, Tree);
   var bintreeproto = BinaryTree.prototype;
-  $.extend(bintreeproto, treeproto);
   bintreeproto.newNode = function(value, parent, options) {
     return new BinaryTreeNode(this, value, parent, options);
   };
@@ -373,8 +373,8 @@
     this.init(container, value, parent, options);
     this.element.addClass("jsavbinarynode");
   };
+  JSAV.utils.extend(BinaryTreeNode, TreeNode);
   var binnodeproto = BinaryTreeNode.prototype;
-  $.extend(binnodeproto, nodeproto);
 
   // a general setchild method for bintreenode, pos parameter
   // should be either 0 (left) or 1 (right), node is the new child
@@ -413,7 +413,7 @@
           }
         }
       } else { // create a new node and set the child
-        if (node.constructor !== BinaryTreeNode) {
+        if (!(node instanceof BinaryTreeNode)) {
           node = self.container.newNode(node, self, opts);
         } else {
           node.parent(self);
