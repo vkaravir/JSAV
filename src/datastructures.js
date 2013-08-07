@@ -294,8 +294,9 @@
     return this;
   };
   nodeproto._setvalue = JSAV.anim(function(newValue) {
-    var oldVal = this.element.attr("data-value") || "",
+    var oldVal = this.value(),
       valtype = typeof(newValue);
+    if (typeof oldVal === "undefined") {oldVal = ""};
     if (valtype === "object") { valtype = "string"; }
     this.element
       .find(".jsavvalue") // find the .jsavvalue element
