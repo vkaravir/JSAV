@@ -166,6 +166,35 @@
         }
       }
       studentAv.forward();
+    },
+    finder: function() {
+      var studentSteps = 0,
+          cont = true,
+          forwStudent = true,
+          forwModel = true,
+          modelAv = this.modelav,
+          studentAv = this.jsav,
+          modelTotal = modelAv.totalSteps(), // "cache" the size
+          studentTotal = studentAv.totalSteps(); // "cache" the size
+
+      this.score.correct = 0;
+      this.score.student = 0;
+      while (forwModel && cont && modelAv.currentStep() <= modelTotal &&
+            studentAv.currentStep() <= studentTotal) {
+        forwModel = modelAv.forward(gradeStepFilterFunction);
+        if (forwModel) {
+          forwStudent = true;
+          while (forwStudent && !allEqual(this.initialStructures, this.modelStructures, this.options.compare) &&
+            studentAv.currentStep() <= studentTotal) {
+              forwStudent = studentAv.forward();
+          }
+          if (allEqual(this.initialStructures, this.modelStructures, this.options.compare)) {
+            this.score.correct++;
+          } else {
+            cont = false;
+          }
+        }
+      }
     }
   };
   var exerproto = Exercise.prototype;
@@ -244,7 +273,7 @@
       var forwModel = true,
           modelTotal = modelav.totalSteps(),
           totalSteps = 0;
-      while (forwModel && modelav.currentStep() < modelTotal) {
+      while (forwModel && modelav.currentStep() <= modelTotal) {
         forwModel = modelav.forward(gradeStepFilterFunction);
         if (forwModel) {
           totalSteps++;
@@ -285,7 +314,7 @@
     this.jsav.backward(); // the empty new step
     this.jsav.backward(); // the new graded step
     // undo until the previous graded step
-    if (this.options.grader === "default" && this.jsav.backward(gradeStepFilterFunction)) {
+    if ((this.options.grader === "default" || this.options.grader === "finder") && this.jsav.backward(gradeStepFilterFunction)) {
       // if such step was found, redo it
       this.jsav.forward();
       this.jsav.step();
