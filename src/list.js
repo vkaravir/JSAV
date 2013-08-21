@@ -286,6 +286,9 @@
         minTop = Number.MAX_VALUE,
         maxLeft = Number.MIN_VALUE,
         maxTop = Number.MIN_VALUE,
+        width,
+        height,
+        left,
         posData = [],
         nodePos;
     // two phase layout: first go through all the nodes calculate positions
@@ -293,10 +296,10 @@
       nodePos = updateFunc(curNode, prevNode, prevPos, opts);
       prevPos = nodePos[0];
       // keep track of max and min coordinates to calculate the size of the container
-      minLeft = typeof(prevPos.left!=="undefined")?Math.min(prevPos.left, minLeft):minLeft;
-      minTop = typeof(prevPos.top!=="undefined")?Math.min(prevPos.top, minTop):minTop;
-      maxLeft = typeof(prevPos.left!=="undefined")?Math.max(prevPos.left + (prevNode?prevNode.element.outerWidth():0), maxLeft):maxLeft;
-      maxTop = typeof(prevPos.top!=="undefined")?Math.max(prevPos.top + (prevNode?prevNode.element.outerHeight():0), maxTop):maxTop;
+      minLeft = (typeof prevPos.left !== "undefined")?Math.min(prevPos.left, minLeft):minLeft;
+      minTop  = (typeof prevPos.top  !== "undefined")?Math.min(prevPos.top, minTop):minTop;
+      maxLeft = (typeof prevPos.left !== "undefined")?Math.max(prevPos.left + curNode.element.outerWidth(), maxLeft):maxLeft;
+      maxTop  = (typeof prevPos.top  !== "undefined")?Math.max(prevPos.top + curNode.element.outerHeight(), maxTop):maxTop;
       posData.unshift({node: curNode, nodePos: prevPos});
       // if we also have edge position data, store that
       if (nodePos.length > 1) {
@@ -307,9 +310,16 @@
       prevNode = curNode;
       curNode = curNode.next();
     }
-    var width = maxLeft - minLeft,
-        height = maxTop - minTop,
-        left = centerList(list, width, opts);
+    if (list.size()) {
+      width = maxLeft - minLeft;
+      height = maxTop - minTop;
+    } else {
+      var tmpNode = list.newNode("");
+      width = tmpNode.element.outerWidth();
+      height = tmpNode.element.outerHeight();
+      tmpNode.clear();
+    }
+    left = centerList(list, width, opts);
     if (!opts.boundsOnly) {
       // ..update list size and position..
       list.css({width: width, height: height, left: left});
