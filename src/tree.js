@@ -400,6 +400,7 @@
           // child exists
           if (!oChild || oChild.value() === "jsavnull") { // ..but no other child
             if (opts.hide) { child.hide(); }
+            if (oChild) { oChild.hide(); }
             self._setchildnodes([]);
           } else { // other child exists
             // create a null node and set it as other child
