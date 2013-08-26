@@ -145,17 +145,27 @@
   // jsavcanvas HTML element.
   pointerproto._arrowPoints = function(options) {
     var opts = $.extend({}, this.options, options),
-        targetElem = this._target.element;
+        myBounds = this.bounds(),
+        targetElem;
+
+    // if targetting null, make the arrow 0 length
+    if (this._target === null) {
+      return [[0, myBounds.left + myBounds.width/2,
+                  myBounds.top + myBounds.height],
+              [1, myBounds.left + myBounds.width/2,
+                  myBounds.top + myBounds.height]];
+    }
     if (typeof(opts.targetIndex) !== "undefined") {
       opts.relativeIndex = opts.targetIndex;
     }
     // If target is an array index, find the DOM element for that index
     if (typeof(opts.relativeIndex) !== "undefined") {
       targetElem = this._target.element.find(".jsavindex:eq(" + opts.relativeIndex + ") .jsavvalue");
+    } else {
+      targetElem = this._target.element;
     }
     var targetOffset = targetElem.offset(),
         canvasOffset = this.jsav.canvas.offset(),
-        myBounds = this.bounds(),
         targetBounds = {width: targetElem.outerWidth(),
                                  height: targetElem.outerHeight,
                                  left: targetOffset.left - canvasOffset.left,
@@ -173,8 +183,16 @@
       return this._target;
     } else {
       this._setTarget(newTarget, options);
+      // if setting target to null, hide the arrow
+      if (newTarget === null) {
+        if (this.arrow) { this.arrow.hide(); }
+        return this;
+      }
       if (!this.arrow) {
         this.arrow = _createArrow(this, options);
+      } else if (!this.arrow.isVisible()) {
+        // if arrow is hidden, show it
+        this.arrow.show();
       }
       JSAV.utils._helpers.setRelativePositioning(this, $.extend({}, this.options, options, {relativeTo: newTarget}));
       var that = this;
