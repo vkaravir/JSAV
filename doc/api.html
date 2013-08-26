@@ -1396,7 +1396,7 @@ q.show();</pre>
 <p>Returns a random integer number between <code>min</code> (inclusive) and
   <code>max</code> (exclusive).</p>
 
-<h3 class="apimethod">JSAV.utils.rand.numKeys(min, max, num, opts)</h3>
+<h3 class="apimethod">JSAV.utils.rand.numKeys(min, max, num[, opts])</h3>
 <p>Returns an array of <code>num</code> random integer numbers between 
   <code>min</code> (inclusive) and <code>max</code> (exclusive). Optional
   parameter <code>opts</code> is an object that can specify options:</p>
@@ -1404,11 +1404,21 @@ q.show();</pre>
     <li><code>sorted</code> If set to true, the array will be sorted.</li>
     <li><code>sortfunc</code> If sorted is set to true, this option can
       be used to specify a function for sorting.</li>
+    <li><code>test</code> A function that takes the random array as a
+      parameter and returns <code>true/false</code> indicating whether it
+      fullfills some requirements. If it returns false, a new random array is
+      generated. This is typically used with exercises to randomize and
+      test the initial data.</li>
+    <li><code>tries</code> If <code>test</code> function is provided, this
+      option specifies how many data sets are tested. If none of the first
+      tries data sets pass the tests, the last one is returned.</li>
   </ul>  
 
-<h3 class="apimethod">JSAV.utils.rand.sample(arrayCollection, num)</h3>
+<h3 class="apimethod">JSAV.utils.rand.sample(arrayCollection, num[, opts])</h3>
 <p>Returns an array of <code>num</code> elements randomly picked from the
-  given array <code>arrayCollection</code>.</p>
+  given array <code>arrayCollection</code>. The optional parameter
+  <code>opts</code> can specify options <code>test</code> and <code>tries</code>
+  like for the <code>numKeys</code> function.</p>
 
 <h3 class="apimethod">JSAV.utils.dialog(html, options)</h3>
 <p>Shows a pop-up dialog with the given HTML as content. Returns an object
