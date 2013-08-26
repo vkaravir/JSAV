@@ -703,13 +703,14 @@ mixkey(math.random(), pool);
   // object prototype, it should be wrapper with the JSAV.anim(..).
   // For example:
   // treenode.toggleClass = JSAV.anim(JSAV.utils._helpers._toggleClass);
-  _helpers._toggleClass = function(className) {
-    if (this.jsav._shouldAnimate()) {
+  _helpers._toggleClass = function(className, options) {
+    var opts = $.extend({animate: true}, options);
+    if (this.jsav._shouldAnimate() && opts.animate) {
       this.element.toggleClass(className, this.jsav.SPEED);
     } else {
       this.element.toggleClass(className);
     }
-    return [className];
+    return [className, options];
   };
   // A helper function to attach to JSAV objects to animate and record
   // addition of a CSS class. This should not be wrapped with JSAV.anim(..).
