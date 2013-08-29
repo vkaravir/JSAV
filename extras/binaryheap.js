@@ -67,11 +67,6 @@
       
       this.initializeFromElement();
     }
-    if (this.options.indexed) {
-      $.each(this.element.find(".jsavindexlabel"), function(index, item) {
-        $(item).html(index + 1);
-      });
-    }
     var oldfx = $.fx.off || false;
     $.fx.off = true;
     
