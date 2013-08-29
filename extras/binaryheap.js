@@ -189,13 +189,9 @@
   bhproto.swap = function(index1, index2, options) {
     this.arrayswap(index1, index2, options);
     if (this.options.tree) {
-      // wrap the swap in a function..
-      var treeswap = function(index1, index2) {
-        this.jsav.effects.swap(this._treenodes[index1].element, this._treenodes[index2].element, true);
-      };
-      // .. and make it an animatable operation
-      // TODO: move this wrapping to interaction.swap as an option
-      JSAV.anim(treeswap, treeswap).call(this, index1, index2);
+      // swap the values in the tree
+      this.jsav.effects.swapValues(this._treenodes[index1],
+                                   this._treenodes[index2]);
     }
   };
   bhproto.insert = function(val) {
