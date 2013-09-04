@@ -85,8 +85,6 @@
     // set the nodes (makes the operation animated)
     this._setnodes(newNodes, options);
 
-    // TODO: remove all edges connected to the removed node ??
-
     // update the adjacency lists
     var firstAdjs = this._edges.slice(0, nodeIndex),
         newAdjs = firstAdjs.concat(this._edges.slice(nodeIndex + 1));
@@ -100,13 +98,14 @@
 
   // adds an edge from fromNode to toNode
   graphproto.addEdge = function(fromNode, toNode, options) {
+    // only allow one edge between two nodes
+    if (this.hasEdge(fromNode, toNode)) { return; }
+
     var opts = $.extend({}, this.options, options);
     if (opts.directed && !opts["arrow-end"]) {
       opts["arrow-end"] = "classic-wide-long";
     }
 
-    // only allow one edge between two nodes
-    if (this.hasEdge(fromNode, toNode)) { return; }
     // get indices of the nodes
     var fromIndex = this._nodes.indexOf(fromNode),
         toIndex = this._nodes.indexOf(toNode);
@@ -120,12 +119,6 @@
     // set the adjlist (makes the operation animated)
     this._setadjlist(adjlist, fromIndex, opts);
 
-    if (!opts.directed) {
-      edge = new Edge(this.jsav, toNode, fromNode, opts);
-      adjlist = this._edges[toIndex].slice(0);
-      adjlist.push(edge);
-      this._setadjlist(adjlist, toIndex, opts);
-    }
     return edge;
   };
 
@@ -157,32 +150,21 @@
     this._setadjlist(newAdjlist, fromIndex, options);
     // we "remove" the edge by hiding it
     edge.hide();
-
-    if (!this.options.directed) { // if not directed graph, remove the edge to other direction as well
-      edge = this.getEdge(toNode, fromNode);
-      adjlist = this._edges[toIndex];
-      edgeIndex = adjlist.indexOf(edge);
-      newAdjlist = adjlist.slice(0, edgeIndex).concat(adjlist.slice(edgeIndex + 1));
-      this._setadjlist(newAdjlist, toIndex, options);
-      // we "remove" the edge by hiding it
-      edge.hide();
-    }
   };
 
   // returns true/false whether an edge from fromNode to toNode exists
   graphproto.hasEdge = function(fromNode, toNode) {
-    return !!this.getEdge(fromNode, toNode);
+    return this.getEdge(fromNode, toNode);
   };
 
   graphproto.getEdge = function(fromNode, toNode) {
-    var fromIndex = this._nodes.indexOf(fromNode),
-        adjlist = this._edges[fromIndex];
-    if (adjlist) {
-      for (var i = 0, l = adjlist.length; i < l; i++) {
-        var edge = adjlist[i];
-        if (edge.end() === toNode) {
-          return edge;
-        }
+    var edges = this.edges();
+    for (var i = 0, l = edges.length; i < l; i++) {
+      var edge = edges[i];
+      if (edge.start() === fromNode && edge.end() === toNode) {
+        return edge;
+      } else if (edge.end() === fromNode && edge.start() === toNode) {
+        return edge;
       }
     }
     return undefined;
@@ -450,10 +432,25 @@
   nodeproto._setcss = JSAV.anim(JSAV.utils._helpers._setcss);
 
   nodeproto.neighbors = function() {
-    var edges = this.container._edges[this.container._nodes.indexOf(this)],
-        neighbors = [];
-    for (var i = 0, l = edges.length; i < l; i++) {
-      neighbors.push(edges[i].end());
+    var edges,
+        neighbors = [],
+        edge, i, l;
+    if (this.container.options.directed) { // directed graph
+      edges = this.container._edges[this.container._nodes.indexOf(this)];
+      for (i = 0, l = edges.length; i < l; i++) {
+        neighbors.push(edges[i].end());
+      }
+    } else { // undirected graph
+      // inefficient way to go through all edges, but educational graphs should be small :)
+      edges = this.container.edges();
+      for (i = 0, l = edges.length; i < l; i++) {
+        edge = edges[i];
+        if (edge.start() === this) {
+          neighbors.push(edge.end());
+        } else if (edge.end() === this) {
+          neighbors.push(edge.start());
+        }
+      }
     }
     return JSAV.utils.iterable(neighbors);
   };
