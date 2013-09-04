@@ -30,6 +30,8 @@
   padding: 0;
   /* prevent text cursor on nodes*/
   cursor: default;
+  /* add a subtle shadow to nodes */
+  box-shadow: 2px 2px 5px rgba(120, 120, 120, 0.5);
 }
 .jsavcenter {
   margin-left: auto;
@@ -126,6 +128,10 @@
   overflow: visible;
   padding-bottom: 30px;
 }
+.jsavbararray .jsavnode {
+  /* remove shadow from the white bars */
+  box-shadow: none;
+} 
 .jsavbararray .jsavindex {
   height: 100%;
   vertical-align: bottom;
@@ -145,6 +151,8 @@
   -ms-border-radius: 0;
   -webkit-border-radius: 0;
   border-radius: 0;
+  /* add a subtle shadow to bars */
+  box-shadow: 2px 2px 5px rgba(120, 120, 120, 0.5);
 }
 .jsavbararray .jsavvalue span {
   position: absolute;
