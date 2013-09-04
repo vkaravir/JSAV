@@ -37,7 +37,7 @@
     var cont = $(this.options.controls),
         self = this;
     if (cont.size() === 0) {
-       cont = this.jsav.container.find(".jsavexercisecontrols");
+      cont = this.jsav.container.find(".jsavexercisecontrols");
     }
     if (cont.size()) {
       var $reset = $('<input type="button" name="reset" value="Reset" />').click(
@@ -52,25 +52,26 @@
               self.showModelanswer();
               cont.removeClass("active");
             }),
-          $grade = $('<input type="button" name="grade" value="Grade" />').click(
-            function() {
-              cont.addClass("active");
-              self.showGrade();
-              cont.removeClass("active");
-              self.jsav.logEvent({type: "jsav-exercise-grade", score: $.extend({}, self.score)});
-            }),
-          $undo = $('<input type="button" name="undo" value="Undo" />"').click(
-            function() {
-              self.jsav.logEvent({type: "jsav-exercise-undo"});
-              self.undo();
-            }),
           $action = $('<span class="actionIndicator"></span>');
-      // only show undo button if not in continuous mode
+      // only add undo and grade button if not in continuous mode
       if (this.options.feedback !== "continuous") {
-        cont.append($undo);
+        var $grade = $('<input type="button" name="grade" value="Grade" />').click(
+              function() {
+                cont.addClass("active");
+                self.showGrade();
+                cont.removeClass("active");
+                self.jsav.logEvent({type: "jsav-exercise-grade", score: $.extend({}, self.score)});
+              }),
+            $undo = $('<input type="button" name="undo" value="Undo" />"').click(
+              function() {
+                self.jsav.logEvent({type: "jsav-exercise-undo"});
+                self.undo();
+              });
+        cont.append($undo, $reset, $model, $grade, $action);
+      } else {
+        cont.append($reset, $model, $action);
       }
-      cont.append($reset, $model, $grade, $action);
-      $action.position({of: $grade, at: "right center", my: "left center", offset: "5 -2"});
+      $action.position({of: cont.children().last(), at: "right center", my: "left center", offset: "5 -2"});
     }
     // if feedbacktype can be selected, add settings for it
     if (this.options.feedbackSelectable) {
