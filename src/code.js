@@ -83,6 +83,7 @@
     var arrow = pointer.jsav.g.line(arrowPoints[0][1], arrowPoints[0][2],
                               arrowPoints[1][1], arrowPoints[1][2],
                               {"arrow-end": "classic-wide",
+                               "arrow-start": "oval-medium-medium",
                                 "stroke-width": 2,
                                 "opacity": 0});
     if (pointer.isVisible()) {
@@ -107,7 +108,8 @@
                           left: 0,
                           top: "-20px" };
     this.options = $.extend(defaultOptions, options);
-    this.element = $('<div class="jsavlabel jsavpointer">' + name + '</div>');
+    this.element = $('<div class="jsavpointer"><div class="jsavlabel">' + name + '</div>' +
+                     '<div class="jsavpointerarea"></div></div>');
     if (this.options.before) {
       this.element.insertBefore(this.options.before.element);
     } else if (this.options.after) {
@@ -170,8 +172,8 @@
                                  height: targetElem.outerHeight,
                                  left: targetOffset.left - canvasOffset.left,
                                  top: targetOffset.top - canvasOffset.top},
-        newPoints = [[0, myBounds.left + myBounds.width/2,
-                        myBounds.top + myBounds.height],
+        newPoints = [[0, myBounds.left + myBounds.width/2 + 1, //+1 to center the arrow start "ball"
+                        myBounds.top + myBounds.height - 5], // -5 to get to center of pointerarea
                      [1, targetBounds.left + targetBounds.width/2,
                         targetBounds.top]];
     return newPoints;
@@ -186,8 +188,10 @@
       // if setting target to null, hide the arrow
       if (newTarget === null) {
         if (this.arrow) { this.arrow.hide(); }
+        this.addClass("jsavnullpointer");
         return this;
       }
+      this.removeClass("jsavnullpointer");
       if (!this.arrow) {
         this.arrow = _createArrow(this, options);
       } else if (!this.arrow.isVisible()) {
