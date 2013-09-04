@@ -101,7 +101,10 @@
     listPointer2.arrow.css({"stroke":"yellow"});
     l.get(2).edgeToNext().css({"stroke":"red"});
     jsav.step();
-	listPointer2.hide();
+    jsav.umsg("Set the target of the second pointer to null");
+	  listPointer2.target(null);
+    jsav.step();
+    listPointer2.hide();
     jsav.umsg("Moves the pointer from the first node to the last node");
     listPointer1.target(l.get(4));
     jsav.step(); 
