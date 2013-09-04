@@ -538,6 +538,10 @@ if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
   };
   labelproto.css = JSAV.utils._helpers.css;
   labelproto._setcss = JSAV.anim(JSAV.utils._helpers._setcss);
+  labelproto.addClass = JSAV.utils._helpers.addClass;
+  labelproto.removeClass = JSAV.utils._helpers.removeClass;
+  labelproto.hasClass = JSAV.utils._helpers.hasClass;
+  labelproto.toggleClass = JSAV.anim(JSAV.utils._helpers._toggleClass);
   JSAV._types.Label = Label; // expose the label type
 
   JSAV.ext.label = function(text, options) {
