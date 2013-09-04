@@ -56,8 +56,8 @@
     this.layout();
     JSAV.utils._helpers.handleVisibility(this, this.options);
   };
+  JSAV.utils.extend(Matrix, JSAV._types.ds.JSAVDataStructure);
   var matrixproto = Matrix.prototype;
-  $.extend(matrixproto, JSAV._types.ds.common);
 
   // swap two elements in the matrix, (row1, col1) with (row2, col2)
   matrixproto.swap = function(row1, col1, row2, col2, options) {

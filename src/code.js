@@ -32,8 +32,8 @@
     JSAV.utils._helpers.handlePosition(this);
     JSAV.utils._helpers.handleVisibility(this, this.options);
   };
+  JSAV.utils.extend(Variable, JSAV._types.JSAVObject);
   var varproto = Variable.prototype;
-  $.extend(varproto, JSAV._types.common);
   varproto._toggleVisible = JSAV.anim(JSAV.ext.effects._toggleVisible);
   varproto.show = JSAV.ext.effects.show;
   varproto.hide = JSAV.ext.effects.hide;
@@ -127,9 +127,9 @@
       this.arrow = _createArrow(this);
     }
   };
-  var pointerproto = Pointer.prototype;
   // Extend the Label type
-  $.extend(pointerproto, JSAV._types.Label.prototype);
+  JSAV.utils.extend(Pointer, JSAV._types.Label);
+  var pointerproto = Pointer.prototype;
   // Helper function to record the change of the pointer target.
   pointerproto._setTarget = JSAV.anim(
     function(newTarget, options) {
@@ -297,8 +297,8 @@
     }
     return clElem;
   };
+  JSAV.utils.extend(Code, JSAV._types.JSAVObject);
   var codeproto = Code.prototype;
-  $.extend(codeproto, JSAV._types.common);
   codeproto._toggleVisible = JSAV.anim(JSAV.ext.effects._toggleVisible);
   codeproto.addCodeLine = JSAV.anim(function(newLine) {
     this.element.append(createCodeLine(newLine, this));

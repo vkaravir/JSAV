@@ -10,9 +10,10 @@
   var inp = $("<input type='range' />");
   $.support.inputTypeRange = (inp.prop("type") === "range");
 
-  var objcommons = {};
+  var ObjCommons = function() {},
+      objproto = ObjCommons.prototype;
   // gets or sets the id of the object
-  objcommons.id = function(newId) {
+  objproto.id = function(newId) {
     if (newId) {
       this.element[0].id = newId;
       return this;
@@ -25,7 +26,7 @@
       return id;
     }
   };
-  objcommons.bounds = function(recalculate, options) {
+  objproto.bounds = function(recalculate, options) {
     if (recalculate && $.isFunction(this.layout)) {
       return this.layout($.extend({boundsOnly: true}, options));
     } else {
@@ -33,20 +34,20 @@
       return $.extend({width: this.element.width(), height: this.element.height()}, pos);
     }
   };
-  objcommons.position = function() {
+  objproto.position = function() {
     return JSAV.position(this.element);
   };
-  objcommons.isVisible = function() {
+  objproto.isVisible = function() {
     // use the jquery :visible pseudo filter for checking for visibility
     return this.element.filter(":visible").size() > 0;
   };
-  objcommons.clear = function() {
+  objproto.clear = function() {
     if (this.element) {
       this.element.remove();
     }
   };
 
-  JSAV._types.common = objcommons;
+  JSAV._types.JSAVObject = ObjCommons;
 
   JSAV.utils = {};
   var u = JSAV.utils; // shortcut for easier and faster access

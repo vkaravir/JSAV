@@ -10,8 +10,8 @@
   var Tree = function(jsav, options) {
     this.init(jsav, options);
   };
+  JSAV.utils.extend(Tree, JSAV._types.ds.JSAVDataStructure);
   var treeproto = Tree.prototype;
-  $.extend(treeproto, JSAV._types.ds.common);
   treeproto.init = function(jsav, options) {
     this._layoutDone = false;
     this.jsav = jsav;

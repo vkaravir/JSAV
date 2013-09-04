@@ -7,7 +7,8 @@ if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
     "use strict";
     if (typeof JSAV === "undefined") { return; }
 
-    var common = {
+    var JSAVGraphical = function() {};
+    JSAVGraphical.prototype = {
       // utility function that actually implements hide
       // animated show function
       show: function(options) {
@@ -99,7 +100,7 @@ if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
         var bbox = this.rObj.getBBox();
         return { left: bbox.x, top: bbox.y, width: bbox.width, height: bbox.height };
       },
-      id: JSAV._types.common.id
+      id: JSAV._types.JSAVObject.id
     };
     var init = function(obj, jsav, props) {
       obj.jsav = jsav;
@@ -175,8 +176,8 @@ if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
       init(this, jsav, props);
       return this;
     };
+    JSAV.utils.extend(Circle, JSAVGraphical);
     var cproto = Circle.prototype;
-    $.extend(cproto, common);
     cproto.center = function(x, y, options) {
       if (typeof x === "undefined") { // getting center
         return this.rObj.attr(["cx", "cy"]);
@@ -203,8 +204,8 @@ if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
       init(this, jsav, props);
       return this;
     };
+    JSAV.utils.extend(Rect, JSAVGraphical);
     var rectproto = Rect.prototype;
-    $.extend(rectproto, common);
     rectproto.width = function(w, options) {
       if (typeof w === "undefined") {
         return this.rObj.attr("width");
@@ -228,7 +229,7 @@ if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
       this._points = [[x1, y1], [x2, y2]];
       return this;
     };
-    $.extend(Line.prototype, common);
+    JSAV.utils.extend(Line, JSAVGraphical);
 
     Line.prototype.translatePoint = translatePoint;
     Line.prototype.movePoints = movePoints;
@@ -239,8 +240,8 @@ if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
       init(this, jsav, props);
       return this;
     };
+    JSAV.utils.extend(Ellipse, JSAVGraphical);
     var ellproto = Ellipse.prototype;
-    $.extend(ellproto, common);
     ellproto.center = cproto.center;
     ellproto.radius = function(x, y, options) {
       if (typeof x === "undefined") { // getting radius
@@ -270,7 +271,7 @@ if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
       this._points = points;
       return this;
     };
-    $.extend(Polyline.prototype, common);
+    JSAV.utils.extend(Polyline, JSAVGraphical);
 
     Polyline.prototype.translatePoint = translatePoint;
     Polyline.prototype.movePoints = movePoints;
@@ -281,6 +282,7 @@ if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
       init(this, jsav, props);
       return this;
     };
+    JSAV.utils.extend(Path, JSAVGraphical);
     Path.prototype.path = function(newPath, options)  {
       if (typeof newPath === "undefined") {
         return this.rObj.attr("path");
@@ -288,15 +290,14 @@ if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
         return this._setattrs({ path: newPath }, options);
       }
     };
-    $.extend(Path.prototype, common);
 
     var Set = function(jsav, raphael, props) {
       this.rObj = raphael.set();
       init(this, jsav, props);
       return this;
     };
+    JSAV.utils.extend(Set, JSAVGraphical);
     var setproto = Set.prototype;
-    $.extend(setproto, common);
     setproto.push = function(g) {
       this.rObj.push(g.rObj);
       return this;
@@ -350,6 +351,7 @@ if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
 
     // expose the types
     var gTypes = {
+      JSAVGraphical: JSAVGraphical,
       Circle: Circle,
       Rect: Rect,
       Line: Line,
@@ -509,8 +511,8 @@ if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
     JSAV.utils._helpers.handlePosition(this);
     JSAV.utils._helpers.handleVisibility(this, this.options);
   };
+  JSAV.utils.extend(Label, JSAV._types.JSAVObject);
   var labelproto = Label.prototype;
-  $.extend(labelproto, JSAV._types.common);
   labelproto._toggleVisible = JSAV.anim(JSAV.ext.effects._toggleVisible);
   labelproto.show = JSAV.ext.effects.show;
   labelproto.hide = JSAV.ext.effects.hide;

@@ -36,8 +36,8 @@
     JSAV.utils._helpers.handlePosition(this);
     JSAV.utils._helpers.handleVisibility(this, this.options);
   };
+  JSAV.utils.extend(Graph, JSAV._types.ds.JSAVDataStructure);
   var graphproto = Graph.prototype;
-  $.extend(graphproto, JSAV._types.ds.common);
   graphproto.css = JSAV.utils._helpers.css;
   graphproto._setcss = JSAV.anim(JSAV.utils._helpers._setcss);
 
@@ -444,8 +444,8 @@
     JSAV.utils._helpers.handlePosition(this);
     JSAV.utils._helpers.handleVisibility(this, this.options);
   };
+  JSAV.utils.extend(GraphNode, JSAV._types.ds.Node);
   var nodeproto = GraphNode.prototype;
-  $.extend(nodeproto, JSAV._types.ds.Node.prototype);
   nodeproto.css = JSAV.utils._helpers.css;
   nodeproto._setcss = JSAV.anim(JSAV.utils._helpers._setcss);
 

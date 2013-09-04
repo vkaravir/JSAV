@@ -29,29 +29,30 @@
 
   // common properties/functions for all data structures, these can be copied
   // to the prototype of a new DS using the addCommonProperties(prototype) function
-  var common = {
-      getSvg: function() {
-        if (!this.svg) { // lazily create the SVG overlay only when needed
-          this.svg = new Raphael(this.element[0]);
-          this.svg.renderfix();
-          var style = this.svg.canvas.style;
-          style.position = "absolute";
-        }
-        return this.svg;
-      },
-      _toggleVisible: JSAV.anim(JSAV.ext.effects._toggleVisible),
-      show: JSAV.ext.effects.show,
-      hide: JSAV.ext.effects.hide,
-      addClass: JSAV.utils._helpers.addClass,
-      removeClass: JSAV.utils._helpers.removeClass,
-      hasClass: JSAV.utils._helpers.hasClass,
-      toggleClass: JSAV.anim(JSAV.utils._helpers._toggleClass),
-      // dummy methods for initializing a DS, the DS should override these
-      initialize: function() { },
-      initializeFromElement: function() { },
-      clone: function() {}
+  var JSAVDataStructure = function() {};
+  JSAV.utils.extend(JSAVDataStructure, JSAV._types.JSAVObject);
+  var dsproto = JSAVDataStructure.prototype;
+  dsproto.getSvg = function() {
+      if (!this.svg) { // lazily create the SVG overlay only when needed
+        this.svg = new Raphael(this.element[0]);
+        this.svg.renderfix();
+        var style = this.svg.canvas.style;
+        style.position = "absolute";
+      }
+      return this.svg;
     };
-  $.extend(common, JSAV._types.common);
+  dsproto._toggleVisible = JSAV.anim(JSAV.ext.effects._toggleVisible);
+  dsproto.show = JSAV.ext.effects.show;
+  dsproto.hide = JSAV.ext.effects.hide;
+  dsproto.addClass = JSAV.utils._helpers.addClass;
+  dsproto.removeClass = JSAV.utils._helpers.removeClass;
+  dsproto.hasClass = JSAV.utils._helpers.hasClass;
+  dsproto.toggleClass = JSAV.anim(JSAV.utils._helpers._toggleClass);
+  // dummy methods for initializing a DS, the DS should override these
+  dsproto.initialize = function() { };
+  dsproto.initializeFromElement = function() { };
+  dsproto.clone = function() {};
+
 
 
   // implementation for a tree edge
@@ -102,8 +103,8 @@
       this.g.show();
     }
   };
+  JSAV.utils.extend(Edge, JSAVDataStructure);
   var edgeproto = Edge.prototype;
-  $.extend(edgeproto, common);
   edgeproto.layout = function(options) {
     if (this.start().value() === "jsavnull" || this.end().value() === "jsavnull") {
       this.addClass("jsavedge", options).addClass("jsavnulledge", options);
@@ -281,9 +282,9 @@
     this.removeClass("jsavhighlight", options);
   };
 
-  var Node = function() {},
-  nodeproto = Node.prototype;
-  $.extend(nodeproto, common);
+  var Node = function() {};
+  JSAV.utils.extend(Node, JSAVDataStructure);
+  var nodeproto = Node.prototype;
 
   nodeproto.value = function(newVal, options) {
     if (typeof newVal === "undefined") {
@@ -320,7 +321,7 @@
   nodeproto.css = JSAV.utils._helpers.css;
   nodeproto._setcss = JSAV.anim(JSAV.utils._helpers._setcss);
 
-  JSAV._types.ds = { "common": common, "Edge": Edge, "Node": Node };
+  JSAV._types.ds = { "JSAVDataStructure": JSAVDataStructure, "Edge": Edge, "Node": Node };
   // expose the extend for the JSAV
   JSAV.ext.ds = {
     layout: {}

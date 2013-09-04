@@ -43,9 +43,9 @@
       this.element.addClass("jsavindexed");
     }
   };
+  JSAV.utils.extend(AVArray, JSAV._types.ds.JSAVDataStructure);
   AVArray._templates = templates;
   var arrproto = AVArray.prototype;
-  $.extend(arrproto, JSAV._types.ds.common);
 
   arrproto.isHighlight = function(index, options) {
     return this.hasClass(index, "jsavhighlight");

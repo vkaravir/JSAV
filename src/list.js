@@ -31,8 +31,8 @@
     JSAV.utils._helpers.handlePosition(this);
     JSAV.utils._helpers.handleVisibility(this, this.options);
   };
+  JSAV.utils.extend(List, JSAV._types.ds.JSAVDataStructure);
   var listproto = List.prototype;
-  $.extend(listproto, JSAV._types.ds.common);
   listproto.first = function(newFirst, options) {
     if (typeof newFirst === "undefined") {
       return this._first;
@@ -195,8 +195,8 @@
     JSAV.utils._helpers.handleVisibility(this, this.options);
   };
   
+  JSAV.utils.extend(ListNode, JSAV._types.ds.Node);
   var listnodeproto = ListNode.prototype;
-  $.extend(listnodeproto, JSAV._types.ds.Node.prototype);
   
   listnodeproto.next = function(newNext, options) {
     if (typeof newNext === "undefined") {
