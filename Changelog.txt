@@ -1,7 +1,9 @@
-Changes in development version
-------------------------------
+Changes in version 0.7
+----------------------
 * new features:
   - support for graph data structure
+  - support for pointer object
+  - support for 2D arrays (or, matrices)
   - added path graphical primitive
   - added support for relative positioning of objects
 * new minor features:
@@ -9,9 +11,14 @@ Changes in development version
   - added general move/copy/swap effects
   - new events jsav-init and jsav-recorded triggered
   - enabled global options for JSAV and JSAV exercises
+  - easier to extend JSAV objects due to "proper" inheritance of types
+  - data structures Stack and Red-Black-Tree added to extras
+  - more unified API for all JSAV objects
+  - score widget for exercises in continuous feedback mode
+* numerous bug fixes in grading, trees, bar array
   
 Changes in version 0.6
-------------------------------
+----------------------
 * new features:
   - support for pseudocode view
 * numerous bug fixes
