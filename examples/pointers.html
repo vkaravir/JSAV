@@ -93,13 +93,18 @@
                       myAnchor: "right bottom",
                       left: 15,
                       top: -20});
-    var listPointer2 = jsav.pointer("pointer2", l.get(2),{visible: true,
+    var listPointer2 = jsav.pointer("pointer2", l.get(2),{
                       anchor: "left top",
                       myAnchor: "right bottom",
                       left: 15,
-                      top: -20});
+                      top: -20,
+                      fixed: true
+                    });
     listPointer2.arrow.css({"stroke":"yellow"});
     l.get(2).edgeToNext().css({"stroke":"red"});
+    jsav.step();
+    jsav.umsg("Set the target of second pointer. The pointer is fixed, so it won't move.")
+    listPointer2.target(l.get(3));
     jsav.step();
     jsav.umsg("Set the target of the second pointer to null");
 	  listPointer2.target(null);
