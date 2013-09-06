@@ -198,12 +198,15 @@
         // if arrow is hidden, show it
         this.arrow.show();
       }
-      JSAV.utils._helpers.setRelativePositioning(this, $.extend({}, this.options, options, {relativeTo: newTarget}));
-      var that = this;
-      this.jsav.container.on("jsav-updaterelative", function() {
-        if (!that.isVisible()) { return; }
-        that.arrow.movePoints(pointerproto._arrowPoints.call(that, options), options);
-      });
+      // if position is not fixed, update relative position to match new target
+      if (!this.options.fixed) {
+        JSAV.utils._helpers.setRelativePositioning(this, $.extend({}, this.options, options, {relativeTo: newTarget}));
+        var that = this;
+        this.jsav.container.on("jsav-updaterelative", function() {
+          if (!that.isVisible()) { return; }
+          that.arrow.movePoints(pointerproto._arrowPoints.call(that, options), options);
+        });
+      }
       return this;
     }
   };
@@ -219,7 +222,7 @@
   };
   // Expose the Pointer as the .pointer(...) function on JSAV instances.
   JSAV.ext.pointer = function(name, target, options) {
-    return new Pointer(this, name, $.extend({}, options, {relativeTo: target}));
+    return new Pointer(this, name, $.extend({}, options, { "relativeTo": target}));
   };
   // Expose the Pointer type
   JSAV._types.Pointer = Pointer;

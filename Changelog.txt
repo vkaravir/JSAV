@@ -1,3 +1,8 @@
+Changes in dev version
+----------------------
+* new minor features:
+  - pointer position can be fixed
+
 Changes in version 0.7
 ----------------------
 * new features:

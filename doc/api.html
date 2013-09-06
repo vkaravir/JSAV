@@ -6,7 +6,7 @@
   </head>
 
 <body>
-<h1>Documentation for the JavaScript Algorithm Visualization API (JSAV) Version 0.7</h1>
+<h1>Documentation for the JavaScript Algorithm Visualization API (JSAV) Version 0.8dev</h1>
 
 <p class="note">
 This documentation reflects the current status of the library.
@@ -1011,11 +1011,14 @@ out, this method will return the current text of the label.
     <li> <code>{visible: &lt;boolean>}</code> Determine whether the pointer
     is visible on creation. Defaults to true.</li>
     <li><code>{left/top/right/bottom: &lt;lengthUnit>}</code> Values to determine the absolute position of the label relative to the pointer's target.</li>
-    <li>anchor: Defines which position on the element being positioned to align with the target element. Should be in 
+    <li><code>{anchor: &lt;String>}</code> Defines which position on the element being positioned to align with the target element. Should be in 
       format <code>horizontal vertical</code>. Possible horizontal values are "left", "center", "right" and vertical values "top", "center", "bottom". Defaults to <code>center center</code>.</li>
-    <li>myAnchor: Similar to anchor, but the position on this element. Defaults to <code>center center</code>.</li>
-    <li>targetIndex: If target is a JSAV array, this option can be used to target
+    <li><code>{myAnchor: &lt;String>}</code> Similar to anchor, but the position on this element. Defaults to <code>center center</code>.</li>
+    <li><code>{targetIndex: &lt; Number>}</code> If target is a JSAV array, this option can be used to target
       an index in that array.</li>
+    <li><code>{fixed: &lt;boolean>}</code> A boolean indicating whether the pointer should move when it's target changes.
+      Note, that if the pointer has a target when initialized, the pointer will still be positioned
+      relative to that target.</li>
     </ul>
     <p>A pointer instance has the functions of the Label object as well as the following functions.</p>
     <h3 class="apimethod">.target([newTarget], [options])</h3>
