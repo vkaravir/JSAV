@@ -232,6 +232,9 @@
     if (node) {
       var newchildnodes = self.childnodes.slice(0);
       newchildnodes[pos] = node;
+      if (node.parent() && node.parent() !== self) {
+        node.remove({hide: false});
+      }
       node.parent(self);
       self._setchildnodes(newchildnodes, opts);
     } else {
