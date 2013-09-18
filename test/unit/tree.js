@@ -479,167 +479,171 @@
   });
 
 
-test("Test show/hide", function() {
-  var av = new JSAV("emptycontainer"),
-      tree = av.ds.bintree();
+  test("Test show/hide", function() {
+    var av = new JSAV("emptycontainer"),
+        tree = av.ds.bintree();
 
-  equal(tree.element.filter(":visible").size(), 1, "Tree initially visible");
-  tree.hide();
-  av.step();
-  equal(tree.element.filter(":visible").size(), 0, "Tree not visible after hide");
-  tree.show();
-  av.step();
-  equal(tree.element.filter(":visible").size(), 1, "Tree again visible after show");
-  tree.show();
-  av.step();
-  equal(tree.element.filter(":visible").size(), 1, "Tree visible after another show");
-  tree.hide();
-  av.step();
-  equal(tree.element.filter(":visible").size(), 0, "Tree not visible after hide");
-  tree.hide();
-  av.step(); // need to add another step, since the empty last step is pruned
-  equal(tree.element.filter(":visible").size(), 0, "Tree not visible after another hide");
-  av.recorded();
-  jQuery.fx.off = true;
-  av.end();
-  equal(tree.element.filter(":visible").size(), 0);
-  av.backward();
-  equal(tree.element.filter(":visible").size(), 0, "Undoing hiding hidden should keep it hidden");
-  av.begin();
-  av.forward(); // redo hide
-  av.forward(); // redo show
-  av.forward(); // redo another show
-  equal(tree.element.filter(":visible").size(), 1, "Tree visible after another show");
-  av.backward(); // undo showing a visible Tree
-  equal(tree.element.filter(":visible").size(), 1, "Undoing show of a visible should keep it visible");
-});
+    equal(tree.element.filter(":visible").size(), 1, "Tree initially visible");
+    tree.hide();
+    av.step();
+    equal(tree.element.filter(":visible").size(), 0, "Tree not visible after hide");
+    tree.show();
+    av.step();
+    equal(tree.element.filter(":visible").size(), 1, "Tree again visible after show");
+    tree.show();
+    av.step();
+    equal(tree.element.filter(":visible").size(), 1, "Tree visible after another show");
+    tree.hide();
+    av.step();
+    equal(tree.element.filter(":visible").size(), 0, "Tree not visible after hide");
+    tree.hide();
+    av.step(); // need to add another step, since the empty last step is pruned
+    equal(tree.element.filter(":visible").size(), 0, "Tree not visible after another hide");
+    av.recorded();
+    jQuery.fx.off = true;
+    av.end();
+    equal(tree.element.filter(":visible").size(), 0);
+    av.backward();
+    equal(tree.element.filter(":visible").size(), 0, "Undoing hiding hidden should keep it hidden");
+    av.begin();
+    av.forward(); // redo hide
+    av.forward(); // redo show
+    av.forward(); // redo another show
+    equal(tree.element.filter(":visible").size(), 1, "Tree visible after another show");
+    av.backward(); // undo showing a visible Tree
+    equal(tree.element.filter(":visible").size(), 1, "Undoing show of a visible should keep it visible");
+  });
 
-test("Tree show/hide recursive", function() {
-  var av = new JSAV("emptycontainer"),
-      tree = av.ds.bintree({visible: false});
+  test("Tree show/hide recursive", function() {
+    var av = new JSAV("emptycontainer"),
+        tree = av.ds.bintree({visible: false});
 
-  var checkVisibility = function(values) {
-    equal(tree.element.filter(":visible").size(), values[0], "check tree visibility");
-    equal(tree.root().element.filter(":visible").size(), values[1], "check root visibility");
-    equal(tree.root().left().element.filter(":visible").size(), values[2], "check left child visibility");
-    equal(tree.root().right().element.filter(":visible").size(), values[3], "check right child visibility");
-    equal(tree.root().left().left().element.filter(":visible").size(), values[4]);
-  };
-  tree.root("Ro");
-  tree.root().left("L");
-  tree.root().right("R");
-  tree.root().left().left("LL");
-  checkVisibility([0, 0, 0, 0, 0]);
+    var checkVisibility = function(values) {
+      equal(tree.element.filter(":visible").size(), values[0], "check tree visibility");
+      equal(tree.root().element.filter(":visible").size(), values[1], "check root visibility");
+      equal(tree.root().left().element.filter(":visible").size(), values[2], "check left child visibility");
+      equal(tree.root().right().element.filter(":visible").size(), values[3], "check right child visibility");
+      equal(tree.root().left().left().element.filter(":visible").size(), values[4]);
+    };
+    tree.root("Ro");
+    tree.root().left("L");
+    tree.root().right("R");
+    tree.root().left().left("LL");
+    checkVisibility([0, 0, 0, 0, 0]);
 
-  av.displayInit();
-  tree.show();
-  checkVisibility([1, 1, 1, 1, 1]);
+    av.displayInit();
+    tree.show();
+    checkVisibility([1, 1, 1, 1, 1]);
 
-  av.step();
-  tree.root().hide(); // should recursively hide all nodes; not tree
-  checkVisibility([1, 0, 0, 0, 0]);
+    av.step();
+    tree.root().hide(); // should recursively hide all nodes; not tree
+    checkVisibility([1, 0, 0, 0, 0]);
 
-  av.step();
-  tree.hide(); // hide everything
+    av.step();
+    tree.hide(); // hide everything
 
-  av.step();
-  tree.show({recursive: false}); // show tree, not recursive
-  tree.root().show({recursive: false}); // show root
-  tree.root().left().show(); // show left child of root
-  checkVisibility([1, 1, 1, 0, 1]);
+    av.step();
+    tree.show({recursive: false}); // show tree, not recursive
+    tree.root().show({recursive: false}); // show root
+    tree.root().left().show(); // show left child of root
+    checkVisibility([1, 1, 1, 0, 1]);
 
-  av.step();
-  tree.show(); // show everything
+    av.step();
+    tree.show(); // show everything
 
-  av.step();
-  tree.root().hide({recursive: false}); // hide root
-  tree.root().left().hide(); // hide left child of root
-  checkVisibility([1, 0, 0, 1, 0]);
-  av.recorded();
-  $.fx.off = true;
+    av.step();
+    tree.root().hide({recursive: false}); // hide root
+    tree.root().left().hide(); // hide left child of root
+    checkVisibility([1, 0, 0, 1, 0]);
+    av.recorded();
+    $.fx.off = true;
 
-  av.begin();
-  av.end();
-  av.begin();
+    av.begin();
+    av.end();
+    av.begin();
 
-  checkVisibility([0, 0, 0, 0, 0]);
-  av.forward(); // redo show tree
-  checkVisibility([1, 1, 1, 1, 1]);
-  av.forward(); // redo hide root recursively
-  checkVisibility([1, 0, 0, 0, 0]);
-  av.forward(); // redo hide tree
-  av.forward(); // redo show tree and root not recursively, show left child of root
-  checkVisibility([1, 1, 1, 0, 1]);
-  av.forward(); // show tree
-  av.forward(); // hide tree and root (non-recursive), hide left child of root
-  checkVisibility([1, 0, 0, 1, 0]);
+    checkVisibility([0, 0, 0, 0, 0]);
+    av.forward(); // redo show tree
+    checkVisibility([1, 1, 1, 1, 1]);
+    av.forward(); // redo hide root recursively
+    checkVisibility([1, 0, 0, 0, 0]);
+    av.forward(); // redo hide tree
+    av.forward(); // redo show tree and root not recursively, show left child of root
+    checkVisibility([1, 1, 1, 0, 1]);
+    av.forward(); // show tree
+    av.forward(); // hide tree and root (non-recursive), hide left child of root
+    checkVisibility([1, 0, 0, 1, 0]);
 
-});
+  });
 
 
-test("Test click event", function() {
-  expect(6);
-  var handler1 = function(event) {
-    ok(event);
-  };
-  var handler2 = function(myval, event) {
-    equal(myval, "kissa");
-    ok(event);
-  };
-  var handler3 = function(myval, myval2, event) {
-    equal(myval, "kissa");
-    equal(myval2, "koira");
-    ok(event);
-  };
-  var av = new JSAV("arraycontainer"),
-      tree1 = av.ds.tree(),
-      tree2 = av.ds.bintree(),
-      tree3 = av.ds.bintree();
-  var setup = function(tree) {
-    tree.root("r");
-    var r = tree.root();
-    r.addChild(0);
-    r.addChild(2);
-  };
-  setup(tree1); setup(tree2); setup(tree3);
-  tree1.click(handler1);
-  tree2.click(["kissa"], handler2);
-  tree3.click(["kissa", "koira"], handler3);
-  tree1.element.find(".jsavnode:eq(2)").click();
-  tree2.element.find(".jsavnode:eq(0)").click();
-  tree3.element.find(".jsavnode:eq(1)").click();
-});
+  test("Test click event", function() {
+    expect(6);
+    var handler1 = function(event) {
+      ok(event);
+    };
+    var handler2 = function(myval, event) {
+      equal(myval, "kissa");
+      ok(event);
+    };
+    var handler3 = function(myval, myval2, event) {
+      equal(myval, "kissa");
+      equal(myval2, "koira");
+      ok(event);
+    };
+    var av = new JSAV("arraycontainer"),
+        tree1 = av.ds.tree(),
+        tree2 = av.ds.bintree(),
+        tree3 = av.ds.bintree();
+    var setup = function(tree) {
+      tree.root("r");
+      var r = tree.root();
+      r.addChild(0);
+      r.addChild(2);
+    };
+    setup(tree1);
+    setup(tree2);
+    setup(tree3);
+    tree1.click(handler1);
+    tree2.click(["kissa"], handler2);
+    tree3.click(["kissa", "koira"], handler3);
+    tree1.element.find(".jsavnode:eq(2)").click();
+    tree2.element.find(".jsavnode:eq(0)").click();
+    tree3.element.find(".jsavnode:eq(1)").click();
+  });
 
-test("Test on event binding and custom events", function() {
-  expect(6);
-  var handler1 = function(event) {
-    ok(event);
-  };
-  var handler2 = function(myval, event) {
-    equal(myval, "kissa");
-    ok(event);
-  };
-  var handler3 = function(myval, myval2, event) {
-    equal(myval, "kissa");
-    equal(myval2, "koira");
-    ok(event);
-  };
-  var av = new JSAV("arraycontainer"),
-      tree1 = av.ds.tree(),
-      tree2 = av.ds.bintree(),
-      tree3 = av.ds.bintree();
-  var setup = function(tree) {
-    tree.root("r");
-    var r = tree.root();
-    r.addChild(0);
-    r.addChild(2);
-  };
-  setup(tree1); setup(tree2); setup(tree3);
-  tree1.on("jsavclick", handler1);
-  tree2.on("jsavclick", "kissa", handler2);
-  tree3.on("jsavclick", ["kissa", "koira"], handler3);
-  tree1.element.find(".jsavnode:eq(2)").trigger("jsavclick");
-  tree2.element.find(".jsavnode:eq(0)").trigger("jsavclick");
-  tree3.element.find(".jsavnode:eq(1)").trigger("jsavclick");
-});
+  test("Test on event binding and custom events", function() {
+    expect(6);
+    var handler1 = function(event) {
+      ok(event);
+    };
+    var handler2 = function(myval, event) {
+      equal(myval, "kissa");
+      ok(event);
+    };
+    var handler3 = function(myval, myval2, event) {
+      equal(myval, "kissa");
+      equal(myval2, "koira");
+      ok(event);
+    };
+    var av = new JSAV("arraycontainer"),
+        tree1 = av.ds.tree(),
+        tree2 = av.ds.bintree(),
+        tree3 = av.ds.bintree();
+    var setup = function(tree) {
+      tree.root("r");
+      var r = tree.root();
+      r.addChild(0);
+      r.addChild(2);
+    };
+    setup(tree1);
+    setup(tree2);
+    setup(tree3);
+    tree1.on("jsavclick", handler1);
+    tree2.on("jsavclick", "kissa", handler2);
+    tree3.on("jsavclick", ["kissa", "koira"], handler3);
+    tree1.element.find(".jsavnode:eq(2)").trigger("jsavclick");
+    tree2.element.find(".jsavnode:eq(0)").trigger("jsavclick");
+    tree3.element.find(".jsavnode:eq(1)").trigger("jsavclick");
+  });
 }());
