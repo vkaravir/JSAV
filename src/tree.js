@@ -420,6 +420,10 @@
         if (!(node instanceof BinaryTreeNode)) {
           node = self.container.newNode(node, self, opts);
         } else {
+          // if this node is already a child somewhere else, remove it there
+          if (node.parent() && node.parent() !== self) {
+            node.remove({hide: false});
+          }
           node.parent(self);
         }
         node.element.attr("data-binchildrole", pos?"right":"left");
@@ -490,7 +494,7 @@
   binnodeproto._setvalue = JSAV.anim(function(newValue) {
     var oldVal = this.value(),
         valtype = typeof(newValue);
-    if (typeof oldVal === "undefined") {oldVal = ""};
+    if (typeof oldVal === "undefined") {oldVal = "";};
     if (valtype === "object") { valtype = "string"; }
     this.element
         .removeClass("jsavnullnode")

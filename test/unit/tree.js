@@ -134,6 +134,44 @@
     equal(n22.parent().id(), n1.id());
   });
   
+
+  test("Tree Move Child", function() {
+    var av = new JSAV("emptycontainer"),
+        tree = av.ds.tree();
+    tree.root("R");
+    var r = tree.root();
+    // add two children to root
+    r.addChild("A");
+    r.addChild("B");
+    var a = r.child(0),
+        b = r.child(1);
+
+    // make sure child counts are correct
+    equal(r.children().length, 2);
+    equal(a.children().length, 0);
+    equal(b.children().length, 0);
+    av.step();
+    // move one child to the child of the other
+    a.addChild(b);
+
+    equal(r.children().length, 1);
+    equal(a.children().length, 1);
+    equal(b.children().length, 0);
+    equal(a.child(0).id(), b.id());
+
+    av.backward(); // undo move
+    equal(r.children().length, 2);
+    equal(a.children().length, 0);
+    equal(b.children().length, 0);
+    equal(r.child(1).id(), b.id());
+
+    av.forward(); // redo move
+    equal(r.children().length, 1);
+    equal(a.children().length, 1);
+    equal(b.children().length, 0);
+    equal(a.child(0).id(), b.id());
+
+  });
   
   test("Tree Node Value", function() {
     var av = new JSAV("emptycontainer");
@@ -293,6 +331,49 @@
     equal(root.right().value(), "Right");
     equal(tree.height(), 2);
     
+
+  });
+
+  test("Binary Tree Move Child", function() {
+    var av = new JSAV("emptycontainer"),
+        tree = av.ds.bintree();
+    tree.root("R");
+    var root = tree.root();
+    // add two children to root
+    root.left("A");
+    root.right("B");
+    var left = root.left(),
+        right = root.right();
+
+    // make sure child counts are correct
+    equal(root.children().length, 2);
+    equal(left.children().length, 0);
+    equal(right.children().length, 0);
+    av.step();
+    // move one child to the child of the other
+    left.right(right);
+
+    // in order to do the layout, JSAV adds a null node as the other child
+    equal(root.children().length, 2);
+    ok(!root.right()); // .. but that child is empty
+    equal(left.children().length, 2); // same for this...
+    ok(!left.left());
+    equal(right.children().length, 0);
+    equal(left.right().id(), right.id());
+
+    av.backward(); // undo move
+    equal(root.children().length, 2);
+    equal(left.children().length, 0);
+    equal(right.children().length, 0);
+    equal(root.right().id(), right.id());
+
+    av.forward(); // redo move
+    equal(root.children().length, 2);
+    ok(!root.right());
+    equal(left.children().length, 2);
+    ok(!left.left());
+    equal(right.children().length, 0);
+    equal(left.right().id(), right.id());
 
   });
   
