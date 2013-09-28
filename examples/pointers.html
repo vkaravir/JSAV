@@ -14,6 +14,13 @@
       top: 15px;
     }
     .jsavcanvas { height: 300px;}
+    .mypointer {
+      text-decoration: underline;
+    }
+    .mypointer .jsavpointerarea {
+      border-color: blue;
+      background-color: red;
+    }
     </style>
   </head>
   <body>
@@ -69,14 +76,20 @@
                        myAnchor: "right bottom",
                        left: 15,
                        top: -20});
-	jsav.step();
+	  jsav.step();
+    jsav.umsg("Change the color of the pointer label");
+    arrayPointer.css({"color": "yellow"});
+    jsav.step();
+    jsav.umsg("Change the appearance of the pointer with a CSS class");
+    arrayPointer.addClass("mypointer");
+    jsav.step();
     jsav.umsg("Hide the JSAV array for the list pointer example");
     arr.hide();
 
     jsav.step();
     // Should move JSAV list 50px down to make room for pointer arrow canvas.
     var l = jsav.ds.list();
-	l.css({top: 50});
+    l.css({top: 50});
     jsav.umsg("We create a list and add some elements.");
     l.addFirst(5)
      .addFirst(4)
