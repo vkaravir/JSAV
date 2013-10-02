@@ -192,12 +192,17 @@
     if (!otherEdge || !otherEdge instanceof Edge) {
       return false;
     }
-    if (options && !options.checkNodes) {
+    //if (!options || !(typeof options.checkNodes === "boolean" && !options.checkNodes)) {
+    if (options && !options.dontCheckNodes) {
       if (!this.startnode.equals(otherEdge.startnode) ||
                 !this.endnode.equals(otherEdge.endnode)) {
         return false;
       }
     }
+    // if edge weights are different, the edges are different
+    if (this._weight !== otherEdge._weight) { return false; }
+
+    // compare styling of the edges
     var cssprop, equal;
     if (options && 'css' in options) { // if comparing css properties
       if ($.isArray(options.css)) { // array of property names

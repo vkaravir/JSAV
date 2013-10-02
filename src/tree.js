@@ -300,7 +300,8 @@
     }
     // compare edge style
     if (this.edgeToParent()) {
-      equal = this.edgeToParent().equals(otherNode.edgeToParent(), options);
+      equal = this.edgeToParent().equals(otherNode.edgeToParent(),
+                                        $.extend({}, options, {dontCheckNodes: true}));
     }
     // compare children
     var ch = this.children(),

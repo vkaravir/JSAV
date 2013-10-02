@@ -95,4 +95,46 @@
     equal(graph.edgeCount(), 1);
     ok(!e1.isVisible() && !e2.isVisible() && !e4.isVisible());
   });
+
+  test("Graph equals() test", function() {
+    var av = new JSAV("emptycontainer");
+    var graph1 = av.ds.graph(),
+        graph2 = av.ds.graph();
+    var a = graph1.addNode("A"),
+        b = graph1.addNode("B"),
+        a2 = graph2.addNode("A"),
+        b2 = graph2.addNode("B");
+    ok(graph1.equals(graph2), "Equal graphs");
+    var c = graph1.addNode("C");
+    ok(!graph1.equals(graph2), "Graphs with different nodes");
+    var c2 = graph2.addNode("C");
+
+    c.highlight();
+    ok(graph1.equals(graph2), "Different background colors, not compared");
+    ok(!graph1.equals(graph2, {'css': 'background-color'}), "Different background colors");
+    c.unhighlight();
+
+    ok(graph1.equals(graph2), "Same background colors, not compared");
+    ok(graph1.equals(graph2, {'css': 'background-color'}), "Same background colors");
+
+    c.highlight();
+    c2.highlight();
+    ok(graph1.equals(graph2), "Same background colors, not compared");
+    ok(graph1.equals(graph2, {'css': 'background-color'}), "Same background colors");
+
+    var e = graph1.addEdge(a, b);
+    ok(!graph1.equals(graph2), "Different set of edges");
+
+    var e2 = graph2.addEdge(a2, b2);
+    ok(graph1.equals(graph2), "Same set of edges");
+
+    e.css({stroke: "red"});
+    ok(graph1.equals(graph2), "Different edge colors, not compared");
+    ok(!graph1.equals(graph2, {'css': 'stroke'}), "Different edge colors");
+
+    e2.css({stroke: "red"});
+    ok(graph1.equals(graph2), "Same edge colors, not compared");
+    ok(graph1.equals(graph2, {'css': ['stroke', 'background-color']}), "Same edge colors");
+
+  });
 })();

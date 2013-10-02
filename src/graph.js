@@ -204,6 +204,27 @@
     }
     return this._alledges.length;
   };
+  // compares this graph to other graph and return true if they are equal
+  graphproto.equals = function(other, options) {
+    if (!other instanceof Graph) { return false; }
+    if (this.nodeCount() !== other.nodeCount() ||
+        this.edgeCount() !== other.edgeCount()) { return false; }
+
+    // sort nodes by their value and compare pair-wise
+    var nodeSortFunc = function(a, b) {
+      return a.value() < b.value();
+    };
+    var myNodes = this.nodes().sort(nodeSortFunc),
+        otherNodes = other.nodes().sort(nodeSortFunc);
+    for (var i = myNodes.length; i--; ) {
+      // if a pair of nodes isn't equal, graphs are not equal
+      if (!myNodes[i].equals(otherNodes[i], options)) {
+        return false;
+      }
+    }
+    return true;
+  };
+
 
   // add the event handler registering functions
   JSAV.utils._events._addEventSupport(graphproto);
@@ -459,6 +480,55 @@
   };
   nodeproto.edgeFrom = function(node) {
     return node.edgeTo(this);
+  };
+
+  nodeproto.equals = function(otherNode, options) {
+    if (!otherNode || this.value() !== otherNode.value()) {
+      return false;
+    }
+
+    // compare css properties of the node
+    var cssprop, equal, i, j;
+    if (options && 'css' in options) { // if comparing css properties
+      if ($.isArray(options.css)) { // array of property names
+        for (i = 0; i < options.css.length; i++) {
+          cssprop = options.css[i];
+          equal = (this.css(cssprop) === otherNode.css(cssprop));
+          if (!equal) { return false; }
+        }
+      } else { // if not array, expect it to be a property name string
+        cssprop = options.css;
+        equal = (this.css(cssprop) === otherNode.css(cssprop));
+        if (!equal) { return false; }
+      }
+    }
+
+    // sort the neighbors based on their values
+    var nodeSortFunc = function(a, b) {
+      return a.value() < b.value();
+    };
+    var myNeighbors = this.neighbors().sort(nodeSortFunc),
+        otherNeighbors = otherNode.neighbors().sort(nodeSortFunc),
+        myNeighbor, otherNeighbor;
+    // different number of neighbors -> cannot be equal nodes
+    if (myNeighbors.length !== otherNeighbors.length) { return false; }
+
+    for (i = myNeighbors.length; i--; ) {
+      myNeighbor = myNeighbors[i];
+      otherNeighbor = otherNeighbors[i];
+      // if value of neighbor differs, this node is different than otherNode
+      if (myNeighbor.value() !== otherNeighbor.value()) { return false; }
+      // if edges differ -> not the same nodes
+      if (!this.container.getEdge(this, myNeighbor)
+                .equals(otherNode.container.getEdge(otherNode, otherNeighbor),
+                        $.extend({}, options, {dontCheckNodes: true})
+                        //options
+                        )) {
+        return false;
+      }
+    }
+
+    return true; // values equal, neighbors equal, edges equal, nothing else to compare
   };
 
   // expose the types
