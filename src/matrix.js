@@ -94,7 +94,6 @@
     }
     for (i = 0; i < l; i++) {
       dimensions = this._arrays[i].layout(options);
-      console.log("array dimensions", dimensions);
       maxWidth = Math.max(maxWidth, dimensions.width);
     }
     this.element.width(maxWidth + "px");
