@@ -16,12 +16,12 @@
       }
       if (exer._defaultscoretext) {
         exer.jsav.container.find(".jsavamidone").html((exer.score.total === exer.score.correct)?
-          "DONE":"Point remaining: <span class='jsavpointsleft'></span>");
+          "DONE":"Points remaining: <span class='jsavpointsleft'></span>");
       }
-      exer.jsav.container.find(".jsavcurrentscore").text(exer.score.correct - exer.score.fix);
-      exer.jsav.container.find(".jsavcurrentmaxscore").text(exer.score.correct);
+      exer.jsav.container.find(".jsavcurrentscore").text(exer.score.correct);
+      exer.jsav.container.find(".jsavcurrentmaxscore").text(exer.score.correct + exer.score.fix);
       exer.jsav.container.find(".jsavmaxscore").text(exer.score.total);
-      exer.jsav.container.find(".jsavpointsleft").text((exer.score.total - exer.score.correct) || "DONE");
+      exer.jsav.container.find(".jsavpointsleft").text((exer.score.total - exer.score.correct  - exer.score.fix) || "DONE");
       exer.jsav.container.find(".jsavpointslost").text(exer.score.fix || 0);
     }
   };
