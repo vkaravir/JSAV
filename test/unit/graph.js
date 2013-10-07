@@ -137,4 +137,36 @@
     ok(graph1.equals(graph2, {'css': ['stroke', 'background-color']}), "Same edge colors");
 
   });
+
+  test("Graph clone() test", function() {
+    var av = new JSAV("emptycontainer");
+    var graph = av.ds.graph();
+    var a = graph.addNode("A"),
+        b = graph.addNode("B"),
+        c = graph.addNode("C");
+
+    ok(graph.clone(), "Check that a clone is created");
+    ok(graph !== graph.clone(), "Check that a new object is created");
+
+    ok(graph.equals(graph.clone()));
+
+    var e = graph.addEdge(a, b);
+
+    ok(graph.equals(graph.clone()));
+
+    a.highlight();
+
+    ok(graph.equals(graph.clone(), {'css': 'background-color'}), "Cloning a graph with node highlight");
+
+    e.highlight();
+
+    ok(graph.equals(graph.clone(), {'css': ['stroke', 'background-color']}), "Cloning a graph with edge highlight");
+
+    var weightedGraph = av.ds.graph();
+    var wa = weightedGraph.addNode("A"),
+        wb = weightedGraph.addNode("B"),
+        we = weightedGraph.addEdge(wa, wb, {weight: 4});
+
+    ok(weightedGraph.equals(weightedGraph.clone()), "Cloning a graph with edge weights");
+  });
 })();

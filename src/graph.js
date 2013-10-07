@@ -36,6 +36,11 @@
     JSAV.utils._helpers.handlePosition(this);
     JSAV.utils._helpers.handleVisibility(this, this.options);
   };
+  // a helper function to sort an array of nodes based on the node value
+  Graph._nodeSortFunction = function(a, b) {
+    return a.value() < b.value();
+  };
+
   JSAV.utils.extend(Graph, JSAV._types.ds.JSAVDataStructure);
   var graphproto = Graph.prototype;
   graphproto.css = JSAV.utils._helpers.css;
@@ -210,12 +215,8 @@
     if (this.nodeCount() !== other.nodeCount() ||
         this.edgeCount() !== other.edgeCount()) { return false; }
 
-    // sort nodes by their value and compare pair-wise
-    var nodeSortFunc = function(a, b) {
-      return a.value() < b.value();
-    };
-    var myNodes = this.nodes().sort(nodeSortFunc),
-        otherNodes = other.nodes().sort(nodeSortFunc);
+    var myNodes = this.nodes().sort(Graph._nodeSortFunction),
+        otherNodes = other.nodes().sort(Graph._nodeSortFunction);
     for (var i = myNodes.length; i--; ) {
       // if a pair of nodes isn't equal, graphs are not equal
       if (!myNodes[i].equals(otherNodes[i], options)) {
@@ -223,6 +224,36 @@
       }
     }
     return true;
+  };
+  // creates a clone of the graph
+  graphproto.clone = function(opts) {
+    var cloneGraph = this.jsav.ds.graph($.extend(this.options, {visible: false}, opts)),
+        nodes = this.nodes(Graph._nodeSortFunction),
+        cloneNode, cloneNodes,
+        edges = this.edges(),
+        n, e, i, fromInd, toInd, edgeOpts;
+
+    // clone all the nodes
+    for (i = 0; i < nodes.length; i++) {
+      n = nodes[i];
+      cloneNode = cloneGraph.addNode(n.value());
+      cloneNode.element.attr("style", n.element.attr("style"));
+      cloneNode.element.attr("class", n.element.attr("class"));
+    }
+    cloneNodes = cloneGraph.nodes(Graph._nodeSortFunction);
+
+    // clone all the edges
+    for (i = 0; i < edges.length; i++) {
+      e = edges[i];
+      fromInd = nodes.indexOf(e.start());
+      toInd = nodes.indexOf(e.end());
+      // add edge weight
+      if (typeof e.weight() !== "undefined") {
+        edgeOpts = { weight: e.weight() };
+      }
+      cloneGraph.addEdge(cloneNodes[fromInd], cloneNodes[toInd], edgeOpts);
+    }
+    return cloneGraph;
   };
 
 
@@ -503,12 +534,8 @@
       }
     }
 
-    // sort the neighbors based on their values
-    var nodeSortFunc = function(a, b) {
-      return a.value() < b.value();
-    };
-    var myNeighbors = this.neighbors().sort(nodeSortFunc),
-        otherNeighbors = otherNode.neighbors().sort(nodeSortFunc),
+    var myNeighbors = this.neighbors().sort(Graph._nodeSortFunction),
+        otherNeighbors = otherNode.neighbors().sort(Graph._nodeSortFunction),
         myNeighbor, otherNeighbor;
     // different number of neighbors -> cannot be equal nodes
     if (myNeighbors.length !== otherNeighbors.length) { return false; }
