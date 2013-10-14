@@ -227,7 +227,9 @@
   };
   // creates a clone of the graph
   graphproto.clone = function(opts) {
-    var cloneGraph = this.jsav.ds.graph($.extend(this.options, {visible: false}, opts)),
+    var cloneOpts = $.extend(this.options, {visible: false}, opts);
+    if ('element' in cloneOpts) { delete cloneOpts.element; }
+    var cloneGraph = this.jsav.ds.graph(cloneOpts),
         nodes = this.nodes(Graph._nodeSortFunction),
         cloneNode, cloneNodes,
         edges = this.edges(),
@@ -236,7 +238,7 @@
     // clone all the nodes
     for (i = 0; i < nodes.length; i++) {
       n = nodes[i];
-      cloneNode = cloneGraph.addNode(n.value());
+      cloneNode = cloneGraph.addNode(n.value(), cloneOpts);
       cloneNode.element.attr("style", n.element.attr("style"));
       cloneNode.element.attr("class", n.element.attr("class"));
     }
@@ -250,8 +252,10 @@
       // add edge weight
       if (typeof e.weight() !== "undefined") {
         edgeOpts = { weight: e.weight() };
+      } else {
+        edgeOpts = { };
       }
-      cloneGraph.addEdge(cloneNodes[fromInd], cloneNodes[toInd], edgeOpts);
+      cloneGraph.addEdge(cloneNodes[fromInd], cloneNodes[toInd], $.extend({}, cloneOpts, edgeOpts));
     }
     return cloneGraph;
   };
