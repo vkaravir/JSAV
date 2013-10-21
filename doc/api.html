@@ -1338,12 +1338,14 @@ q.show();</pre>
     <li><code>{compare: &lt;Object or Array>}</code> Specifies which properties to compare for the structures. In the example below, we set the comparison to be CSS property background-color so grading would check if the structures have same background color (that is, if they are highlighted). <strong>Required.</strong></li>
     <li><code>{feedback: &lt;string>}</code> Will change the feedback mode, possible values continuous and atend (default). See Continuous feedback below.</li>
     <li><code>{fixmode: &lt;string>}</code> Change the behavior in continuous mode, possible values are undo and fix. The default is undo.</li>
-    <li><code>{feedbackSelectable: &lt;>boolean}</code> The settings dialog will not, by default, allow student to change the feedback mode. Setting this option to true enables this choice.</li>
-    <li><code>{fixmodeSelectable: &lt;>boolean}</code> The settings dialog will not, by default, allow student to change the behavior in continuous feedback mode. Setting this option to true enables this choice.</li>
+    <li><code>{feedbackSelectable: &lt;boolean>}</code> The settings dialog will not, by default, allow student to change the feedback mode. Setting this option to true enables this choice.</li>
+    <li><code>{fixmodeSelectable: &lt;boolean>}</code> The settings dialog will not, by default, allow student to change the behavior in continuous feedback mode. Setting this option to true enables this choice.</li>
     <li><code>{fix: &lt;function}</code> A function that will fix the student's solution to match the current step in model solution. Before this function is called, the previous incorrect step in student's solution is undone. The function gets the model structures as a parameter. For an example, see the examples/ShellsortProficiency.html.</li>
     <li><code>{showGrade}: &lt;function>}</code> A function that can be used to customize the way the grade is shown. The function will be added to the exercise and can be called with <code>exercise.showGrade</code>. The function can access the grade information from attribute <code>this.score</code>. Example content of that attribute: <code>{total: 15, correct: 3, undo: 0, fix: 0, student: 5}</code>. Total is the total number of steps in the model solution, student the number of steps in student solution, and correct the number of correct steps. Values undo and fix show how many steps were undone/fixed in the continuous feedback mode. Note, that to make sure the grading is up to date, this function should call the <code>grade</code> function of the exercise before showing the grade.</li>
     <li><code>{modelDialog}: &lt;object>}</code> An object that can specify options for the model answer dialog. For
       the possible options, see the documentation for the JSAV.utils.dialog.</li>
+    <li><code>{debug: &lt;boolean>}</code> If true, print out some debug information for exercise developers. 
+      Mainly, the continuous feedback mode will log possible errors in the fix function.</li>
   </ul>
   <p>For example, assuming <code>modelSolution</code> and <code>reset</code> are functions, the following would initialize an exercise:</p>
   <pre>
