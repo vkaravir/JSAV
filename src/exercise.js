@@ -231,7 +231,7 @@
     // shows an alert box of the grade
     this.grade();
     var grade = this.score,
-      msg = "Your score: " + (grade.correct-grade.fix) + " / " + grade.total;
+      msg = "Your score: " + (grade.correct) + " / " + grade.total;
     if (grade.fix > 0) {
       msg += "\nFixed incorrect steps: " + grade.fix;
     }
@@ -335,9 +335,12 @@
   exerproto.gradeableStep = function() {
     var prevFx = $.fx.off || false;
     $.fx.off = true;
-    // if we are here because of fix function being called
+    // if we are here because of fix function being called, [show error message and] return
     if (this._fixing) {
-      moveModelBackward(this);
+      if (this.options.debug) {
+        console.error("exercise.gradeableStep() shouldn't be called in fix function");
+      }
+      return;
     }
     this.jsav.stepOption("grade", true);
     this.jsav.step();
@@ -358,7 +361,6 @@
         // undo until last graded step
         that.undo();
         that.score.student--;
-        //this.modelav.backward(gradeStepFilterFunction);
         if (fixmode === "fix" && $.isFunction(that.options.fix)) {
           // call the fix function of the exercise to correct the state
           that._fixing = true;
@@ -366,10 +368,16 @@
           that.fix(that.modelStructures);
           delete that._fixing;
           that.score.fix++;
+          that.jsav.stepOption("grade", true);
+          that.jsav.step();
+          if (that.options.debug && !allEqual(that.initialStructures, that.modelStructures, that.options.compare)) {
+            console.error("The fix function did not work as expected, the structures aren't equal");
+          }
           that.jsav.logEvent({type: "jsav-exercise-step-fixed", score: $.extend({}, grade)});
           window.alert("Your last step was incorrect. Your work has been replaced with the correct step so that you can continue on.");
         } else if (fixmode === "fix") {
           that.score.undo++;
+          that.jsav.logEvent({type: "jsav-exercise-step-undone", score: $.extend({}, grade)});
           moveModelBackward(that);
           window.alert("Your last step was incorrect and I should fix your solution, but don't know how. So it was undone and you can try again.");
         } else {
