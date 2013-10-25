@@ -59,9 +59,8 @@
       this.options = $.extend({}, window.JSAV_OPTIONS, arguments[1]);
       this.RECORD = true;
       jQuery.fx.off = true; // by default we are recording changes, not animating them
-      var options = arguments[1] || { }; // TODO: default options
       // initialize stuff from init namespace
-      initializations(this, options);
+      initializations(this, this.options);
       // add all plugins from ext namespace
       extensions(this, this, JSAV.ext);
 
