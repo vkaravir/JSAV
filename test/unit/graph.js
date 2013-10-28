@@ -96,6 +96,81 @@
     ok(!e1.isVisible() && !e2.isVisible() && !e4.isVisible());
   });
 
+  test("Graph node removal", function() {
+    var av = new JSAV("emptycontainer");
+    var graph = av.ds.graph();
+    var a = graph.addNode("A"),
+        b = graph.addNode("B"),
+        c = graph.addNode("C"),
+        d = graph.addNode("D");
+    var e1 = graph.addEdge(a, b),
+        e2 = graph.addEdge(b, d),
+        e3 = graph.addEdge(d, c),
+        e4 = graph.addEdge(c, a),
+        e5 = graph.addEdge(c, b),
+        e6 = graph.addEdge(d, a);
+    equal(graph.nodes().length, 4);
+    equal(graph.nodeCount(), 4);
+    equal(graph.edges().length, 6);
+    equal(graph.edgeCount(), 6);
+
+    av.displayInit();
+
+    graph.removeNode(c);
+    av.step();
+
+    equal(graph.nodes().length, 3);
+    equal(graph.nodeCount(), 3);
+    equal(graph.edges().length, 3);
+    equal(graph.edgeCount(), 3);
+
+    graph.removeNode(d);
+    av.step();
+
+    equal(graph.nodes().length, 2);
+    equal(graph.nodeCount(), 2);
+    equal(graph.edges().length, 1);
+    equal(graph.edgeCount(), 1);
+
+    graph.removeNode(b);
+    av.step();
+
+    equal(graph.nodes().length, 1);
+    equal(graph.nodeCount(), 1);
+    equal(graph.edges().length, 0);
+    equal(graph.edgeCount(), 0);
+
+    av.recorded();
+
+    $.fx.off = true;
+    equal(graph.nodes().length, 4);
+    equal(graph.nodeCount(), 4);
+    equal(graph.edges().length, 6);
+    equal(graph.edgeCount(), 6);
+
+    av.forward();
+
+    equal(graph.nodes().length, 3);
+    equal(graph.nodeCount(), 3);
+    equal(graph.edges().length, 3);
+    equal(graph.edgeCount(), 3);
+
+    av.forward();
+
+    equal(graph.nodes().length, 2);
+    equal(graph.nodeCount(), 2);
+    equal(graph.edges().length, 1);
+    equal(graph.edgeCount(), 1);
+
+    av.forward();
+
+    equal(graph.nodes().length, 1);
+    equal(graph.nodeCount(), 1);
+    equal(graph.edges().length, 0);
+    equal(graph.edgeCount(), 0);
+
+  });
+
   test("Graph equals() test", function() {
     var av = new JSAV("emptycontainer");
     var graph1 = av.ds.graph(),

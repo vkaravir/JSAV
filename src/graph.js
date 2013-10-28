@@ -54,6 +54,7 @@
   graphproto._setadjs = JSAV.anim(function(newadjs, options) {
     var oldadjs = this._edges;
     this._edges = newadjs;
+    this._alledges = null;
     return [oldadjs, options];
   });
   graphproto._setadjlist = JSAV.anim(function(newadj, index, options) {
@@ -84,18 +85,29 @@
   graphproto.removeNode = function(node, options) {
     var nodeIndex = this._nodes.indexOf(node);
     if (nodeIndex === -1) { return; } // no such node
-    // create a new array of nodes without the removed node
-    var firstNodes = this._nodes.slice(0, nodeIndex),
-        newNodes = firstNodes.concat(this._nodes.slice(nodeIndex + 1));
-    // set the nodes (makes the operation animated)
-    this._setnodes(newNodes, options);
+
+    // remove all edges connected to this node
+    var allEdges = this.edges();
+    for (var i = allEdges.length; i--; ) {
+      var edge = allEdges[i];
+      if (edge.start().id() === node.id() || edge.end().id() === node.id()) {
+        this.removeEdge(edge, options);
+      }
+    }
 
     // update the adjacency lists
     var firstAdjs = this._edges.slice(0, nodeIndex),
         newAdjs = firstAdjs.concat(this._edges.slice(nodeIndex + 1));
     this._setadjs(newAdjs, options);
 
-    node.hide();
+    // create a new array of nodes without the removed node
+    var firstNodes = this._nodes.slice(0, nodeIndex),
+        newNodes = firstNodes.concat(this._nodes.slice(nodeIndex + 1));
+    // set the nodes (makes the operation animated)
+    this._setnodes(newNodes, options);
+
+    // finally hide the node
+    node.hide(options);
 
     // return this for chaining
     return this;
