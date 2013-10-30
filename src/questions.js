@@ -117,8 +117,8 @@
     }
   };
   qproto.show = JSAV.anim(function() {
-     // once asked, ignore; when recording, ignore
-    if (this.asked || this.jsav._shouldAnimate()) { return; }
+    // once asked, ignore; when recording, ignore
+    if (this.asked || !this.jsav._shouldAnimate()) { return; }
     this.asked = true; // mark asked
     var $elems = $(),
         that = this;
@@ -131,7 +131,7 @@
     var close = $('<input type="button" value="Close" />').click(
       function() {
         that.dialog.close();
-    });
+      });
     $elems = $elems.add(close);
     // .. and submit button
     var submit = $('<input type="submit" value="Submit" />').click(
