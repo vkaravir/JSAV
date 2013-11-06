@@ -25,13 +25,20 @@
     if (cbs.size() === 0) {
       cbs = $elems.find('[type="radio"]');
     }
+    var answers = [], answer;
     cbs.each(function(index, item) {
       var qi = that.choiceById(item.id);
       var $item = $(item);
+      answer = {label: qi.label,
+        selected: !!$item.prop("checked"),
+        correct: true // assume correct and mark false if incorrect
+      };
       if (!!$item.prop("checked") !== !!qi.options.correct) {
         correct = false;
-        return false; // break the loop
+        answer.correct = false;
+        //return false; // break the loop
       }
+      answers.push(answer);
     });
     $elems.filter(".jsavfeedback").html(correct?"Correct!":"Incorrect, try again")
         .removeClass("jsavcorrect jsavincorrect")
@@ -40,6 +47,7 @@
       cbs.prop("disabled", true);
       $elems.filter('[type="submit"]').remove();
     }
+    return {correct: correct, answers: answers};
     // TODO: add support for points, feedback comments etc.
   };
   
@@ -121,8 +129,9 @@
     if (this.asked || !this.jsav._shouldAnimate()) { return; }
     this.asked = true; // mark asked
     var $elems = $(),
-        that = this;
-    for (var i=0; i < this.choices.length; i++) {
+        that = this,
+        i;
+    for (i=0; i < this.choices.length; i++) {
       $elems = $elems.add(this.choices[i].elem());
     }
     // add feedback element
@@ -136,11 +145,36 @@
     // .. and submit button
     var submit = $('<input type="submit" value="Submit" />').click(
       function() {
-        that.feedback($elems);
+        var logData = that.feedback($elems);
+        logData.question = that.questionText;
+        logData.type = "jsav-question-answer";
+        that.jsav.logEvent(logData);
       });
     $elems = $elems.add(submit);
+    // .. create a close callback handler for logging the close
+    var closeCallback = function() {
+      that.jsav.logEvent({type: "jsav-question-close",
+                          question: that.questionText
+      });
+    };
     // .. and finally create a dialog to show the question
-    this.dialog = JSAV.utils.dialog($elems, {title: this.questionText});
+    this.dialog = JSAV.utils.dialog($elems, {title: this.questionText,
+                                             closeCallback: closeCallback,
+                                             closeOnClick: false
+                                            });
+
+    // log the question show and the choices
+    var logChoices = [];
+    for (i = 0; i < this.choices.length; i++) {
+      var c = this.choices[i];
+      logChoices.push({label: c.label, correct: c.correct});
+    }
+    this.jsav.logEvent({type: "jsav-question-show",
+                        question: this.questionText,
+                        questionType: this.qtype,
+                        choices: logChoices
+                       });
+
     return $elems;
   });
   qproto.choiceById = function(qiId) {
