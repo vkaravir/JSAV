@@ -62,7 +62,7 @@
   };
   
   JSAV.init(function(options) {
-    var output = $(this.container).find(".jsavoutput");
+    var output = options.output ? $(options.output) : $(this.container).find(".jsavoutput");
     this._msg = new MessageHandler(this, output);
   });
 }(jQuery));

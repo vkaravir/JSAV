@@ -103,6 +103,9 @@ var av = new JSAV(jQuery("#container"));</pre>
     slideshow.</dd><br/>
   <dt><code>animationMode</code></dt>
   <dd>Use "none" to turn off animation (slideshow) mode.</dd>
+  <dt><code>output</code></dt>
+  <dd>The output buffer element to use with the Messaging API. The value
+    of the option should be a DOM element, CSS selector string, or a jQuery object.</dd>
 </dl>
 <p>In addition to the options passed to the function, any options specified
   in a global variable <code>JSAV_OPTIONS</code> will be used. Those passed on
@@ -199,6 +202,9 @@ optional standard parameters can be used such as
 the textbox unwriteable by the user, or to
 override the default height and width.
 </p>
+<p>Alternative way to specify where the output buffer element is to use the
+<code>output</code> option when initializing the JSAV instance. The value
+of the option should be a DOM element, CSS selector string, or a jQuery object.</p>
 
 <h3 class="apimethod">.umsg(msg[, options])</h3>
 <p>
@@ -231,6 +237,11 @@ for example, the <code>step</code> method.
 
 <h3 class="apimethod">.clearumsg()</h3>
 <p>Clear the contents of the output message buffer.</p>
+
+<h3 class="apimethod">Events</h3>
+<p>The message API will trigger a <code>jsav-message</code> event on the JSAV
+  <code>container</code> whenever the output buffer content should change. You
+  can listen for this event to integrate more complex output behavior.</p>
 
 <h2>Array Data Structure API</h2>
 
