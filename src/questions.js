@@ -74,12 +74,14 @@
     },
     addChoice: function(label, options) {
       this.choices.push(new QuestionItem(label, "radio", $.extend({name: this.name}, options)));
+      return this;
     },
     feedback: feedbackFunction
   };
   qTypes.MS = {
     addChoice: function(label, options) {
       this.choices.push(new QuestionItem(label, "checkbox", $.extend({}, options)));
+      return this;
     },
     feedback: feedbackFunction
   };
