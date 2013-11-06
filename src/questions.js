@@ -54,10 +54,11 @@
   var qTypes = {};
   qTypes.TF = { // True-False type question
     init: function() {
+      this.name = createUUID();
       this.choices[0] = new QuestionItem(this.options.falseLabel || "False",
-                                        "checkbox", {correct: !this.options.correct});
+                                        "radio", {name: this.name, correct: !this.options.correct});
       this.choices[1] = new QuestionItem(this.options.trueLabel || "True",
-                                        "checkbox", {correct: !!this.options.correct});
+                                        "radio", {name: this.name, correct: !!this.options.correct});
       this.correctChoice = function(correctVal) {
         if (correctVal) {
           this.choices[1].correct = true;
