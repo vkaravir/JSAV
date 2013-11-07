@@ -198,8 +198,44 @@
   $.each(['init', 'feedback', 'addChoice'], function(index, val) {
     qproto[val] = noop;
   });
-  
+
+  // A "class" for showing questions in iframes during a slideshow
+  var QuestionFrame = function(jsav, url, options) {
+    this.jsav = jsav;
+    this.url = url;
+    this.options = options;
+    this._showed = false;
+  };
+  var qfproto = QuestionFrame.prototype;
+  qfproto._createElement = function() {
+    var $iframe = $("<iframe src='" + this.url + "'></iframe>");
+    $iframe.prop("seamless", true); // make it seamless by default
+    if (this.options.attr) { // pass attributes to the iframe
+      $iframe.attr(this.options.attr);
+    }
+    $iframe.addClass("jsavquestionframe");
+    return $iframe;
+  };
+  // JSAV animated show operation
+  qfproto.show = JSAV.anim(function() {
+    // if already showed or shouldn't show animations, return
+    if (this._showed || !this.jsav._shouldAnimate()) { return; }
+    this._showed = true;
+    var $iframe = this.options.element || this._createElement();
+    // by default, dialog shouldn't close when clicking outside of it
+    var opts = $.extend({closeOnClick: false}, this.options);
+    delete opts.attr;
+    JSAV.utils.dialog($iframe, opts);
+  });
+  // dummy function for the animation, there is no need to change the state
+  // when moving in animation; once shown, the question frame is not shown again
+  qfproto.state = function() {};
+
   JSAV.ext.question = function(qtype, questionText, options) {
-    return new Question(this, qtype, questionText, $.extend({}, options));
+    if (qtype === "IFRAME") {
+      return new QuestionFrame(this, questionText, options);
+    } else {
+      return new Question(this, qtype, questionText, $.extend({}, options));
+    }
   };
 }(jQuery));

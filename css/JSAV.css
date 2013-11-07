@@ -622,3 +622,8 @@ ul.jsavcode {
   -ms-user-select: none;
   user-select: none;
 }
+
+.jsavquestionframe {
+  width: 100%;
+  height: 100%;
+}
