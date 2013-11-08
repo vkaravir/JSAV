@@ -122,7 +122,9 @@
     for (var i=0; i < size; i++) {
       vals[i] = this.value(i);
     }
-    return new AVArray(this.jsav, vals, $.extend(true, {}, this.options, {visible: false}));
+    var newArray = new AVArray(this.jsav, vals, $.extend(true, {}, this.options, {visible: false}));
+    newArray.state(this.state());
+    return newArray;
   };
   arrproto.size = function() { return this.element.find("li").size(); };
   arrproto.value = function(index, newValue, options) {

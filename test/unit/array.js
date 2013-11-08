@@ -388,4 +388,24 @@ test("Test on event binding and custom events", function() {
   arr2.element.find(".jsavindex:eq(0)").trigger("jsavclick");
   arr3.element.find(".jsavindex:eq(3)").trigger("jsavclick");
 });
+
+  test("Test array clone", function() {
+    var av = new JSAV("arraycontainer"),
+        arr = av.ds.array([1, 2, 3, 4]);
+    arr.layout();
+    var arr2 = arr.clone();
+    ok(arr.equals(arr2));
+    arr.value(0, 3);
+    ok(!arr.equals(arr2));
+
+    // test style cloning
+    arr.highlight(2);
+    arr.css(0, {color: "blue"});
+    var arr3 = arr.clone();
+
+    ok(arr.equals(arr3));
+    ok(arr.equals(arr3, {css: ["background-color", "color"]}));
+    arr.highlight(0);
+    ok(!arr.equals(arr3, {css: ["background-color", "color"]}));
+  });
 })();
