@@ -293,8 +293,8 @@
     this.nodes = graph.nodes();
     this.edges = graph.edges();
     this.layout();
-    var factorX = (graph.element.width()) / (this.layoutMaxX - this.layoutMinX),
-        factorY = (graph.element.height()) / (this.layoutMaxY - this.layoutMinY),
+    var factorX = (graph.element.width() - this.maxNodeWidth) / (this.layoutMaxX - this.layoutMinX),
+        factorY = (graph.element.height() - this.maxNodeHeight) / (this.layoutMaxY - this.layoutMinY),
         node, edge, res;
     for (var i = 0, l = this.nodes.length; i < l; i++) {
       node = this.nodes[i];
@@ -340,21 +340,28 @@
           miny = Infinity,
           maxy = -Infinity,
           nodes = this.nodes,
-          i, x, y, l;
+          maxNodeWidth = -Infinity,
+          maxNodeHeight = -Infinity,
+          i, x, y, l, n;
 
       for (i = 0, l = nodes.length; i < l; i++) {
-        x = this.results[nodes[i].id()].layoutPosX;
-        y = this.results[nodes[i].id()].layoutPosY;
+        n = nodes[i];
+        x = this.results[n.id()].layoutPosX;
+        y = this.results[n.id()].layoutPosY;
         if (x > maxx) { maxx = x; }
         if (x < minx) { minx = x; }
         if (y > maxy) { maxy = y; }
         if (y < miny) { miny = y; }
+        maxNodeWidth = Math.max(maxNodeWidth, n.element.outerWidth());
+        maxNodeHeight = Math.max(maxNodeHeight, n.element.outerHeight());
       }
 
       this.layoutMinX = minx;
       this.layoutMaxX = maxx;
       this.layoutMinY = miny;
       this.layoutMaxY = maxy;
+      this.maxNodeWidth = maxNodeWidth;
+      this.maxNodeHeight = maxNodeHeight;
     },
 
     layoutIteration: function() {
