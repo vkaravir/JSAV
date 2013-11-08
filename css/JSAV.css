@@ -476,6 +476,8 @@ a.jsavdialogclose {
 .jsavedgelabel {
   background-color: inherit;
   z-index: 700;
+  position: absolute;
+  display: inline-block;
 }
 
 /******** LINKED LIST STRUCTURE ******/

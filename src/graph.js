@@ -305,7 +305,7 @@
     }
     for (i = 0, l = this.edges.length; i < l; i++) {
       edge = this.edges[i];
-      graph.jsav.ds.layout.edge._default(edge, edge.start().position(), edge.end().position());
+      edge.layout(options);
     }
   };
 
@@ -473,7 +473,7 @@
         edges = graph.edges();
     for (i = 0, l = edges.length; i < l; i++) {
       edge = edges[i];
-      graph.jsav.ds.layout.edge._default(edge, edge.start().position(), edge.end().position());
+      edge.layout();
     }
   };
   JSAV.ext.ds.layout.graph = {

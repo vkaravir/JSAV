@@ -666,12 +666,7 @@
       $.each(results, function(key, value) {
         var node = value.node;
         if (node._edgetoparent) {
-          var start = {left: value.translation.width,
-                       top: value.translation.height},
-              endnode = results[node.parent().id()].translation,
-              end = {left: endnode.width,
-                     top: endnode.height};
-          edgeLayout(node._edgetoparent, start, end, opts);
+          node._edgetoparent.layout(opts);
         }
       });
     }
@@ -680,84 +675,9 @@
     return $.extend({ top: tree.position().top }, treeDims);
   }
   
-
-  function normalizeAngle(angle) {
-    var pi = Math.PI;
-    while (angle < 0) {
-      angle += 2 * pi;
-    }
-    while (angle >= 2 * pi) {
-      angle -= 2 * pi;
-    }
-    return angle;
-  }
-
-  function getNodeBorderAtAngle(pos, node, dim, angle, radius) {
-    // dim: x, y coords of center and half of width and height
-    var x, y, pi = Math.PI,
-        urCornerA = Math.atan2(dim.height*2.0, dim.width*2.0),
-        ulCornerA = pi - urCornerA,
-        lrCornerA = 2*pi - urCornerA,
-        llCornerA = urCornerA + pi;
-    if (!radius) { // everything but 0 radius is considered a circle
-      radius = dim.width;
-    } else {
-      radius = Math.min(radius, dim.width);
-    }
-    if (angle < urCornerA || angle > lrCornerA) { // on right side
-      x = dim.x + radius * Math.cos(angle);
-      y = dim.y - radius * Math.sin(angle);
-    } else if (angle > ulCornerA && angle < llCornerA) { // left
-      x = dim.x - radius * Math.cos(angle - pi);
-      y = dim.y + radius * Math.sin(angle - pi);
-    } else if (angle <= ulCornerA) { // top
-      x = dim.x + radius * Math.cos(angle);
-      y = dim.y - radius * Math.sin(angle);
-    } else { // on bottom side
-      x = dim.x - radius * Math.cos(angle - pi);
-      y = dim.y + radius * Math.sin(angle - pi);
-    }
-    return [pos, Math.round(x), Math.round(y)];
-  }
-
-  var edgeLayout = function(edge, start, end, opts) {
-    var sElem = edge.startnode.element,
-        eElem = edge.endnode.element,
-        sWidth = sElem.outerWidth()/2.0,
-        sHeight = sElem.outerHeight()/2.0,
-        eWidth = eElem.outerWidth()/2.0,
-        eHeight = eElem.outerHeight()/2.0,
-        startpos = sElem.offset(),
-        endpos = eElem.offset(),
-        fromX =  Math.round(start.left + sWidth),
-        fromY = Math.round(start.top + sHeight),
-        toX = Math.round(end.left + eWidth),
-        toY = Math.round(end.top + eHeight),
-        fromAngle = normalizeAngle(2*Math.PI - Math.atan2(toY - fromY, toX - fromX)),
-        toAngle = normalizeAngle(2*Math.PI - Math.atan2(fromY - toY, fromX - toX)),
-        fromPoint = getNodeBorderAtAngle(0, edge.startnode.element,
-                    {width: sWidth, height: sHeight, x: fromX, y: fromY}, fromAngle),
-        //fromPoint = [0, fromX, fromY], // from point is the lower node, position at top
-        // arbitrarily choose to use bottom-right boder radius
-        endRadius = parseInt(eElem.css("borderBottomRightRadius"), 10) || 0,
-        toPoint;
-    if (endRadius < eElem.innerWidth()/2.0 || eWidth !== eHeight) { // position edge at bottom middle for non-circle nodes
-      toPoint = [1, toX, toY + eHeight];
-    } else { // for circle nodes, calculate position on the circle
-      toPoint = getNodeBorderAtAngle(1, edge.endnode.element,
-                {width: eWidth, height: eHeight, x: toX, y: toY}, toAngle,
-                endRadius);
-    }
-    edge.g.movePoints([fromPoint, toPoint], opts);
-    edge.layout(opts);
-  };
-  
   var layouts = JSAV.ext.ds.layout;
   layouts.tree = {
     "_default": treeLayout
-  };
-  layouts.edge = {
-    "_default": edgeLayout
   };
 
 var TreeContours = function(left, right, height, data) {

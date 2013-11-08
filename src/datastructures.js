@@ -105,13 +105,6 @@
   };
   JSAV.utils.extend(Edge, JSAVDataStructure);
   var edgeproto = Edge.prototype;
-  edgeproto.layout = function(options) {
-    if (this.start().value() === "jsavnull" || this.end().value() === "jsavnull") {
-      this.addClass("jsavedge", options).addClass("jsavnulledge", options);
-    } else {
-      this.addClass("jsavedge", options).removeClass("jsavnulledge");
-    }
-  };
   edgeproto.start = function(node, options) {
     if (typeof node === "undefined") {
       return this.startnode;
@@ -169,23 +162,22 @@
         return undefined;
       }
     } else {
-      var self = this;
-      var positionUpdate = function() {
-        var bbox = self.g.bounds(),
-            lbbox = self._label.bounds(),
-            newTop = bbox.top + (bbox.height - lbbox.height)/2,
-            newLeft = bbox.left + (bbox.width - lbbox.width)/2;
-        if (newTop !== lbbox.top || newLeft || lbbox.left) {
-          self._label.css({top: newTop, left: newLeft}, options);
-        }
-      };
       if (!this._label) {
         this._label = this.jsav.label(newLabel, {container: this.container.element});
-        this._label.element.css({position: "absolute", display: "inline-block"}).addClass("jsavedgelabel");
-        this.jsav.container.on("jsav-updaterelative", positionUpdate);
+        this._label.element.addClass("jsavedgelabel");
       } else {
         this._label.text(newLabel, options);
       }
+    }
+  };
+  edgeproto._labelPositionUpdate = function(options) {
+    if (!this._label) { return; } // no label, nothing to do
+    var bbox = this.g.bounds(),
+        lbbox = this._label.bounds(),
+        newTop = bbox.top + (bbox.height - lbbox.height)/2,
+        newLeft = bbox.left + (bbox.width - lbbox.width)/2;
+    if (newTop !== lbbox.top || newLeft || lbbox.left) {
+      this._label.css({top: newTop, left: newLeft}, options);
     }
   };
   edgeproto.equals = function(otherEdge, options) {
@@ -287,6 +279,87 @@
     this.removeClass("jsavhighlight", options);
   };
 
+  edgeproto.layout = function(options) {
+    var sElem = this.start().element,
+        eElem = this.end().element,
+        start = this.start().position(),
+        end = this.end().position(),
+        sWidth = sElem.outerWidth()/2.0,
+        sHeight = sElem.outerHeight()/2.0,
+        eWidth = eElem.outerWidth()/2.0,
+        eHeight = eElem.outerHeight()/2.0,
+        fromX =  Math.round(start.left + sWidth),
+        fromY = Math.round(start.top + sHeight),
+        toX = Math.round(end.left + eWidth),
+        toY = Math.round(end.top + eHeight),
+        fromAngle = normalizeAngle(2*Math.PI - Math.atan2(toY - fromY, toX - fromX)),
+        toAngle = normalizeAngle(2*Math.PI - Math.atan2(fromY - toY, fromX - toX)),
+        fromPoint = getNodeBorderAtAngle(0, this.startnode.element,
+            {width: sWidth, height: sHeight, x: fromX, y: fromY}, fromAngle),
+        // arbitrarily choose to use bottom-right border radius
+        endRadius = parseInt(eElem.css("borderBottomRightRadius"), 10) || 0,
+        toPoint;
+    if (endRadius < eElem.innerWidth()/2.0 || eWidth !== eHeight) { // position edge at bottom middle for non-circle nodes
+      toPoint = [1, toX, toY + eHeight];
+    } else { // for circle nodes, calculate position on the circle
+      toPoint = getNodeBorderAtAngle(1, this.endnode.element,
+          {width: eWidth, height: eHeight, x: toX, y: toY}, toAngle,
+          endRadius);
+    }
+    this.g.movePoints([fromPoint, toPoint], options);
+
+    if ($.isFunction(this._labelPositionUpdate)) {
+      this._labelPositionUpdate(options);
+    }
+
+    if (this.start().value() === "jsavnull" || this.end().value() === "jsavnull") {
+      this.addClass("jsavedge", options).addClass("jsavnulledge", options);
+    } else {
+      this.addClass("jsavedge", options).removeClass("jsavnulledge");
+    }
+  };
+
+  // helper functions for edge position calculation
+  function normalizeAngle(angle) {
+    var pi = Math.PI;
+    while (angle < 0) {
+      angle += 2 * pi;
+    }
+    while (angle >= 2 * pi) {
+      angle -= 2 * pi;
+    }
+    return angle;
+  }
+
+  function getNodeBorderAtAngle(pos, node, dim, angle, radius) {
+    // dim: x, y coords of center and half of width and height
+    var x, y, pi = Math.PI,
+        urCornerA = Math.atan2(dim.height*2.0, dim.width*2.0),
+        ulCornerA = pi - urCornerA,
+        lrCornerA = 2*pi - urCornerA,
+        llCornerA = urCornerA + pi;
+    if (!radius) { // everything but 0 radius is considered a circle
+      radius = dim.width;
+    } else {
+      radius = Math.min(radius, dim.width);
+    }
+    if (angle < urCornerA || angle > lrCornerA) { // on right side
+      x = dim.x + radius * Math.cos(angle);
+      y = dim.y - radius * Math.sin(angle);
+    } else if (angle > ulCornerA && angle < llCornerA) { // left
+      x = dim.x - radius * Math.cos(angle - pi);
+      y = dim.y + radius * Math.sin(angle - pi);
+    } else if (angle <= ulCornerA) { // top
+      x = dim.x + radius * Math.cos(angle);
+      y = dim.y - radius * Math.sin(angle);
+    } else { // on bottom side
+      x = dim.x - radius * Math.cos(angle - pi);
+      y = dim.y + radius * Math.sin(angle - pi);
+    }
+    return [pos, Math.round(x), Math.round(y)];
+  }
+
+
   var Node = function() {};
   JSAV.utils.extend(Node, JSAVDataStructure);
   var nodeproto = Node.prototype;
@@ -329,6 +402,6 @@
   JSAV._types.ds = { "JSAVDataStructure": JSAVDataStructure, "Edge": Edge, "Node": Node };
   // expose the extend for the JSAV
   JSAV.ext.ds = {
-    layout: {}
+    layout: { }
   };
 }(jQuery));
