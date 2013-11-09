@@ -90,8 +90,9 @@
     }
    $.fx.off = oldfx;
   };
+  JSAV.utils.extend(BinaryHeap, JSAV._types.ds.AVArray);
   var bhproto = BinaryHeap.prototype;
-  $.extend(bhproto, JSAV._types.ds.AVArray.prototype);
+  //$.extend(bhproto, JSAV._types.ds.AVArray.prototype);
   bhproto.arrayswap = bhproto.swap;
   bhproto.arraycss = bhproto.css;
   bhproto.arrayclear = bhproto.clear;
