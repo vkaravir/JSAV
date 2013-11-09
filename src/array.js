@@ -111,7 +111,10 @@
   };
   arrproto.swap = JSAV.anim(function(index1, index2, options) {
     var $pi1 = $(this.element).find("li:eq(" + index1 + ")"),
-      $pi2 = $(this.element).find("li:eq(" + index2 + ")");
+        $pi2 = $(this.element).find("li:eq(" + index2 + ")"),
+        tmp = this._values[index1];
+    this._values[index1] = this._values[index2];
+    this._values[index2] = tmp;
     this.jsav.effects.swap($pi1, $pi2, options);
     return [index1, index2, options];
   });
@@ -122,6 +125,7 @@
     for (var i=0; i < size; i++) {
       vals[i] = this.value(i);
     }
+    vals = this._values;
     var newArray = new AVArray(this.jsav, vals, $.extend(true, {}, this.options, {visible: false}));
     newArray.state(this.state());
     return newArray;
@@ -129,12 +133,13 @@
   arrproto.size = function() { return this.element.find("li").size(); };
   arrproto.value = function(index, newValue, options) {
     if (typeof newValue === "undefined") {
-      var $index = this.element.find("li:eq(" + index + ")"),
+      /*var $index = this.element.find("li:eq(" + index + ")"),
           val = $index.attr("data-value"),
           valtype = $index.attr("data-value-type");
-      return JSAV.utils.value2type(val, valtype);
+      return JSAV.utils.value2type(val, valtype);*/
+      return this._values[index];
     } else {
-      return this.setvalue(index, newValue, options);
+      return this._setvalue(index, newValue, options);
     }
   };
   arrproto._newindex = function(value, index) {
@@ -150,21 +155,19 @@
     var ind = $("<li class='jsavnode jsavindex'>" + indHtml + "</li>"),
         valtype = typeof(value);
     if (valtype === "object") { valtype = "string"; }
-    ind.attr("data-value", value).attr("data-value-type", valtype);
     return ind;
   };
-  arrproto.setvalue = JSAV.anim(function(index, newValue) {
+  arrproto._setvalue = JSAV.anim(function(index, newValue) {
     var size = this.size(),
       oldval = this.value(index);
     while (index > size - 1) {
       var newli = this._newindex("", size - 1);
+      this._values[size] = "";
       this.element.append(newli);
       size = this.size();
     }
-    var $index = this.element.find("li:eq(" + index + ")"),
-      valtype = typeof(newValue);
-    if (valtype === "object") { valtype = "string"; }
-    $index.attr("data-value", "" + newValue).attr("data-value-type", valtype);
+    var $index = this.element.find("li:eq(" + index + ")");
+    this._values[index] = newValue;
     $index.find(".jsavvaluelabel").html("" + newValue);
     if (("" + newValue).length > ("" + oldval).length || newli) {
       // if the new value is longer than old, or new elements were added to array, re-layout
@@ -176,6 +179,13 @@
     var el = this.options.element || $("<ol/>"),
       liel, liels = $(),
       key, val;
+    this._values = data.slice(0);
+    // replace null values with empty strings
+    for (var i = 0; i < data.length; i++) {
+      if (data[i] === null || data[i] === undefined) {
+        this._values[i] = "";
+      }
+    }
     el.addClass("jsavarray");
     this.options = jQuery.extend({visible: true}, this.options);
     for (key in this.options) {
@@ -212,12 +222,13 @@
       }
     }
     $elem.addClass("jsavarray");
+    this._values = [];
     $elems.each(function(index, item) {
       var $this = $(this),
           value = JSAV.utils.value2type($this.attr("data-value") || $this.html(), // value
                                         $this.attr("data-value-type") || "string"), // value type
           $newElem = that._newindex(value, index); // create a new element using th etemplate of the layout
-
+      that._values[index] = value;
       // replace the li element with the new generated element
       $this.replaceWith($newElem);
     });
@@ -231,8 +242,10 @@
   arrproto.state = function(newstate) {
     if (newstate) {
       $(this.element).html(newstate.html);
+      this._values = newstate.values;
     } else {
       var sta = {
+        values: this._values.slice(0),
         html: $(this.element).html()
       };
       return sta;

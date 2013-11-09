@@ -282,7 +282,7 @@ test("Array values", function() {
   deepEqual( arr.value(1), "<span>html test</span>");
   deepEqual( arr.value(2), false);
   deepEqual( arr.value(3), "");
-  deepEqual( arr.value(4), "" + [0]);
+  deepEqual( arr.value(4), [0]);
   deepEqual( arr.value(5), "0");
   ok(av.backward());
   ok(av.backward());

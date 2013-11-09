@@ -137,11 +137,6 @@
       val2.parentNode.insertBefore(val1, val2);
       aparent.insertBefore(val2, asibling);
 
-      // ..swap the values in the attributes..
-      tmp = $str1.attr("data-value");
-      $str1.attr("data-value", $str2.attr("data-value"));
-      $str2.attr("data-value", tmp);
-      
       // ..and finally animate..
       if (this._shouldAnimate()) {  // only animate when playing, not when recording
         if ('Raphael' in window) { // draw arrows only if Raphael is loaded
