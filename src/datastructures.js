@@ -163,23 +163,27 @@
       }
     } else {
       if (!this._label) {
+        var self = this;
+        var _labelPositionUpdate = function(options) {
+          if (!self._label) { return; } // no label, nothing to do
+          var bbox = self.g.bounds(),
+              lbbox = self._label.bounds(),
+              newTop = bbox.top + (bbox.height - lbbox.height)/2,
+              newLeft = bbox.left + (bbox.width - lbbox.width)/2;
+          if (newTop !== lbbox.top || newLeft || lbbox.left) {
+            self._label.css({top: newTop, left: newLeft}, options);
+          }
+        };
+        this._labelPositionUpdate = _labelPositionUpdate;
         this._label = this.jsav.label(newLabel, {container: this.container.element});
         this._label.element.addClass("jsavedgelabel");
+        this.jsav.container.on("jsav-updaterelative", _labelPositionUpdate);
       } else {
         this._label.text(newLabel, options);
       }
     }
   };
-  edgeproto._labelPositionUpdate = function(options) {
-    if (!this._label) { return; } // no label, nothing to do
-    var bbox = this.g.bounds(),
-        lbbox = this._label.bounds(),
-        newTop = bbox.top + (bbox.height - lbbox.height)/2,
-        newLeft = bbox.left + (bbox.width - lbbox.width)/2;
-    if (newTop !== lbbox.top || newLeft || lbbox.left) {
-      this._label.css({top: newTop, left: newLeft}, options);
-    }
-  };
+
   edgeproto.equals = function(otherEdge, options) {
     if (!otherEdge || !otherEdge instanceof Edge) {
       return false;
