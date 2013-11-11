@@ -175,14 +175,18 @@
         var logData = that.feedback($elems);
         logData.question = that.questionText;
         logData.type = "jsav-question-answer";
+        if (that.options.id) { logData.questionId = that.options.id; }
         that.jsav.logEvent(logData);
       });
     $elems = $elems.add(submit);
     // .. create a close callback handler for logging the close
     var closeCallback = function() {
-      that.jsav.logEvent({type: "jsav-question-close",
-                          question: that.questionText
-      });
+      var logData = {
+        type: "jsav-question-close",
+        question: that.questionText
+      }
+      if (that.options.id) { logData.questionId = that.options.id; }
+      that.jsav.logEvent(logData);
     };
     // .. and finally create a dialog to show the question
     this.dialog = JSAV.utils.dialog($elems, {title: this.questionText,
@@ -196,11 +200,14 @@
       var c = this.choices[i];
       logChoices.push({label: c.label, correct: c.correct});
     }
-    this.jsav.logEvent({type: "jsav-question-show",
-                        question: this.questionText,
-                        questionType: this.qtype,
-                        choices: logChoices
-                       });
+    var logData = {
+      type: "jsav-question-show",
+      question: this.questionText,
+      questionType: this.qtype,
+      choices: logChoices
+    };
+    if (this.options.id) { logData.questionId = this.options.id; }
+    this.jsav.logEvent(logData);
 
     return $elems;
   });
@@ -251,7 +258,23 @@
     // by default, dialog shouldn't close when clicking outside of it
     var opts = $.extend({closeOnClick: false}, this.options);
     delete opts.attr;
+    var that = this;
+    // .. create a close callback handler for logging the close
+    opts.closeCallback = function() {
+      var logData = {
+        type: "jsav-question-closeiframe",
+        question: that.questionText
+      }
+      if (that.options.id) { logData.questionId = that.options.id; }
+      that.jsav.logEvent(logData);
+    };
     JSAV.utils.dialog($iframe, opts);
+    var logData = {
+      type: "jsav-question-showiframe",
+      url: this.url
+    };
+    if (opts.id) { logData.questionId = opts.id; }
+    this.jsav.logEvent(logData);
   });
   // dummy function for the animation, there is no need to change the state
   // when moving in animation; once shown, the question frame is not shown again
