@@ -392,6 +392,9 @@ a.jsavsettings {
 .jsavrow {
   margin: 15px 8px 4px 8px;
 }
+.jsavsettings label {
+  display: inline;
+}
 /**** END STYLING THE DIALOG ****/
 
 /**** MODEL ANSWER ********/

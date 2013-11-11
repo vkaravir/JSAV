@@ -6,7 +6,29 @@
   "use strict";
   var BLOCKED_ATTRIBUTES = ['correct', 'comment', 'points'];
   var createUUID = JSAV.utils.createUUID;
-  
+
+  // a component to be added to settings to toggle show/don't show questions
+  var questionSetting = function(jsav) {
+    return function() {
+      var idPrefix = "jsav" + jsav.id() + "ShowQuestions";
+      var $elem = $('<div class="jsavrow">Show Questions: ' +
+                    '<input id="' + idPrefix + 'Yes" type="radio" value="true" name="jsav-questions" />' +
+                    '<label for="' + idPrefix + 'Yes">Yes</label>' +
+                    '<input  id="' + idPrefix + 'No" type="radio" value="false" name="jsav-questions" />' +
+                    '<label for="' + idPrefix + 'No">No</label>' +
+                    '</div>');
+      if (jsav.options.showQuestions) {
+        $elem.find("#" + idPrefix + "Yes").prop("checked", true);
+      } else {
+        $elem.find("#" + idPrefix + "No").prop("checked", true);
+      }
+      $elem.find('input').on("change", function() {
+        jsav.options.showQuestions = ($(this).val() === "true");
+      });
+      return $elem;
+    };
+  };
+
   var createInputComponent = function(label, itemtype, options) {
     var labelElem = $('<label for="' + options.id + '">' + label + "</label>"),
       input = $('<input id="' + options.id + '" type="' +
@@ -129,7 +151,9 @@
   };
   qproto.show = JSAV.anim(function() {
     // once asked, ignore; when recording, ignore
-    if (this.asked || !this.jsav._shouldAnimate()) { return; }
+    if (this.asked || !this.jsav._shouldAnimate() || !this.jsav.options.showQuestions) {
+      return;
+    }
     this.asked = true; // mark asked
     var $elems = $(),
         that = this,
@@ -219,7 +243,9 @@
   // JSAV animated show operation
   qfproto.show = JSAV.anim(function() {
     // if already showed or shouldn't show animations, return
-    if (this._showed || !this.jsav._shouldAnimate()) { return; }
+    if (this._showed || !this.jsav._shouldAnimate() || !this.jsav.options.showQuestions) {
+      return;
+    }
     this._showed = true;
     var $iframe = this.options.element || this._createElement();
     // by default, dialog shouldn't close when clicking outside of it
@@ -232,10 +258,21 @@
   qfproto.state = function() {};
 
   JSAV.ext.question = function(qtype, questionText, options) {
+    // if the question setting hasn't been added, add it now
+    if (!this._questionSetting && this.settings) {
+      this._questionSetting = true;
+      this.settings.add(questionSetting(this));
+    }
     if (qtype === "IFRAME") {
       return new QuestionFrame(this, questionText, options);
     } else {
       return new Question(this, qtype, questionText, $.extend({}, options));
     }
   };
+  JSAV.init(function() {
+    // default to true for showing questions
+    if (typeof this.options.showQuestions === "undefined") {
+      this.options.showQuestions = true;
+    }
+  });
 }(jQuery));
