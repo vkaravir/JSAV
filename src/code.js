@@ -154,8 +154,8 @@
     if (this._target === null) {
       return [[0, myBounds.left + myBounds.width/2,
                   myBounds.top + myBounds.height],
-              [1, myBounds.left + myBounds.width/2,
-                  myBounds.top + myBounds.height]];
+              [1, myBounds.left + myBounds.width/2 + 5,
+                  myBounds.top + myBounds.height + 5]];
     }
     if (typeof(opts.targetIndex) !== "undefined") {
       opts.relativeIndex = opts.targetIndex;
@@ -351,7 +351,7 @@
   codeproto._setcss = JSAV.anim(function(indices, cssprop) {
     var $elems = getIndices($(this.element).find("li.jsavcodeline"), indices);
     if (this.jsav._shouldAnimate()) { // only animate when playing, not when recording
-      $elems.animate(cssprop, this.jsav.SPEED);
+      $elems.transition(cssprop, this.jsav.SPEED);
     } else {
       $elems.css(cssprop);
     }

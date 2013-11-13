@@ -61,9 +61,9 @@
         $toValElem.css({left: 0, top: 0});
         $fromValElem.position({of: $toValElem});
         $toValElem.css(toPos);
-        $fromValElem.animate({left: 0, top: 0}, this.SPEED, 'linear');
+        $fromValElem.transition({left: 0, top: 0}, this.SPEED, 'linear');
       }
-      $toValElem.animate({left: 0, top: 0}, this.SPEED, 'linear'); // animate to final position
+      $toValElem.transition({left: 0, top: 0}, this.SPEED, 'linear'); // animate to final position
     }
 
     // return "reversed" parameters and the old value for undoing
@@ -124,10 +124,7 @@
           posdiffX = JSAV.position($str1).left - JSAV.position($str2).left,
           posdiffY = translateY?JSAV.position($str1).top - JSAV.position($str2).top:0,
           $both = $($str1).add($str2),
-          str1prevStyle = $str1.getstyles("color", "background-color"),
-          str2prevStyle = $str2.getstyles("color", "background-color"),
-          speed = this.SPEED/5,
-          tmp;
+          speed = this.SPEED/5;
 
       // ..swap the value elements...
       var val1 = $val1[0],
@@ -167,19 +164,17 @@
           var arr = this.getSvg().path("M" + x1 + "," + y1 + "C" + cx1 + "," + cy1 + " " + cx2 + "," + cy2 + " " + x2 + "," + y2).attr({"arrow-start": arrowStyle, "arrow-end": arrowStyle, "stroke-width": 5, "stroke":"lightGray"});
         }
         // .. then set the position so that the array appears unchanged..
-        $val1.css({"transform": "translate(" + (posdiffX) + "px, " + (posdiffY) + "px)"});
-        $val2.css({"transform": "translate(" + (-posdiffX) + "px, " + (-posdiffY) + "px)"});
+        $val2.css({"x": -posdiffX, "y": -posdiffY, z: 1});
+        $val1.css({"x": posdiffX, "y": posdiffY, z: 1});
         // .. animate the color ..
-        $both.animate({"color": "red", "background-color": "pink"}, 3*speed, function() {
-          // ..animate the translation to 0, so they'll be in their final positions..
-          $val1.animate({"transform": "translate(0, 0)"}, 7*speed, 'linear');
-          $val2.animate({"transform": "translate(0, 0)"}, 7*speed, 'linear',
-            function() {
-              if (arr) { arr.remove(); } // ..remove the arrows if they exist
-              // ..and finally animate to the original styles.
-              $str1.animate(str1prevStyle, speed);
-              $str2.animate(str2prevStyle, speed);
-          });
+        $both.addClass("jsavswap", 3*speed);
+        // ..animate the translation to 0, so they'll be in their final positions..
+        $val1.transition({"x": 0, y: 0, z: 0}, 7*speed, 'linear');
+        $val2.transition({x: 0, y: 0, z: 0}, 7*speed, 'linear',
+          function() {
+            if (arr) { arr.remove(); } // ..remove the arrows if they exist
+            // ..and finally animate to the original styles.
+            $both.removeClass("jsavswap", 3*speed);
         });
       }
     }

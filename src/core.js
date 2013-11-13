@@ -9,7 +9,7 @@
   JSAV.position = function(elem) {
     var $el = $(elem),
       offset = $el.position(),
-      translate = $el.css("transform").translate; // requires jquery.transform.light.js!!
+      translate = null;//$el.css("transform").translate; // requires jquery.transform.light.js!!
     if (translate) {
       return {left: offset.left + translate[0], top: offset.top + translate[1]};
     } else { return offset; }

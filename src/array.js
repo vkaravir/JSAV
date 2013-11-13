@@ -64,9 +64,9 @@
   arrproto._setcss = JSAV.anim(function(indices, cssprop) {
     var $elems = getIndices($(this.element).find("li"), indices);
     if (this.jsav._shouldAnimate()) { // only animate when playing, not when recording
-      $elems.find("span.jsavvalue").animate(cssprop, this.jsav.SPEED);
+      $elems.transition(cssprop, this.jsav.SPEED);
     } else {
-      $elems.find("span.jsavvalue").css(cssprop);
+      $elems.css(cssprop);
     }
     return this;
   });
@@ -83,7 +83,7 @@
       }
     }
     if (this.jsav._shouldAnimate()) { // only animate when playing, not when recording
-      this.element.animate(cssprops, this.jsav.SPEED);
+      this.element.transition(cssprops, this.jsav.SPEED);
     } else {
       this.element.css(cssprops);
     }
@@ -313,7 +313,7 @@
     return false;
   };
   arrproto.toggleClass = JSAV.anim(function(index, className, options) {
-    var $elems = getIndices($(this.element).find("li.jsavindex").find("span.jsavvalue"), index);
+    var $elems = getIndices($(this.element).find("li.jsavindex")/*.find("span.jsavvalue")*/, index);
     if (this.jsav._shouldAnimate()) {
       $elems.toggleClass(className, this.jsav.SPEED);
     } else {
@@ -322,7 +322,7 @@
     return [index, className];
   });
   arrproto.addClass = function(index, className, options) {
-    var indices = JSAV.utils._helpers.normalizeIndices($(this.element).find("li.jsavindex").find("span.jsavvalue"), index, ":not(." + className + ")");
+    var indices = JSAV.utils._helpers.normalizeIndices($(this.element).find("li.jsavindex")/*.find("span.jsavvalue")*/, index, ":not(." + className + ")");
     if (indices.length > 0) {
       return this.toggleClass(indices, className, options);
     } else {
@@ -330,7 +330,7 @@
     }
   };
   arrproto.removeClass = function(index, className, options) {
-    var indices = JSAV.utils._helpers.normalizeIndices($(this.element).find("li.jsavindex").find("span.jsavvalue"), index, "." + className);
+    var indices = JSAV.utils._helpers.normalizeIndices($(this.element).find("li.jsavindex")/*.find("span.jsavvalue")*/, index, "." + className);
     if (indices.length > 0) {
       return this.toggleClass(indices, className, options);
     } else {
@@ -338,7 +338,7 @@
     }
   };
   arrproto.hasClass = function(index, className) {
-    var $elems = getIndices($(this.element).find("li.jsavindex").find("span.jsavvalue"), index);
+    var $elems = getIndices($(this.element).find("li.jsavindex")/*.find("span.jsavvalue")*/, index);
     return $elems.hasClass(className);
   };
 
@@ -517,7 +517,7 @@
       // the JSAV.anim wrapper will make sure this points to jsav instance
       var oldHeight = elem.height();
       if (this._shouldAnimate()) {
-        elem.animate({height: newHeight}, this.SPEED);
+        elem.transition({height: newHeight}, this.SPEED);
       } else {
         elem.css({height: newHeight});
       }
