@@ -113,24 +113,44 @@
     }
   };
   
-  bhproto.css = function(index, cssprop) {
-    var val = this.arraycss(index, cssprop);
-    if (this.options.tree && typeof index === "number") {
-      this._treenodes[index].css(cssprop);
-    } else if (this.options.tree && $.isArray(index)) {
-      for (var i = index.length; i--; ) {
-        this._treenodes[index[i]].css(cssprop);
-      }
-    }
-    return val;
-  };
-  
   bhproto.clear = function() {
     this.arrayclear();
     if (this.options.tree) {
       this._tree.clear();
     }
   };
+
+  // create versions of some array functions that will also change
+  // the treenodes
+  var funcs = ["css", "highlight", "unhighlight"];
+  var getDelegateFunction = function(name) {
+    // return a "delegate" function bound to the array function with given name
+    return function() {
+      var node;
+      // first call the stored original array function
+      var val = this["_array" + name].apply(this, arguments);
+      // then the treenode functions, based on the type of the index
+      // argument (first argument)
+      if (this.options.tree && typeof arguments[0] === "number") {
+        node = this._treenodes[arguments[0]];
+        node[name].apply(node, [].slice.call(arguments, 1));
+      } else if (this.options.tree && $.isArray(arguments[0])) {
+        for (var i = arguments[0].length; i--; ) {
+          node = this._treenodes[arguments[0][i]];
+          node[name].apply(node, [].slice.call(arguments, 1))
+        }
+      }
+      // finally return the value of the array function
+      return val;
+    }
+  };
+  // go through the function names, store the array functions, and create
+  // delegate functions to the heap prototype
+  for (var i = funcs.length; i--; ) {
+    bhproto["_array" + funcs[i]] = bhproto[funcs[i]];
+    bhproto[funcs[i]] = getDelegateFunction(funcs[i]);
+  }
+
   bhproto._setsize = JSAV.anim(function(newsize) {
     var oldsize = this.element.attr("data-jsav-heap-size");
     this.element.attr("data-jsav-heap-size", newsize);
