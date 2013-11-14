@@ -139,7 +139,7 @@
       var arrIndex = arguments[0];
       if (typeof arrIndex !== "number") { return; }
       var array = this._arrays[arrIndex];
-      return array[funcname].apply(array, Array.slice.call(null, arguments, 1));
+      return array[funcname].apply(array, [].slice.call(arguments, 1));
     };
   };
   // add functions with all the names in arrayFunctions wrapped in the row extension function
