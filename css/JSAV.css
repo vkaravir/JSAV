@@ -598,6 +598,7 @@ ul.jsavcode {
 .jsavmatrix.jsavmatrixplain .jsavarray li.jsavnode, 
 .jsavmatrix.jsavmatrixmatrix .jsavarray li.jsavnode {
   border: none;
+  box-shadow: none;
 }
 .jsavmatrix.jsavmatrixmatrix {
   border-left: 2px solid black;
