@@ -118,11 +118,12 @@
       // wrap the doValueEffect function to JSAV animatable function
       JSAV.anim(doValueEffect).call(this, params);
     },
-    swap: function($str1, $str2, translateY) {
-      var $val1 = $str1.find("span.jsavvalue"),
+    swap: function($str1, $str2, options) {
+      var opts = $.extend({translateY: true, arrow: true}, options),
+          $val1 = $str1.find("span.jsavvalue"),
           $val2 = $str2.find("span.jsavvalue"),
           posdiffX = JSAV.position($str1).left - JSAV.position($str2).left,
-          posdiffY = translateY?JSAV.position($str1).top - JSAV.position($str2).top:0,
+          posdiffY = opts.translateY?JSAV.position($str1).top - JSAV.position($str2).top:0,
           $both = $($str1).add($str2),
           str1prevStyle = $str1.getstyles("color", "background-color"),
           str2prevStyle = $str2.getstyles("color", "background-color"),
@@ -139,7 +140,7 @@
 
       // ..and finally animate..
       if (this._shouldAnimate()) {  // only animate when playing, not when recording
-        if ('Raphael' in window) { // draw arrows only if Raphael is loaded
+        if ('Raphael' in window && opts.arrow) { // draw arrows only if Raphael is loaded
           var off1 = $val1.offset(),
               off2 = $val2.offset(),
               coff = this.canvas.offset(),
