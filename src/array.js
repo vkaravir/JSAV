@@ -133,10 +133,6 @@
   arrproto.size = function() { return this.element.find("li").size(); };
   arrproto.value = function(index, newValue, options) {
     if (typeof newValue === "undefined") {
-      /*var $index = this.element.find("li:eq(" + index + ")"),
-          val = $index.attr("data-value"),
-          valtype = $index.attr("data-value-type");
-      return JSAV.utils.value2type(val, valtype);*/
       return this._values[index];
     } else {
       return this._setvalue(index, newValue, options);
@@ -242,7 +238,9 @@
   arrproto.state = function(newstate) {
     if (newstate) {
       $(this.element).html(newstate.html);
-      this._values = newstate.values;
+      for (var i = newstate.values.length; i--; ) {
+        this._values[i] = newstate.values[i];
+      }
     } else {
       var sta = {
         values: this._values.slice(0),
