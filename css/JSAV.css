@@ -43,12 +43,14 @@
 }
 
 .jsavvalue {
-  height: 100%;
+  /* FF doesn't respect 100% here when using display: table so have to fix the height */
+  height: 45px;
   width: 100%;
   min-height: inherit;
   min-width: inherit;
   background-color: transparent;
   display: table;
+  border-radius: inherit;
 }
 
 .jsavvaluelabel {
@@ -102,7 +104,7 @@
   bottom: -25px;
   left: 0;
 }
-.jsavhorizontalarray .jsavindex:first-of-type, .jsavhorizontalarray .jsavindex:first-of-type .jsavvalue {
+.jsavhorizontalarray .jsavindex:first-of-type {
   -ms-border-top-left-radius: 8px;
   -ms-border-bottom-left-radius: 8px;
   -moz-border-top-left-radius: 8px;
@@ -114,7 +116,7 @@
   border-top-left-radius: 8px;
   border-bottom-left-radius: 8px;
 }
-.jsavhorizontalarray .jsavindex:last-of-type, .jsavhorizontalarray .jsavindex:last-of-type .jsavvalue {
+.jsavhorizontalarray .jsavindex:last-of-type {
   -ms-border-top-right-radius: 8px;
   -ms-border-bottom-right-radius: 8px;
   -moz-border-top-right-radius: 8px;
@@ -592,6 +594,9 @@ ul.jsavcode {
   min-width: 30px;
   font-size: 14px;
   border-top: none;
+}
+.jsavmatrix .jsavarray .jsavvalue {
+  height: 30px;
 }
 .jsavmatrix .jsavarray:first-child li {
   border-top: 1px solid black;
