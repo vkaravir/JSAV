@@ -666,7 +666,12 @@
       $.each(results, function(key, value) {
         var node = value.node;
         if (node._edgetoparent) {
-          node._edgetoparent.layout(opts);
+          var start = {left: value.translation.width,
+                        top: value.translation.height},
+              endnode = results[node.parent().id()].translation,
+              end = {left: endnode.width,
+              top: endnode.height};
+          node._edgetoparent.layout($.extend({start: start, end: end}, opts));
         }
       });
     }

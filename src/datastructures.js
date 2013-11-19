@@ -286,8 +286,8 @@
   edgeproto.layout = function(options) {
     var sElem = this.start().element,
         eElem = this.end().element,
-        start = this.start().position(),
-        end = this.end().position(),
+        start = (options && options.start)?options.start:this.start().position(),
+        end = (options && options.end)?options.end:this.end().position(),
         sWidth = sElem.outerWidth()/2.0,
         sHeight = sElem.outerHeight()/2.0,
         eWidth = eElem.outerWidth()/2.0,
