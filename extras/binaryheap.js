@@ -107,9 +107,7 @@
       this.element.attr("data-jsav-heap-size", index + 1);
     }
     if (this.options.tree) {
-      inittree(this);
       this._treenodes[index].value(newValue);
-      this._tree.layout();
     }
   };
   
@@ -216,10 +214,6 @@
       comp = this.options.compare,
       step = this.options.steps ? this.jsav.step : function() {};
     this.value(i - 1, val);
-    if (this.options.tree) {
-      inittree(this);
-      this._tree.layout();
-    }
     if (this.options.steps) { this.jsav.stepOption("grade", true); }
     step.apply(this.jsav);
     while (i > 1 && comp(this.value(parent - 1), val) > 0) {
