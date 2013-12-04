@@ -8,24 +8,6 @@
   // function to filter the steps to those that should be graded
   var gradeStepFilterFunction = function(step) { return step.options.grade; };
 
-  var updateScore = function(exer) {
-    if (exer.options.feedback === "continuous") {
-      if (!exer.modelav) {
-        exer.modelanswer();
-        exer.grade();
-      }
-      if (exer._defaultscoretext) {
-        exer.jsav.container.find(".jsavamidone").html((exer.score.total === exer.score.correct)?
-          "DONE":"Points remaining: <span class='jsavpointsleft'></span>");
-      }
-      exer.jsav.container.find(".jsavcurrentscore").text(exer.score.correct);
-      exer.jsav.container.find(".jsavcurrentmaxscore").text(exer.score.correct + exer.score.fix);
-      exer.jsav.container.find(".jsavmaxscore").text(exer.score.total);
-      exer.jsav.container.find(".jsavpointsleft").text((exer.score.total - exer.score.correct  - exer.score.fix) || "DONE");
-      exer.jsav.container.find(".jsavpointslost").text(exer.score.fix || 0);
-    }
-  };
-
   var Exercise = function(jsav, options) {
     this.jsav = jsav;
     this.options = jQuery.extend({reset: function() { }, controls: null, feedback: "atend",
@@ -199,6 +181,26 @@
     }
   };
   var exerproto = Exercise.prototype;
+  exerproto._updateScore = function() {
+    if (this.options.feedback === "continuous") {
+      if (!this.modelav) {
+        this.modelanswer();
+        this.grade();
+      }
+      // cache to make access faster
+      var container = this.jsav.container,
+          score = this.score;
+      if (this._defaultscoretext) {
+        container.find(".jsavamidone").html((score.total === score.correct)?
+            "DONE":"Points remaining: <span class='jsavpointsleft'></span>");
+      }
+      container.find(".jsavcurrentscore").text(score.correct);
+      container.find(".jsavcurrentmaxscore").text(score.correct + score.fix);
+      container.find(".jsavmaxscore").text(score.total);
+      container.find(".jsavpointsleft").text((score.total - score.correct  - score.fix) || "DONE");
+      container.find(".jsavpointslost").text(score.fix || 0);
+    }
+  };
   exerproto.grade = function(continuousMode) {
     // behavior in a nutshell:
     // 1. get the student's solution
@@ -299,14 +301,17 @@
   exerproto.reset = function() {
     this.jsav.clear();
     this.score = {total: 0, correct: 0, undo: 0, fix: 0, student: 0};
+    this.jsav.RECORD = true;
     this.initialStructures = this.options.reset();
+    this.jsav.displayInit();
+    this.jsav.recorded();
     if (this.modelav) {
       this.modelav.container.remove();
       this.modelav = undefined;
       this.modelStructures = undefined;
     }
     this.jsav._undo = [];
-    updateScore(this);
+    this._updateScore();
   };
   exerproto.undo = function() {
     var oldFx = $.fx.off || false;
@@ -351,7 +356,7 @@
         var grade = that.grade(true); // true is for continuous mode
         if (grade.student === grade.correct) { // all student's steps are correct
           that.jsav.logEvent({ type: "jsav-exercise-grade-change", score: $.extend({}, grade)});
-          updateScore(that);
+          that._updateScore();
           return;
         }
         if (grade.correct === grade.total) { // student continues with the exercise even after done
@@ -386,7 +391,7 @@
           moveModelBackward(that);
           window.alert("Your last step was incorrect. Things are reset to the beginning of the step so that you can try again.");
         }
-        updateScore(that);
+        that._updateScore();
       };
       that.jsav._clearPlaying(function() {
         // set a timer to do the grading once animation is finished

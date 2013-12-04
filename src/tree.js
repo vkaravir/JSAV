@@ -141,7 +141,7 @@
     this.container.element.append(el);
 
     JSAV.utils._helpers.handleVisibility(this, this.options);
-    if (parent && value !== "jsavnull") {
+    if (parent) {
       this._edgetoparent = new Edge(this.jsav, this, parent);
       if (this.options.edgeLabel) {
         this._edgetoparent.label(this.options.edgeLabel);
@@ -419,7 +419,12 @@
         }
       } else { // create a new node and set the child
         if (!(node instanceof BinaryTreeNode)) {
-          node = self.container.newNode(node, self, opts);
+          // if there is a child node and value is number or string, just change the value of the node
+          if (child && (typeof node === "number" || typeof node === "string")) {
+            return child.value(node, opts);
+          } else {
+            node = self.container.newNode(node, self, opts);
+          }
         } else {
           // if this node is already a child somewhere else, remove it there
           if (node.parent() && node.parent() !== self) {
@@ -666,7 +671,12 @@
       $.each(results, function(key, value) {
         var node = value.node;
         if (node._edgetoparent) {
-          node._edgetoparent.layout(opts);
+          var start = {left: value.translation.width,
+                        top: value.translation.height},
+              endnode = results[node.parent().id()].translation,
+              end = {left: endnode.width,
+              top: endnode.height};
+          node._edgetoparent.layout($.extend({start: start, end: end}, opts));
         }
       });
     }

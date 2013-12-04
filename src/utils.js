@@ -520,7 +520,7 @@ mixkey(math.random(), pool);
       return this._setcss(cssprop, value, options);
     }
   };
-  _helpers._setcss = function(cssprop, value) {
+  _helpers._setcss = function(cssprop, value, options) {
     var oldProps = $.extend(true, {}, cssprop),
         el = this.element,
         newprops;

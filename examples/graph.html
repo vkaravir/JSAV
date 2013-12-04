@@ -43,7 +43,7 @@
     var jsav = new JSAV("av"),
         g;
     var initGraph = function() {
-      g = jsav.ds.graph({width: 500, height: 200});
+      g = jsav.ds.graph({width: 500, height: 200, layout: "automatic"});
       var a = g.addNode("A"),
           b = g.addNode("B"),
           c = g.addNode("C"),
