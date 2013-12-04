@@ -148,7 +148,7 @@
 .jsavbararray .jsavvalue {
   z-index: 100;
   bottom: 0;
-  background-color: transparent;
+  background-color: inherit;
   min-height: 0;
   -moz-border-radius: 0;
   -o-border-radius: 0;
@@ -637,7 +637,7 @@ ul.jsavcode {
   height: 100%;
 }
 
-.jsavswap {
+.jsavswap, .jsavswap .jsavvalue {
   background-color: pink !important;
   color: red !important;
 }
