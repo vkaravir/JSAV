@@ -92,7 +92,7 @@
   arrproto.css = function(indices, cssprop, options) {
     var $elems = getIndices($(this.element).find("li"), indices);
     if (typeof cssprop === "string") {
-      return $elems.find(".jsavvalue").css(cssprop);
+      return $elems.css(cssprop);
     } else if (typeof indices === "string") {
       return this.element.css(indices);
     } else if (!$.isArray(indices) && typeof indices === "object") { // object, apply for array
@@ -313,7 +313,7 @@
     return false;
   };
   arrproto.toggleClass = JSAV.anim(function(index, className, options) {
-    var $elems = getIndices($(this.element).find("li.jsavindex")/*.find("span.jsavvalue")*/, index);
+    var $elems = getIndices($(this.element).find("li.jsavindex"), index);
     if (this.jsav._shouldAnimate()) {
       $elems.toggleClass(className, this.jsav.SPEED);
     } else {
@@ -322,7 +322,7 @@
     return [index, className];
   });
   arrproto.addClass = function(index, className, options) {
-    var indices = JSAV.utils._helpers.normalizeIndices($(this.element).find("li.jsavindex")/*.find("span.jsavvalue")*/, index, ":not(." + className + ")");
+    var indices = JSAV.utils._helpers.normalizeIndices($(this.element).find("li.jsavindex"), index, ":not(." + className + ")");
     if (indices.length > 0) {
       return this.toggleClass(indices, className, options);
     } else {
@@ -330,7 +330,7 @@
     }
   };
   arrproto.removeClass = function(index, className, options) {
-    var indices = JSAV.utils._helpers.normalizeIndices($(this.element).find("li.jsavindex")/*.find("span.jsavvalue")*/, index, "." + className);
+    var indices = JSAV.utils._helpers.normalizeIndices($(this.element).find("li.jsavindex"), index, "." + className);
     if (indices.length > 0) {
       return this.toggleClass(indices, className, options);
     } else {
@@ -338,7 +338,7 @@
     }
   };
   arrproto.hasClass = function(index, className) {
-    var $elems = getIndices($(this.element).find("li.jsavindex")/*.find("span.jsavvalue")*/, index);
+    var $elems = getIndices($(this.element).find("li.jsavindex"), index);
     return $elems.hasClass(className);
   };
 
