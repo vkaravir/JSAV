@@ -301,7 +301,10 @@
   exerproto.reset = function() {
     this.jsav.clear();
     this.score = {total: 0, correct: 0, undo: 0, fix: 0, student: 0};
+    this.jsav.RECORD = true;
     this.initialStructures = this.options.reset();
+    this.jsav.displayInit();
+    this.jsav.recorded();
     if (this.modelav) {
       this.modelav.container.remove();
       this.modelav = undefined;
