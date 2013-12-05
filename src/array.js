@@ -61,16 +61,16 @@
     return this;
   };
 
-  arrproto._setcss = JSAV.anim(function(indices, cssprop) {
+  arrproto._setcss = JSAV.anim(function(indices, cssprops, options) {
     var $elems = getIndices($(this.element).find("li"), indices);
     if (this.jsav._shouldAnimate()) { // only animate when playing, not when recording
-      $elems.transition(cssprop, this.jsav.SPEED);
+      this.jsav.effects.transition($elems, cssprops, options);
     } else {
-      $elems.css(cssprop);
+      $elems.css(cssprops);
     }
     return this;
   });
-  arrproto._setarraycss = JSAV.anim(function(cssprops) {
+  arrproto._setarraycss = JSAV.anim(function(cssprops, options) {
     var oldProps = $.extend(true, {}, cssprops),
         el = this.element;
     if (typeof cssprops !== "object") {
@@ -83,15 +83,16 @@
       }
     }
     if (this.jsav._shouldAnimate()) { // only animate when playing, not when recording
-      this.element.transition(cssprops, this.jsav.SPEED);
+      this.jsav.effects.transition(this.element, cssprops, options);
     } else {
       this.element.css(cssprops);
     }
     return [oldProps];
   });
   arrproto.css = function(indices, cssprop, options) {
-    var $elems = getIndices($(this.element).find("li"), indices);
+    var $elems;
     if (typeof cssprop === "string") {
+      $elems = getIndices($(this.element).find("li"), indices);
       return $elems.css(cssprop);
     } else if (typeof indices === "string") {
       return this.element.css(indices);
@@ -101,6 +102,7 @@
       if ($.isFunction(indices)) { // if indices is a function, evaluate it right away and get a list of indices
         var all_elems = $(this.element).find("li"),
           sel_indices = []; // array of selected indices
+        $elems = getIndices($(this.element).find("li"), indices);
         for (var i = 0; i < $elems.size(); i++) {
           sel_indices.push(all_elems.index($elems[i]));
         }
@@ -511,11 +513,11 @@
     maxValue *= 1.15;
 
     // a function which will animate and record the change of height of an element
-    var setBarHeight = JSAV.anim(function(elem, newHeight) {
+    var setBarHeight = JSAV.anim(function(elem, newHeight, options) {
       // the JSAV.anim wrapper will make sure this points to jsav instance
       var oldHeight = elem.height();
       if (this._shouldAnimate()) {
-        elem.transition({height: newHeight}, this.SPEED);
+        this.jsav.effects.transition(elem, {height: newHeight}, options);
       } else {
         elem.css({height: newHeight});
       }

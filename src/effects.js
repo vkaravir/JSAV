@@ -162,12 +162,20 @@
 
   JSAV.ext.effects = {
     _toggleClass: function($elems, clazz, options) {
-      this._animations += $elems.size();
+      this._animations += $elems.length;
       var that = this;
+
       $elems.jsavToggleClass(clazz, {duration: (options && options.duration) || this.SPEED, delay: (options && options.delay) || 0,
-        complete: function(evt) {
-          that._animations--;
-        }});
+        complete: function() { that._animations--; }
+      });
+    },
+    transition: function($elems, cssProps, options) {
+      this._animations += $elems.length;
+      var that = this;
+      $elems.transition(cssProps, {duration: (options && options.duration) ||this.SPEED,
+                                    delay: (options && options.delay) || 0,
+                                    complete: function() { that._animations--; }
+      });
     },
     /* toggles visibility of an element */
     _toggleVisible: function() {

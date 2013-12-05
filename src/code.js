@@ -348,12 +348,12 @@
     var $elems = getIndices($(this.element).find("li.jsavcodeline"), index);
     return $elems.hasClass(className);
   };
-  codeproto._setcss = JSAV.anim(function(indices, cssprop) {
+  codeproto._setcss = JSAV.anim(function(indices, cssprops, options) {
     var $elems = getIndices($(this.element).find("li.jsavcodeline"), indices);
     if (this.jsav._shouldAnimate()) { // only animate when playing, not when recording
-      $elems.transition(cssprop, this.jsav.SPEED);
+      this.jsav.effects.transition($elems, cssprops, options);
     } else {
-      $elems.css(cssprop);
+      $elems.css(cssprops);
     }
     return this;
   });

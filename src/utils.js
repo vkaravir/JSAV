@@ -537,7 +537,7 @@ mixkey(math.random(), pool);
       newprops = cssprop;
     }
     if (this.jsav._shouldAnimate()) { // only animate when playing, not when recording
-      this.element.transition(newprops, this.jsav.SPEED);
+      this.jsav.effects.transition(this.element, newprops, options)
     } else {
       this.element.css(newprops);
     }
