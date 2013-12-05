@@ -115,6 +115,7 @@
   
 
   JSAV.init(function() {
+    this._animations = 0;
     this._redo = []; // stack for operations to redo
     this._undo = []; // stack for operations to undo
     var that = this,
@@ -137,6 +138,7 @@
       var timeouter = function() {
         if (!jsav.isAnimating()) {
           jsav.container.removeClass(playingCl);
+          jsav._animations = 0;
           if ($.isFunction(callback)) {
             callback();
           }
@@ -404,7 +406,7 @@
   };
   JSAV.ext.isAnimating = function() {
     // returns true if animation is playing, false otherwise
-    return !!this.container.find(":animated").size();
+    return !!this.container.find(":animated").size() || this._animations > 0;
   };
   JSAV.ext._shouldAnimate = function() {
     return (!this.RECORD && !$.fx.off);

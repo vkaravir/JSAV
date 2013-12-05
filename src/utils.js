@@ -704,9 +704,9 @@ mixkey(math.random(), pool);
   // object prototype, it should be wrapper with the JSAV.anim(..).
   // For example:
   // treenode.toggleClass = JSAV.anim(JSAV.utils._helpers._toggleClass);
-  _helpers._toggleClass = function(className) {
+  _helpers._toggleClass = function(className, options) {
     if (this.jsav._shouldAnimate()) {
-      this.element.toggleClass(className, this.jsav.SPEED);
+      this.jsav.effects._toggleClass(this.element, className, options);
     } else {
       this.element.toggleClass(className);
     }

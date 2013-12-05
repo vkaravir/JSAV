@@ -4,6 +4,89 @@
 */
 (function($) {
   "use strict";
+
+  function callOrQueue(self, queue, fn) {
+    if (queue === true) {
+      self.queue(fn);
+    } else if (queue) {
+      self.queue(queue, fn);
+    } else {
+      fn();
+    }
+  }
+
+  $.fn.extend({
+    jsavToggleClass: function(classNames, opts) {
+      var self  = this;
+
+      var opt = $.extend({queue: true, easing: "linear", delay: 0}, opts);
+      opt.duration = jQuery.fx.off ? 0 : typeof opt.duration === "number" ? opt.duration :
+          opt.duration in jQuery.fx.speeds ? jQuery.fx.speeds[ opt.duration ] : jQuery.fx.speeds._default;
+      // Account for aliases (`in` => `ease-in`).
+      if ($.cssEase[opt.easing]) { opt.easing = $.cssEase[opt.easing]; }
+
+      // Build the duration/easing/delay attributes for it.
+      var transitionValue = 'all ' + opt.duration + 'ms ' + opt.easing;
+      if (opt.delay) { transitionValue += ' ' + opt.delay + 'ms'; }
+
+      // If there's nothing to do...
+      if (opt.duration === 0) {
+        return this.toggleClass( this, arguments );
+      }
+
+      var RUN_DONE = false; // keep track if the properties have been set already
+      var run = function(nextCall) {
+        var bound = false; // if transitionEnd was bound or not
+        var called = false; // if callback has been called; to prevent timeout calling it again
+
+        // Prepare the callback.
+        var cb = function() {
+          if (called) { return; }
+          called = true;
+          if (bound) { self.unbind($.support.transitionEnd, cb); }
+
+          if (typeof opt.complete === 'function') { opt.complete.apply(self); }
+          if (typeof nextCall === 'function') { nextCall(); }
+        };
+
+        if ((opt.duration > 0) && ($.support.transitionEnd) && ($.transit.useTransitionEnd)) {
+          // Use the 'transitionend' event if it's available.
+          bound = true;
+          self.bind($.support.transitionEnd, cb);
+        }
+
+        // Fallback to timers if the 'transitionend' event isn't supported or fails to trigger.
+        window.setTimeout(cb, opt.duration);
+
+        if (!RUN_DONE) { // Apply only once
+          // Apply transitions
+          self.each(function() {
+            if (opt.duration > 0) {
+              this.style[$.support.transition] = transitionValue;
+            }
+            $(this).toggleClass(classNames);
+          });
+        }
+        RUN_DONE = true;
+      };
+
+      // Defer running. This allows the browser to paint any pending CSS it hasn't
+      // painted yet before doing the transitions.
+      var deferredRun = function(next) {
+        this.offsetWidth; // force a repaint
+        run(next);
+      };
+
+      // Use jQuery's fx queue.
+      callOrQueue(self, opt.queue, deferredRun);
+
+      // Chainability.
+      return this;
+    }
+  });
+
+
+
   var parseValueEffectParameters = function() {
     // parse the passed arguments
     // possibilities are:
@@ -78,6 +161,14 @@
   };
 
   JSAV.ext.effects = {
+    _toggleClass: function($elems, clazz, options) {
+      this._animations += $elems.size();
+      var that = this;
+      $elems.jsavToggleClass(clazz, {duration: (options && options.duration) || this.SPEED, delay: (options && options.delay) || 0,
+        complete: function(evt) {
+          that._animations--;
+        }});
+    },
     /* toggles visibility of an element */
     _toggleVisible: function() {
       if (this.jsav._shouldAnimate()) { // only animate when playing, not when recording

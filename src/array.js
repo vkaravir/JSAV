@@ -313,7 +313,7 @@
   arrproto.toggleClass = JSAV.anim(function(index, className, options) {
     var $elems = getIndices($(this.element).find("li.jsavindex"), index);
     if (this.jsav._shouldAnimate()) {
-      $elems.toggleClass(className, this.jsav.SPEED);
+      this.jsav.effects._toggleClass($elems, className, options);
     } else {
       $elems.toggleClass(className);
     }
@@ -387,9 +387,9 @@
     return this;
   };
 
-  arrproto.toggleArrow = JSAV.anim(function(indices) {
+  arrproto.toggleArrow = JSAV.anim(function(indices, options) {
     var $elems = getIndices($(this.element).find("li"), indices);
-    $elems.toggleClass("jsavarrow");
+    this.jsav.effects._toggleClass($elems, "jsavarrow", options);
   });
   arrproto.toggleLine = JSAV.anim(function(index, options) {
       // Toggles a marker line above a given array index for bar layout

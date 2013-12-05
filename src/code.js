@@ -322,7 +322,7 @@
   codeproto.toggleClass = JSAV.anim(function(index, className, options) {
     var $elems = getIndices($(this.element).find("li.jsavcodeline"), index);
     if (this.jsav._shouldAnimate()) {
-      $elems.toggleClass(className, this.jsav.SPEED);
+      this.jsav.effects._toggleClass($elems, className, options);
     } else {
       $elems.toggleClass(className);
     }
