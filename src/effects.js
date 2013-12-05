@@ -5,6 +5,7 @@
 (function($) {
   "use strict";
 
+  // to use jQuery queue (code borrowed from https://github.com/rstacruz/jquery.transit/)
   function callOrQueue(self, queue, fn) {
     if (queue === true) {
       self.queue(fn);
@@ -16,6 +17,8 @@
   }
 
   $.fn.extend({
+    // use CSS3 animations to animate the class toggle (if supported by browser)
+    // based on https://github.com/rstacruz/jquery.transit/
     jsavToggleClass: function(classNames, opts) {
       var self  = this;
 
@@ -25,7 +28,7 @@
       // Account for aliases (`in` => `ease-in`).
       if ($.cssEase[opt.easing]) { opt.easing = $.cssEase[opt.easing]; }
 
-      // Build the duration/easing/delay attributes for it.
+      // Build the duration/easing/delay attributes for the transition.
       var transitionValue = 'all ' + opt.duration + 'ms ' + opt.easing;
       if (opt.delay) { transitionValue += ' ' + opt.delay + 'ms'; }
 
@@ -34,7 +37,7 @@
         return this.toggleClass( this, arguments );
       }
 
-      var RUN_DONE = false; // keep track if the properties have been set already
+      var RUN_DONE = false; // keep track if the toggle has already been done
       var run = function(nextCall) {
         var bound = false; // if transitionEnd was bound or not
         var called = false; // if callback has been called; to prevent timeout calling it again
@@ -161,6 +164,7 @@
   };
 
   JSAV.ext.effects = {
+    /* toggles the clazz class of the given elements with CSS3 transitions */
     _toggleClass: function($elems, clazz, options) {
       this._animations += $elems.length;
       var that = this;
@@ -169,6 +173,7 @@
         complete: function() { that._animations--; }
       });
     },
+    /* Animate the properties of the given elements with CSS3 transitions */
     transition: function($elems, cssProps, options) {
       this._animations += $elems.length;
       var that = this;
