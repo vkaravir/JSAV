@@ -43,6 +43,7 @@
       var tmplName = this.options.layout + (this.options.indexed?"-indexed":"");
       this.options.template = JSAV._types.ds.AVArray._templates[tmplName];
     }
+    this._indices = [];
     if ($.isArray(element)) {
       var arrsize = element.length;
       if ('size' in options) {
