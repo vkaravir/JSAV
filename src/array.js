@@ -159,7 +159,7 @@
     var size = this.size(),
       oldval = this.value(index);
     while (index > size - 1) {
-      var newli = this._newindex("", size - 1);
+      var newli = this._newindex("", size);
       this._values[size] = "";
       this.element.append(newli);
       size = this.size();
