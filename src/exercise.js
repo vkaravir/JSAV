@@ -240,6 +240,9 @@
     window.alert(msg);
   };
   exerproto.modelanswer = function(returnToStep) {
+    if (this.modelDialog) {
+      this.modelDialog.remove();
+    }
     var model = this.options.model,
         modelav,
         self = this,
