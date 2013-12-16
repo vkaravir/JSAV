@@ -72,6 +72,10 @@
   min-height: 50px;
   padding: 0;
   clear:both;
+  -webkit-transform-style: preserve-3d;
+}
+.jsavarray * {
+  -webkit-transform-style: preserve-3d;
 }
 .jsavarray.jsavindexed {
   margin-bottom: 0;
@@ -639,4 +643,9 @@ ul.jsavcode {
 .jsavquestionframe {
   width: 100%;
   height: 100%;
+}
+
+.jsavswap, .jsavswap .jsavvalue {
+  background-color: pink !important;
+  color: red !important;
 }

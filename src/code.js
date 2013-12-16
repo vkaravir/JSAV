@@ -154,8 +154,8 @@
     if (this._target === null) {
       return [[0, myBounds.left + myBounds.width/2,
                   myBounds.top + myBounds.height],
-              [1, myBounds.left + myBounds.width/2,
-                  myBounds.top + myBounds.height]];
+              [1, myBounds.left + myBounds.width/2 + 5,
+                  myBounds.top + myBounds.height + 5]];
     }
     if (typeof(opts.targetIndex) !== "undefined") {
       opts.relativeIndex = opts.targetIndex;
@@ -322,7 +322,7 @@
   codeproto.toggleClass = JSAV.anim(function(index, className, options) {
     var $elems = getIndices($(this.element).find("li.jsavcodeline"), index);
     if (this.jsav._shouldAnimate()) {
-      $elems.toggleClass(className, this.jsav.SPEED);
+      this.jsav.effects._toggleClass($elems, className, options);
     } else {
       $elems.toggleClass(className);
     }
@@ -348,12 +348,12 @@
     var $elems = getIndices($(this.element).find("li.jsavcodeline"), index);
     return $elems.hasClass(className);
   };
-  codeproto._setcss = JSAV.anim(function(indices, cssprop) {
+  codeproto._setcss = JSAV.anim(function(indices, cssprops, options) {
     var $elems = getIndices($(this.element).find("li.jsavcodeline"), indices);
     if (this.jsav._shouldAnimate()) { // only animate when playing, not when recording
-      $elems.animate(cssprop, this.jsav.SPEED);
+      this.jsav.effects.transition($elems, cssprops, options);
     } else {
-      $elems.css(cssprop);
+      $elems.css(cssprops);
     }
     return this;
   });
