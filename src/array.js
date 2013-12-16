@@ -20,6 +20,31 @@
   templates.bar = '<span class="jsavvaluebar"></span>' + templates.array;
   templates["bar-indexed"] = templates.bar + '<span class="jsavindexlabel">{{index}}</span>';
 
+
+  var ArrayIndex = function(container, value, index, options) {
+    this.jsav = container.jsav;
+    this.container = container;
+    this.index = index;
+    this.options = $.extend(true, {visible: true}, options);
+    var indHtml = container.options.template
+        .replace("{{value}}", value)
+        .replace("{{index}}", index);
+    var ind = $("<li class='jsavnode jsavindex'>" + indHtml + "</li>");
+    this.element = ind;
+    if (this.options.autoResize) {
+      ind.addClass("jsavautoresize");
+    }
+    this.container.element.append(ind);
+
+    JSAV.utils._helpers.handleVisibility(this, this.options);
+  };
+  JSAV.utils.extend(ArrayIndex, JSAV._types.ds.Node);
+  var indexproto = ArrayIndex.prototype;
+  indexproto.value = function(newValue, options) {
+    return this.container.value(this.index, newValue, options);
+  };
+  indexproto._setvalue = indexproto.value;
+
   /* Array data structure for JSAV library. */
   var AVArray = function(jsav, element, options) {
     this.jsav = jsav;
@@ -27,6 +52,7 @@
     if (!this.options.template) {
       this.options.template = templates[this.options.layout + (this.options.indexed?"-indexed":"")];
     }
+    this._indices = [];
     if ($.isArray(element)) {
       this.initialize(element);
     } else if (element) { // assume it's a DOM element
@@ -61,15 +87,6 @@
     return this;
   };
 
-  arrproto._setcss = JSAV.anim(function(indices, cssprops, options) {
-    var $elems = getIndices($(this.element).find("li"), indices);
-    if (this.jsav._shouldAnimate()) { // only animate when playing, not when recording
-      this.jsav.effects.transition($elems, cssprops, options);
-    } else {
-      $elems.css(cssprops);
-    }
-    return this;
-  });
   arrproto._setarraycss = JSAV.anim(function(cssprops, options) {
     var oldProps = $.extend(true, {}, cssprops),
         el = this.element;
@@ -99,17 +116,15 @@
     } else if (!$.isArray(indices) && typeof indices === "object") { // object, apply for array
       return this._setarraycss(indices, options);
     } else {
-      if ($.isFunction(indices)) { // if indices is a function, evaluate it right away and get a list of indices
-        var all_elems = $(this.element).find("li"),
-          sel_indices = []; // array of selected indices
-        $elems = getIndices($(this.element).find("li"), indices);
-        for (var i = 0; i < $elems.size(); i++) {
-          sel_indices.push(all_elems.index($elems[i]));
-        }
-        indices = sel_indices;
+      var indArray = JSAV.utils._helpers.normalizeIndices($(this.element).find("li.jsavindex"), indices);
+      for (var i = 0, l = indArray.length; i < l; i++) {
+        this._indices[indArray[i]].css(cssprop, options);
       }
-      return this._setcss(indices, cssprop, options);
+      return this;
     }
+  };
+  arrproto.index = function(index) {
+    return this._indices[index];
   };
   arrproto.swap = JSAV.anim(function(index1, index2, options) {
     var $pi1 = $(this.element).find("li:eq(" + index1 + ")"),
@@ -147,12 +162,8 @@
     if (typeof index === "undefined") {
       index = "";
     }
-    var indHtml = this.options.template
-                    .replace("{{value}}", value)
-                    .replace("{{index}}", index);
-    var ind = $("<li class='jsavnode jsavindex'>" + indHtml + "</li>"),
-        valtype = typeof(value);
-    if (valtype === "object") { valtype = "string"; }
+    var ind = new ArrayIndex(this, value, index, this.options);
+    this._indices[index] = ind;
     return ind;
   };
   arrproto._setvalue = JSAV.anim(function(index, newValue) {
@@ -161,7 +172,6 @@
     while (index > size - 1) {
       var newli = this._newindex("", size);
       this._values[size] = "";
-      this.element.append(newli);
       size = this.size();
     }
     var $index = this.element.find("li:eq(" + index + ")");
@@ -175,11 +185,14 @@
   });
   arrproto.initialize = function(data) {
     var el = this.options.element || $("<ol/>"),
-      liel, liels = $(),
-      key, val;
+      key, val, i;
+    if (!this.options.element) {
+      $(this.jsav.canvas).append(el);
+    }
+    this.element = el;
     this._values = data.slice(0);
     // replace null values with empty strings
-    for (var i = 0; i < data.length; i++) {
+    for (i = 0; i < data.length; i++) {
       if (data[i] === null || data[i] === undefined) {
         this._values[i] = "";
       }
@@ -194,15 +207,9 @@
         }
       }
     }
-    for (var i=0; i < data.length; i++) {
-      liel = this._newindex(data[i], i);
-      liels = liels.add(liel);
+    for (i=0; i < data.length; i++) {
+      this._newindex(data[i], i);
     }
-    el.append(liels);
-    if (!this.options.element) {
-      $(this.jsav.canvas).append(el);
-    }
-    this.element = el;
     JSAV.utils._helpers.handlePosition(this);
     this.layout();
     el.css("display", "none");
@@ -221,14 +228,14 @@
     }
     $elem.addClass("jsavarray");
     this._values = [];
-    $elems.each(function(index, item) {
+    $elems.each(function(index) {
       var $this = $(this),
           value = JSAV.utils.value2type($this.attr("data-value") || $this.html(), // value
                                         $this.attr("data-value-type") || "string"), // value type
-          $newElem = that._newindex(value, index); // create a new element using th etemplate of the layout
+          $newElem = that._newindex(value, index); // create a new element using the template of the layout
       that._values[index] = value;
-      // replace the li element with the new generated element
-      $this.replaceWith($newElem);
+      // remove the original li element
+      $this.remove();
     });
     this.layout();
   };
@@ -239,6 +246,7 @@
   };
   arrproto.state = function(newstate) {
     if (newstate) {
+      console.log("setting array state");
       $(this.element).html(newstate.html);
       for (var i = newstate.values.length; i--; ) {
         this._values[i] = newstate.values[i];

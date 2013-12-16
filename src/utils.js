@@ -523,7 +523,7 @@ mixkey(math.random(), pool);
   _helpers._setcss = function(cssprop, value, options) {
     var oldProps = $.extend(true, {}, cssprop),
         el = this.element,
-        newprops;
+        newprops, opts = options;
     if (typeof cssprop === "string" && typeof value !== "undefined") {
       oldProps[cssprop] = el.css(cssprop);
       newprops = {};
@@ -534,14 +534,15 @@ mixkey(math.random(), pool);
           oldProps[i] = el.css(i);
         }
       }
+      opts = value;
       newprops = cssprop;
     }
     if (this.jsav._shouldAnimate()) { // only animate when playing, not when recording
-      this.jsav.effects.transition(this.element, newprops, options)
+      this.jsav.effects.transition(this.element, newprops, opts)
     } else {
       this.element.css(newprops);
     }
-    return [oldProps];
+    return [oldProps, value, options];
   };
   // function that selects elements from $elems that match the indices
   // filter (number, array of numbers, or filter function)
