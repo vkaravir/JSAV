@@ -119,7 +119,7 @@
     return new ListNode(this, value, $.extend({first: false}, this.options, options));
   };
   listproto.remove = function(index, options) {
-    // TODO: remove bounds checks -> use removefirst/last
+    var opts = $.extend({hide: true}, options);
     if (index === 0) {
       return this.removeFirst(options);
     } else if (index === this.size() - 1) {
@@ -129,18 +129,33 @@
         next = this.get(index + 1),
         oldNode = prev.next();
     prev.next(next, options);
+    if (opts.hide) {
+      oldNode.hide();
+      oldNode.edgeToNext().hide();
+    }
     return oldNode;
   };
   listproto.removeFirst = function(options) {
-    var oldFirst = this.first();
+    if (this.size() <= 0) { return; }
+    var opts = $.extend({hide: true}, options),
+        oldFirst = this.first();
     this._setfirst(oldFirst.next(), options);
-    oldFirst.hide();
+    if (opts.hide) {
+      oldFirst.hide();
+      oldFirst.edgeToNext().hide();
+    }
     return oldFirst;
   };
   listproto.removeLast = function(options) {
-    var newLast = this.get(this.size() - 2),
-      oldLast = this.last();
+    if (this.size() <= 1) { return this.removeFirst(); }
+    var opts = $.extend({hide: true}, options),
+        newLast = this.get(this.size() - 2),
+        oldLast = this.last();
     newLast.next(null, options);
+    if (opts.hide) {
+      oldLast.hide();
+      newLast.edgeToNext().hide();
+    }
     return oldLast;
   };
   listproto.layout = function(options) {
