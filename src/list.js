@@ -142,7 +142,9 @@
     this._setfirst(oldFirst.next(), options);
     if (opts.hide) {
       oldFirst.hide();
-      oldFirst.edgeToNext().hide();
+      if (oldFirst.edgeToNext()) {
+        oldFirst.edgeToNext().hide();
+      }
     }
     return oldFirst;
   };
