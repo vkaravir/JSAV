@@ -401,10 +401,9 @@
     return this;
   };
 
-  arrproto.toggleArrow = JSAV.anim(function(indices, options) {
-    var $elems = getIndices($(this.element).find("li"), indices);
-    this.jsav.effects._toggleClass($elems, "jsavarrow", options);
-  });
+  arrproto.toggleArrow = function(indices, options) {
+    this.toggleClass(indices, "jsavarrow", options);
+  };
   arrproto.toggleLine = JSAV.anim(function(index, options) {
       // Toggles a marker line above a given array index for bar layout
       // Options that can be passed:
