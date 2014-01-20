@@ -25,7 +25,8 @@
     this.jsav = container.jsav;
     this.container = container;
     this.index = index;
-    this.options = $.extend(true, {visible: true}, options);
+    // always have indices visible, visibility is controlled by the array
+    this.options = $.extend(true, {}, options, {visible: true});
     var indHtml = container.options.template
         .replace("{{value}}", value)
         .replace("{{index}}", index);
@@ -36,7 +37,6 @@
     }
     this.container.element.append(ind);
 
-    JSAV.utils._helpers.handleVisibility(this, this.options);
   };
   JSAV.utils.extend(ArrayIndex, JSAV._types.ds.Node);
   var indexproto = ArrayIndex.prototype;
@@ -44,6 +44,10 @@
     return this.container.value(this.index, newValue, options);
   };
   indexproto._setvalue = indexproto.value;
+  // show/hide of indices makes no sense, so replace them with noop functions
+  indexproto.show = function() {};
+  indexproto.hide = function() {};
+
 
   /* Array data structure for JSAV library. */
   var AVArray = function(jsav, element, options) {
