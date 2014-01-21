@@ -272,14 +272,14 @@
         $val2.css({"x": -posdiffX, "y": -posdiffY, z: 1});
         $val1.css({"x": posdiffX, "y": posdiffY, z: 1});
         // .. animate the color ..
-        $both.addClass("jsavswap", 3*speed);
+        //$both.addClass("jsavswap", 3*speed);
         // ..animate the translation to 0, so they'll be in their final positions..
         $val1.transition({"x": 0, y: 0, z: 0}, 7*speed, 'linear');
         $val2.transition({x: 0, y: 0, z: 0}, 7*speed, 'linear',
           function() {
             if (arr) { arr.remove(); } // ..remove the arrows if they exist
             // ..and finally animate to the original styles.
-            $both.removeClass("jsavswap", 3*speed);
+            //$both.removeClass("jsavswap", 3*speed);
         });
       }
     }
