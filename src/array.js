@@ -250,7 +250,6 @@
   };
   arrproto.state = function(newstate) {
     if (newstate) {
-      console.log("setting array state");
       $(this.element).html(newstate.html);
       for (var i = newstate.values.length; i--; ) {
         this._values[i] = newstate.values[i];
