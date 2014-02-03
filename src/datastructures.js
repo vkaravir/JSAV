@@ -199,20 +199,16 @@
     if (this._weight !== otherEdge._weight) { return false; }
 
     // compare styling of the edges
-    var cssprop, equal;
     if (options && 'css' in options) { // if comparing css properties
-      if ($.isArray(options.css)) { // array of property names
-        for (var i = 0; i < options.css.length; i++) {
-          cssprop = options.css[i];
-          equal = this.css(cssprop) === otherEdge.css(cssprop);
-          if (!equal) { return false; }
-        }
-      } else { // if not array, expect it to be a property name string
-        cssprop = options.css;
-        equal = this.css(cssprop) === otherEdge.css(cssprop);
-        if (!equal) { return false; }
-      }
+      var cssEquals = JSAV.utils._helpers.cssEquals(this, otherEdge, options.css);
+      if (!cssEquals) { return false; }
     }
+
+    if (options && 'class' in options) { // if comparing class attributes
+      var classEquals = JSAV.utils._helpers.classEquals(this, otherEdge, options["class"]);
+      if (!classEquals) { return false; }
+    }
+
     return true;
   };
 

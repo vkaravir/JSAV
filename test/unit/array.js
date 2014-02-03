@@ -219,6 +219,16 @@ test("Comparing arrays", function() {
     hlBg = hlDiv.css("background-color"),
     unhlBg = unhlDiv.css("background-color");
   ok(arr2.equals([unhlBg, unhlBg, hlBg, unhlBg], {'css': 'background-color'}), "Equal background-colors as array.");
+
+  // test class as equals option
+  arr1.addClass(0, "someClazz");
+  arr1.addClass(1, "someClazz2");
+  arr3.addClass(0, "someClazz");
+  ok(arr1.equals(arr3, {'class': "someClazz", value: false}, "Arrays with matching classes"));
+  ok(!arr1.equals(arr2, {'class': "someClazz2"}, "Arrays with non-matching class"));
+  ok(arr1.equals(arr3, {'class': "unknownClazz2", value: false}, "Non-existing class"));
+  ok(arr1.equals(arr3, {'class': ["someClazz", "unknownClazz2"], value: false}, "Multiple classes"));
+  ok(!arr1.equals(arr3, {'class': ["someClazz", "someClazz2", "unknownClazz2"], value: false}, "Multiple, differing classes"));
 });
 
 test("Array data-attributes", function() {

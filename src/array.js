@@ -267,6 +267,7 @@
       i, j,
       equal,
       cssprop,
+      clazzname,
       len;
     if ($.isArray(otherArray)) { // simple case of array values
       if (!options) { // if nothing in options is specified
@@ -317,6 +318,23 @@
           }
         }
       }
+      if ('class' in opts) { // if comparing class attributes
+        if ($.isArray(opts["class"])) { // array of class names
+          for (i = 0; i < opts["class"].length; i++) {
+            clazzname = opts["class"][i];
+            for (j = 0; j < len; j++) {
+              equal = this.hasClass(j, clazzname) === otherArray.hasClass(j, clazzname);
+              if (!equal) { return false; }
+            }
+          }
+        } else { // if not array, expect it to be a class name string
+          clazzname = opts["class"];
+          for (i = 0; i < len; i++) {
+            equal = this.hasClass(i, clazzname) === otherArray.hasClass(i, clazzname);
+            if (!equal) { return false; }
+          }
+        }
+      }
       return true; // if tests passed, arrays are equal
     }
 
@@ -330,7 +348,7 @@
     } else {
       $elems.toggleClass(className);
     }
-    return [index, className];
+    return [index, className, options];
   });
   arrproto.addClass = function(index, className, options) {
     var indices = JSAV.utils._helpers.normalizeIndices($(this.element).find("li.jsavindex"), index, ":not(." + className + ")");

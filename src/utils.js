@@ -583,6 +583,36 @@ mixkey(math.random(), pool);
     }
     return normIndices;
   };
+  _helpers.cssEquals = function(jsavObj1, jsavObj2, cssProps) {
+    var cssprop, i;
+    if ($.isArray(cssProps)) { // array of property names
+      for (i = 0; i < cssProps.length; i++) {
+        cssprop = cssProps[i];
+        if (jsavObj1.css(cssprop) !== jsavObj2.css(cssprop)) { return false; }
+      }
+    } else { // if not array, expect it to be a property name string
+      cssprop = cssProps;
+      if (jsavObj1.css(cssprop) !== jsavObj2.css(cssprop)) { return false; }
+    }
+    return true;
+  };
+  _helpers.classEquals = function(jsavObj1, jsavObj2, classNames) {
+    var clazzname, i, l;
+    if ($.isArray(classNames)) { // array of property names
+      for (i = 0, l = classNames.length; i < l; i++) {
+        clazzname = classNames[i];
+        if (!jsavObj1.hasClass(clazzname) === jsavObj2.hasClass(clazzname)) {
+          return false;
+        }
+      }
+    } else { // if not array, expect it to be a property name string
+      clazzname = classNames;
+      if (jsavObj1.hasClass(clazzname) !== jsavObj2.hasClass(clazzname)) {
+        return false;
+      }
+    }
+    return true;
+  };
 
   // Returns an handler for the jsav-update-relative event
   // to maintain scope.

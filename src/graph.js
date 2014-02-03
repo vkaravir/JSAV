@@ -542,19 +542,13 @@
     }
 
     // compare css properties of the node
-    var cssprop, equal, i, j;
     if (options && 'css' in options) { // if comparing css properties
-      if ($.isArray(options.css)) { // array of property names
-        for (i = 0; i < options.css.length; i++) {
-          cssprop = options.css[i];
-          equal = (this.css(cssprop) === otherNode.css(cssprop));
-          if (!equal) { return false; }
-        }
-      } else { // if not array, expect it to be a property name string
-        cssprop = options.css;
-        equal = (this.css(cssprop) === otherNode.css(cssprop));
-        if (!equal) { return false; }
-      }
+      var cssEquals = JSAV.utils._helpers.cssEquals(this, otherNode, options.css);
+      if (!cssEquals) { return false; }
+    }
+    if (options && 'class' in options) { // if comparing class attributes
+      var classEquals = JSAV.utils._helpers.classEquals(this, otherNode, options["class"]);
+      if (!classEquals) { return false; }
     }
 
     var myNeighbors = this.neighbors().sort(Graph._nodeSortFunction),
@@ -563,6 +557,7 @@
     // different number of neighbors -> cannot be equal nodes
     if (myNeighbors.length !== otherNeighbors.length) { return false; }
 
+    var i;
     for (i = myNeighbors.length; i--; ) {
       myNeighbor = myNeighbors[i];
       otherNeighbor = otherNeighbors[i];

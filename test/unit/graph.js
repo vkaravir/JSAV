@@ -211,6 +211,17 @@
     ok(graph1.equals(graph2), "Same edge colors, not compared");
     ok(graph1.equals(graph2, {'css': ['stroke', 'background-color']}), "Same edge colors");
 
+    // class equals tests
+    ok(graph1.equals(graph2, {'class': "unknownClass"}, "Unused class"));
+    a.addClass("someClass");
+    a.addClass("someClass2");
+    a2.addClass("someClass");
+
+    ok(graph1.equals(graph2, {'class': "someClass"}, "Class that exists in same nodes"));
+    ok(!graph1.equals(graph2, {'class': "someClass2"}, "Class that is not in the other graph"));
+    ok(graph1.equals(graph2, {'class': ["someClass", "unknownClass"]}, "Array of class names that match"));
+    ok(!graph1.equals(graph2, {'class': ["someClass", "someClass2", "unknownClass"]}, "Array of class names that don't match"));
+
   });
 
   test("Graph clone() test", function() {

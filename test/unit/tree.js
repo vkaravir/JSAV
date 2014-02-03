@@ -278,6 +278,15 @@
     ok(t1.equals(t2));
     ok(t1.equals(t2, {"css": "background-color"}));
 
+    // classes
+    ok(t1.equals(t2, {"class": "jsavhighlight"}));
+    ok(t1.equals(t2, {"class": ["jsavhighlight", "unknownClass"]}));
+    t1.root().addClass("someClass");
+    t1.root().addClass("someClass2");
+    t2.root().addClass("someClass");
+    ok(t1.equals(t2, {"class": "someClass"}));
+    ok(!t1.equals(t2, {"class": "someClass2"}));
+    ok(!t1.equals(t2, {"class": ["someClass", "someClass2", "unknownClass"]}));
   });
 
   module("datastructures.binarytree", {  });
