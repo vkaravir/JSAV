@@ -84,6 +84,7 @@
       this.showGrade = this.options.showGrade;
     }
   };
+  Exercise.GradeStepFilterFunction = gradeStepFilterFunction;
   var allEqual = function(initial, model, compare) {
     if ($.isArray(initial)) {
       for (var i = 0; i < initial.length; i++) {
