@@ -121,7 +121,7 @@
 
   // create versions of some array functions that will also change
   // the treenodes
-  var funcs = ["css", "highlight", "unhighlight"];
+  var funcs = ["css", "highlight", "unhighlight", "addClass", "removeClass", "toggleClass"];
   var getDelegateFunction = function(name) {
     // return a "delegate" function bound to the array function with given name
     return function() {
