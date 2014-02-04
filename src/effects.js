@@ -271,15 +271,21 @@
         // .. then set the position so that the array appears unchanged..
         $val2.css({"x": -posdiffX, "y": -posdiffY, z: 1});
         $val1.css({"x": posdiffX, "y": posdiffY, z: 1});
+
+        // mark to JSAV that we're animating something more complex
+        this._animations += 1;
+        var jsav = this;
         // .. animate the color ..
-        //$both.addClass("jsavswap", 3*speed);
+        $both.addClass("jsavswap", 3*speed);
         // ..animate the translation to 0, so they'll be in their final positions..
         $val1.transition({"x": 0, y: 0, z: 0}, 7*speed, 'linear');
         $val2.transition({x: 0, y: 0, z: 0}, 7*speed, 'linear',
           function() {
             if (arr) { arr.remove(); } // ..remove the arrows if they exist
             // ..and finally animate to the original styles.
-            //$both.removeClass("jsavswap", 3*speed);
+            $both.removeClass("jsavswap", 3*speed);
+            // notify jsav that we're done with our animation
+            jsav._animations -= 1;
         });
       }
     }
