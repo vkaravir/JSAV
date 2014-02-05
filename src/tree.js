@@ -294,8 +294,9 @@
     }
     // compare edge style
     if (this.edgeToParent()) {
-      equal = this.edgeToParent().equals(otherNode.edgeToParent(),
+      var edgeEquals = this.edgeToParent().equals(otherNode.edgeToParent(),
                                         $.extend({}, options, {dontCheckNodes: true}));
+      if (!edgeEquals) { return false; }
     }
     // compare children
     var ch = this.children(),

@@ -278,6 +278,11 @@
     ok(t1.equals(t2));
     ok(t1.equals(t2, {"css": "background-color"}));
 
+    t1.root().edgeToLeft().css({"stroke": "red"});
+    ok(t1.equals(t2));
+    ok(!t1.equals(t2, {"css": "stroke"}));
+
+
     // classes
     ok(t1.equals(t2, {"class": "jsavhighlight"}));
     ok(t1.equals(t2, {"class": ["jsavhighlight", "unknownClass"]}));
