@@ -220,6 +220,20 @@
     this._origshow(options);
     if (this.arrow) { this.arrow.show(); }
   };
+  pointerproto.equals = function(otherPointer, options) {
+    if (!otherPointer || !otherPointer instanceof Pointer) {
+      return false;
+    }
+    if (options && 'css' in options) { // if comparing css properties
+      var cssEquals = JSAV.utils._helpers.cssEquals(this, otherPointer, options.css);
+      if (!cssEquals) { return false; }
+    }
+    if (options && 'class' in options) { // if comparing class attributes
+      var classEquals = JSAV.utils._helpers.classEquals(this, otherPointer, options["class"]);
+      if (!classEquals) { return false; }
+    }
+    return this.target().equals(otherPointer.target());
+  };
   // Expose the Pointer as the .pointer(...) function on JSAV instances.
   JSAV.ext.pointer = function(name, target, options) {
     return new Pointer(this, name, $.extend({}, options, { "relativeTo": target}));
