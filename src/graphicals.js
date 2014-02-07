@@ -102,6 +102,11 @@ if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
       },
       id: JSAV._types.JSAVObject.id
     };
+    JSAVGraphical.prototype.addClass = JSAV.utils._helpers.addClass;
+    JSAVGraphical.prototype.removeClass = JSAV.utils._helpers.removeClass;
+    JSAVGraphical.prototype.hasClass = JSAV.utils._helpers.hasClass;
+    JSAVGraphical.prototype.toggleClass = JSAV.anim(JSAV.utils._helpers._toggleClass);
+
     var init = function(obj, jsav, props) {
       obj.jsav = jsav;
       obj.element = $(obj.rObj.node).data("svgelem", obj.rObj);
