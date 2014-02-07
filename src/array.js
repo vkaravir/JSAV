@@ -47,6 +47,20 @@
   // show/hide of indices makes no sense, so replace them with noop functions
   indexproto.show = function() {};
   indexproto.hide = function() {};
+  indexproto.equals = function(otherIndex, options) {
+    if (!otherIndex || this.value() !== otherIndex.value() || !otherIndex instanceof ArrayIndex) {
+      return false;
+    }
+    if (options && 'css' in options) { // if comparing css properties
+      var cssEquals = JSAV.utils._helpers.cssEquals(this, otherIndex, options.css);
+      if (!cssEquals) { return false; }
+    }
+    if (options && 'class' in options) { // if comparing class attributes
+      var classEquals = JSAV.utils._helpers.classEquals(this, otherIndex, options["class"]);
+      if (!classEquals) { return false; }
+    }
+    return true; // values equal, nothing else to compare
+  };
 
 
   /* Array data structure for JSAV library. */
@@ -181,10 +195,6 @@
     var $index = this.element.find("li:eq(" + index + ")");
     this._values[index] = newValue;
     $index.find(".jsavvaluelabel").html("" + newValue);
-    if (("" + newValue).length > ("" + oldval).length || newli) {
-      // if the new value is longer than old, or new elements were added to array, re-layout
-      this.layout();
-    }
     return [index, oldval];
   });
   arrproto.initialize = function(data) {
