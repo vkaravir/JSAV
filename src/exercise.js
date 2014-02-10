@@ -12,7 +12,10 @@
     this.jsav = jsav;
     this.options = jQuery.extend({reset: function() { }, controls: null, feedback: "atend",
                                   feedbackSelectable: false, fixmode: "undo",
-                                  fixmodeSelectable: false, grader: "default"},
+                                  fixmodeSelectable: false, grader: "default",
+                                  resetButtonTitle: "Reset", undoButtonTitle: "Undo",
+                                  modelButtonTitle: "Model Answer", gradeButtonTitle: "Grade"
+                                 },
                                   window.JSAV_EXERCISE_OPTIONS,
                                   options);
     // initialize controls
@@ -22,12 +25,12 @@
       cont = this.jsav.container.find(".jsavexercisecontrols");
     }
     if (cont.size()) {
-      var $reset = $('<input type="button" name="reset" value="Reset" />').click(
+      var $reset = $('<input type="button" name="reset" value="' + this.options.resetButtonTitle + '" />').click(
             function() {
               self.jsav.logEvent({type: "jsav-exercise-reset"});
               self.reset();
             }),
-          $model = $('<input type="button" name="answer" value="Model Answer" />').click(
+          $model = $('<input type="button" name="answer" value="' + this.options.modelButtonTitle + '" />').click(
             function() {
               cont.addClass("active");
               self.jsav.logEvent({type: "jsav-exercise-model-open"});
@@ -37,14 +40,14 @@
           $action = $('<span class="actionIndicator"></span>');
       // only add undo and grade button if not in continuous mode
       if (this.options.feedback !== "continuous") {
-        var $grade = $('<input type="button" name="grade" value="Grade" />').click(
+        var $grade = $('<input type="button" name="grade" value="' + this.options.gradeButtonTitle + '" />').click(
               function() {
                 cont.addClass("active");
                 self.showGrade();
                 cont.removeClass("active");
                 self.jsav.logEvent({type: "jsav-exercise-grade", score: $.extend({}, self.score)});
               }),
-            $undo = $('<input type="button" name="undo" value="Undo" />"').click(
+            $undo = $('<input type="button" name="undo" value="' + this.options.undoButtonTitle + '" />"').click(
               function() {
                 self.jsav.logEvent({type: "jsav-exercise-undo"});
                 self.undo();
