@@ -617,7 +617,7 @@ mixkey(math.random(), pool);
   // Returns an handler for the jsav-update-relative event
   // to maintain scope.
   var relativeUpdateHandlerFunction = function(jsavobj, relElem, offsetLeft, offsetTop, 
-                  elemPos, elemTop, elemLeft, anchor, myAnchor) {
+                  elemLeft, elemTop, anchor, myAnchor) {
     return function() {
       // on update:
       //  - check relElems position
@@ -645,15 +645,24 @@ mixkey(math.random(), pool);
                    of: relElem,
                    offset: offsetLeft + " " + offsetTop,
                    collision: "none"});
-      elemPos = el.position();
+      var elemPos = el.position();
       elemLeft = elemPos.left;
       elemTop = elemPos.top;
       if (elemLeft === elemCurLeft && elemTop === elemCurTop && // relativeTo element has not changed pos
                 offsetChangeLeft === 0 && offsetChangeTop === 0) { // this element has not changed pos
-        return; // no change to animate, just return
+        return { left: elemLeft, top: elemTop }; // no change to animate, just return
       }
-      el.css({left: elemCurLeft, top: elemCurTop}); // restore the element position
-      jsavobj.css({left: elemLeft, top: elemTop}); // .. and animate the change
+      // wrap the position change into an animatable step
+      var effect = JSAV.anim(function(left, top, diffleft, difftop) {
+        this.element.css({left: left, top: top}); // change the position
+        if (this.jsav._shouldAnimate()) { // if we should animate
+          this.element.css({x: -diffleft, y: -difftop}); // restore the element position to the previous
+          this.jsav.effects.transition(this.element, {x: 0, y: 0}); // .. and animate the change
+        }
+        return [left - diffleft, top - difftop, -diffleft, -difftop ];
+      }).call(jsavobj, elemLeft, elemTop, elemLeft - elemCurLeft, elemTop - elemCurTop);
+      // return the new position
+      return { left: elemLeft, top: elemTop };
     };
   };
 
@@ -662,13 +671,14 @@ mixkey(math.random(), pool);
     var el = jsavobj.element,
         relElem = options.relativeTo,
         anchor = options.anchor || "center",
-        myAnchor = options.myAnchor || "center";
+        myAnchor = options.myAnchor || "center",
+        follow = !!options.follow;
     if (!(relElem instanceof jQuery)) {
       if (relElem.nodeType === Node.ELEMENT_NODE) { // check if it's DOM element
         relElem = $(relElem);
       } else if (relElem.constructor === JSAV._types.ds.AVArray && "relativeIndex" in options)  {
         // position relative to the given array index, so set relElem to that index element
-        relElem = relElem.element.find(".jsavindex:eq(" + options.relativeIndex + ")");
+        relElem = relElem.index(options.relativeIndex).element; // get the array index object
       } else if (JSAV.utils.isGraphicalPrimitive(relElem)) { // JSAV graphical primitive
         relElem = $(relElem.rObj.node);
       } else {
@@ -679,10 +689,7 @@ mixkey(math.random(), pool);
     el.css({ position: "absolute" });
     var offsetLeft = parseInt(options.left || 0, 10),
         offsetTop = parseInt(options.top || 0, 10);
-    // store relElems position
-    var relPos = relElem.position(),
-        relLeft = relPos.left,
-        relTop = relPos.top;
+
     // unbind previous event handler
     if (jsavobj._relativehandle) {
       jsavobj.jsav.container.off("jsav-updaterelative", jsavobj._relativehandle);
@@ -696,9 +703,15 @@ mixkey(math.random(), pool);
     var elemPos = el.position(),
         elemLeft = elemPos.left,
         elemTop = elemPos.top;
-    var hdanle = relativeUpdateHandlerFunction(jsavobj, relElem, offsetLeft, offsetTop, elemPos, elemTop, elemLeft, anchor, myAnchor) // end relative positioning
-    jsavobj.jsav.container.on("jsav-updaterelative", hdanle);
-    jsavobj._relativehandle = hdanle;
+    var handle = relativeUpdateHandlerFunction(jsavobj, relElem, offsetLeft, offsetTop, elemLeft, elemTop, anchor, myAnchor);
+    if (follow) {
+      jsavobj.jsav.container.on("jsav-updaterelative", handle);
+      jsavobj._relativehandle = handle;
+    } else {
+      jsavobj._relativehandle = true;
+      // call the handle and return the new position
+      return handle();
+    }
   };
   /* Handles top, left, right, bottom options and positions the given element accordingly */
   _helpers.handlePosition = function(jsavobj) {
