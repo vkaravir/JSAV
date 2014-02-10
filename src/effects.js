@@ -48,6 +48,10 @@
           called = true;
           if (bound) { self.unbind($.support.transitionEnd, cb); }
 
+          self.each(function() {
+            // clear the transition properties of all elements
+            this.style[$.support.transition] = null;
+          });
           if (typeof opt.complete === 'function') { opt.complete.apply(self); }
           if (typeof nextCall === 'function') { nextCall(); }
         };
@@ -177,7 +181,7 @@
     transition: function($elems, cssProps, options) {
       this._animations += $elems.length;
       var that = this;
-      $elems.transition(cssProps, {duration: (options && options.duration) ||this.SPEED,
+      $elems.transition(cssProps, {duration: (options && options.duration) || this.SPEED,
                                     delay: (options && options.delay) || 0,
                                     complete: function() { that._animations--; }
       });
