@@ -220,6 +220,8 @@
     var counter = $(".jsavcounter", this.container);
     // register an event to be triggered on container to update the counter
     if (counter.size() > 0) {
+      counter.text("0 / 0"); // initialize the counter text
+      // register event handler to update the counter
       this.container.bind("jsav-updatecounter", function(evet, current, total) {
         counter.text(current + " / " + total);
       });
