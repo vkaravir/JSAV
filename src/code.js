@@ -21,7 +21,7 @@
     } else if (this.options.after) {
       this.element.insertAfter(this.options.before.element);
     } else {
-      $(this.jsav.container).append(this.element);
+      $(this.jsav.canvas).append(this.element);
     }
     if (this.options.label) {
       this.element.find(".jsavvarlabel").html(this.options.label);
