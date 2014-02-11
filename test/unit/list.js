@@ -266,4 +266,47 @@
     list2.element.find(".jsavnode:eq(0)").trigger("jsavclick");
     list3.element.find(".jsavnode:eq(1)").trigger("jsavclick");
   });
+
+  test("Test list equals function", function() {
+    var av = new JSAV("emptycontainer"),
+        list1 = av.ds.list(),
+        list2 = av.ds.list();
+    ok(list1.equals(list2), "Empty lists should be equal");
+    list2.addFirst(1);
+    ok(!list1.equals(list2), "Empty list should not be equal with non-empty list");
+    ok(!list2.equals(list1), "Non-empty list should not be equal with empty list");
+    list1.addFirst(1);
+    list1.addFirst(2);
+    list1.addFirst(3);
+    list2.addFirst(2);
+    list2.addFirst(3);
+    ok(list1.equals(list2), "Lists with equal values should be equal");
+
+    list1.first().value(4);
+    ok(!list1.equals(list2), "Lists with different values should not be equal");
+    list2.first().value(4);
+    ok(list1.equals(list2), "Lists with equal values should be equal");
+
+    list1.first().highlight();
+    ok(list1.equals(list2), "Lists with equal values should be equal when not comparing css or classes");
+    ok(!list1.equals(list2, {css: "background-color"}), "Lists with same values but different css should not be equal");
+    ok(!list1.equals(list2, {class: "jsavhighlight"}), "Lists with same values but different class should not be equal");
+
+    list2.first().highlight();
+    ok(list1.equals(list2, {css: "background-color"}), "Lists with same values and css should be equal");
+    ok(list1.equals(list2, {class: "jsavhighlight"}), "Lists with same values and class should be equal");
+
+    list1.first().edgeToNext().css({stroke: "red"});
+    ok(list1.equals(list2), "Lists with equal values should be equal when not comparing css or classes");
+    ok(!list1.equals(list2, {css: "stroke"}), "Lists with same values but different edge css should not be equal");
+
+    list2.first().edgeToNext().css({stroke: "red"});
+    ok(list1.equals(list2), "Lists with equal values should be equal when not comparing css or classes");
+    ok(list1.equals(list2, {css: "stroke"}), "Lists with same values and edge css should be equal");
+
+    list1.removeLast();
+    ok(!list1.equals(list2), "Lists with different number of nodes should not be equal");
+    list2.removeLast();
+    ok(list1.equals(list2), "Lists with same values should be equal");
+  });
 }());

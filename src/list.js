@@ -179,6 +179,15 @@
     }
     return size;
   };
+  listproto.equals = function(otherList, options) {
+    if (!this.first() && !otherList.first()) { // empty lists
+      return true;
+    } else if (!this.first()) { // other list not empty, this list is
+      return false;
+    } else {
+      return this.first().equals(otherList.first(), options);
+    }
+  };
   listproto.css = JSAV.utils._helpers.css;
   listproto._setcss = JSAV.anim(JSAV.utils._helpers._setcss);
 
@@ -241,6 +250,33 @@
   listnodeproto.state = function(newState) {
     // TODO: implement state
   };
+  listnodeproto.equals = function(otherNode, options) {
+    if (!otherNode || this.value() !== otherNode.value()) {
+      return false;
+    }
+    if (options && 'css' in options) { // if comparing css properties
+      var cssEquals = JSAV.utils._helpers.cssEquals(this, otherNode, options.css);
+      if (!cssEquals) { return false; }
+    }
+    if (options && 'class' in options) { // if comparing class attributes
+      var classEquals = JSAV.utils._helpers.classEquals(this, otherNode, options["class"]);
+      if (!classEquals) { return false; }
+    }
+    // compare edge style
+    if (this.edgeToNext()) {
+      var edgeEquals = this.edgeToNext().equals(otherNode.edgeToNext(),
+          $.extend({}, options, {dontCheckNodes: true}));
+      if (!edgeEquals) { return false; }
+    }
+    // compare next nodes
+    if (this.next()) { // both have next, return whether they match
+      return this.next().equals(otherNode.next(), options);
+    } else if (otherNode.next()) { // this node has no next, the other has
+      return false; // nodes are not equal
+    } else {
+      return true;
+    }
+  }
 
   // expose the list types
   var dstypes = JSAV._types.ds;
