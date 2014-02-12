@@ -554,7 +554,7 @@
     var setBarHeight = JSAV.anim(function(elem, newHeight, options) {
       // the JSAV.anim wrapper will make sure this points to jsav instance
       var oldHeight = elem.height();
-      if (this._shouldAnimate()) {
+      if (this.jsav._shouldAnimate()) {
         this.jsav.effects.transition(elem, {height: newHeight}, options);
       } else {
         elem.css({height: newHeight});
@@ -570,7 +570,7 @@
           newBarHeight = Math.round(valueBarHeight*(array.value(index) / maxValue));
       // only if height has changed should it be recorded
       if (newBarHeight !== $value.height()) {
-        setBarHeight.call(array.jsav, $value, newBarHeight);
+        setBarHeight.call(array, $value, newBarHeight);
       }
     });
     setArrayWidth(array, $items.last(), options);
