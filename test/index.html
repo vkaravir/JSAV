@@ -5,14 +5,17 @@
 	<title>JSAV Test Suite</title>
 	<link rel="stylesheet" media="screen" href="utils/qunit.css" />
 	<link rel="stylesheet" href="../css/JSAV.css" media="screen" />
-	<!-- Includes -->
-<script
-   src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.js">
-</script>
-<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js"></script>
+	<!-- Library Includes -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js"></script>
   <script src="../lib/jquery.transit.js"></script>
   <script src="../lib/raphael.js"></script>
-	
+
+  <script src="utils/qunit.js"></script>
+  <script src="utils/qunit-assert-close.js"></script>
+  <script src="utils/arrayutils.js"></script>
+
+  <!-- JSAV files -->
 	<script src="../src/core.js"></script>
 	<script src="../src/anim.js"></script>
 	<script src="../src/messages.js"></script>
@@ -21,18 +24,17 @@
 	<script src="../src/events.js"></script>
 	<script src="../src/graphicals.js"></script>
 	<script src="../src/datastructures.js"></script>
-	<script src="../src/array.js"></script>
+  <script src="../src/array.js"></script>
+  <script src="../src/matrix.js"></script>
 	<script src="../src/tree.js"></script>
 	<script src="../src/list.js"></script>
 	<script src="../src/code.js"></script>
-    <script src="../src/settings.js"></script>
-    <script src="../src/graph.js"></script>
+  <script src="../src/settings.js"></script>
+  <script src="../src/graph.js"></script>
+  <script src="../src/exercise.js"></script>
 	<script src="../extras/binaryheap.js"></script>
 
-	<script src="utils/qunit.js"></script>
-  <script src="utils/qunit-assert-close.js"></script>
-	<script src="utils/arrayutils.js"></script>
-
+  <!-- Tests -->
 	<script src="unit/core.js"></script>
 	<script src="unit/array.js"></script>
 	<script src="unit/anim.js"></script>
