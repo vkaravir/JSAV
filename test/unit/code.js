@@ -145,4 +145,146 @@
     equal(pseudoNoEscape.element.find(".jsavcodeline:eq(2)").html(), "line3 <br> line4");
     equal(pseudoNoEscape.element.find(".jsavcodeline:eq(2)").text(), "line3  line4");
   });
+
+  test("Pointers positioning", function(assert) {
+    var av = new JSAV("emptycontainer"),
+        arr = av.ds.array([1, 2, 3, 4], {left: 500, top: 200}),
+        list = av.ds.list(),
+        maxDifference = 0.9;
+
+    $.fx.off = true;
+
+    list.addFirst(3);
+    list.addFirst(2);
+    list.addFirst(1);
+    list.layout();
+
+    var target = arr.index(0),
+        ptr = av.pointer("p", target, {top: 0, left: 0}),
+        ptrOffset = ptr.element.offset(),
+        targetOffset = target.element.offset();
+    assert.close(ptrOffset.top + ptr.element.outerHeight(), targetOffset.top, maxDifference, "Pointer top position");
+    assert.close(ptrOffset.left, targetOffset.left, maxDifference, "Pointer left position");
+
+
+
+    av.displayInit();
+    target = arr.index(2);
+    ptr.target(target);
+    av.step();
+
+    // change the target
+    ptrOffset = ptr.element.offset();
+    targetOffset = target.element.offset();
+    assert.close(ptrOffset.top + ptr.element.outerHeight(), targetOffset.top, maxDifference, "Pointer top position after changing target");
+    assert.close(ptrOffset.left, targetOffset.left, maxDifference, "Pointer left position after changing target");
+
+    // move the array, pointer should move with it
+    arr.css({left: "+=20px", top: "+=20px"});
+    av.step();
+
+    ptrOffset = ptr.element.offset();
+    targetOffset = target.element.offset();
+    assert.close(ptrOffset.top + ptr.element.outerHeight(), targetOffset.top, maxDifference, "Pointer top position after moving target");
+    assert.close(ptrOffset.left, targetOffset.left, maxDifference, "Pointer left position after moving target");
+
+    // change target to another structure
+    target = list.get(1);
+    ptr.target(target);
+    av.step();
+
+    ptrOffset = ptr.element.offset();
+    targetOffset = target.element.offset();
+    assert.close(ptrOffset.top + ptr.element.outerHeight(), targetOffset.top, maxDifference, "Pointer top position after changing target to another structure");
+    assert.close(ptrOffset.left, targetOffset.left, maxDifference, "Pointer left position after changing target to another structure");
+
+    // add node to list, pointers target will move
+    list.addFirst("0");
+    list.layout();
+    av.step();
+
+    ptrOffset = ptr.element.offset();
+    targetOffset = target.element.offset();
+    assert.close(ptrOffset.top + ptr.element.outerHeight(), targetOffset.top, maxDifference, "Pointer top position after moving target through layout");
+    assert.close(ptrOffset.left, targetOffset.left, maxDifference, "Pointer left position after moving target through layout");
+  });
+
+
+  test("Fixed pointer positioning", function(assert) {
+    // a fixed pointer should never move even if target moves or changes
+    var av = new JSAV("emptycontainer"),
+        arr = av.ds.array([1, 2, 3, 4], {left: 500, top: 200}),
+        list = av.ds.list({left: 800, top: 400}),
+        maxDifference = 0.9;
+
+    $.fx.off = true;
+
+    list.addFirst(3);
+    list.addFirst(2);
+    list.addFirst(1);
+    list.layout();
+
+    var target = arr.index(0),
+        ptr = av.pointer("p", target, {top: -300, left: 0, fixed: true}),
+        origPointerOffset = ptr.element.offset(),
+        origArrowBounds = ptr.arrow.bounds(),
+        arrowBounds,
+        ptrOffset = ptr.element.offset(),
+        targetOffset = target.element.offset();
+    av.displayInit();
+    assert.close(ptrOffset.top + 300 + ptr.element.outerHeight(), targetOffset.top, maxDifference, "Pointer top position");
+    assert.close(ptrOffset.left, targetOffset.left, maxDifference, "Pointer left position");
+
+    // change the target
+    target = arr.index(2);
+    ptr.target(target);
+    av.step();
+
+    ptrOffset = ptr.element.offset();
+    equal(ptrOffset.top, origPointerOffset.top, "Pointer top position after changing target");
+    equal(ptrOffset.left, origPointerOffset.left, "Pointer left position after changing target");
+
+    arrowBounds = ptr.arrow.bounds();
+    equal(origArrowBounds.top, arrowBounds.top, "Arrow still starting from the same top position");
+    equal(origArrowBounds.left, arrowBounds.left, "Arrow still starting from the same left position");
+
+    // move the array, pointer should NOT move with it
+    arr.css({left: "+=20px", top: "+=20px"});
+    av.step();
+
+    ptrOffset = ptr.element.offset();
+    equal(ptrOffset.top, origPointerOffset.top, "Pointer top position after moving target");
+    equal(ptrOffset.left, origPointerOffset.left, "Pointer left position after moving target");
+
+    arrowBounds = ptr.arrow.bounds();
+    equal(origArrowBounds.top, arrowBounds.top, "Arrow still starting from the same top position");
+    equal(origArrowBounds.left, arrowBounds.left, "Arrow still starting from the same left position");
+
+    // change target to another structure
+    target = list.get(1);
+    ptr.target(target);
+    av.step();
+
+    ptrOffset = ptr.element.offset();
+    equal(ptrOffset.top, origPointerOffset.top, "Pointer top position after changing target to another structure");
+    equal(ptrOffset.left, origPointerOffset.left, "Pointer left position after changing target to another structure");
+
+    arrowBounds = ptr.arrow.bounds();
+    equal(origArrowBounds.top, arrowBounds.top, "Arrow still starting from the same top position");
+    equal(origArrowBounds.left, arrowBounds.left, "Arrow still starting from the same left position");
+
+    // add node to list, pointers target will move
+    list.addFirst("0");
+    list.layout();
+    av.step();
+
+    ptrOffset = ptr.element.offset();
+    equal(ptrOffset.top, origPointerOffset.top, "Pointer top position after moving target through layout");
+    equal(ptrOffset.left, origPointerOffset.left, "Pointer left position after moving target through layout");
+
+    arrowBounds = ptr.arrow.bounds();
+    equal(origArrowBounds.top, arrowBounds.top, "Arrow still starting from the same top position");
+    equal(origArrowBounds.left, arrowBounds.left, "Arrow still starting from the same left position");
+
+  });
 }());
