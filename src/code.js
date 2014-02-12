@@ -72,6 +72,7 @@
   varproto.hasClass = JSAV.utils._helpers.hasClass;
   varproto.toggleClass = JSAV.anim(JSAV.utils._helpers._toggleClass);
 
+  JSAV._types.Variable = Variable;
   JSAV.ext.variable = function(value, options) {
     return new Variable(this, value, options);
   };
@@ -463,6 +464,8 @@
       this.element.html(newState.html);
     }
   };
+  JSAV._types.Code = Code;
+
   JSAV.ext.code = function(codelines, options) {
     return new Code(this, codelines, options);
   };
