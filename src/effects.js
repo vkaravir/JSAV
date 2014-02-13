@@ -145,15 +145,33 @@
     }
 
     if (this._shouldAnimate()) {  // only animate when playing, not when recording
+      var toValElemHeight = $toValElem.height(); // saved into a variable, because the computed value is zero after repositioning
+      var fromValElemHeight = $fromValElem.height(); // saved into a variable, because the computed value is zero after repositioning
       $toValElem.position({of: $fromValElem}); // let jqueryUI position it on top of the from element
       if (opts.mode === "swap") {
         toPos = $.extend({}, $toValElem.position());
-        $toValElem.css({left: 0, top: 0});
+        if (to.options.layout !== "bar") {
+          $toValElem.css({left: 0, top: 0});
+        } else {
+          $toValElem.css({left: 0, bottom: 0, top: ""});
+        }
         $fromValElem.position({of: $toValElem});
         $toValElem.css(toPos);
-        $fromValElem.transition({left: 0, top: 0}, this.SPEED, 'linear');
+        if (from.options.layout !== "bar") {
+          $fromValElem.transition({left: 0, top: 0}, this.SPEED, 'linear');
+        } else {
+          var bottom = $fromValElem.parent().height() - $fromValElem.position().top - fromValElemHeight;
+          $fromValElem.css({top: "", bottom: bottom});
+          $fromValElem.transition({left: 0, bottom: 0}, this.SPEED, 'linear'); // animate to final position
+        }
       }
-      $toValElem.transition({left: 0, top: 0}, this.SPEED, 'linear'); // animate to final position
+      if (to.options.layout !== "bar") {
+        $toValElem.transition({left: 0, top: 0}, this.SPEED, 'linear'); // animate to final position
+      } else {
+        var bottom = $toValElem.parent().height() - $toValElem.position().top - toValElemHeight;
+        $toValElem.css({top: "", bottom: bottom});
+        $toValElem.transition({left: 0, bottom: 0}, this.SPEED, 'linear'); // animate to final position
+      }
     }
 
     // return "reversed" parameters and the old value for undoing
