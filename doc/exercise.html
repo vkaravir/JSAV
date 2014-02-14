@@ -239,22 +239,21 @@ to highlight the array indices from left (index 0) to right
 (index arraySize-1) and then swap first and last element.
 
 <pre>
-  function modelSolution(jsav) {
-    var modelArray = jsav.ds.array(initialArray);
+  function modelSolution(modeljsav) {
+    var modelArray = modeljsav.ds.array(initialArray);
     for (var i = 0; i &lt; arraySize; i++) {
       modelArray.highlight(i);
-      jsav.stepOption("grade", true);
-      jsav.step();
+      modeljsav.gradeableStep();
     }
     // swap the first and last element
     modelArray.swap(0, arraySize - 1);
-    jsav.stepOption("grade", true);
+    modeljsav.gradeableStep();
     return modelArray;
   }
 </pre>
 
 <p>
-The function takes a single parameter (<code>jsav</code> above) that
+The function takes a single parameter (<code>modeljsav</code> above) that
 is a reference to the JSAV animation of the model answer.
 Like the initialization function, the model solution function should 
 return the structures used in comparing the model solution with
@@ -266,15 +265,12 @@ in variable <code>initialArray</code> in the initialization
 function.
 It then goes through all indices in turn and highlights the current
 index.
-It also sets a step option for the current collection of effects and
-calls <code>jsav.step()</code>.
-The step option <code>grade</code> is used to mark states in the model
+The <code>gradeableStep()</code> function is used to mark states in the model
 solution that should be used in grading.
 Thus, the model solution can contain an AV with explanations and other
 structures, but only the returned structures at steps where grade is
-set to true, are graded.
-The call to <code>jsav.step()</code> notifies the AV that  
-a new step should be started.
+set to true, are graded. Such explanatory steps can be added through call to
+<code>modeljsav.step()</code>.
 </p>
 
 <h2>Creating the exercise</h2>

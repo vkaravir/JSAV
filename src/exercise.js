@@ -86,6 +86,12 @@
     if (this.options.showGrade && $.isFunction(this.options.showGrade)) {
       this.showGrade = this.options.showGrade;
     }
+
+    // add a gradeableStep function to the jsav instance
+    var exer = this;
+    jsav.gradeableStep = function() {
+      exer.gradeableStep.apply(exer, arguments);
+    };
   };
   Exercise.GradeStepFilterFunction = gradeStepFilterFunction;
   var allEqual = function(initial, model, compare) {
@@ -271,6 +277,13 @@
       // 1. create a new JSAV (and the HTML required for it)
       modelav = new JSAV($("<div><span class='jsavcounter'/><div class='jsavcontrols'/><p class='jsavoutput jsavline'></p></div>").addClass("jsavmodelanswer"),
               {logEvent: modelLogHandler });
+
+      // add a gradeableStep function to the modelanswer jsav instance
+      modelav.gradeableStep = function() {
+        this.stepOption("grade", true);
+        this.step();
+      };
+
       // 2. create a dialog for the model answer
       this.modelDialog = JSAV.utils.dialog(modelav.container, modelOpts );
       // 3. generate the model structures and the state sequence
