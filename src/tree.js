@@ -495,7 +495,7 @@
   binnodeproto._setvalue = JSAV.anim(function(newValue) {
     var oldVal = this.value(),
         valtype = typeof(newValue);
-    if (typeof oldVal === "undefined") {oldVal = "";};
+    if (typeof oldVal === "undefined") {oldVal = "";}
     if (valtype === "object") { valtype = "string"; }
     this.element
         .removeClass("jsavnullnode")
@@ -628,7 +628,7 @@
     calculateLayout(root);
     translateNodes(root, 20, 10 + NODEGAP);
     propagateTranslations(root);
-    var maxX = Number.MIN_VALUE, maxY = Number.MIN_VALUE,
+    var maxX = -Number.MAX_VALUE, maxY = -Number.MAX_VALUE,
         max = Math.max, previousLayout = tree._layoutDone;
     $.each(results, function(key, value) {
       var oldPos = value.node.element.position();
@@ -636,7 +636,7 @@
         if (!previousLayout || (oldPos.left === 0 && oldPos.top === 0)) {
           value.node.element.css({left: value.translation.width + "px", top: value.translation.height + "px"});
         } else {
-          value.node.css({left: value.translation.width + "px", top: value.translation.height + "px"});
+          value.node.moveTo(value.translation.width, value.translation.height);
         }
       }
       maxX = max(maxX, value.translation.width + value.node.element.outerWidth());
@@ -644,24 +644,28 @@
     });
     
     // calculate left coordinate to center the tree inside its parent container
-    var centerTree = function() {
+    var centerTree = function(tree, width) {
       // if options center is not set to truthy value, center it
       if (tree.options.hasOwnProperty("center") && !tree.options.center) {
-        return tree.position().left;
+        return 0;
       }
       var containerWidth = $(tree.jsav.canvas).width();
-      return (containerWidth - maxX)/2;
+      return (containerWidth - width)/2 - tree.position().left;
     };
 
-    var treeDims = { width: maxX, height: maxY,
-                    left: centerTree(tree)};
+    var treeDims = { width: maxX, height: maxY },
+        left = centerTree(tree, maxX);
 
     if (!opts.boundsOnly) { // only go through edges if we are not just calculating bounds
       tree._layoutDone = true;
       if (!previousLayout) {
         tree.element.css(treeDims);
+        tree.element.css("left", left);
       } else {
         tree.css(treeDims, opts);
+        if (left) {
+          tree.translateX(left);
+        }
       }
       $.each(results, function(key, value) {
         var node = value.node;

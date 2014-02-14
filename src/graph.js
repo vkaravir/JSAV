@@ -299,9 +299,9 @@
     for (var i = 0, l = this.nodes.length; i < l; i++) {
       node = this.nodes[i];
       res = this.results[node.id()];
-      node.css({left: (res.layoutPosX - this.layoutMinX) * factorX + "px",
-               top: Math.max(0, (res.layoutPosY - this.layoutMinY) * factorY -
-                    node.element.outerHeight())+ "px"});
+      node.moveTo((res.layoutPosX - this.layoutMinX) * factorX,
+                  Math.max(0, (res.layoutPosY - this.layoutMinY) * factorY -
+                    node.element.outerHeight()));
     }
     for (i = 0, l = this.edges.length; i < l; i++) {
       edge = this.edges[i];

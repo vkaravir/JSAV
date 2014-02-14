@@ -287,11 +287,11 @@
     // center the list inside its parent container
     if (list.options.hasOwnProperty("center") && !list.options.center) {
       // if options center is set to falsy value, return
-      return list.position().left;
+      return 0;
     }
     // width of list expected to be last items position + its width
     var containerWidth = $(list.jsav.canvas).width();
-    return (containerWidth - width)/2;
+    return (containerWidth - width)/2 - list.position().left;
   }
 
   var horizontalNodePosUpdate = function(node, prevNode, prevPos, opts) {
@@ -375,12 +375,15 @@
     left = centerList(list, width, opts);
     if (!opts.boundsOnly) {
       // ..update list size and position..
-      list.css({width: width, height: height, left: left});
+      list.css({width: width, height: height});
+      if (left) {
+        list.translateX(left);
+      }
       // .. and finally update the node and edge positions
       // doing the size first makes the animation look smoother by reducing some flicker
       for (var i = posData.length - 1; i >= 0; i--) {
         var posItem = posData[i];
-        posItem.node.css(posItem.nodePos);
+        posItem.node.moveTo(posItem.nodePos.left, posItem.nodePos.top);
         if (posItem.edge) {
           posItem.edge.g.movePoints(posItem.edgePos, opts);
         }
