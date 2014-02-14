@@ -104,7 +104,17 @@
       this.options.relativeIndex = this.options.targetIndex;
       delete this.options.targetIndex;
     }
-    JSAV.utils._helpers.handlePosition(this);
+
+    if (!this.fixed) {
+      var pointer = this;
+      var arrowPointerListener = function(dleft, dtop) {
+        pointer._pointerLeftSum += dleft;
+        pointer._pointerTopSum += dtop;
+      };
+      this._arrowPointerCallback = arrowPointerListener;
+    }
+    JSAV.utils._helpers.setRelativePositioning(this, $.extend({}, this.options, {callback: this._arrowPointerCallback}));
+
     JSAV.utils._helpers.handleVisibility(this, this.options);
     this._target = options.relativeTo;
     if (this._target) {
@@ -115,6 +125,42 @@
   JSAV.utils.extend(Pointer, JSAV._types.Label);
   var pointerproto = Pointer.prototype;
 
+  pointerproto._setArrowTargetFollower = function() {
+    this._targetLeftSum = 0;
+    this._targetTopSum = 0;
+    var pointer = this;
+    if (!this._arrowUpdateRelativeListener) {
+      var arrowUpdateRelativeListener = function() {
+        if (!pointer.isVisible()) { return; }
+        pointer._translateArrowPoints(pointer._pointerLeftSum, pointer._pointerTopSum,
+                                   pointer._targetLeftSum, pointer._targetTopSum);
+        pointer._targetLeftSum = 0;
+        pointer._targetTopSum = 0;
+        pointer._pointerLeftSum = 0;
+        pointer._pointerTopSum = 0;
+      };
+      this._arrowUpdateRelativeListener = arrowUpdateRelativeListener;
+      pointer.jsav.container.on("jsav-updaterelative", arrowUpdateRelativeListener);
+    }
+
+    var arrowTargetListener = function(dleft, dtop) {
+      pointer._targetLeftSum += dleft;
+      pointer._targetTopSum += dtop;
+    };
+    this._arrowTargetCallback = arrowTargetListener;
+    // set up an event handler to update the arrow position whenever the target moves
+    JSAV.utils._helpers._setRelativeFollowUpdater(this.arrow, this._target, {callback: arrowTargetListener,
+                                                        autotranslate: false});
+  };
+  pointerproto._translateArrowPoints = function(sourceX, sourceY, targetX, targetY) {
+    var curPoints = this.arrow.points();
+    curPoints[0][0] += sourceX;
+    curPoints[0][1] += sourceY;
+    curPoints[1][0] += targetX;
+    curPoints[1][1] += targetY;
+    this.arrow.movePoints([[0, curPoints[0][0], curPoints[0][1]],
+                           [1, curPoints[1][0], curPoints[1][1]]]);
+  };
   // helper function to create the arrow for the pointer
   pointerproto._createArrow = function(options) {
     var arrowPoints = this._arrowPoints();
@@ -127,15 +173,10 @@
     if (this.isVisible()) {
       arrow.show();
     }
-    // set up an event handler to update the arrow position whenever the target
-    // changes or the target moves
-    if (this.options.follow) {
-      var pointer = this;
-      pointer.jsav.container.on("jsav-updaterelative", function() {
-        if (!pointer.isVisible()) { return; }
-        pointer.arrow.movePoints(pointer._arrowPoints(options), options);
-      });
-    }
+    this._pointerLeftSum = 0;
+    this._pointerTopSum = 0;
+    this.arrow = arrow;
+    this._setArrowTargetFollower();
     return arrow;
   };
 
@@ -190,6 +231,26 @@
                         targetBounds.top]];
     return newPoints;
   };
+  pointerproto._calculateArrowTargetPosition = function(target, opts) {
+    var targetElem = target.element;
+    if (opts && typeof(opts.targetIndex) !== "undefined") {
+      opts.relativeIndex = opts.targetIndex;
+    }
+    // If target is an array index, find the DOM element for that index
+    if (opts && typeof(opts.relativeIndex) !== "undefined") {
+      targetElem = target.index(opts.relativeIndex).element;
+    } else {
+      targetElem = target.element;
+    }
+    var targetOffset = targetElem.offset(),
+        canvasOffset = this.jsav.canvas.offset(),
+        targetBounds = {width: targetElem.outerWidth(),
+          height: targetElem.outerHeight(),
+          left: targetOffset.left - canvasOffset.left,
+          top: targetOffset.top - canvasOffset.top};
+    return [targetBounds.left + targetBounds.width/2,
+                     targetBounds.top];
+  };
   // Update the target of this pointer. Argument newTarget should be a JSAV object.
   // Options available are the same as when positioning elements relative to each other.
   pointerproto.target = function(newTarget, options) {
@@ -212,22 +273,15 @@
       }
       // if position is not fixed, update relative position to match new target
       if (!this.options.fixed) {
-        var newPos = JSAV.utils._helpers.setRelativePositioning(this, $.extend({}, this.options, options, {relativeTo: newTarget}));
-        if (this.options.follow) {
-          var that = this;
-          var arrowUpdater = function() {
-            if (!that.isVisible()) { return; }
-            that.arrow.movePoints(pointerproto._arrowPoints.call(that, options), options);
-          };
-          if (this._arrowUpdater) { // unbind the old event handler
-            this.jsav.container.off("jsav-updaterelative", this._arrowUpdater);
-          }
-          this.jsav.container.on("jsav-updaterelative", arrowUpdater);
-          this._arrowUpdater = arrowUpdater;
-        } else if (newPos) { // relative positioning returned new position -> update arrow
-          this.arrow.movePoints(this._arrowPoints(newPos.left, newPos.top, options), options);
-        }
+        var newPos = JSAV.utils._helpers.setRelativePositioning(this, $.extend({}, this.options, options,
+                                                              {relativeTo: newTarget,
+                                                               callback: this._arrowPointerCallback}));
       }
+      this._setArrowTargetFollower();
+      var newTargetArrowPoint = this._calculateArrowTargetPosition(newTarget, options);
+      var currTargetPoint = this.arrow.points()[1];
+      this._targetLeftSum += newTargetArrowPoint[0] - currTargetPoint[0];
+      this._targetTopSum += newTargetArrowPoint[1] - currTargetPoint[1];
       return this;
     }
   };
