@@ -2,7 +2,6 @@
 * Module that contains support for program code constructs.
 * Depends on core.js, anim.js
 */
-/*global JSAV:true*/
 (function($) {
   "use strict";
   if (typeof JSAV === "undefined") { return; }
@@ -100,12 +99,20 @@
     } else {
       $(this.jsav.canvas).append(this.element);
     }
+
+    // if we have relativeIndex or targetIndex in options, get the index and
+    // delete the options
     if (typeof(this.options.targetIndex) !== "undefined") {
-      this.options.relativeIndex = this.options.targetIndex;
+      this.options.relativeTo = this.options.relativeTo.index(this.options.targetIndex);
       delete this.options.targetIndex;
+      delete this.options.relativeIndex;
+    } else if (typeof(this.options.relativeIndex) !== "undefined") {
+        this.options.relativeTo = this.options.relativeTo.index(this.options.relativeIndex);
+        delete this.options.relativeIndex;
     }
 
-    if (!this.fixed) {
+    if (!this.options.fixed) {
+      this.options.follow = true;
       var pointer = this;
       var arrowPointerListener = function(dleft, dtop) {
         pointer._pointerLeftSum += dleft;
@@ -116,20 +123,32 @@
     JSAV.utils._helpers.setRelativePositioning(this, $.extend({}, this.options, {callback: this._arrowPointerCallback}));
 
     JSAV.utils._helpers.handleVisibility(this, this.options);
-    this._target = options.relativeTo;
+    this._target = this.options.relativeTo;
     if (this._target) {
-      this.arrow = this._createArrow();
+      this._createArrow();
     }
   };
   // Extend the Label type
   JSAV.utils.extend(Pointer, JSAV._types.Label);
   var pointerproto = Pointer.prototype;
 
+  // Function to make the arrow end follow the target element of this pointer.
+  // The arrow will change in two ways: when pointer moves and when target moves.
+  // This function handles the latter case. This function also registers a handler
+  // for jsav-updaterelative event which will trigger the actual re-drawing of the
+  // arrow. Until that event fires, the change in position is tracked in fields
+  // _targetLeft/TopSum and _pointerLeft/TopSum.
+  //
+  // The movement of the pointer element is handled by a listener set in the
+  // constructor.
   pointerproto._setArrowTargetFollower = function() {
     this._targetLeftSum = 0;
     this._targetTopSum = 0;
+    // store this in the closure for the handlers
     var pointer = this;
     if (!this._arrowUpdateRelativeListener) {
+      // A handler for jsav-updaterelative event. When the event fires, move
+      // the arrow based on the cumulative translations
       var arrowUpdateRelativeListener = function() {
         if (!pointer.isVisible()) { return; }
         pointer._translateArrowPoints(pointer._pointerLeftSum, pointer._pointerTopSum,
@@ -139,31 +158,38 @@
         pointer._pointerLeftSum = 0;
         pointer._pointerTopSum = 0;
       };
+      // store the function to recognize later that it has been set
       this._arrowUpdateRelativeListener = arrowUpdateRelativeListener;
+      // register the event listener
       pointer.jsav.container.on("jsav-updaterelative", arrowUpdateRelativeListener);
     }
 
+    // function called whenever the target moves.
     var arrowTargetListener = function(dleft, dtop) {
       pointer._targetLeftSum += dleft;
       pointer._targetTopSum += dtop;
     };
-    this._arrowTargetCallback = arrowTargetListener;
     // set up an event handler to update the arrow position whenever the target moves
     JSAV.utils._helpers._setRelativeFollowUpdater(this.arrow, this._target, {callback: arrowTargetListener,
                                                         autotranslate: false});
   };
-  pointerproto._translateArrowPoints = function(sourceX, sourceY, targetX, targetY) {
+
+  // translate the start and end points of the arrow by the given amounts
+  pointerproto._translateArrowPoints = function(startDiffX, startDiffY, endDiffX, endDiffY) {
     var curPoints = this.arrow.points();
-    curPoints[0][0] += sourceX;
-    curPoints[0][1] += sourceY;
-    curPoints[1][0] += targetX;
-    curPoints[1][1] += targetY;
+    curPoints[0][0] += startDiffX;
+    curPoints[0][1] += startDiffY;
+    curPoints[1][0] += endDiffX;
+    curPoints[1][1] += endDiffY;
+    // call the movePoints of the line (in the slightly strange format it has :))
     this.arrow.movePoints([[0, curPoints[0][0], curPoints[0][1]],
                            [1, curPoints[1][0], curPoints[1][1]]]);
   };
   // helper function to create the arrow for the pointer
   pointerproto._createArrow = function(options) {
+    // calculate the points
     var arrowPoints = this._arrowPoints();
+    // create the line graphical primitive for the arrow
     var arrow = this.jsav.g.line(arrowPoints[0][1], arrowPoints[0][2],
         arrowPoints[1][1], arrowPoints[1][2],
         {"arrow-end": "classic-wide",
@@ -175,9 +201,10 @@
     }
     this._pointerLeftSum = 0;
     this._pointerTopSum = 0;
+    // store the arrow in the object
     this.arrow = arrow;
+    // set the arrow to follow the target
     this._setArrowTargetFollower();
-    return arrow;
   };
 
   // Helper function to record the change of the pointer target.
@@ -193,6 +220,7 @@
   // an array like [[0, startX, startY], [1, endX, endY]]
   // Note, that this assumes that both the pointer and the target are inside the
   // jsavcanvas HTML element.
+  // Also not, that this uses _calculateArrowTargetPosition to calculate the end point.
   pointerproto._arrowPoints = function(newLeft, newTop, options) {
     if (typeof newLeft === "object") {
       options = newLeft;
@@ -200,88 +228,90 @@
       newTop = null;
     }
     var opts = $.extend({}, this.options, options),
-        myBounds = this.bounds(),
-        targetElem;
+        myBounds = this.bounds();
 
-    // if targetting null, make the arrow 0 length
-    if (this._target === null) {
-      return [[0, myBounds.left + myBounds.width/2,
-                  myBounds.top + myBounds.height],
-              [1, myBounds.left + myBounds.width/2 + 5,
-                  myBounds.top + myBounds.height + 5]];
-    }
-    if (typeof(opts.targetIndex) !== "undefined") {
-      opts.relativeIndex = opts.targetIndex;
-    }
-    // If target is an array index, find the DOM element for that index
-    if (typeof(opts.relativeIndex) !== "undefined") {
-      targetElem = this._target.index(opts.relativeIndex).element;
-    } else {
-      targetElem = this._target.element;
-    }
-    var targetOffset = targetElem.offset(),
-        canvasOffset = this.jsav.canvas.offset(),
-        targetBounds = {width: targetElem.outerWidth(),
-                                 height: targetElem.outerHeight,
-                                 left: targetOffset.left - canvasOffset.left,
-                                 top: targetOffset.top - canvasOffset.top},
+    var targetPoint = this._calculateArrowTargetPosition(this._target, opts),
         newPoints = [[0, (newLeft || myBounds.left) + myBounds.width/2 + 1, //+1 to center the arrow start "ball"
                          (newTop || myBounds.top) + myBounds.height - 5], // -5 to get to center of pointerarea
-                     [1, targetBounds.left + targetBounds.width/2,
-                        targetBounds.top]];
+                     [1, targetPoint[0], targetPoint[1]]];
     return newPoints;
   };
+  // calculate the end point of the arrow based on the target element. Argument target
+  // should be a JSAV object.
   pointerproto._calculateArrowTargetPosition = function(target, opts) {
-    var targetElem = target.element;
-    if (opts && typeof(opts.targetIndex) !== "undefined") {
-      opts.relativeIndex = opts.targetIndex;
+    var myBounds = this.bounds();
+    // if targetting null, make the arrow 0 length
+    if (this._target === null) {
+      return [myBounds.left + myBounds.width/2 + 5, myBounds.top + myBounds.height + 5];
     }
-    // If target is an array index, find the DOM element for that index
-    if (opts && typeof(opts.relativeIndex) !== "undefined") {
-      targetElem = target.index(opts.relativeIndex).element;
-    } else {
-      targetElem = target.element;
-    }
-    var targetOffset = targetElem.offset(),
+
+    var targetElem = target.element,
+        targetOffset = targetElem.offset(),
         canvasOffset = this.jsav.canvas.offset(),
         targetBounds = {width: targetElem.outerWidth(),
           height: targetElem.outerHeight(),
           left: targetOffset.left - canvasOffset.left,
           top: targetOffset.top - canvasOffset.top};
-    return [targetBounds.left + targetBounds.width/2,
-                     targetBounds.top];
+    // always set the pointer to "center top" of the target element
+    // TODO: allow setting the arrow target anchor
+    return [targetBounds.left + targetBounds.width/2, targetBounds.top];
   };
+
   // Update the target of this pointer. Argument newTarget should be a JSAV object.
   // Options available are the same as when positioning elements relative to each other.
   pointerproto.target = function(newTarget, options) {
     if (typeof newTarget === "undefined") {
       return this._target;
     } else {
-      this._setTarget(newTarget, options);
+      var opts = $.extend({}, options);
+
+      // if relativeIndex or targetIndex are in options, get the index from the
+      // target and delete the options
+      if (typeof(opts.targetIndex) !== "undefined") {
+        newTarget = newTarget.index(opts.targetIndex);
+        delete opts.targetIndex;
+        delete opts.relativeIndex;
+      } else if (typeof(opts.relativeIndex) !== "undefined") {
+        newTarget = newTarget.index(opts.relativeIndex);
+        delete opts.relativeIndex;
+      }
+
+      // record the change of the target
+      this._setTarget(newTarget, opts);
+
       // if setting target to null, hide the arrow
       if (newTarget === null) {
         if (this.arrow) { this.arrow.hide(); }
         this.addClass("jsavnullpointer");
         return this;
+      } else {
+        this.removeClass("jsavnullpointer");
       }
-      this.removeClass("jsavnullpointer");
+      // if no arrow, create the arrow
       if (!this.arrow) {
-        this.arrow = this._createArrow(options);
+        this._createArrow(opts);
       } else if (!this.arrow.isVisible()) {
         // if arrow is hidden, show it
         this.arrow.show();
       }
+
+      // reset the counters for pointer position change
+      this._pointerLeftSum = 0;
+      this._pointerTopSum = 0;
       // if position is not fixed, update relative position to match new target
       if (!this.options.fixed) {
-        var newPos = JSAV.utils._helpers.setRelativePositioning(this, $.extend({}, this.options, options,
+        var newPos = JSAV.utils._helpers.setRelativePositioning(this, $.extend({}, this.options, opts,
                                                               {relativeTo: newTarget,
                                                                callback: this._arrowPointerCallback}));
       }
+      // set the arrow to follow the new target
       this._setArrowTargetFollower();
-      var newTargetArrowPoint = this._calculateArrowTargetPosition(newTarget, options);
+      // calculate the change in position for the arrow target
+      var newTargetArrowPoint = this._calculateArrowTargetPosition(newTarget, opts);
       var currTargetPoint = this.arrow.points()[1];
       this._targetLeftSum += newTargetArrowPoint[0] - currTargetPoint[0];
       this._targetTopSum += newTargetArrowPoint[1] - currTargetPoint[1];
+      // return this for chaining
       return this;
     }
   };
