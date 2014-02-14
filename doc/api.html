@@ -289,6 +289,8 @@ JSAV rather than by the developer.
       specified.</li>
   <li>myAnchor: Similar to anchor, but the position on this element. Defaults to <code>center center</code>. Only 
       has an effect if relativeTo is specified.</li>
+  <li>follow: A boolean indicating whether or not this structure should move when the relative element moves. Only
+    has an effect if relativeTo is specified.</li>
   <li>relativeIndex: If relativeTo points to a JSAV array, this option can be used to position this structure relative
       to an index in that array. Only has an effect if relativeTo is specified.</li>
 </ul>
@@ -548,6 +550,8 @@ Currently, JSAV supports two types of trees: common tree and binary tree. The st
       specified.</li>
   <li>myAnchor: Similar to anchor, but the position on this element. Defaults to <code>center center</code>. Only 
       has an effect if relativeTo is specified.</li>
+  <li>follow: A boolean indicating whether or not this structure should move when the relative element moves. Only
+    has an effect if relativeTo is specified.</li>
   <li>relativeIndex: If relativeTo points to a JSAV array, this option can be used to position this structure relative
       to an index in that array. Only has an effect if relativeTo is specified.</li>
 </ul>
@@ -721,8 +725,11 @@ The additional <code>options</code> parameter works like for <code>.child(...)</
       specified.</li>
   <li>myAnchor: Similar to anchor, but the position on this element. Defaults to <code>center center</code>. Only 
       has an effect if relativeTo is specified.</li>
+  <li>follow: A boolean indicating whether or not this structure should move when the relative element moves. Only
+    has an effect if relativeTo is specified.</li>
   <li>relativeIndex: If relativeTo points to a JSAV array, this option can be used to position this structure relative
       to an index in that array. Only has an effect if relativeTo is specified.</li>
+
 </ul>
 <p>The returned list instance is controlled through a collection of methods explained next. In addition, the list has the common functions such as <code>.id()</code>, <code>.css(...)</code>, <code>.show()</code>, and <code>.hide()</code>.</p>
 
@@ -820,6 +827,8 @@ The additional <code>options</code> parameter works like for <code>.child(...)</
       specified.</li>
   <li>myAnchor: Similar to anchor, but the position on this element. Defaults to <code>center center</code>. Only 
       has an effect if relativeTo is specified.</li>
+  <li>follow: A boolean indicating whether or not this structure should move when the relative element moves. Only
+    has an effect if relativeTo is specified.</li>
   <li>relativeIndex: If relativeTo points to a JSAV array, this option can be used to position this structure relative
       to an index in that array. Only has an effect if relativeTo is specified.</li>
   <li>width: Width of the graph, in pixels. Defaults to 400.</li>
@@ -969,6 +978,8 @@ out, this method will return the current text of the label.
       specified.</li>
   <li>myAnchor: Similar to anchor, but the position on this element. Defaults to <code>center center</code>. Only 
       has an effect if relativeTo is specified.</li>
+  <li>follow: A boolean indicating whether or not this structure should move when the relative element moves. Only
+      has an effect if relativeTo is specified.</li>
   <li>relativeIndex: If relativeTo points to a JSAV array, this option can be used to position this structure relative
       to an index in that array. Only has an effect if relativeTo is specified.</li>
     </ul>
@@ -1073,6 +1084,8 @@ out, this method will return the current text of the label.
       specified.</li>
       <li>myAnchor: Similar to anchor, but the position on this element. Defaults to <code>center center</code>. Only 
       has an effect if relativeTo is specified.</li>
+      <li>follow: A boolean indicating whether or not this structure should move when the relative element moves. Only
+        has an effect if relativeTo is specified.</li>
       <li>relativeIndex: If relativeTo points to a JSAV array, this option can be used to position this structure relative
       to an index in that array. Only has an effect if relativeTo is specified.</li>
     </ul>
@@ -1127,6 +1140,8 @@ out, this method will return the current text of the label.
       <li>relativeTo: A JSAV data structure object or DOM element that this structure should be positioned relative to. If this option is specified, left and top options will change structure's position relative to the relativeTo element. Note, that the element pointed by relativeTo needs to be visible.</li>
       <li>anchor: Defines which position on the element being positioned to align with the target element. Should be in format horizontal vertical. Possible horizontal values are "left", "center", "right" and vertical values "top", "center", "bottom". Defaults to center center. Only has an effect if relativeTo is specified.</li>
       <li>myAnchor: Similar to anchor, but the position on this element. Defaults to center center. Only has an effect if relativeTo is specified.</li>
+      <li>follow: A boolean indicating whether or not this structure should move when the relative element moves. Only
+        has an effect if relativeTo is specified.</li>
       <li>relativeIndex: If relativeTo points to a JSAV array, this option can be used to position this structure relative to an index in that array. Only has an effect if relativeTo is specified.</li>
       <li>style: The style of the array. Valid values are <code>plain</code>, <code>matrix</code>, and
         <code>table</code>. Defaults to table.</li>
