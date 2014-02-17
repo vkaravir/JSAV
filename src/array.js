@@ -480,6 +480,7 @@
 
 
   JSAV._types.ds.AVArray = AVArray;
+  JSAV._types.ds.ArrayIndex = ArrayIndex;
   // expose the data structures for the JSAV
   JSAV.ext.ds.array = function(element, options) {
     return new AVArray(this, element, options);

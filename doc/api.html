@@ -450,7 +450,10 @@ Sets the value of the element at the given index to the given value.
 <h3 class="apimethod">.hasClass(index, className, [options])</h3>
 <p>Return true/false based on if the given index has the CSS class <code>className</code>. Parameter
   <code>index</code> should be a number.</p>
-
+<h3 class="apimethod">.index(index)</h3>
+<p>Returns an ArrayIndex object correcponding to the array index at the given position. The ArrayIndex object
+has all the functions JSAV node objects have, like <code>.css</code>, <code>.toggle/add/remove/hasClass</code>,
+and <code>.highlight</code>.</p>
 <h3 class="apitopic">Events</h3>
 <p>There are functions to attach event handlers for the array elements. The events that can be
   listened for are: click, dblclick, mousedown, mousemove, mouseup, mouseenter, and mouseleave. 

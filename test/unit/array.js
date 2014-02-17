@@ -33,8 +33,7 @@ test("Initializing from Array", function() {
 test("Highlighting indices in Array", function() {
   // [12, 22, 14, 39, 10] array in HTML
   var av = new JSAV("arraycontainer"),
-    arr = av.ds.array($("#array")),
-    props = ["color", "background-color"];
+    arr = av.ds.array($("#array"));
   arr.highlight(0);
   av.step();
   arr.highlight([1]); // highlight with an array
@@ -45,32 +44,31 @@ test("Highlighting indices in Array", function() {
   av.recorded(); // will do rewind, nothing should be highlighted
   $.fx.off = true;
 
-  arrayUtils.testArrayHighlights(arr, [0, 0, 0, 0, 0], props);
+  arrayUtils.testArrayHighlights(arr, [0, 0, 0, 0, 0]);
   
   av.forward(); // apply first highlight
 
-  arrayUtils.testArrayHighlights(arr, [1, 0, 0, 0, 0], props);
+  arrayUtils.testArrayHighlights(arr, [1, 0, 0, 0, 0]);
 
   av.forward(); // apply 2nd (array version) highlight
-  arrayUtils.testArrayHighlights(arr, [1, 1, 0, 0, 0], props);
+  arrayUtils.testArrayHighlights(arr, [1, 1, 0, 0, 0]);
 
   av.forward(); // apply 3rd (function version) highlight
-  arrayUtils.testArrayHighlights(arr, [1, 1, 0, 0, 1], props);
+  arrayUtils.testArrayHighlights(arr, [1, 1, 0, 0, 1]);
 
   av.forward(); // apply last highlight (all should now be highlighted)
-  arrayUtils.testArrayHighlights(arr, [1, 1, 1, 1, 1], props);
+  arrayUtils.testArrayHighlights(arr, [1, 1, 1, 1, 1]);
 
   av.begin(); // going to beginning should remove all highlights
-  arrayUtils.testArrayHighlights(arr, [0, 0, 0, 0, 0], props);
+  arrayUtils.testArrayHighlights(arr, [0, 0, 0, 0, 0]);
   av.end(); // going to the end should reapply the highlights
-  arrayUtils.testArrayHighlights(arr, [1, 1, 1, 1, 1], props);
+  arrayUtils.testArrayHighlights(arr, [1, 1, 1, 1, 1]);
 });
 
 test("Unhighlighting indices in Array", function() {
   // [12, 22, 14, 39, 10] array in HTML
   var av = new JSAV("arraycontainer"),
-    arr = av.ds.array($("#array")),
-    props = ["color", "background-color"];
+    arr = av.ds.array($("#array"));
 
   arr.highlight();
   av.step();
@@ -84,39 +82,38 @@ test("Unhighlighting indices in Array", function() {
   av.recorded(); // will do rewind, nothing should be highlighted
   $.fx.off = true;
 
-  arrayUtils.testArrayHighlights(arr, [0, 0, 0, 0, 0], props);
+  arrayUtils.testArrayHighlights(arr, [0, 0, 0, 0, 0]);
   
   av.forward(); // apply first highlight
-  arrayUtils.testArrayHighlights(arr, [1, 1, 1, 1, 1], props);
+  arrayUtils.testArrayHighlights(arr, [1, 1, 1, 1, 1]);
 
   av.forward(); // apply first unhighlight
-  arrayUtils.testArrayHighlights(arr, [0, 1, 1, 1, 1], props);
+  arrayUtils.testArrayHighlights(arr, [0, 1, 1, 1, 1]);
 
   av.forward(); // apply 2nd (array version) unhighlight
-  arrayUtils.testArrayHighlights(arr, [0, 0, 1, 1, 1], props);
+  arrayUtils.testArrayHighlights(arr, [0, 0, 1, 1, 1]);
 
   av.forward(); // apply 3rd (function version) unhighlight
-  arrayUtils.testArrayHighlights(arr, [0, 0, 1, 1, 0], props);
+  arrayUtils.testArrayHighlights(arr, [0, 0, 1, 1, 0]);
 
   av.forward(); // apply last unhighlight (all should now be unhighlighted)
-  arrayUtils.testArrayHighlights(arr, [0, 0, 0, 0, 0], props);
+  arrayUtils.testArrayHighlights(arr, [0, 0, 0, 0, 0]);
 
   av.begin(); // going to beginning should remove all highlights
-  arrayUtils.testArrayHighlights(arr, [0, 0, 0, 0, 0], props);
+  arrayUtils.testArrayHighlights(arr, [0, 0, 0, 0, 0]);
   av.end(); // going to the end should reapply the unhighlights
-  arrayUtils.testArrayHighlights(arr, [0, 0, 0, 0, 0], props);
+  arrayUtils.testArrayHighlights(arr, [0, 0, 0, 0, 0]);
 });
 
 test("Highlight without parameters", function() {
   var av = new JSAV("arraycontainer"),
-    arr = av.ds.array($("#array")),
-    props = ["color", "background-color"];
+    arr = av.ds.array($("#array"));
   arr.highlight();
   av.recorded();
-  arrayUtils.testArrayHighlights(arr, [0, 0, 0, 0, 0], props);
+  arrayUtils.testArrayHighlights(arr, [0, 0, 0, 0, 0]);
   $.fx.off = true;
   av.forward();
-  arrayUtils.testArrayHighlights(arr, [1, 1, 1, 1, 1], props);
+  arrayUtils.testArrayHighlights(arr, [1, 1, 1, 1, 1]);
 });
 
 test("Test isHighlight", function() {
@@ -153,8 +150,7 @@ test("Simple swaps", function() {
 
 test("Swaps with highlights", function() {
   var av = new JSAV("emptycontainer"),
-    arr = av.ds.array([10, 20, 30, 40]),
-    props = ["color", "background-color"];
+    arr = av.ds.array([10, 20, 30, 40]);
   arr.highlight(function(index) { return index%2 === 0;});
   av.step();
   arr.swap(0, 2);
@@ -162,16 +158,16 @@ test("Swaps with highlights", function() {
   arr.unhighlight(function(index) { return index%2 === 0;});
   av.recorded();
   $.fx.off = true;
-  arrayUtils.testArrayHighlights(arr, [0, 0, 0, 0, 0], props);
+  arrayUtils.testArrayHighlights(arr, [0, 0, 0, 0, 0]);
   arrayUtils.testArrayValues(arr, [10, 20, 30, 40]);
   av.forward(); // apply highlight
-  arrayUtils.testArrayHighlights(arr, [1, 0, 1, 0, 0], props);
+  arrayUtils.testArrayHighlights(arr, [1, 0, 1, 0, 0]);
   arrayUtils.testArrayValues(arr, [10, 20, 30, 40]);
   av.forward(); // apply swap
-  arrayUtils.testArrayHighlights(arr, [1, 0, 1, 0, 0], props);
+  arrayUtils.testArrayHighlights(arr, [1, 0, 1, 0, 0]);
   arrayUtils.testArrayValues(arr, [30, 20, 10, 40]);
   av.forward(); // apply unhighlight
-  arrayUtils.testArrayHighlights(arr, [0, 0, 0, 0, 0], props);
+  arrayUtils.testArrayHighlights(arr, [0, 0, 0, 0, 0]);
   arrayUtils.testArrayValues(arr, [30, 20, 10, 40]);
 });
 test("Swaps with indices", function() {
@@ -417,5 +413,28 @@ test("Test on event binding and custom events", function() {
     ok(arr.equals(arr3, {css: ["background-color", "color"]}));
     arr.highlight(0);
     ok(!arr.equals(arr3, {css: ["background-color", "color"]}));
+  });
+
+  test("Test array indices", function() {
+    var av = new JSAV("arraycontainer"),
+        arr = av.ds.array([1, 2, 3, 4]);
+    arr.layout();
+
+    var ind0 = arr.index(0);
+    ok(ind0 instanceof JSAV._types.ds.ArrayIndex);
+    ok(ind0, "Index function returns something");
+    ok(!arr.index(7), "Nothing is returned when index out of bounds");
+    ok(!arr.index(-1), "Nothing is returned when index out of bounds");
+    ok(!arr.index("kissa"), "Nothing is returned when index out of bounds");
+
+    equal(ind0.value(), 1, "Index value");
+
+    arr.highlight(0);
+    ok(ind0.isHighlight());
+    arr.unhighlight();
+    ok(!ind0.isHighlight());
+
+    arr.css(0, {color: "rgb(0, 0, 7)"});
+    equal(ind0.css("color"), "rgb(0, 0, 7)");
   });
 })();
