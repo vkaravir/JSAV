@@ -2,6 +2,7 @@
 * Module that contains utility functions.
 * Depends on core.js
 */
+/*global JSAV, jQuery */
 (function($) {
   "use strict";
   if (typeof JSAV === "undefined") { return; }
@@ -652,7 +653,7 @@ mixkey(math.random(), pool);
     if ($.isArray(classNames)) { // array of property names
       for (i = 0, l = classNames.length; i < l; i++) {
         clazzname = classNames[i];
-        if (!jsavObj1.hasClass(clazzname) === jsavObj2.hasClass(clazzname)) {
+        if (jsavObj1.hasClass(clazzname) !== jsavObj2.hasClass(clazzname)) {
           return false;
         }
       }

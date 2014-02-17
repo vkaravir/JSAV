@@ -2,6 +2,7 @@
 * Module that contains interaction helpers for JSAV.
 * Depends on core.js, anim.js
 */
+/*global JSAV, jQuery */
 (function($) {
   "use strict";
 

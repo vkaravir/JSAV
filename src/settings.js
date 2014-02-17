@@ -2,6 +2,7 @@
 * Module that contains the configurable settings panel implementation
 * Depends on core.js, utils.js
 */
+/*global JSAV, jQuery */
 (function($) {
   "use strict";
   if (typeof JSAV === "undefined") { return; }

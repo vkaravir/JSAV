@@ -2,6 +2,7 @@
 * Module that contains the array data structure implementations.
 * Depends on core.js, anim.js, utils.js, effects.js, datastructures.js
 */
+/* global JSAV, jQuery */
 (function($) {
   "use strict";
   if (typeof JSAV === "undefined") { return; }

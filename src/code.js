@@ -2,6 +2,7 @@
 * Module that contains support for program code constructs.
 * Depends on core.js, anim.js
 */
+/*global JSAV, jQuery */
 (function($) {
   "use strict";
   if (typeof JSAV === "undefined") { return; }

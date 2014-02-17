@@ -2,7 +2,7 @@
 * Module that contains the linked list data structure implementations.
 * Depends on core.js, datastructures.js, anim.js, utils.js
 */
-/*global JSAV:true */
+/*global JSAV, jQuery */
 (function($) {
   "use strict";
   if (typeof JSAV === "undefined") { return; }
@@ -276,7 +276,7 @@
     } else {
       return true;
     }
-  }
+  };
 
   // expose the list types
   var dstypes = JSAV._types.ds;

@@ -1,3 +1,4 @@
+/*global JSAV, jQuery, console */
 (function($) {
   "use strict";
   if (typeof JSAV === "undefined") { return; }

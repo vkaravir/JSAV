@@ -2,7 +2,7 @@
 * Module that contains the animator implementations.
 * Depends on core.js
 */
-/*global JSAV:true */
+/*global JSAV, jQuery */
 (function($) {
   "use strict";
 

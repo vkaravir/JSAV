@@ -2,6 +2,7 @@
 * Module that contains the message output implementations.
 * Depends on core.js, anim.js, utils.js
 */
+/*global JSAV, jQuery */
 (function($) {
   "use strict";
   var BLOCKED_ATTRIBUTES = ['correct', 'comment', 'points'];
@@ -184,7 +185,7 @@
       var logData = {
         type: "jsav-question-close",
         question: that.questionText
-      }
+      };
       if (that.options.id) { logData.questionId = that.options.id; }
       that.jsav.logEvent(logData);
     };
@@ -264,7 +265,7 @@
       var logData = {
         type: "jsav-question-closeiframe",
         question: that.questionText
-      }
+      };
       if (that.options.id) { logData.questionId = that.options.id; }
       that.jsav.logEvent(logData);
     };

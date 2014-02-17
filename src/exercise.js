@@ -2,6 +2,7 @@
 * Module that contains support for TRAKLA2-type exercises.
 * Depends on core.js, anim.js, utils.js
 */
+/*global JSAV, jQuery, console */
 (function($) {
   "use strict";
   if (typeof JSAV === "undefined") { return; }

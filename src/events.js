@@ -1,3 +1,4 @@
+/*global JSAV, jQuery */
 (function($) {
   "use strict";
   // events to register as functions on tree

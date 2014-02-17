@@ -1,6 +1,7 @@
 /**
 * Module that contains JSAV core.
 */
+/*global JSAV, jQuery, Raphael */
 (function($) {
   "use strict";
   var JSAV = function() {

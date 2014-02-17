@@ -2,6 +2,7 @@
 * Module that contains the message output implementations.
 * Depends on core.js, anim.js
 */
+/*global JSAV, jQuery */
 (function($) {
   "use strict";
   if (typeof JSAV === "undefined") { return; }

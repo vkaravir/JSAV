@@ -2,6 +2,7 @@
 * Module that contains the data structure implementations.
 * Depends on core.js, anim.js, utils.js, effects.js
 */
+/*global JSAV, jQuery, Raphael */
 (function($) {
   "use strict";
   if (typeof JSAV === "undefined") { return; }

@@ -2,6 +2,7 @@
 * Module that contains the graphical primitive implementations.
 * Depends on core.js, anim.js, jQuery, Raphael
 */
+/*global JSAV, jQuery, Raphael */
 if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
   (function($, R) {
     "use strict";
@@ -409,7 +410,7 @@ if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
       isSVGElem: function(node) {
         return (node.nodeType == 1 && node.namespaceURI == 'http://www.w3.org/2000/svg');
       }
-    }
+    };
     /* Support adding class names to SVG nodes. */
     $.fn.addClass = function(origAddClass) {
       return function(classNames) {

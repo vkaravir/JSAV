@@ -2,6 +2,7 @@
 * Module that contains the graph data structure implementations.
 * Depends on core.js, datastructures.js, anim.js, utils.js
 */
+/*global JSAV, jQuery */
 (function($) {
   "use strict";
   if (typeof JSAV === "undefined") { return; }
