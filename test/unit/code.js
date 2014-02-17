@@ -180,7 +180,7 @@
     assert.close(ptrOffset.left, targetOffset.left, maxDifference, "Pointer left position after changing target");
 
     // move the array, pointer should move with it
-    arr.css({left: "+=20px", top: "+=20px"});
+    arr.translate(20, 20);
     av.step();
 
     ptrOffset = ptr.element.offset();
