@@ -1,0 +1,26 @@
+# Dependencies
+markdown:         redcarpet
+pygments:         true
+
+# Permalinks
+permalink:        pretty
+
+# Setup
+title:            JSAV
+tagline:          'The JavaScript Algorithm Visualization Library'
+description:      'The JavaScript Algorithm Visualization Library'
+url:              http://github.com/vkaravir/JSAV/
+
+author:
+  name:           'Ville Karavirta'
+  url:            https://twitter.com/vkaravir
+
+paginate:         5
+
+baseurl:          ''
+
+# Custom vars
+version:          0.8dev
+
+github:
+  repo:           https://github.com/vkaravir/JSAV/

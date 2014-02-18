@@ -1,4 +1,0 @@
-
- * Copyright (c) 2011-2013 by Ville Karavirta and Cliff Shaffer
- * Released under the MIT license.
- */

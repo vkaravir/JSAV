@@ -1,0 +1,10 @@
+<ul>
+  {% assign pages_list = site.pages %}
+  {% for node in pages_list %}
+  {% if node.title != null %}
+  {% if node.layout == "subpage" and node.url contains page.url %}
+  <li><a href="{{ node.url }}">{{ node.title }}</a></li>
+  {% endif %}
+  {% endif %}
+  {% endfor %}
+</ul>

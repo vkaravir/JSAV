@@ -1,0 +1,42 @@
+<div class="sidebar">
+  <div class="container sidebar-sticky">
+    <div class="sidebar-about">
+      <h1><a href="{{ site.baseurl }}/">{{ site.title }}</a></h1>
+      <p>{{ site.description }}<br/>
+        <span class="version">v{{ site.version }}</span>
+      </p>
+
+    </div>
+
+    <ul class="sidebar-nav">
+      <li class="sidebar-nav-item{% if page.url contains 'getstarted' %} active{% endif %}">
+        <a href="{{ site.baseurl }}/getstarted/">Getting Started</a>
+      </li>
+      <li class="sidebar-nav-item{% if page.url contains 'datastructures' %} active{% endif %}">
+        <a href="{{ site.baseurl }}/datastructures/">Data Structures</a>
+      </li>
+      <li class="sidebar-nav-item{% if page.url contains 'graphicalprimitives' %} active{% endif %}">
+        <a href="{{ site.baseurl }}/graphicalprimitives/">Graphical Primitives</a>
+      </li>
+      <li class="sidebar-nav-item{% if page.url contains 'codeelements' %} active{% endif %}">
+        <a href="{{ site.baseurl }}/codeelements/">Code Elements</a>
+      </li>
+      <li class="sidebar-nav-item{% if page.url contains 'commonfunctionality' %} active{% endif %}">
+        <a href="{{ site.baseurl }}/commonfunctionality/">Common Functionality</a>
+      </li>
+      <li class="sidebar-nav-item{% if page.url contains 'otherapis' %} active{% endif %}">
+        <a href="{{ site.baseurl }}/otherapis/">Additional APIs</a>
+      </li>
+      <li class="sidebar-nav-item{% if page.url contains 'exercises' %} active{% endif %}">
+        <a href="{{ site.baseurl }}/exercises/">Creating Exercises</a>
+      </li>
+      <li class="sidebar-nav-item{% if page.url contains 'questions' %} active{% endif %}">
+        <a href="{{ site.baseurl }}/questions/">Showing Questions</a>
+      </li>
+
+    </ul>
+
+    <p><a href="{{ site.github.repo }}">Project on GitHub</a></p>
+    <p>&copy; {{ site.time | date: '%Y' }}. All rights reserved.</p>
+  </div>
+</div>

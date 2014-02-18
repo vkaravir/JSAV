@@ -1,0 +1,13 @@
+h3 {
+  border-left: 3px solid #bbb;
+  padding-left: 5px;
+}
+h3.apimethod {
+  font-family: monospace;
+}
+.version {
+  font-size: 80%;
+}
+.jsavcontainer * {
+  box-sizing: content-box;
+}
