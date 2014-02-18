@@ -3,7 +3,7 @@ layout: subpage
 title: Matrix (or, 2D Array) API
 ---
 
-The Matrix data structures is essentially a 2-dimensional array.
+The Matrix data structure is essentially a 2-dimensional array.
 
 <h3 class="apimethod">.ds.matrix(data[, options]) or .ds.matrix(options)</h3>
 A matrix can be initialized with the ```.ds.matrix()``` function of a JSAV instance.
