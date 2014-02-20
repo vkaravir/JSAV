@@ -11,3 +11,6 @@ h3.apimethod {
 .jsavcontainer * {
   box-sizing: content-box;
 }
+li.subpages {
+  list-style: none;
+}
