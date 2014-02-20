@@ -661,7 +661,9 @@
       tree._layoutDone = true;
       if (!previousLayout) {
         tree.element.css(treeDims);
-        tree.element.css("left", left);
+        if (left) {
+          tree.element.css("left", left);
+        }
       } else {
         tree.css(treeDims, opts);
         if (left) {
