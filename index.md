@@ -33,6 +33,7 @@ Documentation for v{{ site.version }}
   <li>
     <a href="{{ site.baseurl }}/exercises/">Creating Exercises</a>
   </li>
+  {% include toc-subpages.html pageurl='exercises' %}
   <li>
     <a href="{{ site.baseurl }}/questions/">Showing Questions</a>
   </li>
