@@ -17,7 +17,7 @@ author:
 
 paginate:         5
 
-baseurl:          '/JSAV'
+baseurl:          ''
 
 # Custom vars
 version:          0.8dev
