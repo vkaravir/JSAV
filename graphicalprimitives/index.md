@@ -12,6 +12,8 @@ JSAV supports the following graphical primitives: [circle](circle/), [rectangle]
 This would initialize a rectangle with upper-left corner at point (70, 60) that
   is 50 pixels wide and 40 pixels tall.
 
+**Note:** Make sure you [load Rapha&euml;l.js](../getstarted/) when using the graphical primitives.
+
 All the graphical primitives have the following functions.
 
 <h3 class="apimethod">.show()</h3>
