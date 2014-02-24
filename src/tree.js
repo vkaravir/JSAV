@@ -629,21 +629,33 @@
     calculateLayout(root);
     translateNodes(root, 20, 10 + NODEGAP);
     propagateTranslations(root);
+
+    // figure out mix and max positions of nodes
     var maxX = -Number.MAX_VALUE, maxY = -Number.MAX_VALUE,
-        max = Math.max, previousLayout = tree._layoutDone;
+        minX = Number.MAX_VALUE, minY = Number.MAX_VALUE,
+        max = Math.max,
+        min = Math.min;
     $.each(results, function(key, value) {
-      var oldPos = value.node.element.position();
-      if (!opts.boundsOnly) { // only change pos if we are not just calculating bounds
-        if (!previousLayout || (oldPos.left === 0 && oldPos.top === 0)) {
-          value.node.element.css({left: value.translation.width + "px", top: value.translation.height + "px"});
-        } else {
-          value.node.moveTo(value.translation.width, value.translation.height);
-        }
-      }
       maxX = max(maxX, value.translation.width + value.node.element.outerWidth());
       maxY = max(maxY, value.translation.height + value.node.element.outerHeight());
+      minX = min(minX, value.translation.width);
+      minY = min(minY, value.translation.height);
     });
-    
+    // change the position of nodes
+    if (!opts.boundsOnly) { // only change pos if we are not just calculating bounds
+      $.each(results, function(key, value) {
+        var oldPos = value.node.element.position();
+        // if node hasn't been positioned earlier, don't animate
+        if (!value.node._layoutDone && oldPos.left === 0 && oldPos.top === 0) {
+          value.node.element.css({left: (value.translation.width - minX) + "px",
+                                  top: (value.translation.height - minY) + "px"});
+          value.node._layoutDone = true;
+        } else { // otherwise animate to the new position
+          value.node.moveTo(value.translation.width - minX, value.translation.height - minY);
+        }
+      });
+    }
+
     // calculate left coordinate to center the tree inside its parent container
     var centerTree = function(tree, width) {
       // if options center is not set to truthy value, center it
@@ -654,12 +666,12 @@
       return (containerWidth - width)/2 - tree.position().left;
     };
 
-    var treeDims = { width: maxX, height: maxY },
-        left = centerTree(tree, maxX);
+    var treeDims = { width: maxX - minX, height: maxY - minY },
+        left = centerTree(tree, maxX - minX);
 
     if (!opts.boundsOnly) { // only go through edges if we are not just calculating bounds
-      tree._layoutDone = true;
-      if (!previousLayout) {
+      if (!tree._layoutDone) {
+        tree._layoutDone = true;
         tree.element.css(treeDims);
         if (left) {
           tree.element.css("left", left);
@@ -673,11 +685,11 @@
       $.each(results, function(key, value) {
         var node = value.node;
         if (node._edgetoparent) {
-          var start = {left: value.translation.width,
-                        top: value.translation.height},
+          var start = {left: value.translation.width - minX,
+                        top: value.translation.height - minY},
               endnode = results[node.parent().id()].translation,
-              end = {left: endnode.width,
-              top: endnode.height};
+              end = {left: endnode.width - minX,
+              top: endnode.height - minY};
           node._edgetoparent.layout($.extend({start: start, end: end}, opts));
         }
       });
