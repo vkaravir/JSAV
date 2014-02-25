@@ -573,14 +573,18 @@ mixkey(math.random(), pool);
     }
   };
   _helpers._setcss = function(cssprop, value, options) {
-    var oldProps = $.extend(true, {}, cssprop),
+    var oldProps,
         el = this.element,
         newprops, opts = options;
     if (typeof cssprop === "string" && typeof value !== "undefined") {
+      // handle args like (propName, newValue)
+      oldProps = {}; //we will still return an object of old props
       oldProps[cssprop] = el.css(cssprop);
-      newprops = {};
+      newprops = {}; // newProps for animation
       newprops[cssprop] = value;
+      value = undefined;
     } else {
+      oldProps = $.extend(true, {}, cssprop);
       for (var i in cssprop) {
         if (cssprop.hasOwnProperty(i)) {
           oldProps[i] = el.css(i);
