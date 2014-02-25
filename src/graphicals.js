@@ -495,6 +495,16 @@ if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
     /*! End Keith Wood's utilities */
 
   }(jQuery, Raphael));
+
+} else { // end if Raphael !== "undefined"
+  // if raphael is not loaded, create dummy functions which warn when using primitives without Raphael
+  var error = function() {
+    console.error("You are trying to use graphical primitives but forgot to load Raphael.js.");
+  };
+  var g = {};
+  var names = ["circle", "rect", "line", "ellipse", "polyline", "polygon", "path", "set"];
+  for (var i = names.length; i--; ) { g[names[i]] = error; }
+  JSAV.ext.g = g;
 }
 
 (function($) {
