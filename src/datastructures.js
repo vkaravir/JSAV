@@ -389,10 +389,10 @@
     return "<span class='jsavvaluelabel'>" + value + "</span>";
   };
   nodeproto.highlight = function(options) {
-    this.addClass("jsavhighlight");
+    return this.addClass("jsavhighlight");
   };
   nodeproto.unhighlight = function(options) {
-    this.removeClass("jsavhighlight");
+    return this.removeClass("jsavhighlight");
   };
   nodeproto.isHighlight = function() {
     return this.hasClass("jsavhighlight");
