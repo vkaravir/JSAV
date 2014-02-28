@@ -40,33 +40,33 @@
   };
   JSAV.init.functions = [];
   
-  var AV = function() {},
-    create = function() {
-      if (typeof arguments[0] === "string") {
-        this.container = $(document.getElementById(arguments[0]));
-      } else {
-        this.container = $(arguments[0]); // make sure it is jQuery object
-      }
-      var initialHTML = this.container.clone().wrap("<p/>").parent().html();
-      this.container.addClass("jsavcontainer");
-      this.canvas = this.container.find(".jsavcanvas");
-      if (this.canvas.size() === 0) {
-        this.canvas = $("<div />").addClass("jsavcanvas").appendTo(this.container);
-      }
-      // element used to block events when animating
-      var shutter = $("<div class='jsavshutter' />").appendTo(this.container);
-      this._shutter = shutter;
+  var create = function() {
+    // this will point to a newly-created JSAV instance
+    if (typeof arguments[0] === "string") {
+      this.container = $(document.getElementById(arguments[0]));
+    } else {
+      this.container = $(arguments[0]); // make sure it is jQuery object
+    }
+    var initialHTML = this.container.clone().wrap("<p/>").parent().html();
+    this.container.addClass("jsavcontainer");
+    this.canvas = this.container.find(".jsavcanvas");
+    if (this.canvas.size() === 0) {
+      this.canvas = $("<div />").addClass("jsavcanvas").appendTo(this.container);
+    }
+    // element used to block events when animating
+    var shutter = $("<div class='jsavshutter' />").appendTo(this.container);
+    this._shutter = shutter;
 
-      this.options = $.extend({}, window.JSAV_OPTIONS, arguments[1]);
-      this.RECORD = true;
-      jQuery.fx.off = true; // by default we are recording changes, not animating them
-      // initialize stuff from init namespace
-      initializations(this, this.options);
-      // add all plugins from ext namespace
-      extensions(this, this, JSAV.ext);
+    this.options = $.extend({autoresize: true}, window.JSAV_OPTIONS, arguments[1]);
+    this.RECORD = true;
+    jQuery.fx.off = true; // by default we are recording changes, not animating them
+    // initialize stuff from init namespace
+    initializations(this, this.options);
+    // add all plugins from ext namespace
+    extensions(this, this, JSAV.ext);
 
-      this.logEvent({ type: "jsav-init", initialHTML: initialHTML });
-    };
+    this.logEvent({ type: "jsav-init", initialHTML: initialHTML });
+  };
   function initializations(jsav, options) {
     var fs = JSAV.init.functions;
     for (var i = 0; i < fs.length; i++) {
@@ -95,6 +95,7 @@
       }
     }
   }
+
   if (window) {
     window.JSAV = JSAV;
   }
