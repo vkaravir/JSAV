@@ -16,15 +16,19 @@ Matrix supports the [common options and position options]({{ site.baseurl }}/com
  * style: The style of the array. Valid values are ```plain```, ```matrix```, and
   ```table```. Defaults to ```table```.
 
-<div id="matrixStyles"></div>
+<div id="matrixStyles" class="jsavexample"></div>
 <script>
-var jsav = new JSAV("matrixStyles");
-jsav.label("Table Style", {center: true});
-var tableStyle = jsav.ds.matrix([[0, 1], [2, 3]]);
-jsav.label("Matrix Style", {center: true});
-var matrixStyle = jsav.ds.matrix([[0, 1], [2, 3]], {style: "matrix"});
-jsav.label("Plain Style", {center: true});
-var plainStyle = jsav.ds.matrix([[0, 1], [2, 3]], {style: "plain"});
+(function() {
+  var jsav = new JSAV("matrixStyles");
+  jsav.label("Table Style", {center: true});
+  var tableStyle = jsav.ds.matrix([[0, 1], [2, 3]]);
+  jsav.label("Matrix Style", {center: true});
+  var matrixStyle = jsav.ds.matrix([[0, 1], [2, 3]], {style: "matrix"});
+  jsav.label("Plain Style", {center: true});
+  var plainStyle = jsav.ds.matrix([[0, 1], [2, 3]], {style: "plain"});
+}());
+</script>
+<script>
 </script>
 
 For example, this would create a 2x2 matrix: ```var m = jsav.ds.matrix([[0, 1], [2, 3]])```.

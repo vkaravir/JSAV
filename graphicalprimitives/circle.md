@@ -13,3 +13,16 @@ Gets or sets the center of the circle. The center is returned as an object with 
 
 <h3 class="apimethod">.radius([r])</h3>
 Gets or sets the radius of the circle.
+
+<h3>Example</h3>
+<div id="circleExample" class="jsavexample"></div>
+<script>
+(function() {
+  var jsav = new JSAV("circleExample");
+  jsav.g.circle(100, 55, 50);
+  jsav.g.circle(250, 55, 50, {stroke: "red"});
+  jsav.g.circle(400, 55, 50, {fill: "orange"});
+  jsav.g.circle(550, 55, 50, {stroke: "orange", "stroke-width": 4});
+  jsav.displayInit();
+}());
+</script>
