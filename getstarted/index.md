@@ -85,6 +85,8 @@ Both alternatives accept an optional second parameter <code>options</code>
  * <code>animationMode</code> Use "none" to turn off animation (slideshow) mode.
  * <code>output</code> The output buffer element to use with the Messaging API. The value
     of the option should be a DOM element, CSS selector string, or a jQuery object.
+ * <code>autoresize</code> Control whether the JSAV canvas element automatically adjusts
+    its size based on the content. Defaults to <code>true</code>.
 
 In addition to the options passed to the function, any options specified
   in a global variable <code>JSAV_OPTIONS</code> will be used. Those passed on
