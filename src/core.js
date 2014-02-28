@@ -96,6 +96,44 @@
     }
   }
 
+  // register a handler for autoresizing the jsavcanvas
+  JSAV.init(function() {
+    // in a JSAV init function, this will be the just-created JSAV instance
+    if (this.options.autoresize) {
+      var that = this;
+      // register event handler for jsav-updaterelative which is triggered on each step
+      this.container.on("jsav-updaterelative", function() {
+        // collect max top and left positions of all JSAV objects
+        var maxTop = parseInt(that.canvas.css("minHeight"), 10),
+            maxLeft = parseInt(that.canvas.css("minWidth"), 10);
+
+        // go through all elements inside jsavcanvas
+        that.canvas.children().each(function(index, item) {
+          var $item = $(item),
+              itemPos = $item.position();
+          // ignore SVG, since it will be handled differently since it's sized 100%x100%
+          if (item.nodeName.toLowerCase() !== "svg") {
+            maxTop = Math.max(maxTop, itemPos.top + $item.innerHeight());
+            maxLeft = Math.max(maxLeft, itemPos.left + $item.innerWidth());
+          }
+        });
+        if (that.svg) { // handling of SVG
+          var curr = that.svg.bottom, // start from the element in the behind
+              bbox, strokeWidth;
+          while (curr) { // iterate all SVG objects in Raphael
+            bbox = curr.getBBox();
+            strokeWidth = curr.attr("stroke-width");
+            maxTop = Math.max(maxTop, bbox.y2 + strokeWidth);
+            maxLeft = Math.max(maxLeft, bbox.x2 + strokeWidth);
+            curr = curr.next;
+          }
+        }
+        // set minheight and minwidth on the jsavcanvas element
+        that.canvas.css({"minHeight": maxTop, "minWidth": maxLeft});
+      });
+    }
+  }); // end autoresize handler
+
   if (window) {
     window.JSAV = JSAV;
   }

@@ -14,7 +14,9 @@ test("JSAV Options", function() {
   // simple test to see if global JSAV_OPTIONS works
   window.JSAV_OPTIONS = {cat: 0, dog: 1};
   var av = new JSAV("emptycontainer", {cat: 3, turtle: 42});
-  deepEqual(av.options, {cat: 3, dog: 1, turtle: 42});
+  equal(av.options.turtle, 42, "Basic option preserved");
+  equal(av.options.dog, 1, "Global option");
+  equal(av.options.cat, 3, "Global option also specified on initialization");
   // delete the global variable
   delete window.JSAV_OPTIONS;
 });
