@@ -250,7 +250,7 @@
     if (typeof node === "undefined") {
       return this.childnodes[pos];
     } else {
-      if (!node instanceof TreeNode) {
+      if (node !== null && !(node instanceof TreeNode)) {
         node = this.container.newNode(node, this, options);
       }
       return setchildhelper(this, pos, node, options);
