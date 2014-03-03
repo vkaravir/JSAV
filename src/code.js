@@ -245,7 +245,30 @@
     if (this._target === null) {
       return [myBounds.left + myBounds.width/2 + 5, myBounds.top + myBounds.height + 5];
     }
-
+    // figure out where to target the arrow
+    // format of the arrowAnchor should be horz vert
+    // where horz is left, center, right, or a percentage
+    // and vert is top, center, bottom, or a percentage
+    var horzPercentMapping = {left: 0, center: 50, right: 100},
+        vertPercentMapping = {top: 0, center: 50, bottom: 100};
+    var arrowHorzAnchor = 50, // default to center
+        arrowVertAnchor = 0, // and top
+        arrowAnchor = opts.arrowAnchor || this.options.arrowAnchor;
+    if (arrowAnchor) {
+      var anchor = arrowAnchor.split(' ');
+      if (anchor.length === 1) {
+        arrowHorzAnchor = arrowVertAnchor = parseInt(anchor[0], 10);
+      } else {
+        arrowHorzAnchor = horzPercentMapping[anchor[0]];
+        if (typeof arrowHorzAnchor !== "number") {
+          arrowHorzAnchor = parseInt(anchor[0], 10);
+        }
+        arrowVertAnchor = vertPercentMapping[anchor[1]];
+        if (typeof arrowVertAnchor !== "number") {
+          arrowVertAnchor = parseInt(anchor[1], 10);
+        }
+      }
+    }
     var targetElem = target.element,
         targetOffset = targetElem.offset(),
         canvasOffset = this.jsav.canvas.offset(),
@@ -253,9 +276,8 @@
           height: targetElem.outerHeight(),
           left: targetOffset.left - canvasOffset.left,
           top: targetOffset.top - canvasOffset.top};
-    // always set the pointer to "center top" of the target element
-    // TODO: allow setting the arrow target anchor
-    return [targetBounds.left + targetBounds.width/2, targetBounds.top];
+    return [targetBounds.left + targetBounds.width*arrowHorzAnchor/100.0,
+            targetBounds.top + targetBounds.height*arrowVertAnchor/100.0];
   };
 
   // Update the target of this pointer. Argument newTarget should be a JSAV object.
