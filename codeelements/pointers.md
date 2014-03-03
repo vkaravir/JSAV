@@ -11,7 +11,7 @@ Pointers can be used to represent pointers of a programming language. The pointe
 This is a method of the AV object. It creates a pointer that points to some JSAV object.
 Parameter ```name``` is the (initial) name for the pointer. Parameter ```options``` include the following:
 
- * ```{left/top/right/bottom: <lengthUnit>}``` Values to determine the absolute position of the label relative to the pointer's target.
+ * ```{left/top: <lengthUnit>}``` Values to determine the absolute position of the label relative to the pointer's target.
  * ```{anchor: <String>}``` Defines which position on the element being positioned to align with the target element. Should be in 
   format ```horizontal vertical```. Possible horizontal values are "left", "center", "right" and vertical values "top", "center", "bottom". Defaults to ```center center```.
  * ```{myAnchor: <String>}``` Similar to anchor, but the position on this element. Defaults to ```center center```.
@@ -21,6 +21,9 @@ Parameter ```name``` is the (initial) name for the pointer. Parameter ```options
  * ```{fixed: <boolean>}``` A boolean indicating whether the pointer should move when it's target changes.
   Note, that if the pointer has a target when initialized, the pointer will still be positioned
   relative to that target.
+ * ```{arrowAnchor: <String>}``` Similar to anchor, but the target position of the arrow. Defaults to ```top center```.
+  In addition to values of anchor, can also be specified as percentages of width/height from top-left corner. For example,
+  ```0 50%``` would match the default value ```top center```.
 
 A pointer instance has the functions of the Label object as well as the following functions.
 
@@ -33,3 +36,22 @@ If ```newTarget``` is not specified, returns the JSAV object this pointer points
 
 **Note:** the position of the pointer is only updated once the ```jsav.step()```,
   ```jsav.displayInit()```, or ```jsav.recorded()``` function is called.
+
+### Example
+<div id="pointerExample" class="jsavexample"></div>
+<script>
+(function() {
+  var jsav = new JSAV("pointerExample"),
+      arr = jsav.ds.array([9, 8, 7, 6, 5, 4, 3, 2, 1],
+                          {left: 50, top: 50});
+  var pointer = jsav.pointer("p", arr.index(2)),
+      pointerBottom = jsav.pointer("bottom", arr,
+                             { anchor: "center bottom",
+                               myAnchor: "right top",
+                               top: 10,
+                               left: -20,
+                               arrowAnchor: "center bottom"
+                             });
+  jsav.displayInit();
+}());
+</script>
