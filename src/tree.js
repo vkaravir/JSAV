@@ -659,7 +659,7 @@
     // calculate left coordinate to center the tree inside its parent container
     var centerTree = function(tree, width) {
       // if options center is not set to truthy value, center it
-      if (tree.options.hasOwnProperty("center") && !tree.options.center) {
+      if (opts.hasOwnProperty("center") && !opts.center) {
         return 0;
       }
       var containerWidth = $(tree.jsav.canvas).width();
