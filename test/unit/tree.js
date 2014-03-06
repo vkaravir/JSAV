@@ -253,6 +253,23 @@
     t1.root("Ro").left("L").left("LL").parent().parent().right("R");
     t2.root("Ro").left("L").left("LL").parent().parent().right("R");
     ok(t1.equals(t2));
+
+    t1.root().value("Ri");
+    ok(!t1.equals(t2), "Different values in root");
+
+    t2.root().value("Ri");
+    ok(t1.equals(t2), "Same values in root again");
+
+    t1.root().left().left().right("LLR");
+    ok(!t1.equals(t2), "Different nodes in the trees");
+    t2.root().left().left().right("LLR");
+    ok(t1.equals(t2), "Same nodes in the trees again");
+    t2.root().left().left().right().remove();
+    ok(!t1.equals(t2), "Different nodes in the trees");
+    t1.root().left().left().right().remove();
+    ok(t1.equals(t2), "Same nodes in the trees again");
+
+
     ok(t1.equals(t2, {"css": "background-color"}));
     t1.root().highlight();
     ok(t1.equals(t2));
@@ -281,7 +298,6 @@
     t1.root().edgeToLeft().css({"stroke": "red"});
     ok(t1.equals(t2));
     ok(!t1.equals(t2, {"css": "stroke"}));
-
 
     // classes
     ok(t1.equals(t2, {"class": "jsavhighlight"}));
