@@ -343,6 +343,28 @@
     constructor.prototype = prototypeObject;
   };
 
+  /* Replaces the labels (surrounded by curly brackets) in a string with a value
+   * 
+   * For instance if the string is "The value of x is {x}" and the object
+   * containing the replacements for the tag is {x: 7}, this function will
+   * return the string "The value of x is 7"
+   *
+   * This function uses regular expressions to replace the tags. Therefore tags
+   * should not use numbers or special characters such as . ? * + etc.
+   */
+  u.replaceLabels = function (string, replacementObject) {
+    if (!replacementObject || typeof replacementObject !== "object")
+      return string;
+
+    var result = string;
+    for (var label in replacementObject) {
+      var reg = new RegExp("{"+label+"}", "g");
+      result = result.replace(reg, replacementObject[label]);
+    }
+
+    return result;
+  };
+
 /*!
 // based on seedrandom.js version 2.0.
 // Author: David Bau 4/2/2011
