@@ -15,7 +15,7 @@
     }
   };
   MessageHandler.prototype.umsg = JSAV.anim(function(msg, options) {
-    if (options.fill && typeof options.fill === "object") {
+    if (options && options.fill && typeof options.fill === "object") {
       // replace the labels in the string if the replacements are given in the options
       msg = JSAV.utils.replaceLabels(msg, options.fill);
     }
