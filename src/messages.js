@@ -15,6 +15,10 @@
     }
   };
   MessageHandler.prototype.umsg = JSAV.anim(function(msg, options) {
+    if (options && options.fill && typeof options.fill === "object") {
+      // replace the labels in the string if the replacements are given in the options
+      msg = JSAV.utils.replaceLabels(msg, options.fill);
+    }
     if (!this.jsav.RECORD) { // trigger events only if not recording
       this.jsav.container.trigger("jsav-message", [msg, options]);
     }
