@@ -343,6 +343,79 @@
     constructor.prototype = prototypeObject;
   };
 
+  /* Returns a function which interpet given labels to a values
+   * (usually a strings) in the selected language.
+   *
+   * langJSON         - a JavaScript object or a URL to a JSON file
+   *                    containing the translation(s)
+   * selectedLanguage - a string which tells which language to select.
+   *                    If undefined the langJSON is assumed to already
+   *                    contain the translation for a language.
+   *
+   * If the translations are in separate files the URL can be written
+   * with the label {lang}. This label will then be replaced with the
+   * selected language. For instance if the translations are in BST-en.json
+   * and BST-fi.json, langJSON can be "BST-{lang}.json" and selectedLanguage
+   * "en" or "fi".
+   *
+   * A translation object for only one language could look like this:
+   *    {message: "Hello!"}
+   * and for two languages it could look like this:
+   *    {
+   *      en: {message: "Hello!"},
+   *      fi: {message: "Moi!"}
+   *    }
+   */
+  u.getInterpreter = function (langJSON, selectedLanguage) {
+    var trans;
+
+    // get the translation from the given location or object 
+    if (typeof langJSON === "string") {
+      // assume langJSON is a url
+      if (langJSON.indexOf("{lang}") !== -1) {
+        // replace {lang} label with the selected language
+        langJSON = langJSON.replace("{lang}", selectedLanguage);
+        selectedLanguage = undefined;
+      }
+      $.ajax({
+        url: langJSON,
+        async: false,
+        dataType: "json",
+        success: function (data) {
+          if (selectedLanguage) {
+            trans = data[selectedLanguage];
+          } else {
+            trans = data;
+          }
+        }
+      });
+    } else if (typeof langJSON === "object") {
+      // assume this is an object containing one or more translations
+      if (selectedLanguage) {
+        trans = langJSON[selectedLanguage];
+      } else {
+        trans = langJSON;
+      }
+    }
+
+    // if the selected translation is not an object give a warning and
+    // return a dummy function
+    if (typeof trans !== "object") {
+      console.warn("Language not found (" + selectedLanguage + ")");
+      return function (label) {
+        return "[" + label + "]";
+      };
+    }
+
+    // return the interpreter function for the selected language
+    return function (label) {
+      if (typeof trans[label] === "undefined") {
+        console.warn("Cannot find label: " + label);
+        return "[" + label + "]";
+      }
+      return trans[label];
+    };
+
   /* Replaces the labels (surrounded by curly brackets) in a string with a value
    * 
    * For instance if the string is "The value of x is {x}" and the object
