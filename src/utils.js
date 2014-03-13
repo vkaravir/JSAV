@@ -415,6 +415,7 @@
       }
       return trans[label];
     };
+  };
 
   /* Replaces the labels (surrounded by curly brackets) in a string with a value
    * 
