@@ -19,9 +19,6 @@
       // replace the labels in the string if the replacements are given in the options
       msg = JSAV.utils.replaceLabels(msg, options.fill);
     }
-    if (!this.jsav.RECORD) { // trigger events only if not recording
-      this.jsav.container.trigger("jsav-message", [msg, options]);
-    }
     var opts = $.extend({color: "black", preserve: false}, options);
     if (this.output) {
       if (this.output.hasClass("jsavline") && opts.preserve) {
@@ -41,6 +38,9 @@
           this.output[0].scrollTop = this.output[0].scrollHeight;
         }
       }
+    }
+    if (!this.jsav.RECORD) { // trigger events only if not recording
+      this.jsav.container.trigger("jsav-message", [msg, options]);
     }
     return this;
   });
