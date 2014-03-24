@@ -545,6 +545,8 @@ if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
       return this;
     }
   };
+  // add value(..) function as an alias for text
+  labelproto.value = labelproto.text;
   labelproto.state = function(newstate) {
     if (newstate) {
       $(this.element).html(newstate);

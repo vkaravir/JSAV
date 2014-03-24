@@ -136,11 +136,15 @@
     // get the HTML elements for the values, for arrays, use the index
     if (from.constructor === JSAV._types.ds.AVArray) {
       $fromValElem = from.element.find("li:eq(" + opts.args1[0] + ") .jsavvaluelabel");
+    } else if (from.element.hasClass("jsavlabel")) { // special treatment for labels
+      $fromValElem = from.element;
     } else {
       $fromValElem = from.element.find(".jsavvaluelabel");
     }
     if (to.constructor === JSAV._types.ds.AVArray) {
       $toValElem = to.element.find("li:eq(" + opts.args2[0] + ") .jsavvaluelabel");
+    } else if (to.element.hasClass("jsavlabel")) { // special treatment for labels
+      $toValElem = to.element;
     } else {
       $toValElem = to.element.find(".jsavvaluelabel");
     }
