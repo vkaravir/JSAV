@@ -1,6 +1,6 @@
 /**
 * Module that contains support for TRAKLA2-type exercises.
-* Depends on core.js, anim.js, utils.js
+* Depends on core.js, anim.js, utils.js, translate.js
 */
 /*global JSAV, jQuery, console */
 (function($) {
@@ -14,8 +14,10 @@
     this.options = jQuery.extend({reset: function() { }, controls: null, feedback: "atend",
                                   feedbackSelectable: false, fixmode: "undo",
                                   fixmodeSelectable: false, grader: "default",
-                                  resetButtonTitle: "Reset", undoButtonTitle: "Undo",
-                                  modelButtonTitle: "Model Answer", gradeButtonTitle: "Grade"
+                                  resetButtonTitle: this.jsav._translate("resetButtonTitle"),
+                                  undoButtonTitle: this.jsav._translate("undoButtonTitle"),
+                                  modelButtonTitle: this.jsav._translate("modelButtonTitle"),
+                                  gradeButtonTitle: this.jsav._translate("gradeButtonTitle")
                                  },
                                   window.JSAV_EXERCISE_OPTIONS,
                                   options);
@@ -61,25 +63,33 @@
     }
     // if feedbacktype can be selected, add settings for it
     if (this.options.feedbackSelectable) {
-      this.feedback = this.jsav.settings.add("feedback",
-              {"type": "select", "options": {"continuous": "Continuous", "atend": "At end"},
-              "label":"Grade Feedback: ", "value": this.options.feedback});
+      this.feedback = this.jsav.settings.add("feedback", {
+              "type": "select",
+              "options": {
+                  "continuous": this.jsav._translate("continuous"),
+                  "atend": this.jsav._translate("atend")},
+              "label":this.jsav._translate("feedbackLabel"),
+              "value": this.options.feedback});
     }
     // if fixmode can be selected, add settings for it
     if (this.options.fixmodeSelectable) {
-      this.fixmode = this.jsav.settings.add("fixmode",
-              {"type": "select", "options": {"undo": "Undo incorrect step", "fix": "Fix incorrect step"},
-              "label": "Continuous feedback behaviour", "value": this.options.fixmode});
+      this.fixmode = this.jsav.settings.add("fixmode", {
+              "type": "select",
+              "options": {
+                  "undo": this.jsav._translate("undo"),
+                  "fix": this.jsav._translate("fix")},
+              "label": this.jsav._translate("fixLabel"),
+              "value": this.options.fixmode});
     }
 
     // if jsavscore element is present and empty, add default structure
     var $jsavscore = this.jsav.container.find(".jsavscore");
     if ($jsavscore.size() === 1 && $jsavscore.children().size() === 0 &&
       this.options.feedback === "continuous") {
-      $jsavscore.html('Score: <span class="jsavcurrentscore"></span> / ' +
-          '<span class="jsavmaxscore" ></span>, <span class="jsavamidone">Points remaining: ' +
-          '<span class="jsavpointsleft"></span></span>, ' +
-          'Points lost: <span class="jsavpointslost" ></span>');
+      $jsavscore.html(this.jsav._translate("scoreLabel") + ' <span class="jsavcurrentscore"></span> / ' +
+          '<span class="jsavmaxscore" ></span>, <span class="jsavamidone">' + this.jsav._translate("remainingLabel") +
+          ' <span class="jsavpointsleft"></span></span>, ' +
+          this.jsav._translate("lostLabel") + ' <span class="jsavpointslost" ></span>');
       this._defaultscoretext = true;
     }
     
@@ -203,12 +213,12 @@
           score = this.score;
       if (this._defaultscoretext) {
         container.find(".jsavamidone").html((score.total === score.correct)?
-            "DONE":"Points remaining: <span class='jsavpointsleft'></span>");
+            this.jsav._translate("doneLabel"):this.jsav._translate("remainingLabel") + " <span class='jsavpointsleft'></span>");
       }
       container.find(".jsavcurrentscore").text(score.correct);
       container.find(".jsavcurrentmaxscore").text(score.correct + score.fix);
       container.find(".jsavmaxscore").text(score.total);
-      container.find(".jsavpointsleft").text((score.total - score.correct  - score.fix) || "DONE");
+      container.find(".jsavpointsleft").text((score.total - score.correct  - score.fix) || this.jsav._translate("doneLabel"));
       container.find(".jsavpointslost").text(score.fix || 0);
     }
   };
@@ -244,9 +254,9 @@
     // shows an alert box of the grade
     this.grade();
     var grade = this.score,
-      msg = "Your score: " + (grade.correct) + " / " + grade.total;
+      msg = this.jsav._translate("yourScore") + " " + (grade.correct) + " / " + grade.total;
     if (grade.fix > 0) {
-      msg += "\nFixed incorrect steps: " + grade.fix;
+      msg += "\n" + this.jsav._translate("fixedSteps") + " " + grade.fix;
     }
     window.alert(msg);
   };
@@ -257,7 +267,9 @@
     var model = this.options.model,
         modelav,
         self = this,
-        modelOpts = $.extend({ "title": 'Model Answer', "closeOnClick": false, "modal": false,
+        modelOpts = $.extend({"title": this.jsav._translate("modelWindowTitle"),
+                              "closeOnClick": false,
+                              "modal": false,
                               "closeCallback": function() {
                                 self.jsav.logEvent({type: "jsav-exercise-model-close"});
                                 if (typeof returnToStep === "number") {
@@ -400,17 +412,17 @@
             console.error("The fix function did not work as expected, the structures aren't equal");
           }
           that.jsav.logEvent({type: "jsav-exercise-step-fixed", score: $.extend({}, grade)});
-          window.alert("Your last step was incorrect. Your work has been replaced with the correct step so that you can continue on.");
+          window.alert(that.jsav._translate("fixedPopup"));
         } else if (fixmode === "fix") {
           that.score.undo++;
           that.jsav.logEvent({type: "jsav-exercise-step-undone", score: $.extend({}, grade)});
           moveModelBackward(that);
-          window.alert("Your last step was incorrect and I should fix your solution, but don't know how. So it was undone and you can try again.");
+          window.alert(that.jsav._translate("fixFailedPopup"));
         } else {
           that.score.undo++;
           that.jsav.logEvent({type: "jsav-exercise-step-undone", score: $.extend({}, grade)});
           moveModelBackward(that);
-          window.alert("Your last step was incorrect. Things are reset to the beginning of the step so that you can try again.");
+          window.alert(that.jsav._translate("undonePopup"));
         }
         that._updateScore();
       };
