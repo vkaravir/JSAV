@@ -295,9 +295,17 @@
     return true;
   }
   JSAV.anim = anim;
-  if (localStorage) {
-
-    JSAV.ext.SPEED = localStorage.getItem("jsav-speed") || DEFAULT_SPEED;
+  if (localStorage) { // try to fetch a stored setting for speed from localStorage
+    var spd = localStorage.getItem("jsav-speed");
+    if (spd) { // if we have a value, it is a string (from localStorage)
+      spd = parseInt(spd, 10);
+      if (isNaN(spd)) { // if we couldn't parse an int, fallback to default speed
+        spd = DEFAULT_SPEED;
+      }
+    } else { // no value in localStorage, go with the default speed
+      spd = DEFAULT_SPEED;
+    }
+    JSAV.ext.SPEED = spd;
   } else {
     JSAV.ext.SPEED = DEFAULT_SPEED;
   }
