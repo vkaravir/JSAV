@@ -250,7 +250,7 @@
       JSAV.anim(doValueEffect).call(this, params);
     },
     swap: function($str1, $str2, options) {
-      var opts = $.extend({translateY: true, arrow: true}, options),
+      var opts = $.extend({translateY: true, arrow: true, highlight: true}, options),
           $val1 = $str1.find("span.jsavvalue"),
           $val2 = $str2.find("span.jsavvalue"),
           posdiffX = JSAV.position($str1).left - JSAV.position($str2).left,
@@ -303,14 +303,18 @@
         this._animations += 1;
         var jsav = this;
         // .. animate the color ..
-        $both.addClass("jsavswap", 3*speed);
+        if (opts.highlight) {
+          $both.addClass("jsavswap", 3*speed);
+        }
         // ..animate the translation to 0, so they'll be in their final positions..
         $val1.transition({"x": 0, y: 0, z: 0}, 7*speed, 'linear');
         $val2.transition({x: 0, y: 0, z: 0}, 7*speed, 'linear',
           function() {
             if (arr) { arr.remove(); } // ..remove the arrows if they exist
             // ..and finally animate to the original styles.
-            $both.removeClass("jsavswap", 3*speed);
+            if (opts.highlight) {
+              $both.removeClass("jsavswap", 3*speed);
+            }
             // notify jsav that we're done with our animation
             jsav._animations -= 1;
         });
