@@ -250,9 +250,11 @@
       JSAV.anim(doValueEffect).call(this, params);
     },
     swap: function($str1, $str2, options) {
-      var opts = $.extend({translateY: true, arrow: true, highlight: true}, options),
+      var opts = $.extend({translateY: true, arrow: true, highlight: true, swapClasses: true}, options),
           $val1 = $str1.find("span.jsavvalue"),
           $val2 = $str2.find("span.jsavvalue"),
+          classes1 = $str1.attr("class"),
+          classes2 = $str2.attr("class"),
           posdiffX = JSAV.position($str1).left - JSAV.position($str2).left,
           posdiffY = opts.translateY?JSAV.position($str1).top - JSAV.position($str2).top:0,
           $both = $($str1).add($str2),
@@ -265,6 +267,12 @@
           asibling = val1.nextSibling===val2 ? val1 : val1.nextSibling;
       val2.parentNode.insertBefore(val1, val2);
       aparent.insertBefore(val2, asibling);
+
+      // ... and swap classes...
+      if (opts.swapClasses) {
+        $str1.attr("class", classes2);
+        $str2.attr("class", classes1);
+      }
 
       // ..and finally animate..
       if (this._shouldAnimate()) {  // only animate when playing, not when recording
