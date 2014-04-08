@@ -78,7 +78,7 @@
     }
 
     if (options.tree) {
-      this._tree = jsav.ds.bintree(options);
+      this._tree = jsav.ds.binarytree(options);
       inittree(this);
       this._tree.layout();
     }

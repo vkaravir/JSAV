@@ -517,11 +517,11 @@
   dstypes.BinaryTree = BinaryTree;
   dstypes.BinaryTreeNode = BinaryTreeNode;
 
-  // add functions to jsav.ds to create tree, bintree, end edge
+  // add functions to jsav.ds to create tree, binarytree, end edge
   JSAV.ext.ds.tree = function(options) {
     return new Tree(this, $.extend(true, {visible: true, autoresize: true}, options));
   };
-  JSAV.ext.ds.bintree = function(options) {
+  JSAV.ext.ds.binarytree = function(options) {
     return new BinaryTree(this, $.extend(true, {visible: true, autoresize: true}, options));
   };
   JSAV.ext.ds.edge = function(options) {

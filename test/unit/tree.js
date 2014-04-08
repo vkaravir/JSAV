@@ -195,7 +195,7 @@
   
   test("Tree Node Highlight", function() {
     var av = new JSAV("emptycontainer");
-    var tree = av.ds.bintree(),
+    var tree = av.ds.binarytree(),
         root = tree.root();
     tree.root("Ro").left("L").parent().right("R");
     var left = root.left(),
@@ -248,8 +248,8 @@
 
   test("Tree Compare", function() {
     var av = new JSAV("emptycontainer"),
-      t1 = av.ds.bintree(),
-      t2 = av.ds.bintree();
+      t1 = av.ds.binarytree(),
+      t2 = av.ds.binarytree();
     t1.root("Ro").left("L").left("LL").parent().parent().right("R");
     t2.root("Ro").left("L").left("LL").parent().parent().right("R");
     ok(t1.equals(t2));
@@ -315,7 +315,7 @@
     var av = new JSAV("emptycontainer");
     ok (JSAV._types.ds.BinaryTree, "BinaryTree exists" );
     ok( JSAV._types.ds.BinaryTreeNode, "BinaryTreeNode exists" );
-    var tree = av.ds.bintree(),
+    var tree = av.ds.binarytree(),
         root = tree.root();
     equal(tree.root().children().length, 0);
     equal(tree.height(), 1);
@@ -366,7 +366,7 @@
 
   test("Binary Tree Move Child", function() {
     var av = new JSAV("emptycontainer"),
-        tree = av.ds.bintree();
+        tree = av.ds.binarytree();
     tree.root("R");
     var root = tree.root();
     // add two children to root
@@ -409,7 +409,7 @@
   
   test("Binary Tree Remove Child", function() {
     var av = new JSAV("emptycontainer");
-    var tree = av.ds.bintree(),
+    var tree = av.ds.binarytree(),
         root = tree.root();
     tree.root("Ro");
     var left = root.left("L");
@@ -451,7 +451,7 @@
   test("Binary Tree Edges", function() {
     var av = new JSAV("emptycontainer");
     ok (JSAV._types.ds.Edge, "Edge exists" );
-    var tree = av.ds.bintree(),
+    var tree = av.ds.binarytree(),
         root = tree.root();
     tree.root("Ro");
     var left = root.left("L");
@@ -487,7 +487,7 @@
 
   test("Test edge labels", function() {
     var av = new JSAV("emptycontainer"),
-        tree = av.ds.bintree(),
+        tree = av.ds.binarytree(),
         root = tree.root();
     root.value("R");
     av.step();
@@ -511,7 +511,7 @@
 
   test("Test show/hide", function() {
     var av = new JSAV("emptycontainer"),
-        tree = av.ds.bintree();
+        tree = av.ds.binarytree();
 
     equal(tree.element.filter(":visible").size(), 1, "Tree initially visible");
     tree.hide();
@@ -546,7 +546,7 @@
 
   test("Tree show/hide recursive", function() {
     var av = new JSAV("emptycontainer"),
-        tree = av.ds.bintree({visible: false});
+        tree = av.ds.binarytree({visible: false});
 
     var checkVisibility = function(values) {
       equal(tree.element.filter(":visible").size(), values[0], "check tree visibility");
@@ -623,8 +623,8 @@
     };
     var av = new JSAV("arraycontainer"),
         tree1 = av.ds.tree(),
-        tree2 = av.ds.bintree(),
-        tree3 = av.ds.bintree();
+        tree2 = av.ds.binarytree(),
+        tree3 = av.ds.binarytree();
     var setup = function(tree) {
       tree.root("r");
       var r = tree.root();
@@ -658,8 +658,8 @@
     };
     var av = new JSAV("arraycontainer"),
         tree1 = av.ds.tree(),
-        tree2 = av.ds.bintree(),
-        tree3 = av.ds.bintree();
+        tree2 = av.ds.binarytree(),
+        tree3 = av.ds.binarytree();
     var setup = function(tree) {
       tree.root("r");
       var r = tree.root();
