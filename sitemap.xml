@@ -8,7 +8,8 @@
     <url>
       <loc>http://jsav.io{{ page.url }}</loc>
       <changefreq>weekly</changefreq>
-      <priority>0.80</priority>
+      {% comment %}Prioritize the main page higher than the rest{% endcomment %}
+      <priority>{% if page.url == '/' %}1.0{% else %}0.80{% endif %}</priority>
     </url>
   {% endif %}
   {% endfor %}
