@@ -9,7 +9,7 @@ Currently, JSAV supports two types of trees: common tree and binary tree. The st
 Tree &larr; Binary Tree and TreeNode &larr; BinaryTreeNode.
 
 
-<h3 class="apimethod">.ds.tree([options]) and .ds.bintree([options])</h3>
+<h3 class="apimethod">.ds.tree([options]) and .ds.binarytree([options])</h3>
 These functions of a JSAV instance initialize a new tree or binary tree. The returned tree instance is controlled through a collection of methods explained next.
 
 Options that the optional parameter can specify:
