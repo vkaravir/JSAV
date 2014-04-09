@@ -250,7 +250,7 @@
       JSAV.anim(doValueEffect).call(this, params);
     },
     swap: function($str1, $str2, options) {
-      var opts = $.extend({translateY: true, arrow: true, highlight: true, swapClasses: true}, options),
+      var opts = $.extend({translateY: true, arrow: true, highlight: true, swapClasses: false}, options),
           $val1 = $str1.find("span.jsavvalue"),
           $val2 = $str2.find("span.jsavvalue"),
           classes1 = $str1.attr("class"),
