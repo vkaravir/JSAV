@@ -250,9 +250,11 @@
       JSAV.anim(doValueEffect).call(this, params);
     },
     swap: function($str1, $str2, options) {
-      var opts = $.extend({translateY: true, arrow: true}, options),
+      var opts = $.extend({translateY: true, arrow: true, highlight: true, swapClasses: false}, options),
           $val1 = $str1.find("span.jsavvalue"),
           $val2 = $str2.find("span.jsavvalue"),
+          classes1 = $str1.attr("class"),
+          classes2 = $str2.attr("class"),
           posdiffX = JSAV.position($str1).left - JSAV.position($str2).left,
           posdiffY = opts.translateY?JSAV.position($str1).top - JSAV.position($str2).top:0,
           $both = $($str1).add($str2),
@@ -265,6 +267,12 @@
           asibling = val1.nextSibling===val2 ? val1 : val1.nextSibling;
       val2.parentNode.insertBefore(val1, val2);
       aparent.insertBefore(val2, asibling);
+
+      // ... and swap classes...
+      if (opts.swapClasses) {
+        $str1.attr("class", classes2);
+        $str2.attr("class", classes1);
+      }
 
       // ..and finally animate..
       if (this._shouldAnimate()) {  // only animate when playing, not when recording
@@ -303,14 +311,18 @@
         this._animations += 1;
         var jsav = this;
         // .. animate the color ..
-        $both.addClass("jsavswap", 3*speed);
+        if (opts.highlight) {
+          $both.addClass("jsavswap", 3*speed);
+        }
         // ..animate the translation to 0, so they'll be in their final positions..
         $val1.transition({"x": 0, y: 0, z: 0}, 7*speed, 'linear');
         $val2.transition({x: 0, y: 0, z: 0}, 7*speed, 'linear',
           function() {
             if (arr) { arr.remove(); } // ..remove the arrows if they exist
             // ..and finally animate to the original styles.
-            $both.removeClass("jsavswap", 3*speed);
+            if (opts.highlight) {
+              $both.removeClass("jsavswap", 3*speed);
+            }
             // notify jsav that we're done with our animation
             jsav._animations -= 1;
         });
