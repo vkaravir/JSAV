@@ -70,7 +70,7 @@ Next, we will define the various DOM elements on the HTML page.
 <div id="jsavcontainer">
   <a class="jsavsettings" href="#">Settings</a>
   <p align="center" class="jsavexercisecontrols"></p>
-  <ol id="exerArray"></ol>
+  <p class="jsavscore"></p>
   <p class="jsavoutput jsavline"></p>
 </div>
 {% endhighlight %}
@@ -85,8 +85,7 @@ pair of gears.
 The standard exercise controls include the ability to regenerate a new
 instance of the exercise ("reset"), a slideshow showing the "model
 answer", and information about the grade received on the exercise.
-We create a placeholder for what will be the displayed array.
-Note that the DOM type is just a numbered list.
+We create a placeholder for what will display the current score.
 Finally, we position the message output, which is merely a special
 type of paragraph.
 
@@ -115,7 +114,6 @@ Next we make variable definitions specific to the exercise.
 var arraySize = 8,
     initialArray = [],
     jsavArray,
-    $array = $("#exerArray"),
     av = new JSAV($("#jsavcontainer"));
 {% endhighlight %}
 
@@ -125,11 +123,9 @@ This placeholder is needed since JSAV will have to maintain two
 versions of the array object: The one that the user works on, and the
 copy displayed when the model answer is presented.
 ```jsavArray``` will hold a reference to the JSAV array the student is working on.</b>
-```$array``` will store a reference to the ```ol``` DOM element used later to
-generate the HTML for the array.
-```av``` is the visualization object itself.
-We pass in ```jsavcontainer``` to bind the position of the
-visualization to this DOM element.
+```av``` is the JSAV visualization object itself.
+We pass in ```jsavcontainer``` to bind the container of the
+visualization to the DOM element with this ```id```.
 
 Next we deal with giving instructions to the user.
 
@@ -166,40 +162,31 @@ as shown later in the tutorial.
 
 {% highlight javascript %}
 function initialize() {
-  var htmldata = "";
-  for (var i = arraySize; i > 0; i--) {
-    var randomVal = Math.floor(Math.random()*100);
-    htmldata += "<li>" + randomVal + "</li>";
-    initialArray[arraySize-i] = randomVal;
+  if (jsavArray) {
+    jsavArray.clear();
+    swapIndex.clear();
   }
-  $array.html(htmldata);
-
-  jsavArray = av.ds.array($array, {indexed: true});
-  swapIndex = av.variable(-1);
-
   av.umsg("Directions: Click on all array elements from left to right to highlight them. Then click on the first and last elements to swap them.");
-  av.forward();
+  initialArray = JSAV.utils.rand.numKeys(10, 100, arraySize);
+
+  jsavArray = av.ds.array(initialArray, {indexed: true});
+  swapIndex = av.variable(-1);
+  // bind a function to handle all click events on the array
+  jsavArray.click(arrayClickHandler);
   return jsavArray;
 }
 {% endhighlight %}
 
 Our example here is a simplified version of the one used by
-the Shellsort Proficiency Exercise.
-This code generates random numbers and changes the content
-of an existing HTML element.
-In the HTML, there is an element ```&lt;ol id="exerArray">&lt;/ol>```
-and the ```$theArray``` variable is a jQuery object that refers
-to that element (```var $theArray = $("#exerArray")```).
-The ```$array.html(htmldata);``` function call replaces the existing
-array contents with new data.
+the Shellsort Proficiency Exercise. The code start by checking if we have an old instance
+of jsavArray, and clears the HTML elements if we do (calls to ```clear()```).
+Next, the code generates random numbers with a call to ```JSAV.utils.rand.numKeys```.
 The call to ```av.ds.array``` initializes a new JSAV array from
-the given jQuery object and the given options. The call to ```av.variable``` initializes a new
+the given array and the given options. The call to ```av.variable``` initializes a new
 variable that can be used to store value changes in the animation sequence. See
 section "Adding Student Interaction" below for explanation why we need this.
 The call to ```av.umsg()``` provides the text of the message
-that give directions to the user,
-and ```av.forward()``` causes the message to be
-displayed on the screen. Finally, the function
+that give directions to the user. Finally, the function
 returns the JSAV array.
 
 
@@ -216,6 +203,7 @@ to highlight the array indices from left (index 0) to right
 {% highlight javascript %}
 function modelSolution(modeljsav) {
   var modelArray = modeljsav.ds.array(initialArray);
+  modeljsav.displayInit();
   for (var i = 0; i < arraySize; i++) {
     modelArray.highlight(i);
     modeljsav.gradeableStep();
@@ -231,19 +219,20 @@ The function takes a single parameter (```modeljsav``` above) that
 is a reference to the JSAV animation of the model answer.
 Like the initialization function, the model solution function should
 return the structures used in comparing the model solution with
-student's solution
+student's solution.
 
 
 The function above first creates a JSAV array using the data stored
 in variable ```initialArray``` in the initialization
-function.
+function. Next, it marks the current state as the initially displayed state. Without this line,
+the first step in the model answer would be empty and the first step would show the array.
 It then goes through all indices in turn and highlights the current
 index.
 The ```gradeableStep()``` function is used to mark states in the model
 solution that should be used in grading.
 Thus, the model solution can contain an AV with explanations and other
-structures, but only the returned structures at steps where grade is
-set to true, are graded. Such explanatory steps can be added through call to
+structures, but only the returned structures at steps where ```gradeableStep``` is
+called, are graded. Such explanatory steps can be added through call to
 ```modeljsav.step()```.
 
 
@@ -255,7 +244,7 @@ required. Given our ```initialize``` and ```modelSolution```
 functions, we initialize an exercise as follows.
 
 {% highlight javascript %}
-var exercise = av.exercise(modelSolution, initialize, {css: "background-color"});
+var exercise = av.exercise(modelSolution, initialize, {class: "jsavhighlight"});
 exercise.reset();
 {% endhighlight %}
 
@@ -266,9 +255,9 @@ The options that we pass:
  * ```{reset: <function>}``` The initialization function
   that resets the exercise. <strong>Required.</strong>
  * ```{compare: <Object or Array>}``` Specifies which
-  properties to compare for the structures. In the example below, we
-  set the comparison to be the CSS property ```background-color```,
-  since that is changed when highlighting indices. **Required.**
+  properties to compare for the structures. In the example above, we
+  set the comparison to be the CSS class ```jsavhighlight```,
+  since that is used to highlight indices. **Required.**
 
 
 The full set of options can be found in the
@@ -283,14 +272,20 @@ her solution.
 ### Adding Student Interaction
 
 It is simple to attach listeners for user actions (like mouse clicks)
-to JSAV data structures. We will
-register a click event handler to the array.
+to JSAV data structures. We already had the code
+register a click event handler to the array in the ```initialize``` function:
+
+{% highlight javascript %}
+// bind a function to handle all click events on the array
+jsavArray.click(arrayClickHandler);
+{% endhighlight %}
+
+Now let's see how to write the ```arrayClickHandler``` function.
 Inside the handler, we need to first decide if we are in "swap mode" or not. This
 is done based on whether the last index is highlighted or not.
 
 {% highlight javascript %}
-// bind a function to handle all click events on the array
-jsavArray.click(function(index) {
+function arrayClickHandler(index) {
   // if last index is highlighted, we are in "swap mode"
   if (this.isHighlight(arraySize - 1)) {
     // when in swap mode, first click on index will store that index
