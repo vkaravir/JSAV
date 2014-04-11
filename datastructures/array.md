@@ -15,7 +15,7 @@ four elements, the following code creates an array like the one below.
 
 {% highlight javascript %}var arr = av.ds.array([10, 13, 99, 25]);{% endhighlight %}
 
-<div id="arrayCreation"></div>
+<div id="arrayCreation" class="jsavexample"></div>
 <script>
 (function() {
   var jsav = new JSAV("arrayCreation");
@@ -165,9 +165,13 @@ the following would return 4:
 {% highlight javascript %}arr.size();{% endhighlight %}
 
 <h3 class="apimethod">.swap(index1, index2, [options])</h3>
-Swaps the values of the two array positions. Has one supported option ```arrow```
-  which controls whether or not to show an arrow highlighting the elements being swapped. Note, the arrow is not
-  shown if raphael.js is not loaded.
+Swaps the values of the two array positions. Options supported:
+
+ * ```arrow```: A boolean specifying whether to show an arrow below the array to indicate the swapped indices.
+   Defaults to true. If Rapha&euml;l.js is not loaded, no arrow will be shown.
+ * ```swapClasses```: A boolean specifying whether to swap the classes of the array indices as well. Defaults to false.
+ * ```highlight```: A boolean indicating whether the swapped elements should be highlighted. The highlight is
+   adding the class ```jsavswap``` which, by default, sets the background color to red. Defaults to true.
 
 <h3 class="apimethod">.unhighlight(indices)</h3>
 Removes the highlight from the given ```indices```.
@@ -258,7 +262,7 @@ when the event is triggered. On mouse enter, the function call will essentially 
 
 You can try the result by moving your cursor in to and out of the indices in the interactive example below.
 
-<div id="jsavMouseEvents"></div>
+<div id="jsavMouseEvents" class="jsavexample"></div>
 <script>
 (function() {
   var jsav = new JSAV("jsavMouseEvents", {animationMode: "none"}),
