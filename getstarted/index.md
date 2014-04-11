@@ -3,10 +3,12 @@ layout: page
 title: Getting Started
 ---
 
-Once you have gotten JSAV from the [Github repository]({{site.github.repo}}), here are the first
-steps to get you started with building algorithm visualizations with JSAV.
+Here are the first steps to get you started with building algorithm visualizations with JSAV.
 
 <ul class="">
+  <li>
+    <a href="getjsav/">Downloading and Installing JSAV</a>
+  </li>
   <li>
     <a href="html/">Required Files and HTML</a>
   </li>

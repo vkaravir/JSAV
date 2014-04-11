@@ -15,6 +15,9 @@ Documentation for v{{ site.version }}
   {% comment %}Have to include manually, since the default ordering is quite dumb{% endcomment %}
     <ul class="">
       <li>
+        <a href="{{ site.baseurl }}/getstarted/getjsav/">Downloading and Installing JSAV</a>
+      </li>
+      <li>
         <a href="{{ site.baseurl }}/getstarted/html/">Required Files and HTML</a>
       </li>
       <li>
