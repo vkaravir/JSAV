@@ -12,16 +12,16 @@ Documentation for v{{ site.version }}
     <a href="{{ site.baseurl }}/getstarted/">Getting Started</a>
   </li>
   <li class="subpages">
-  {# comment #}Have to include manually, since the default ordering is quite dumb{# endcomment #}
+  {% comment %}Have to include manually, since the default ordering is quite dumb{% endcomment %}
     <ul class="">
       <li>
-        <a href="html/">Required Files and HTML</a>
+        <a href="{{ site.baseurl }}/getstarted/html/">Required Files and HTML</a>
       </li>
       <li>
-        <a href="creatingvisualization/">Creating A Visualization</a>
+        <a href="{{ site.baseurl }}/getstarted/creatingvisualization/">Creating A Visualization</a>
       </li>
       <li>
-        <a href="slideshows/">Creating A Slideshow</a>
+        <a href="{{ site.baseurl }}/getstarted/slideshows/">Creating A Slideshow</a>
       </li>
     </ul>
   </li>
