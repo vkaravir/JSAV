@@ -300,13 +300,9 @@
         // arbitrarily choose to use bottom-right border radius
         endRadius = parseInt(eElem.css("borderBottomRightRadius"), 10) || 0,
         toPoint;
-    if (endRadius < eElem.innerWidth()/2.0 || eWidth !== eHeight) { // position edge at bottom middle for non-circle nodes
-      toPoint = [1, toX, toY + eHeight];
-    } else { // for circle nodes, calculate position on the circle
-      toPoint = getNodeBorderAtAngle(1, this.endnode.element,
-          {width: eWidth, height: eHeight, x: toX, y: toY}, toAngle,
-          endRadius);
-    }
+    toPoint = getNodeBorderAtAngle(1, this.endnode.element,
+        {width: eWidth, height: eHeight, x: toX, y: toY}, toAngle,
+        endRadius);
     this.g.movePoints([fromPoint, toPoint], options);
 
     if ($.isFunction(this._labelPositionUpdate)) {
