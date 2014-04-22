@@ -108,8 +108,8 @@
       delete this.options.targetIndex;
       delete this.options.relativeIndex;
     } else if (typeof(this.options.relativeIndex) !== "undefined") {
-        this.options.relativeTo = this.options.relativeTo.index(this.options.relativeIndex);
-        delete this.options.relativeIndex;
+      this.options.relativeTo = this.options.relativeTo.index(this.options.relativeIndex);
+      delete this.options.relativeIndex;
     }
 
     if (!this.options.fixed) {
@@ -515,6 +515,13 @@
         currindex = this.element.find("li.jsavcodeline").index($curr),
         $prev = this.element.find("li.jsavpreviousline"),
         previndex = this.element.find("li.jsavcodeline").index($prev);
+    if (typeof index === "string") {
+      if (this.options.tags && this.options.tags[index]) {
+        index = this.options.tags[index];
+      } else {
+        index = -1;
+      }
+    }
     if (index === -1) {
       if (currindex !== -1) { this.toggleClass(currindex, "jsavcurrentline"); }
       if (previndex !== -1) { this.toggleClass(previndex, "jsavpreviousline"); }
