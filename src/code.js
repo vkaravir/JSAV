@@ -516,7 +516,7 @@
         $prev = this.element.find("li.jsavpreviousline"),
         previndex = this.element.find("li.jsavcodeline").index($prev);
     if (typeof index === "string") {
-      if (this.options.tags && this.options.tags[index]) {
+      if (this.options.tags && typeof this.options.tags[index] !== "undefined") {
         index = this.options.tags[index];
       } else {
         index = -1;
