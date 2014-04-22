@@ -455,10 +455,10 @@
   // wrapper function for getIndices to add support for indexing with tags
   function getCodeLineElements(self, indices) {
     if (typeof indices === "string") {
-      if (self.options.tags && self.options.tags[indices]) {
+      if (self.options.tags && typeof self.options.tags[indices] !== "undefined") {
         indices = self.options.tags[indices];
       } else {
-        indices = -1;
+        indices = undefined;
       }
     }
     return getIndices($(self.element).find("li.jsavcodeline"), indices);
