@@ -34,7 +34,14 @@
 
       "fixedPopup": "Your last step was incorrect. Your work has been replaced with the correct step so that you can continue.",
       "fixFailedPopup": "Your last step was incorrect and I should fix your solution, but don't know how. So it was undone and you can try again.",
-      "undonePopup": "Your last step was incorrect. Things are reset to the beginning of the step so that you can try again."
+      "undonePopup": "Your last step was incorrect. Things are reset to the beginning of the step so that you can try again.",
+
+      "settings": "Settings",
+      "animationSpeed" : "Animation speed",
+      "(slowFast)": "(slow - fast)",
+      "valueBetween1And10": "Value between 1 (Slow) and 10 (Fast).",
+      "save": "Save",
+      "saved": "Saved..."
     },
     "fi": {
       "resetButtonTitle": "Uudelleen",
@@ -62,7 +69,14 @@
 
       "fixedPopup": "Viime askeleesi meni väärin. Se on korjattu puolestasi, niin että voit jatkaa tehtävää.",
       "fixFailedPopup": "Viime askeleesi meni väärin ja minun tulisi korjata se. En kuitenkaan osaa korjata sitä, joten olen vain kumonnut sen.",
-      "undonePopup": "Viime askeleesi meni väärin. Askel on kumottu, niin että voit yrittää uudelleen."
+      "undonePopup": "Viime askeleesi meni väärin. Askel on kumottu, niin että voit yrittää uudelleen.",
+
+      "settings": "Asetukset",
+      "animationSpeed" : "Animointinopeus",
+      "(slowFast)": "(hidas - nopea)",
+      "valueBetween1And10": "Anna arvo 1:n (hidas) ja 10:n (nopea) välillä.",
+      "save": "Tallenna",
+      "saved": "Tallennettu..."
     }
   };
 

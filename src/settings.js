@@ -1,6 +1,6 @@
 /**
 * Module that contains the configurable settings panel implementation
-* Depends on core.js, utils.js
+* Depends on core.js, utils.js, trasnlations.js
 */
 /*global JSAV, jQuery */
 (function($) {
@@ -14,16 +14,28 @@
     }
     return curval + 1;
   };
-  var speedSetting = function() {
+  var speedSetting = function(settings) {
     return function() {
+      var translate;
+      if (settings.jsav) {
+        translate = settings.jsav._translate;
+      } else {
+        translate = JSAV.utils.getInterpreter({
+          "animationSpeed" : "Animation speed",
+          "(slowFast)": "(slow - fast)",
+          "valueBetween1And10": "Value between 1 (Slow) and 10 (Fast).",
+          "save": "Save",
+          "saved": "Saved..."
+        });
+      }
       var curSpeed = JSAV.ext.SPEED;
       var rangeSupported = !!$.support.inputTypeRange;
       // get the closest speed choice to the current speed
       var curval = getSpeedChoice(curSpeed);
       // add explanation if using range slider, help text otherwise
-      var $elem = $('<div class="jsavrow">Animation speed' + (rangeSupported?' (slow - fast)':'') +
+      var $elem = $('<div class="jsavrow">' + translate("animationSpeed") + (rangeSupported?' ' + translate("(slowFast)"):'') +
           ': <input type="range" min="1" max="10" step="1" size="30" value="' + curval + '"/> ' +
-          (rangeSupported?'':'<button>Save</button><div class="jsavhelp">Value between 1 (Slow) and 10 (Fast). ') +
+          (rangeSupported?'':'<button>' + translate("save") + '</button><div class="jsavhelp">' + translate("valueBetween1And10")) +
           '</div>');
       // event handler function for storing the speed
       var speedChangeHandler = function() {
@@ -45,7 +57,7 @@
       } else {
         $elem.find("button").click(function() {
           speedChangeHandler.call($inputElem);
-          var savedElem = $("<span>Saved..</span>");
+          var savedElem = $("<span>" + translate("saved") + "</span>");
           setTimeout(function() { savedElem.fadeOut(); }, 1000);
           $(this).after(savedElem);
         });
@@ -110,7 +122,7 @@
   
   var Settings = function(elem) {
       this.components = [];
-      this.add(speedSetting());
+      this.add(speedSetting(this));
       
       var that = this;
       if (elem) {
@@ -122,13 +134,13 @@
     },
     sproto = Settings.prototype;
   sproto.show = function() {
-    var $cont = $("<div class='jsavsettings'></div>"),
-      that = this;
+    var $cont = $("<div class='jsavsettings'></div>");
     for (var i = 0; i < this.components.length; i++) {
       $cont.append(this.components[i]);
     }
     
-    this.dialog = JSAV.utils.dialog($cont, {title: "Settings"});
+    var title = this.jsav? this.jsav._translate("settings"): "Settings";
+    this.dialog = JSAV.utils.dialog($cont, {title: title});
   };
   sproto.close = function() {
     if (this.dialog) {
@@ -162,5 +174,7 @@
     } else {
       this.settings = new Settings($(this.container).find(".jsavsettings").show());
     }
+    // set a reference to the JSAV instance for translation support
+    this.settings.jsav = this;
   });
 }(jQuery));
