@@ -17,6 +17,7 @@ The options that can be specified:
  *  ```{url: <string>}``` A URL where the code should be fetched. The fetched text will be split on
     newline characters (```\n```). Note, that if the codelines parameter is given, this option is ignored. Also, same-origin
     policies in browsers might prevent this from working across domains.
+ *  ```{tags: <object>}``` Enables referring to lines with strings. The JavaScript object should map strings to either line numbers or arrays of line numbers. For instance if the tags are defined with the object ```{hello: 5}``` it means that ```.highlight("hello")``` will be equivalent to ```.highlight(5)```.
  *  ```{lineNumbers: <boolean>}``` Determine whether linenumbers should be shown. Defaults to true. 
  *  ```{visible: <boolean>}``` Determine whether the pseudocode is visible on creation. Defaults to true.
  *  ```{before: <UI element>}``` Add the pseudocode before element ```UI element```
@@ -49,7 +50,7 @@ Highlight and unhighlight the codelines at given indices. Lines are numbered fro
 
     pseudo.highlight(0)
 
-Similarly to the array (un)highlight, the ```indices``` parameter can be either a number, an array of numbers, or a function.
+Similarly to the array (un)highlight, the ```indices``` parameter can be either a number, an array of numbers, a function or a tag (see tags in options).
 
 <h3 class="apimethod">.show() and .hide()</h3>
 
@@ -57,12 +58,12 @@ Show/hide the pseudocode object.
 
 <h3 class="apimethod">.show(indices) and .hide(indices)</h3>
 
-Show/hide the codelines at given indices. Again, indices can be a number, an array of numbers, or a function.
+Show/hide the codelines at given indices. Again, indices can be a number, an array of numbers, a function or a tag.
 
 <h3 class="apimethod">.css(indices, css)</h3>
 
 Apply the given CSS properties to the codelines at specified ```indices```.
-  Parameter ```indices``` can be a number, array, or function like for 
+  Parameter ```indices``` can be a number, array, function or a tag like for 
   the ```highlight``` method.
   The argument ```css``` should be an object with property name-and-value pairs. For example, to make
   lines 0 and 4 have green color and lightgray background:
@@ -83,19 +84,19 @@ re-initializing exercises when the existing object needs to be removed.
 <h3 class="apimethod">.addClass(indices, className, [options])</h3>
 
 Adds the CSS class ```className``` to lines at given indices and animates the changes. Like for
-  the rest of pseudocode methods, ```indices``` can be a number, array of numbers, or a function.
+  the rest of pseudocode methods, ```indices``` can be a number, array of numbers, a function or a tag.
 
 <h3 class="apimethod">.removeClass(indices, className, [options])</h3>
 
 Removes the CSS class ```className``` from lines at given indices and animates the changes. Like for
-  the rest of pseudocode methods, ```indices``` can be a number, array of numbers, or a function.
+  the rest of pseudocode methods, ```indices``` can be a number, array of numbers, a function or a tag.
 
 <h3 class="apimethod">.toggleClass(indices, className, [options])</h3>
 
 Toggles the CSS class ```className``` of lines at  given indices and animates the changes. Like for
-  the rest of pseudocode methods, ```indices``` can be a number, array of numbers, or a function.
+  the rest of pseudocode methods, ```indices``` can be a number, array of numbers, a function or a tag.
 
 <h3 class="apimethod">.hasClass(index, className, [options])</h3>
 
 Return true/false based on if the line at given index has the CSS class ```className```. Parameter
-  ```index``` should be a number.
+  ```index``` should be a number or a tag to a number.
