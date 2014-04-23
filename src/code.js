@@ -108,8 +108,8 @@
       delete this.options.targetIndex;
       delete this.options.relativeIndex;
     } else if (typeof(this.options.relativeIndex) !== "undefined") {
-        this.options.relativeTo = this.options.relativeTo.index(this.options.relativeIndex);
-        delete this.options.relativeIndex;
+      this.options.relativeTo = this.options.relativeTo.index(this.options.relativeIndex);
+      delete this.options.relativeIndex;
     }
 
     if (!this.options.fixed) {
@@ -452,6 +452,17 @@
   codeproto.addCodeLine = JSAV.anim(function(newLine) {
     this.element.append(createCodeLine(newLine, this));
   });
+  // wrapper function for getIndices to add support for indexing with tags
+  function getCodeLineElements(self, indices) {
+    if (typeof indices === "string") {
+      if (self.options.tags && typeof self.options.tags[indices] !== "undefined") {
+        indices = self.options.tags[indices];
+      } else {
+        indices = undefined;
+      }
+    }
+    return getIndices($(self.element).find("li.jsavcodeline"), indices);
+  }
   codeproto.highlight = function(index, options) {
     return this.addClass(index, "jsavhighlight");
   };
@@ -462,7 +473,7 @@
     return this.hasClass(index, "jsavhighlight");
   };
   codeproto.toggleClass = JSAV.anim(function(index, className, options) {
-    var $elems = getIndices($(this.element).find("li.jsavcodeline"), index);
+    var $elems = getCodeLineElements(this, index);
     if (this.jsav._shouldAnimate()) {
       this.jsav.effects._toggleClass($elems, className, options);
     } else {
@@ -471,7 +482,7 @@
     return [index, className];
   });
   codeproto.addClass = function(index, className, options) {
-    var $elems = getIndices($(this.element).find("li.jsavcodeline"), index);
+    var $elems = getCodeLineElements(this, index);
     if (!$elems.hasClass(className)) {
       return this.toggleClass(index, className, options);
     } else {
@@ -479,7 +490,7 @@
     }
   };
   codeproto.removeClass = function(index, className, options) {
-    var $elems = getIndices($(this.element).find("li.jsavcodeline"), index);
+    var $elems = getCodeLineElements(this, index);
     if ($elems.hasClass(className)) {
       return this.toggleClass(index, className, options);
     } else {
@@ -487,11 +498,11 @@
     }
   };
   codeproto.hasClass = function(index, className) {
-    var $elems = getIndices($(this.element).find("li.jsavcodeline"), index);
+    var $elems = getCodeLineElements(this, index);
     return $elems.hasClass(className);
   };
   codeproto._setcss = JSAV.anim(function(indices, cssprops, options) {
-    var $elems = getIndices($(this.element).find("li.jsavcodeline"), indices);
+    var $elems = getCodeLineElements(this, indices);
     if (this.jsav._shouldAnimate()) { // only animate when playing, not when recording
       this.jsav.effects.transition($elems, cssprops, options);
     } else {
@@ -504,6 +515,13 @@
         currindex = this.element.find("li.jsavcodeline").index($curr),
         $prev = this.element.find("li.jsavpreviousline"),
         previndex = this.element.find("li.jsavcodeline").index($prev);
+    if (typeof index === "string") {
+      if (this.options.tags && typeof this.options.tags[index] !== "undefined") {
+        index = this.options.tags[index];
+      } else {
+        index = -1;
+      }
+    }
     if (index === -1) {
       if (currindex !== -1) { this.toggleClass(currindex, "jsavcurrentline"); }
       if (previndex !== -1) { this.toggleClass(previndex, "jsavpreviousline"); }
@@ -531,7 +549,7 @@
     return this;
   };
   codeproto.css = function(index, cssprop, options) {
-    var $elems = getIndices($(this.element).find("li.jsavcodeline"), index);
+    var $elems = getCodeLineElements(this, index);
     if (typeof cssprop === "string") {
       return $elems.css(cssprop);
     } else if (typeof index === "string") {
