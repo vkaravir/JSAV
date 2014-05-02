@@ -56,3 +56,32 @@ Options can include:
   Class ```jsavdialog``` is always added.
  * title: title of the dialog
 
+<h3 class="apimethod">JSAV.utils.getInterpreter(languageJSON[, language])</h3>
+Returns an interpreter function which translates tags into strings or other
+values specified in the selected language. ```languageJSON``` be either a
+JavaScript object or a URL to a JSON file, and can contain one or more
+translations. In case there are several translations ```language``` should
+specify the selected language. A simple translation JSON with two translations
+would look something like:
+
+{% highlight javascript %}
+{
+  "en": {
+    "message": "Hello"
+  },
+  "fi": {
+    "message": "Hei"
+  }
+}
+{% endhighlight %}
+
+The example above contains translations for English and Finnish. To create an
+interpreter function for English, ```language``` should be set to ```"en"```.
+The returned function will return ```"Hello"``` when called with the argument
+```"message"```. Similarly the interpreter function returns ```"Hei"``` if
+```language``` is set to ```"fi"```. Alternatively, different langauges can be
+placed in different files. In this case ```languageJSON``` could be a URL with
+the language tag ```{lang}``` that will be substituted with the value of
+```language```. For instance if the URL is ```"path/to/{lang}.json"``` and
+```language``` is ```"en"``` the translation will be fetched from
+```"path/to/en.json"```.
