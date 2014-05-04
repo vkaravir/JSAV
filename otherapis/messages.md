@@ -47,6 +47,19 @@ When "line-style" message buffer is used, option
 ```"preserve": true``` can be used to append the new message
 after the previous one instead of clearing the buffer.
 
+The  option ```fill: <object>``` can be used to easily insert variable values
+to the message. This feature is especially useful when the AV is being
+translated to different languages. The message should contain a tag surrounded
+by curly brackets where the value should be inserted. The object handed to the
+fill option should map the different tags used in the message to their values.
+The tags are replaced with regular expression, which means that the tags should
+not contain characters such as ```$ ^ . + -```, or consist only of digits.
+Fill option example:
+
+{% highlight javascript %}
+// This will output "Value of variable x: 5"
+av.umsg("Value of variable x: {x}", {fill: {x: 5}});
+{% endhighlight %}
 
 Since the
 ```msg``` is output as standard HTML, the style of
