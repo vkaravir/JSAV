@@ -5,24 +5,25 @@ title: Exercise API
 
 The exercise API is used to create interactive, automatically assessed exercises.
 
-<h3 class="apimethod">.exercise(modelSolution, reset, options)</h3>
+<h3 class="apimethod">.exercise(modelSolution, reset, compare, options)</h3>
 An exercise is 
 initialized with a call to ```av.exercise(..)```. The parameters for the function are:
 
  * ```{modelSolution: <function>}``` The function to generate the model solution. The function has to return the data structures and/or variables used in grading of the exercise. The return value can be a single data structure or an array of structures.
  * ```{reset: <function>}``` The initialization function that resets the exercise. The function has to return the data structures and/or variables used in grading of the exercise. The return value can be a single data structure or an array of structures.
+ * ```{compare: <Object or Array>}``` Specifies which properties to compare for the structures. In the example below, we set the comparison to be CSS property background-color so grading would check if the structures have same background color (that is, if they are highlighted).
 
 The function can also take several options, some of which are required. The full set of options are: 
 
- * ```{compare: <Object or Array>}``` Specifies which properties to compare for the structures. In the example below, we set the comparison to be CSS property background-color so grading would check if the structures have same background color (that is, if they are highlighted). <strong>Required.</strong>
  * ```{feedback: <string>}``` Will change the feedback mode, possible values continuous and atend (default). See Continuous feedback below.
  * ```{fixmode: <string>}``` Change the behavior in continuous mode, possible values are undo and fix. The default is undo.
  * ```{feedbackSelectable: <boolean>}``` The settings dialog will not, by default, allow student to change the feedback mode. Setting this option to true enables this choice.
  * ```{fixmodeSelectable: <boolean>}``` The settings dialog will not, by default, allow student to change the behavior in continuous feedback mode. Setting this option to true enables this choice.
  * ```{fix: <function}``` A function that will fix the student's solution to match the current step in model solution. Before this function is called, the previous incorrect step in student's solution is undone. The function gets the model structures as a parameter. For an example, see the examples/ShellsortProficiency.html.
  * ```{showGrade}: <function>}``` A function that can be used to customize the way the grade is shown. The function will be added to the exercise and can be called with ```exercise.showGrade```. The function can access the grade information from attribute ```this.score```. Example content of that attribute: ```{total: 15, correct: 3, undo: 0, fix: 0, student: 5}```. Total is the total number of steps in the model solution, student the number of steps in student solution, and correct the number of correct steps. Values undo and fix show how many steps were undone/fixed in the continuous feedback mode. Note, that to make sure the grading is up to date, this function should call the ```grade``` function of the exercise before showing the grade.
- * ```{modelDialog}: <object>}``` An object that can specify options for the model answer dialog. For
+ * ```{modelDialog: <object>}``` An object that can specify options for the model answer dialog. For
     the possible options, see the documentation for the JSAV.utils.dialog.
+ * ```{controls: &lt;DOMElement or jQuery Object>``` An HTML element inside which the control buttons (reset, undo etc.) are added.
  * ```{debug: <boolean>}``` If true, print out some debug information for exercise developers.
     Mainly, the continuous feedback mode will log possible errors in the fix function.
  * ```{resetButtonTitle: <string>}``` Change the text on the reset button. Defaults to "Reset".
@@ -33,7 +34,7 @@ The function can also take several options, some of which are required. The full
 For example, assuming ```modelSolution``` and ```reset``` are functions, the following would initialize an exercise:
 
 {% highlight javascript %}
-var exercise = av.exercise(modelSolution, reset, { compare: {css: "background-color"}});
+var exercise = av.exercise(modelSolution, reset, { css: "background-color" });
 exercise.reset();
 {% endhighlight %}
 
