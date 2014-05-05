@@ -23,7 +23,7 @@ The function can also take several options, some of which are required. The full
  * ```{showGrade}: <function>}``` A function that can be used to customize the way the grade is shown. The function will be added to the exercise and can be called with ```exercise.showGrade```. The function can access the grade information from attribute ```this.score```. Example content of that attribute: ```{total: 15, correct: 3, undo: 0, fix: 0, student: 5}```. Total is the total number of steps in the model solution, student the number of steps in student solution, and correct the number of correct steps. Values undo and fix show how many steps were undone/fixed in the continuous feedback mode. Note, that to make sure the grading is up to date, this function should call the ```grade``` function of the exercise before showing the grade.
  * ```{modelDialog: <object>}``` An object that can specify options for the model answer dialog. For
     the possible options, see the documentation for the JSAV.utils.dialog.
- * ```{controls: &lt;DOMElement or jQuery Object>``` An HTML element inside which the control buttons (reset, undo etc.) are added.
+ * ```{controls: <DOMElement or jQuery Object>``` An HTML element inside which the control buttons (reset, undo etc.) are added.
  * ```{debug: <boolean>}``` If true, print out some debug information for exercise developers.
     Mainly, the continuous feedback mode will log possible errors in the fix function.
  * ```{resetButtonTitle: <string>}``` Change the text on the reset button. Defaults to "Reset".
