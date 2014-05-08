@@ -7,7 +7,7 @@
   "use strict";
   if (typeof JSAV === "undefined") { return; }
 
-  var translations = {
+  JSAV._translations = {
     "en": {
       "resetButtonTitle": "Reset",
       "undoButtonTitle": "Undo",
@@ -82,10 +82,10 @@
 
   JSAV.init(function (options) {
     var language = options.lang || "en";
-    if (typeof translations[language] === "object") {
-      this._translate = JSAV.utils.getInterpreter(translations, language);
+    if (typeof JSAV._translations[language] === "object") {
+      this._translate = JSAV.utils.getInterpreter(JSAV._translations, language);
     } else {
-      this._translate = JSAV.utils.getInterpreter(translations, "en");
+      this._translate = JSAV.utils.getInterpreter(JSAV._translations, "en");
     }
   });
 

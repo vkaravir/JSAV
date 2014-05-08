@@ -20,13 +20,7 @@
       if (settings.jsav) {
         translate = settings.jsav._translate;
       } else {
-        translate = JSAV.utils.getInterpreter({
-          "animationSpeed" : "Animation speed",
-          "(slowFast)": "(slow - fast)",
-          "valueBetween1And10": "Value between 1 (Slow) and 10 (Fast).",
-          "save": "Save",
-          "saved": "Saved..."
-        });
+        translate = JSAV.utils.getInterpreter(JSAV._translations, "en");
       }
       var curSpeed = JSAV.ext.SPEED;
       var rangeSupported = !!$.support.inputTypeRange;
