@@ -28,19 +28,26 @@
       cont = this.jsav.container.find(".jsavexercisecontrols");
     }
     if (cont.size()) {
-      var $reset = $('<input type="button" name="reset" value="' + this.options.resetButtonTitle + '" />').click(
-            function() {
-              self.jsav.logEvent({type: "jsav-exercise-reset"});
-              self.reset();
-            }),
-          $model = $('<input type="button" name="answer" value="' + this.options.modelButtonTitle + '" />').click(
-            function() {
-              cont.addClass("active");
-              self.jsav.logEvent({type: "jsav-exercise-model-open"});
-              self.showModelanswer();
-              cont.removeClass("active");
-            }),
+      // function to handle the reset event
+      var resetHandler = function() {
+            self.jsav.logEvent({type: "jsav-exercise-reset"});
+            self.reset();
+          };
+      // function to handle the model answer event
+      var modelHandler = function() {
+            cont.addClass("active");
+            self.jsav.logEvent({type: "jsav-exercise-model-open"});
+            self.showModelanswer();
+            cont.removeClass("active");
+          };
+      var $reset = $('<input type="button" name="reset" value="' + this.options.resetButtonTitle + '" />')
+                      .click(resetHandler),
+          $model = $('<input type="button" name="answer" value="' + this.options.modelButtonTitle + '" />')
+                      .click(modelHandler),
           $action = $('<span class="actionIndicator"></span>');
+      // allow reset and model answer through an event triggered on container
+      this.jsav.container.bind({"jsav-exercise-reset": resetHandler,
+                                "jsav-exercise-model": modelHandler});
       // only add undo and grade button if not in continuous mode
       if (this.options.feedback !== "continuous") {
         var $grade = $('<input type="button" name="grade" value="' + this.options.gradeButtonTitle + '" />').click(
