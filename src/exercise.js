@@ -178,6 +178,18 @@
       }
       studentAv.forward();
     },
+    // A grader that only compares the student structures and model structures at the last
+    // step of both animation sequences. Useful in exercises where only the final state is relevant
+    // instead of the process how student got there.
+    finalStep: function() {
+      this.score.correct = 0;
+      this.score.student = 1;
+      this.modelav.end();
+      this.jsav.end();
+      if (allEqual(this.initialStructures, this.modelStructures, this.options.compare)) {
+        this.score.correct = 1;
+      }
+    },
     finder: function() {
       var studentSteps = 0,
           cont = true,
