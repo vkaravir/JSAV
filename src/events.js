@@ -6,7 +6,13 @@
                 "mouseenter", "mouseleave"];
   // returns a function for the passed eventType that binds a passed
   // function to that eventType nodes/edges in the tree
-  var eventhandler = function(eventType) {
+  // eventOpts that can be specified:
+  //  - selector: specify a CSS selector that will select the element which the event listener is attached to
+  //              (essentially this is the selector passed to jQuery .on() function). for example .jsavnode
+  //  - dataField: the name of the data field where the JSAV object can be found. for example node
+  //  - logEventPrefix: the prefix used when logging this event. the name of the event (i.e click) will be
+  //                    prepended to this prefix. for example jsav-node-
+  var eventhandler = function(eventType, eventOpts) {
     return function(data, handler, options) {
       // default options; not enabled for edges by default
       var defaultopts = {edge: false},
@@ -19,17 +25,22 @@
       }
       if (!opts.edge || opts.node) {
         // bind an event handler for nodes in this tree
-        this.element.on(eventType, ".jsavnode", function(e) {
-          var node = $(this).data("node"); // get the JSAV node object
-          jsav.logEvent({type: "jsav-node-" + eventType, nodeid: node.id(), nodevalue: node.value() });
+        this.element.on(eventType, eventOpts.selector, function(e) {
+          var $curr = $(this),
+              elem = $curr.data(eventOpts.dataField); // get the JSAV node object
+          while (!elem) {
+            $curr = $curr.parent();
+            elem = $curr.data(eventOpts.dataField);
+          }
+          jsav.logEvent({type: eventOpts.logEventPrefix + eventType, objid: elem.id(), objvalue: elem.value() });
           if ($.isFunction(data)) { // if no data -> 1st arg is the handler function
-            // bind this to the node and call handler
+            // bind this to the elem and call handler
             // with the event as parameter
-            data.call(node, e);
+            data.call(elem, e);
           } else if ($.isFunction(handler)) { // data provided, 2nd arg is the handler function
             var params = $.isArray(data)?data.slice(0):[data]; // get a cloned array or data as array
             params.push(e); // jQuery event as the last parameter
-            handler.apply(node, params); // apply the given handler function
+            handler.apply(elem, params); // apply the given handler function
           }
         });
       }
@@ -53,18 +64,21 @@
       return this; // enable chaining of calls
     };
   };
-  var on = function(eventName, data, handler, options) {
-    eventhandler(eventName).call(this, data, handler, options);
-    return this;
+  var on = function(eventOpts) {
+    return function(eventName, data, handler, options) {
+      eventhandler(eventName, eventOpts).call(this, data, handler, options);
+      return this;
+    };
   };
   
   JSAV.utils._events = {
-    _addEventSupport: function(proto) {
+    _addEventSupport: function(proto, options) {
+      var opts = $.extend({selector: ".jsavnode", logEventPrefix: "jsav-node-", dataField: "node"}, options);
       // create the event binding functions and add to the given prototype
       for (var i = events.length; i--; ) {
-        proto[events[i]] = eventhandler(events[i]);
+        proto[events[i]] = eventhandler(events[i], opts);
       }
-      proto.on = on;
+      proto.on = on(opts);
     }
   };
 }(jQuery));
