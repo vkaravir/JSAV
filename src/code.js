@@ -16,6 +16,7 @@
                       '<span class="jsavvarlabel"></span> <span class="jsavvalue">' +
                       '<span class="jsavvaluelabel jsavvarvalue">' + value + '</span></span></div>');
     this.element.find(".jsavvarvalue").attr("data-value", value);
+    this.element.data("var", this);
     if (this.options.before) {
       this.element.insertBefore(this.options.before.element);
     } else if (this.options.after) {
@@ -34,9 +35,14 @@
   };
   JSAV.utils.extend(Variable, JSAV._types.JSAVObject);
   var varproto = Variable.prototype;
+  // add visibility functions
   varproto._toggleVisible = JSAV.anim(JSAV.ext.effects._toggleVisible);
   varproto.show = JSAV.ext.effects.show;
   varproto.hide = JSAV.ext.effects.hide;
+  // add event handlers to variable
+  JSAV.utils._events._addEventSupport(varproto, { selector: ".jsavvalue",
+                                                  logEventPrefix: "jsav-var-",
+                                                  dataField: "var"});
   varproto._setValue = JSAV.anim(
     function(newValue, options) {
       var oldValue = this.value();
@@ -71,6 +77,16 @@
   varproto.removeClass = JSAV.utils._helpers.removeClass;
   varproto.hasClass = JSAV.utils._helpers.hasClass;
   varproto.toggleClass = JSAV.anim(JSAV.utils._helpers._toggleClass);
+  varproto.highlight = function(options) {
+    this.addClass("jsavhighlight", options);
+  };
+  varproto.unhighlight = function(options) {
+    this.removeClass("jsavhighlight", options);
+  };
+  varproto.isHighlight = function() {
+    return this.hasClass("jsavhighlight");
+  };
+
 
   JSAV._types.Variable = Variable;
   JSAV.ext.variable = function(value, options) {
