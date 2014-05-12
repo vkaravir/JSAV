@@ -20,7 +20,8 @@
       if (settings.jsav) {
         translate = settings.jsav._translate;
       } else {
-        translate = JSAV.utils.getInterpreter(JSAV._translations, "en");
+        var lang = window.JSAV_OPTIONS ? window.JSAV_OPTIONS.lang || "en" : "en";
+        translate = JSAV.utils.getInterpreter(JSAV._translations, lang);
       }
       var curSpeed = JSAV.ext.SPEED;
       var rangeSupported = !!$.support.inputTypeRange;
@@ -133,7 +134,14 @@
       $cont.append(this.components[i]);
     }
     
-    var title = this.jsav? this.jsav._translate("settings"): "Settings";
+    var translate;
+    if (this.jsav) {
+      translate = this.jsav._translate;
+    } else {
+      var lang = window.JSAV_OPTIONS ? window.JSAV_OPTIONS.lang || "en" : "en";
+      translate = JSAV.utils.getInterpreter(JSAV._translations, lang);
+    }
+    var title = translate("settings");
     this.dialog = JSAV.utils.dialog($cont, {title: title});
   };
   sproto.close = function() {
