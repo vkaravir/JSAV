@@ -37,7 +37,7 @@
   margin-right: auto;
 }
 
-.jsavhighlight, .jsavarray.jsavbararray .jsavindex.jsavhighlight .jsavvalue{
+.jsavhighlight, .jsavarray.jsavbararray .jsavindex.jsavhighlight .jsavvalue, .jsavvariable.jsavhighlight .jsavvalue {
   background-color: yellow !important;
   color: black !important;
 }
