@@ -167,7 +167,7 @@
         var self = this;
         var _labelPositionUpdate = function(options) {
           if (!self._label) { return; } // no label, nothing to do
-          var bbox = self.g.bounds(),
+          var bbox = (options && options.bbox) ? options.bbox: self.g.bounds(),
               lbbox = self._label.bounds(),
               newTop = bbox.top + (bbox.height - lbbox.height)/2,
               newLeft = bbox.left + (bbox.width - lbbox.width)/2;
@@ -178,7 +178,6 @@
         this._labelPositionUpdate = _labelPositionUpdate;
         this._label = this.jsav.label(newLabel, {container: this.container.element});
         this._label.element.addClass("jsavedgelabel");
-        this.jsav.container.on("jsav-updaterelative", _labelPositionUpdate);
       } else {
         this._label.text(newLabel, options);
       }
@@ -299,14 +298,17 @@
             {width: sWidth, height: sHeight, x: fromX, y: fromY}, fromAngle),
         // arbitrarily choose to use bottom-right border radius
         endRadius = parseInt(eElem.css("borderBottomRightRadius"), 10) || 0,
-        toPoint;
-    toPoint = getNodeBorderAtAngle(1, this.endnode.element,
-        {width: eWidth, height: eHeight, x: toX, y: toY}, toAngle,
-        endRadius);
+        toPoint = getNodeBorderAtAngle(1, this.endnode.element,
+            {width: eWidth, height: eHeight, x: toX, y: toY}, toAngle, endRadius);
     this.g.movePoints([fromPoint, toPoint], options);
 
     if ($.isFunction(this._labelPositionUpdate)) {
-      this._labelPositionUpdate(options);
+      var bbtop = Math.min(fromPoint[2], toPoint[2]),
+          bbleft = Math.min(fromPoint[1], toPoint[1]),
+          bbwidth = Math.abs(fromPoint[1] - toPoint[1]),
+          bbheight = Math.abs(fromPoint[2] - toPoint[2]),
+          bbox = {top: bbtop, left: bbleft, width: bbwidth, height: bbheight};
+      this._labelPositionUpdate($.extend({bbox: bbox}, options));
     }
 
     if (this.start().value() === "jsavnull" || this.end().value() === "jsavnull") {
