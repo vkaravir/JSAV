@@ -20,7 +20,13 @@
       if (settings.jsav) {
         translate = settings.jsav._translate;
       } else {
-        var lang = window.JSAV_OPTIONS ? window.JSAV_OPTIONS.lang || "en" : "en";
+        var lang = "en";
+        if (window.JSAV_OPTIONS &&
+            window.JSAV_OPTIONS.lang &&
+            typeof JSAV._translations[window.JSAV_OPTIONS.lang] === "object")
+        {
+          lang = window.JSAV_OPTIONS.lang;
+        }
         translate = JSAV.utils.getInterpreter(JSAV._translations, lang);
       }
       var curSpeed = JSAV.ext.SPEED;
@@ -138,7 +144,13 @@
     if (this.jsav) {
       translate = this.jsav._translate;
     } else {
-      var lang = window.JSAV_OPTIONS ? window.JSAV_OPTIONS.lang || "en" : "en";
+      var lang = "en";
+      if (window.JSAV_OPTIONS &&
+          window.JSAV_OPTIONS.lang &&
+          typeof JSAV._translations[window.JSAV_OPTIONS.lang] === "object")
+      {
+        lang = window.JSAV_OPTIONS.lang;
+      }
       translate = JSAV.utils.getInterpreter(JSAV._translations, lang);
     }
     var title = translate("settings");
