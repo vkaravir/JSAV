@@ -184,6 +184,7 @@
     finalStep: function() {
       this.score.correct = 0;
       this.score.student = 1;
+      this.score.total = 1;
       this.modelav.end();
       this.jsav.end();
       if (allEqual(this.initialStructures, this.modelStructures, this.options.compare)) {
