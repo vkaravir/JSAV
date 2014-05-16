@@ -16,7 +16,7 @@
 
       "modelWindowTitle": "Model Answer",
 
-      "feedbackLabel":"Grade Feedback: ",
+      "feedbackLabel":"Grading Mode: ",
       "continuous": "Continuous",
       "atend": "At end",
 
@@ -77,6 +77,41 @@
       "valueBetween1And10": "Anna arvo 1:n (hidas) ja 10:n (nopea) välillä.",
       "save": "Tallenna",
       "saved": "Tallennettu..."
+    },
+    "sv": {
+      "resetButtonTitle": "Börja om",
+      "undoButtonTitle": "Ångra",
+      "modelButtonTitle": "Visa lösning",
+      "gradeButtonTitle": "Poängsätt",
+
+      "modelWindowTitle": "Lösning",
+
+      "feedbackLabel":"Rättningsalternativ: ",
+      "continuous": "Rätta kontinuerligt",
+      "atend": "Poängsätt i slutet",
+
+      "fixLabel": "Alternativ för kontinuerlig rättning",
+      "undo": "Ångra felaktigt steg",
+      "fix": "Åtgärda felaktigt steg",
+
+      "scoreLabel": "Poäng:",
+      "remainingLabel": "Kvarvarande poäng:",
+      "lostLabel": "Förlorade poäng:",
+      "doneLabel": "FÄRDIG!",
+
+      "yourScore": "Din poäng:",
+      "fixedSteps": "Åtgärdade felaktiga steg:",
+
+      "fixedPopup": "Ditt senaste steg var felaktigt. Det har ersatts med det korrekta steget så att du kan fortsätta.",
+      "fixFailedPopup": "Ditt senaste steg var felaktigt men jag vet inte hur det bör åtgärdas. Därför har ditt steg ångrats och du kan försöka igen.",
+      "undonePopup": "Ditt senaste steg var felaktigt. Steget har ångrats så att du kan försöka igen.",
+
+      "settings": "Inställningar",
+      "animationSpeed" : "Animationshastighet",
+      "(slowFast)": "(långsamt - snabbt)",
+      "valueBetween1And10": "Värde mellan 1 (långsamt) och 10 (snabbt).",
+      "save": "Spara",
+      "saved": "Sparat..."
     }
   };
 
