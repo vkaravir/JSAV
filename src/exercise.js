@@ -373,7 +373,8 @@
     this.jsav.backward(); // the empty new step
     this.jsav.backward(); // the new graded step
     // undo until the previous graded step
-    if ((this.options.grader === "default" || this.options.grader === "finder") && this.jsav.backward(gradeStepFilterFunction)) {
+    var undoGraders = ["default", "finder", "finalStep"];
+    if ((undoGraders.indexOf(this.options.grader) !== -1 ) && this.jsav.backward(gradeStepFilterFunction)) {
       // if such step was found, redo it
       this.jsav.forward();
       this.jsav.step();
