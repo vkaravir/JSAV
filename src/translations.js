@@ -112,6 +112,41 @@
       "valueBetween1And10": "Värde mellan 1 (långsamt) och 10 (snabbt).",
       "save": "Spara",
       "saved": "Sparat..."
+    },
+    "fr": {
+      "resetButtonTitle": "Reinitialiser",
+      "undoButtonTitle": "Annuler",
+      "modelButtonTitle": "Solution",
+      "gradeButtonTitle": "Score",
+
+      "modelWindowTitle": "Solution",
+
+      "feedbackLabel":"Type de controle: ",
+      "continuous": "Continue",
+      "atend": "A la fin",
+
+      "fixLabel": "Parametres de controle continue",
+      "undo": "Annuler les étapes incorrectes",
+      "fix": "Corriger les étapes incorrectes",
+
+      "scoreLabel": "Score:",
+      "remainingLabel": "Points restants:",
+      "lostLabel": "Points perdus:",
+      "doneLabel": "Activite terminée",
+
+      "yourScore": "Votre score:",
+      "fixedSteps": "Corriger les étapes incorrectes:",
+
+      "fixedPopup": "Votre dernière action etait incorrecte. Votre action a été corrigée pour vous permettre de poursuivre.",
+      "fixFailedPopup": "Votre dernière action etait incorrecte et je ne sais pas comment la corriger. Votre action a ete annulée, essayez a nouveau.",
+      "undonePopup": "Votre dernière action etait incorrecte. La simulation a été reinitialisée. Essayez a nouveau.",
+
+      "settings": "Paramètres",
+      "animationSpeed" : "Vitesse",
+      "(slowFast)": "(lent - rapide)",
+      "valueBetween1And10": "Vitesse entre 1 (Lent) et 10 (Rapide).",
+      "save": "Sauvegarder",
+      "saved": "Sauvegarde complète..."
     }
   };
 
