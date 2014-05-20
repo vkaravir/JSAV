@@ -44,9 +44,21 @@
     // this will point to a newly-created JSAV instance
     if (typeof arguments[0] === "string") {
       this.container = $(document.getElementById(arguments[0]));
-    } else {
+    } else if (arguments[0] instanceof HTMLElement) {
       this.container = $(arguments[0]); // make sure it is jQuery object
+    } else if (arguments[0] && typeof arguments[0] === "object" && arguments[0].constructor === jQuery) {
+      this.container = arguments[0];
     }
+
+    // if the container was set based on the first argument, options are the second arg
+    if (this.container) {
+      this.options = $.extend({autoresize: true}, window.JSAV_OPTIONS, arguments[1]);
+    } else { // otherwise assume the first argument is options (if exists)
+      this.options = $.extend({autoresize: true}, window.JSAV_OPTIONS, arguments[0]);
+      // set the element option as the container
+      this.container = $(this.options.element);
+    }
+
     var initialHTML = this.container.clone().wrap("<p/>").parent().html();
     this.container.addClass("jsavcontainer");
     this.canvas = this.container.find(".jsavcanvas");
@@ -57,7 +69,6 @@
     var shutter = $("<div class='jsavshutter' />").appendTo(this.container);
     this._shutter = shutter;
 
-    this.options = $.extend({autoresize: true}, window.JSAV_OPTIONS, arguments[1]);
     this.RECORD = true;
     jQuery.fx.off = true; // by default we are recording changes, not animating them
     // initialize stuff from init namespace

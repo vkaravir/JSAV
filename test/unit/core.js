@@ -10,6 +10,31 @@ test("JSAV", function() {
   ok( av, "JSAV initialized" );
 });
 
+test("JSAV container options", function() {
+  var avDOM = new JSAV(document.getElementById("emptycontainer"));
+  ok(avDOM, "Passing a DOM element");
+
+  var avjQuery = new JSAV($("#emptycontainer"));
+  ok(avjQuery, "Passing a jQuery object");
+
+  var avStringId = new JSAV("emptycontainer");
+  ok(avStringId, "Passing an element id");
+
+  var avDOMOpt = new JSAV({element: document.getElementById("emptycontainer")});
+  ok(avDOMOpt, "Passing a DOM element as an option");
+
+  var avjQueryOpt = new JSAV({element: jQuery("#emptycontainer")});
+  ok(avjQueryOpt, "Passing a jQuery object as an option");
+
+  var avSelectorOpt = new JSAV({element: "#emptycontainer"});
+  ok(avSelectorOpt, "Passing a selector as an option");
+
+  window.JSAV_OPTIONS = {element: "#emptycontainer"};
+  var avSelectorGlobalOpt = new JSAV();
+  ok(avSelectorGlobalOpt, "Element as a selector in global JSAV_OPTION");
+  delete window.JSAV_OPTIONS;
+});
+
 test("JSAV Options", function() {
   // simple test to see if global JSAV_OPTIONS works
   window.JSAV_OPTIONS = {cat: 0, dog: 1};
