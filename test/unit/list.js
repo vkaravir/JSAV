@@ -309,4 +309,29 @@
     list2.removeLast();
     ok(list1.equals(list2), "Lists with same values should be equal");
   });
+
+  test("Test list state function", function() {
+    var av = new JSAV("emptycontainer"),
+        list1 = av.ds.list(),
+        list2 = av.ds.list();
+    list1.addFirst(1);
+    list1.addLast(2);
+    list1.get(1).next(list1.newNode(3));
+    list1.first().addClass("testing");
+    list1.last().highlight();
+    list1.get(1).css("color", "red");
+
+    list2.state(list1.state());
+
+    ok(list1.equals(list2), "List values should equal after setting state");
+    ok(list1.equals(list2, {"class": ["jsavhighlight", "testing"]}), "List values and classes should equal after setting state");
+    ok(list1.equals(list2, {css: ["color"], "class": ["jsavhighlight", "testing"]}),
+          "List values, style, and classes should equal after setting state");
+
+    var list3 = av.ds.list();
+    ok(!list1.equals(list3));
+    list1.state(list3.state());
+    ok(list1.equals(list3, {css: ["color"], "class": ["jsavhighlight", "testing"]}));
+
+  });
 }());

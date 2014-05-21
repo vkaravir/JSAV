@@ -165,7 +165,51 @@
     return this.jsav.ds.layout.list[layoutAlg](this, options);
   };
   listproto.state = function(newState) {
-    // TODO: implement list.state
+    if (typeof newState !== "undefined") {
+      // first handle the special case of newState being an empty list
+      if (newState.length === 0) {
+        while (this.first()) { // just remove everything
+          this.removeFirst({record: false});
+        }
+        return; // remember to return
+      }
+
+      var currNode = this.first(),
+          i = 0,
+          newCurrState = newState[i];
+      while (newCurrState && currNode) {
+        currNode.state(newCurrState);
+        currNode = currNode.next();
+        newCurrState = ++i < newState.length?newState[i]:null;
+      }
+      if (!currNode) {
+        // list is shorter than the new state
+        currNode = this.last();
+        for (; i < newState.length; i++) {
+          var newNode = this.newNode("");
+          if (!currNode) { // if this list was initially empty
+            this.first(newNode);
+            currNode = this.first();
+          }
+          newNode.state(newState[i]);
+          currNode.next(newNode);
+          currNode = newNode;
+        }
+      } else {
+        // newCurrState is null, so list is longer than new state
+        while (currNode !== this.last()) { // remove until proper length
+          this.removeLast({record: false});
+        }
+      }
+    } else {
+      var state = [],
+          node = this.first();
+      while (node) {
+        state.push(node.state());
+        node = node.next();
+      }
+      return state;
+    }
   };
   listproto.clear = function() {
     this.element.remove();
@@ -248,7 +292,21 @@
     return this._edgetonext;
   };
   listnodeproto.state = function(newState) {
-    // TODO: implement state
+    if (typeof newState !== "undefined") {
+      this.value(newState.value, {record: false});
+      this.element.attr("class", newState.classes);
+      if (newState.style) {
+        this.element.attr("style", newState.style);
+      }
+    } else {
+      var state = { value: this.value(),
+                    classes: this.element.attr("class") },
+          style = this.element.attr("style");
+      if (style) {
+        state.style = style;
+      }
+      return state;
+    }
   };
   listnodeproto.equals = function(otherNode, options) {
     if (!otherNode || this.value() !== otherNode.value()) {
