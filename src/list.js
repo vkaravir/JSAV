@@ -186,13 +186,13 @@
         // list is shorter than the new state
         currNode = this.last();
         for (; i < newState.length; i++) {
-          var newNode = this.newNode("");
+          var newNode = this.newNode("", {record: false});
           if (!currNode) { // if this list was initially empty
             this.first(newNode);
             currNode = this.first();
           }
           newNode.state(newState[i]);
-          currNode.next(newNode);
+          currNode.next(newNode, {record: false});
           currNode = newNode;
         }
       } else {
@@ -290,23 +290,6 @@
   });
   listnodeproto.edgeToNext = function() {
     return this._edgetonext;
-  };
-  listnodeproto.state = function(newState) {
-    if (typeof newState !== "undefined") {
-      this.value(newState.value, {record: false});
-      this.element.attr("class", newState.classes);
-      if (newState.style) {
-        this.element.attr("style", newState.style);
-      }
-    } else {
-      var state = { value: this.value(),
-                    classes: this.element.attr("class") },
-          style = this.element.attr("style");
-      if (style) {
-        state.style = style;
-      }
-      return state;
-    }
   };
   listnodeproto.equals = function(otherNode, options) {
     if (!otherNode || this.value() !== otherNode.value()) {

@@ -395,6 +395,26 @@
   nodeproto.isHighlight = function() {
     return this.hasClass("jsavhighlight");
   };
+  // NOTE: the state function only sets state of the node, not
+  // things like edges out of the node
+  nodeproto.state = function(newState) {
+    if (typeof newState !== "undefined") {
+      this.value(newState.value, {record: false});
+      this.element.attr("class", newState.classes);
+      if (newState.style) {
+        this.element.attr("style", newState.style);
+      }
+    } else {
+      var state = { value: this.value(),
+          classes: this.element.attr("class") },
+        style = this.element.attr("style");
+      if (style) {
+        state.style = style;
+      }
+      return state;
+    }
+  };
+
   nodeproto.css = JSAV.utils._helpers.css;
   nodeproto._setcss = JSAV.anim(JSAV.utils._helpers._setcss);
 
