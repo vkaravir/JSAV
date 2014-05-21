@@ -310,6 +310,30 @@
     ok(!t1.equals(t2, {"class": ["someClass", "someClass2", "unknownClass"]}));
   });
 
+  test("Test tree state setting", function() {
+    var av = new JSAV("emptycontainer"),
+      tree1 = av.ds.tree(),
+      tree2 = av.ds.tree(),
+      tree3 = av.ds.tree();
+
+    tree1.root("3").addChild("5").child(0).addChild("7").child(0).highlight();
+    tree1.root().addChild(2).addChild("9").addClass("testing");
+    tree1.root().css("background-color", "red");
+
+    ok(!tree1.equals(tree2), "Different trees shouldn't be equal");
+    ok(!tree1.equals(tree2, {css: "background-color", "class": ["testing", "jsavhighlight"]}), "Different trees shouldn't be equal");
+
+    tree2.state(tree1.state());
+
+    ok(tree1.equals(tree2), "After setting state, trees should be equal");
+    ok(tree1.equals(tree2, {css: "background-color", "class": ["testing", "jsavhighlight"]}), "After setting state, trees should be equal");
+
+    tree3.root("tree three");
+    ok(!tree3.equals(tree1, {css: "background-color", "class": ["testing", "jsavhighlight"]}));
+    tree1.state(tree3.state());
+    ok(tree3.equals(tree1, {css: "background-color", "class": ["testing", "jsavhighlight"]}));
+  });
+
   module("datastructures.binarytree", {  });
   test("Binary Tree Children", function() {
     var av = new JSAV("emptycontainer");
@@ -675,5 +699,29 @@
     tree1.element.find(".jsavnode:eq(2)").trigger("jsavclick");
     tree2.element.find(".jsavnode:eq(0)").trigger("jsavclick");
     tree3.element.find(".jsavnode:eq(1)").trigger("jsavclick");
+  });
+
+  test("Test binary tree state setting", function() {
+    var av = new JSAV("emptycontainer"),
+        bt1 = av.ds.binarytree(),
+        bt2 = av.ds.binarytree(),
+        bt3 = av.ds.binarytree();
+
+    bt1.root("3").left("5").right("7").highlight();
+    bt1.root().right(2).right("9").addClass("testing").left(3);
+    bt1.root().css("background-color", "red");
+
+    ok(!bt1.equals(bt2), "Different trees shouldn't be equal");
+    ok(!bt1.equals(bt2, {css: "background-color", "class": ["testing", "jsavhighlight"]}), "Different trees shouldn't be equal");
+
+    bt2.state(bt1.state());
+
+    ok(bt1.equals(bt2), "After setting state, trees should be equal");
+    ok(bt1.equals(bt2, {css: "background-color", "class": ["testing", "jsavhighlight"]}), "After setting state, trees should be equal");
+
+    bt3.root("tree three");
+    ok(!bt3.equals(bt1, {css: "background-color", "class": ["testing", "jsavhighlight"]}));
+    bt1.state(bt3.state());
+    ok(bt3.equals(bt1, {css: "background-color", "class": ["testing", "jsavhighlight"]}));
   });
 }());

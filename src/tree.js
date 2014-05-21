@@ -111,7 +111,54 @@
   };
 
   treeproto.state = function(newState) {
-    // TODO: Should tree.state be implemented??? Probably..
+    if (typeof newState !== "undefined") {
+      var tree = this;
+      var setNodeState = function(node, newState) {
+        node.state(newState);
+        var newChildren = newState.children || [],
+            children = node.children(),
+            pos = 0;
+        var newChildState = newChildren[pos],
+            child = children[pos];
+        while (newChildState && child) { // set states of "common" children
+          setNodeState(child, newChildState);
+          pos++;
+          newChildState = newChildren[pos];
+          child = children[pos];
+        }
+        if (newChildren.length > children.length) {
+          // add more children
+          while (pos < newChildren.length) {
+            var newChildNode = tree.newNode("", node, {record: false});
+            node.addChild(newChildNode);
+            setNodeState(newChildNode, newChildren[pos]);
+            pos++;
+          }
+        } else {
+          // remove all extra children
+          while (pos < children.length) {
+            node.child(pos).remove({record: false});
+            children = node.children();
+          }
+        }
+      };
+      setNodeState(this.root(), newState);
+    } else {
+      var nodeState = function(node) {
+        if (!node) { return null; }
+        var state = node.state(),
+            children = node.children();
+        if (children.length > 0) {
+          state.children = [];
+          for (var i = 0; i < children.length; i++) {
+            state.children.push(nodeState(node.child(i)));
+          }
+        }
+        return state;
+      };
+      return nodeState(this.root());
+
+    }
   };
 
   JSAV.utils._events._addEventSupport(treeproto);
@@ -351,10 +398,7 @@
     }
     return this;
   };
-  nodeproto.state = function() {
-    // TODO: Should this be implemented??? Probably..
-  };
-  
+
   
   /// Binary Tree implementation
   var BinaryTree = function(jsav, options) {
@@ -366,8 +410,47 @@
   bintreeproto.newNode = function(value, parent, options) {
     return new BinaryTreeNode(this, value, parent, options);
   };
-  
-  
+  bintreeproto.state = function(newState) {
+    if (typeof newState !== "undefined") {
+      var tree = this;
+
+      var setNodeState = function(node, state) {
+        node.state(state);
+        var setChild = function(childName) {
+          var child = node[childName]();
+          if (!child && !state[childName]) { // no such child
+            return;
+          } else if (child && state[childName]) { // both such children
+            setNodeState(child, state);
+          } else if (child) { // existing child, need to remove
+            node[childName](null, {record: false});
+          } else { // no existing child but new child, need to add node
+            var newNode = tree.newNode("", node, {record: false});
+            node[childName](newNode, {record: false});
+            setNodeState(newNode, state[childName]);
+          }
+        };
+        setChild("left");
+        setChild("right");
+      };
+      setNodeState(this.root(), newState);
+
+    } else {
+      var nodeState = function(node) {
+        if (!node) { return null; }
+        var state = node.state();
+        if (node.left()) {
+          state.left = nodeState(node.left());
+        }
+        if (node.right()) {
+          state.right = nodeState(node.right());
+        }
+        return state;
+      }
+      return nodeState(this.root());
+    }
+  };
+
   /// Binary Tree Node implementation
   var BinaryTreeNode = function(container, value, parent, options) {
     this.init(container, value, parent, options);
@@ -509,7 +592,7 @@
     }
     return [oldVal];
   });
-    
+
   // expose the types to JSAV._types.ds
   var dstypes = JSAV._types.ds;
   dstypes.Tree = Tree;

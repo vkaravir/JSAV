@@ -401,9 +401,7 @@
     if (typeof newState !== "undefined") {
       this.value(newState.value, {record: false});
       this.element.attr("class", newState.classes);
-      if (newState.style) {
-        this.element.attr("style", newState.style);
-      }
+      this.element.attr("style", newState.style || "");
     } else {
       var state = { value: this.value(),
           classes: this.element.attr("class") },
