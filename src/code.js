@@ -66,8 +66,6 @@
       this.element.attr("class", newstate.classes);
       this.element.attr("style", newstate.style);
     } else {
-      console.log(this.element.attr("class"));
-      console.log(this.element.attr("style"));
       return { html: this.element.html(),
               classes: this.element.attr("class"),
               style: this.element.attr("style") };
