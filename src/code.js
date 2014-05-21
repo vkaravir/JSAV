@@ -64,11 +64,17 @@
     if (newstate) {
       this.element.html(newstate.html);
       this.element.attr("class", newstate.classes);
-      this.element.attr("style", newstate.style);
+      if (newstate.style) {
+        this.element.attr("style", newstate.style);
+      }
     } else {
-      return { html: this.element.html(),
-              classes: this.element.attr("class"),
-              style: this.element.attr("style") };
+      var state = { html: this.element.html(),
+              classes: this.element.attr("class")},
+          style = this.element.attr("style");
+      if (style) {
+        state.style = style;
+      }
+      return state;
     }
   };
   varproto.equals = function(otherVariable, options) {
