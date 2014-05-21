@@ -73,6 +73,64 @@
     equal(var1.element.filter(":visible").size(), 1, "Undoing show of a visible should keep it visible");
   });
 
+  test("Variable equals", function() {
+    var av = new JSAV("emptycontainer"),
+        var1 = av.variable("kissa"),
+        var2 = av.variable("koira");
+    ok(!var1.equals(var2), "Variables with different values shouldn't be equal");
+    var2.value("kissa");
+    ok(var1.equals(var2), "Variables with same values should be equal");
+
+    var1.highlight();
+    ok(!var1.equals(var2, {'class': 'jsavhighlight'}), "Variables with different highlights shouldn't be equal");
+    ok(!var1.equals(var2, {'css': 'background-color'}), "Variables with different highlights shouldn't be equal");
+    ok(var1.equals(var2), "Variables with different highlights should be equal if not comparing styles");
+
+    var2.highlight();
+    ok(var1.equals(var2, {'class': 'jsavhighlight'}), "Variables with same highlights should be equal");
+    ok(var1.equals(var2, {'css': 'background-color'}), "Variables with same highlights shouldn't be equal");
+    ok(var1.equals(var2), "Variables with same highlights should be equal even if not comparing styles");
+    var1.unhighlight();
+    var2.unhighlight();
+
+    var1.addClass("testing");
+    ok(!var1.equals(var2, {'class': 'testing'}), "Variables with different classes shouldn't be equal");
+    ok(var1.equals(var2, {'class': 'testingInvalid'}), "Variables with different classes should be equal if not testing for that class");
+    ok(var1.equals(var2), "Variables with different classes should be equal if not comparing classes");
+
+    var2.addClass("testing");
+    ok(var1.equals(var2, {'class': 'testing'}), "Variables with same classes should be equal");
+    ok(var1.equals(var2, {'class': 'testingInvalid'}), "Variables with same classes should be equal even if not testing for that class");
+    ok(var1.equals(var2), "Variables with same classes should be equal even if not comparing classes");
+
+    var1.css({color: "red"});
+    ok(!var1.equals(var2, {css: 'color'}), "Variables with different style shouldn't be equal");
+    ok(!var1.equals(var2, {css: ['font-size', 'color']}), "Variables with different style shouldn't be equal");
+    ok(var1.equals(var2, {css: 'font-size'}), "Variables with different styles should be equal if not testing for that property");
+    ok(var1.equals(var2), "Variables with different styles should be equal if not comparing styles");
+
+    var2.css({color: "red"});
+    ok(var1.equals(var2, {css: 'color'}), "Variables with same style should be equal");
+    ok(var1.equals(var2, {css: ['font-size', 'color']}), "Variables with same style should be equal");
+    ok(var1.equals(var2, {css: 'font-size'}), "Variables with same styles should be equal even if not testing for that property");
+    ok(var1.equals(var2), "Variables with same styles should be equal even if not comparing styles");
+  });
+
+  test("Variable state", function() {
+    var av = new JSAV("emptycontainer");
+    var var1 = av.variable("kissa");
+    var1.addClass("testing");
+    var1.highlight();
+    var1.css("font-size", "30px");
+    var state = var1.state();
+    var var2 = av.variable("");
+    var2.state(state);
+    ok(var1.equals(var2, {css: ["font-size"], "class": ["jsavhighlight", "testing"]}),
+                  "After setting state, variables should be equal");
+    ok(var2.equals(var1, {css: ["font-size"], "class": ["jsavhighlight", "testing"]}),
+                  "After setting state, variables should be equal both ways");
+  });
+
   module("code.code");
   test("Pseudocode initialization", function() {
     var av = new JSAV("emptycontainer"),

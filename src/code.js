@@ -62,14 +62,31 @@
   };
   varproto.state = function(newstate) {
     if (newstate) {
-      this.element.html(newstate);
+      this.element.html(newstate.html);
+      this.element.attr("class", newstate.classes);
+      this.element.attr("style", newstate.style);
     } else {
-      return this.element.html();
+      console.log(this.element.attr("class"));
+      console.log(this.element.attr("style"));
+      return { html: this.element.html(),
+              classes: this.element.attr("class"),
+              style: this.element.attr("style") };
     }
   };
-  varproto.equals = function(otherVariable) {
-    if (!otherVariable || typeof otherVariable !== "object") { return false; }
-    return this.value() === otherVariable.value();
+  varproto.equals = function(otherVariable, options) {
+    if (!otherVariable || typeof otherVariable !== "object" ||
+      this.value() !== otherVariable.value()) { return false; }
+    // compare styling of the variables
+    if (options && 'css' in options) { // if comparing css properties
+      var cssEquals = JSAV.utils._helpers.cssEquals(this, otherVariable, options.css);
+      if (!cssEquals) { return false; }
+    }
+
+    if (options && 'class' in options) { // if comparing class attributes
+      var classEquals = JSAV.utils._helpers.classEquals(this, otherVariable, options["class"]);
+      if (!classEquals) { return false; }
+    }
+    return true;
   };
   varproto.css = JSAV.utils._helpers.css;
   varproto._setcss = JSAV.anim(JSAV.utils._helpers._setcss);
