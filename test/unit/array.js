@@ -415,6 +415,38 @@ test("Test on event binding and custom events", function() {
     ok(!arr.equals(arr3, {css: ["background-color", "color"]}));
   });
 
+  test("Test array state", function() {
+    var av = new JSAV("emptycontainer"),
+        arr1 = av.ds.array([1, 2, 3, 4, 5]),
+        arr2 = av.ds.array([3, 4, 5, 6, 7, 8, 9]),
+        arr3 = av.ds.array([0]);
+
+    arr1.highlight(2);
+    arr1.addClass(3, "testing");
+    arr1.css({"border": "2px solid blue"});
+    arr1.css(0, {"color": "red"});
+
+    ok(!arr1.equals(arr2), "Different arrays should not be equal");
+    ok(!arr1.equals(arr2, {css: ["color", "background-color"]}), "Different arrays should not be equal");
+    ok(!arr1.equals(arr2, {css: ["color", "background-color"], "class": ["jsavhighlight", "testing"]}), "Different arrays should not be equal");
+
+    arr2.state(arr1.state());
+
+    ok(arr1.equals(arr2), "After setting state, arrays should be equal");
+    ok(arr1.equals(arr2, {css: ["color", "background-color"]}), "After setting state, arrays should be equal");
+    ok(arr1.equals(arr2, {css: ["color", "background-color"], "class": ["jsavhighlight", "testing"]}), "After setting state, arrays should be equal");
+
+    ok(!arr3.equals(arr1), "Different arrays should not be equal");
+    ok(!arr3.equals(arr1, {css: ["color", "background-color"]}), "Different arrays should not be equal");
+    ok(!arr3.equals(arr1, {css: ["color", "background-color"], "class": ["jsavhighlight", "testing"]}), "Different arrays should not be equal");
+
+    arr3.state(arr1.state());
+
+    ok(arr3.equals(arr1), "After setting state, arrays should be equal");
+    ok(arr3.equals(arr1, {css: ["color", "background-color"]}), "After setting state, arrays should be equal");
+    ok(arr3.equals(arr1, {css: ["color", "background-color"], "class": ["jsavhighlight", "testing"]}), "After setting state, arrays should be equal");
+  });
+
   test("Test array indices", function() {
     var av = new JSAV("arraycontainer"),
         arr = av.ds.array([1, 2, 3, 4]);

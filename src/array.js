@@ -156,12 +156,7 @@
   });
   arrproto.clone = function() {
     // fetch all values
-    var size = this.size(),
-      vals = [];
-    for (var i=0; i < size; i++) {
-      vals[i] = this.value(i);
-    }
-    vals = this._values;
+    var vals = this._values;
     var newArray = new AVArray(this.jsav, vals, $.extend(true, {}, this.options, {visible: false}));
     newArray.state(this.state());
     return newArray;
@@ -259,18 +254,44 @@
     this.element.removeClass("jsavbararray");
     return this.jsav.ds.layout.array[layoutAlg](this, options);
   };
+  // set the new state of the array
+  // NOTE: this won't even try to set state properly if the arrays have
+  // different layouts
   arrproto.state = function(newstate) {
     if (newstate) {
-      $(this.element).html(newstate.html);
-      for (var i = newstate.values.length; i--; ) {
-        this._values[i] = newstate.values[i];
+      this.element.attr("style", newstate.style || "");
+      this.element.attr("class", newstate.classes);
+      var currIndices = this._indices, newIndices = newstate.ind,
+          i = 0, curr = currIndices.length, newl = newIndices.length;
+      for (; i < curr && i < newl; i++) {
+        currIndices[i].state(newIndices[i]);
+      }
+      // handle removing or adding indices; note, that after the for loop
+      // above, only one of the while loops can ever be executed
+      while (i < curr) { // remove indices
+        var lastInd = currIndices.length - 1;
+        currIndices[lastInd].element.remove();
+        currIndices.splice(lastInd);
+        this._values.splice(lastInd);
+        i++;
+      }
+      while (i < newl) { // add indices
+        var newInd = this._newindex("", i);
+        newInd.state(newIndices[i]);
+        i++;
       }
     } else {
-      var sta = {
-        values: this._values.slice(0),
-        html: $(this.element).html()
-      };
-      return sta;
+      var state = {ind: []};
+      var indices = state.ind;
+      for (var i = 0, l = this._indices.length; i < l; i++) {
+        indices.push(this._indices[i].state());
+      }
+      var style = this.element.attr("style");
+      if (style) {
+        state.style = style;
+      }
+      state.classes = this.element.attr("class");
+      return state;
     }
   };
   arrproto.equals = function(otherArray, options) {
