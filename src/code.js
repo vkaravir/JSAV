@@ -64,9 +64,7 @@
     if (newstate) {
       this.element.html(newstate.html);
       this.element.attr("class", newstate.classes);
-      if (newstate.style) {
-        this.element.attr("style", newstate.style);
-      }
+      this.element.attr("style", newstate.style || "");
     } else {
       var state = { html: this.element.html(),
               classes: this.element.attr("class")},
