@@ -399,15 +399,25 @@
   // things like edges out of the node
   nodeproto.state = function(newState) {
     if (typeof newState !== "undefined") {
-      this.value(newState.value, {record: false});
-      this.element.attr("class", newState.classes);
-      this.element.attr("style", newState.style || "");
+      this.value(newState.v, {record: false});
+      /*if (newState.cls) {
+        console.log(newState.cls);
+        for (var i = newState.cls.length; i--; ) {
+          this.element.addClass(newState.cls[i]);
+        }
+      }*/
+      JSAV.utils._helpers.setElementClasses(this.element, newState.cls || []);
+      //this.element.attr("class", newState.classes);
+      this.element.attr("style", newState.css || "");
     } else {
-      var state = { value: this.value(),
-          classes: this.element.attr("class") },
+      var state = { v: this.value() },
         style = this.element.attr("style");
+      var cls = JSAV.utils._helpers.elementClasses(this.element);
+      if (cls.length > 0) {
+        state.cls = cls;
+      }
       if (style) {
-        state.style = style;
+        state.css = style;
       }
       return state;
     }

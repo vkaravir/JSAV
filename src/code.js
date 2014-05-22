@@ -62,16 +62,20 @@
   };
   varproto.state = function(newstate) {
     if (newstate) {
-      this.element.html(newstate.html);
-      this.element.attr("class", newstate.classes);
+      // set the type of this variable
+      this.options.type = newstate.t;
+      // set the value
+      this.value(newstate.v, {record: false});
+      // use the helper to add the classes and remove any existing extra classes
+      JSAV.utils._helpers.setElementClasses(this.element, newstate.cls || []);
+      // set the style attribute to match the newstate or clear existing styles
       this.element.attr("style", newstate.style || "");
-    } else {
-      var state = { html: this.element.html(),
-              classes: this.element.attr("class")},
+    } else { // no new state, so return the current state
+      var state = { t: this.options.type, v: this.value() },
+          cls = JSAV.utils._helpers.elementClasses(this.element),
           style = this.element.attr("style");
-      if (style) {
-        state.style = style;
-      }
+      if (style) { state.style = style; }
+      if (cls.length > 0) { state.cls = cls; }
       return state;
     }
   };

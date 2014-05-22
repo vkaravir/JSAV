@@ -192,7 +192,7 @@
     var d = {
       },
       modal = options.modal,
-      $dialog = $(dialogBase),
+      $dialog = $(options.dialogBase || dialogBase),
       i, l, attr,
       attrOptions = ["width", "height", "minWidth", "minHeight", "maxWidth", "maxHeight"];
     if (typeof html === "string") {
@@ -661,6 +661,43 @@ mixkey(math.random(), pool);
  
   var _helpers = {};
   u._helpers = _helpers;
+  var JSAV_CLASS_NAMES = ["jsavarray", "jsavhorizontalarray", "jsavverticalarray",
+                          "jsavbararray", "jsavindexed",
+                          "jsavnode", "jsavindex",
+                          "jsavcommontree", "jsavtree", "jsavbinarytree",
+                          "jsavbinarynode", "jsavtreenode",
+                          "jsavlistnode", "jsavlist", "jsavverticallist",
+                          "jsavhorizontallist",
+                          "jsavmatrix",
+                          "jsavgraphnode",
+                          "jsavvariable"];
+  _helpers.setElementClasses = function(element, cls) {
+    var elem = element[0],
+        clsList = elem.classList;
+    var curCls = Array.prototype.slice.call(element[0].classList, 0);
+    for (var i = curCls.length; i--; ) {
+      var c = curCls[i];
+      if (JSAV_CLASS_NAMES.indexOf(c) === -1 && cls.indexOf(c) === -1) {
+        clsList.remove(c);
+      }
+    }
+    for (i = cls.length; i--; ) {
+      c = cls[i];
+      if (!clsList.contains(c)) {
+        clsList.add(c);
+      }
+    }
+  };
+  _helpers.elementClasses = function(element) {
+    var cls = Array.prototype.slice.call(element[0].classList, 0),
+        customCls = [];
+    for (var i = cls.length; i--; ) {
+      if (JSAV_CLASS_NAMES.indexOf(cls[i]) === -1) {
+        customCls.push(cls[i]);
+      }
+    }
+    return customCls;
+  };
   _helpers.css = function(cssprop, value, options) {
     if (typeof cssprop === "string" && typeof value === "undefined") {
       return this.element.css(cssprop);

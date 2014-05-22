@@ -430,21 +430,31 @@ test("Test on event binding and custom events", function() {
     ok(!arr1.equals(arr2, {css: ["color", "background-color"]}), "Different arrays should not be equal");
     ok(!arr1.equals(arr2, {css: ["color", "background-color"], "class": ["jsavhighlight", "testing"]}), "Different arrays should not be equal");
 
+    // set state of a longer array
     arr2.state(arr1.state());
+    equal(arr2.size(), 5, "Array size after setting state");
 
     ok(arr1.equals(arr2), "After setting state, arrays should be equal");
     ok(arr1.equals(arr2, {css: ["color", "background-color"]}), "After setting state, arrays should be equal");
     ok(arr1.equals(arr2, {css: ["color", "background-color"], "class": ["jsavhighlight", "testing"]}), "After setting state, arrays should be equal");
+    // test that the internal array values were set properly as well
+    deepEqual(arr1._values, arr2._values, "Internal values of arrays should be equal after setting state");
 
     ok(!arr3.equals(arr1), "Different arrays should not be equal");
     ok(!arr3.equals(arr1, {css: ["color", "background-color"]}), "Different arrays should not be equal");
     ok(!arr3.equals(arr1, {css: ["color", "background-color"], "class": ["jsavhighlight", "testing"]}), "Different arrays should not be equal");
 
+    // set state of a shorter array
     arr3.state(arr1.state());
+    equal(arr3.size(), 5, "Array size after setting state");
 
     ok(arr3.equals(arr1), "After setting state, arrays should be equal");
     ok(arr3.equals(arr1, {css: ["color", "background-color"]}), "After setting state, arrays should be equal");
     ok(arr3.equals(arr1, {css: ["color", "background-color"], "class": ["jsavhighlight", "testing"]}), "After setting state, arrays should be equal");
+    // test that the internal array values were set properly as well
+    deepEqual(arr1._values, arr3._values, "Internal values of arrays should be equal after setting state");
+
+
   });
 
   test("Test array indices", function() {

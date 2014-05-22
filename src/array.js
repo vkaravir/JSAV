@@ -260,7 +260,7 @@
   arrproto.state = function(newstate) {
     if (newstate) {
       this.element.attr("style", newstate.style || "");
-      this.element.attr("class", newstate.classes);
+      JSAV.utils._helpers.setElementClasses(this.element, newstate.classes || []);
       var currIndices = this._indices, newIndices = newstate.ind,
           i = 0, curr = currIndices.length, newl = newIndices.length;
       for (; i < curr && i < newl; i++) {
@@ -290,7 +290,10 @@
       if (style) {
         state.style = style;
       }
-      state.classes = this.element.attr("class");
+      var cls = JSAV.utils._helpers.elementClasses(this.element);
+      if (cls.length > 0) {
+        state.classes = cls;
+      }
       return state;
     }
   };
