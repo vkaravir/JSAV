@@ -220,7 +220,10 @@
         }
       }
     }
-  };
+  }; // end grader specification
+  // set the continuous finalStep grader the same as normal finalStep
+  graders["finalStep-continuous"] = graders.finalStep;
+
   var exerproto = Exercise.prototype;
   exerproto._updateScore = function() {
     if (this.options.feedback === "continuous") {
@@ -421,8 +424,10 @@
         }
         var fixmode = that.fixmode?that.fixmode.val():that.options.fixmode;
         // undo until last graded step
-        that.undo();
-        that.score.student--;
+        if (fixmode !== "none") {
+          that.undo();
+          that.score.student--;
+        }
         if (fixmode === "fix" && $.isFunction(that.options.fix)) {
           // call the fix function of the exercise to correct the state
           that._fixing = true;
@@ -442,6 +447,8 @@
           that.jsav.logEvent({type: "jsav-exercise-step-undone", score: $.extend({}, grade)});
           moveModelBackward(that);
           window.alert(that.jsav._translate("fixFailedPopup"));
+        } else if (fixmode === "none") {
+          // DO nothing
         } else {
           that.score.undo++;
           that.jsav.logEvent({type: "jsav-exercise-step-undone", score: $.extend({}, grade)});
