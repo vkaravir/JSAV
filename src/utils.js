@@ -188,6 +188,8 @@
     //  - dialogClass
     //  - title
     //  - closeCallback
+    //  - dialogBase
+    //  - dialogRootElement
     options = $.extend({}, {modal: true, closeOnClick: true}, options);
     var d = {
       },
@@ -251,7 +253,8 @@
         .click(close);
       $dialog.append(closeButton);
     }
-    var $dial = $dialog.appendTo($("body")).add($modalElem);
+
+    var $dial = $dialog.appendTo(options.dialogRootElement || $("body")).add($modalElem);
     $dial.draggable();
     var center = function() {
       $dialog.css({
