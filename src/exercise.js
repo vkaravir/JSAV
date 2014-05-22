@@ -365,6 +365,9 @@
     }
     this.jsav._undo = [];
     this._updateScore();
+    // log the initialization of an exercise, passing the exercise as data
+    // this enables other components on a page to get access to the exercise object
+    this.jsav.logEvent({type: "jsav-exercise-init", exercise: this});
   };
   exerproto.undo = function() {
     var oldFx = $.fx.off || false;
@@ -403,9 +406,9 @@
     }
     this.jsav.stepOption("grade", true);
     this.jsav.step();
+    var that = this;
     if ((this.feedback && this.feedback.val() === "continuous") ||
         (!this.feedback && this.options.feedback === "continuous")) {
-      var that = this;
       var doContinuousGrading = function() {
         var grade = that.grade(true); // true is for continuous mode
         if (grade.student === grade.correct) { // all student's steps are correct
@@ -448,11 +451,17 @@
         that._updateScore();
       };
       that.jsav._clearPlaying(function() {
+        // log the gradeable step event
+        that.jsav.logEvent({type: "jsav-exercise-gradeable-step"});
         // set a timer to do the grading once animation is finished
         doContinuousGrading();
         $.fx.off = prevFx;
       });
     } else {
+      this.jsav._clearPlaying(function() {
+        // log the event of gradeable step after the animation is finished
+        that.jsav.logEvent({type: "jsav-exercise-gradeable-step"});
+      });
       $.fx.off = prevFx;
     }
   };
