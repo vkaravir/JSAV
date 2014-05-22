@@ -412,7 +412,9 @@
   // Pseudocode objects for JSAV
   var Code = function(jsav, codelines, options) {
     this.jsav = jsav;
-    if (typeof(codelines) === "string") {
+    if (typeof(codelines) === "undefined") {
+      codelines = [];
+    } else if (typeof(codelines) === "string") {
       // strings will be split at newline characters
       codelines = codelines.split("\n");
     } else if (typeof(codelines) === "object" && !$.isArray(codelines)) {
