@@ -167,7 +167,7 @@
   listproto.state = function(newState) {
     if (typeof newState !== "undefined") {
       // first handle the special case of newState being an empty list
-      if (newState.length === 0) {
+      if (newState.n.length === 0) {
         while (this.first()) { // just remove everything
           this.removeFirst({record: false});
         }
@@ -176,22 +176,22 @@
 
       var currNode = this.first(),
           i = 0,
-          newCurrState = newState[i];
+          newCurrState = newState.n[i];
       while (newCurrState && currNode) {
         currNode.state(newCurrState);
         currNode = currNode.next();
-        newCurrState = ++i < newState.length?newState[i]:null;
+        newCurrState = ++i < newState.n.length?newState.n[i]:null;
       }
       if (!currNode) {
         // list is shorter than the new state
         currNode = this.last();
-        for (; i < newState.length; i++) {
+        for (; i < newState.n.length; i++) {
           var newNode = this.newNode("", {record: false});
           if (!currNode) { // if this list was initially empty
             this.first(newNode);
             currNode = this.first();
           }
-          newNode.state(newState[i]);
+          newNode.state(newState.n[i]);
           currNode.next(newNode, {record: false});
           currNode = newNode;
         }
@@ -201,13 +201,27 @@
           this.removeLast({record: false});
         }
       }
+      currNode = this.first();
+      var edge = currNode.edgeToNext(),
+          edges = newState.e;
+      for (i = 0; i < edges.length; i++) {
+        this.get(i).edgeToNext().state(edges[i]);
+      }
     } else {
-      var state = [],
-          node = this.first();
+      var state = {},
+          node = this.first(),
+          edge,
+          nodes = [], edges = [];
       while (node) {
-        state.push(node.state());
+        nodes.push(node.state());
+        edge = node.edgeToNext();
+        if (edge) {
+          edges.push(edge.state());
+        }
         node = node.next();
       }
+      state.n = nodes;
+      state.e = edges;
       return state;
     }
   };

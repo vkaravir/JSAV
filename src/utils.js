@@ -673,7 +673,7 @@ mixkey(math.random(), pool);
                           "jsavhorizontallist",
                           "jsavmatrix",
                           "jsavgraphnode",
-                          "jsavvariable"];
+                          "jsavvariable", "jsavedge"];
   _helpers.setElementClasses = function(element, cls) {
     var elem = element[0],
         clsList = elem.classList;

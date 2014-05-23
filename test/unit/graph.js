@@ -268,11 +268,13 @@
         b2 = graph2.addNode("B"),
         c2 = graph2.addNode("C"),
         d2 = graph2.addNode("D");
-    graph1.addEdge(a1, b1);
-    graph1.addEdge(b1, c1);
+    var e1 = graph1.addEdge(a1, b1);
+    var e2 = graph1.addEdge(b1, c1);
     a1.highlight();
     b1.addClass("testing");
     c1.css({"color": "red"});
+    e1.css({stroke: "blue"});
+    e2.highlight();
     graph1.layout();
 
     graph2.addEdge(a2, c2);

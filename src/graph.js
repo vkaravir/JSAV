@@ -279,7 +279,7 @@
           nodes = this.nodes(Graph._nodeSortFunction),
           newNodes = newState.n,
           newEdges = newState.e,
-          i, l, e;
+          i, l, e, newE;
       for (i = 0, l = edges.length; i < l; i++) {
         e = edges[i];
         this.removeEdge(e.start(), e.end(), {record: false});
@@ -303,7 +303,8 @@
       // create edges between the nodes
       for (i = 0, l = newEdges.length; i < l; i++) {
         e = newEdges[i]; // includes array like [startNodeIndex, endNodeIndex]
-        this.addEdge(nodes[e[0]], nodes[e[1]], {record: false});
+        newE = this.addEdge(nodes[e[0]], nodes[e[1]], {record: false});
+        newE.state(e[2]);
       }
     } else {
       var state = {},
@@ -317,7 +318,7 @@
       }
       for (i = 0; i < edgelist.length; i++) {
         e = edgelist[i];
-        edges.push([nodelist.indexOf(e.start()), nodelist.indexOf(e.end())]);
+        edges.push([nodelist.indexOf(e.start()), nodelist.indexOf(e.end()), e.state()]);
       }
       state.n = nodes;
       state.e = edges;

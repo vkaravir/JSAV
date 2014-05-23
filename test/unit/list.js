@@ -320,18 +320,21 @@
     list1.first().addClass("testing");
     list1.last().highlight();
     list1.get(1).css("color", "red");
+    list1.first().edgeToNext().css("stroke", "red");
+    list1.get(1).edgeToNext().highlight();
+    list1.layout();
 
     list2.state(list1.state());
 
     ok(list1.equals(list2), "List values should equal after setting state");
     ok(list1.equals(list2, {"class": ["jsavhighlight", "testing"]}), "List values and classes should equal after setting state");
-    ok(list1.equals(list2, {css: ["color"], "class": ["jsavhighlight", "testing"]}),
+    ok(list1.equals(list2, {css: ["color", "stroke"], "class": ["jsavhighlight", "testing"]}),
           "List values, style, and classes should equal after setting state");
 
     var list3 = av.ds.list();
     ok(!list1.equals(list3));
     list1.state(list3.state());
-    ok(list1.equals(list3, {css: ["color"], "class": ["jsavhighlight", "testing"]}));
+    ok(list1.equals(list3, {css: ["color", "stroke"], "class": ["jsavhighlight", "testing"]}));
 
   });
 }());
