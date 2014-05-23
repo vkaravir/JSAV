@@ -469,4 +469,23 @@
     equal(label.element.filter(":visible").size(), 1, "Undoing show of a visible should keep it visible");
   });
 
+  test("Test Label state() function", function() {
+    var av = new JSAV("emptycontainer"),
+        label1 = av.label("labeli1"),
+        label2 = av.label("labeli2");
+    label1.addClass("testing");
+    label2.addClass("testing2");
+    label1.css("font-size", "23px");
+    label2.css("border", "1px solid black");
+
+    ok(!label1.equals(label2));
+    ok(!label1.equals(label2, {css: ["font-size", "border"]}));
+    ok(!label1.equals(label2, {css: ["font-size", "border"], "class": ["testing", "testing2"]}));
+
+    label2.state(label1.state());
+
+    ok(label1.equals(label2));
+    ok(label1.equals(label2, {css: ["font-size", "border"]}));
+    ok(label1.equals(label2, {css: ["font-size", "border"], "class": ["testing", "testing2"]}));
+  });
 }());

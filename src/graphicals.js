@@ -547,13 +547,40 @@ if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
   };
   // add value(..) function as an alias for text
   labelproto.value = labelproto.text;
-  labelproto.state = function(newstate) {
-    if (newstate) {
-      $(this.element).html(newstate);
+  labelproto.state = function(newState) {
+    if (typeof newState !== "undefined") {
+      this.text(newState.t, {record: false});
+      JSAV.utils._helpers.setElementClasses(this.element, newState.cls || []);
+      this.element.attr("style", newState.css || "");
     } else {
-      return $(this.element).html();
+      var state = {t: this.text()},
+        style = this.element.attr("style");
+      var cls = JSAV.utils._helpers.elementClasses(this.element);
+      if (cls.length > 0) {
+        state.cls = cls;
+      }
+      if (style) {
+        state.css = style;
+      }
+      return state;
     }
   };
+  labelproto.equals = function(otherLabel, options) {
+    if (!otherLabel || !(otherLabel instanceof Label) ||
+      this.text() !== otherLabel.text()) { return false; }
+    // compare styling of the variables
+    if (options && 'css' in options) { // if comparing css properties
+      var cssEquals = JSAV.utils._helpers.cssEquals(this, otherLabel, options.css);
+      if (!cssEquals) { return false; }
+    }
+
+    if (options && 'class' in options) { // if comparing class attributes
+      var classEquals = JSAV.utils._helpers.classEquals(this, otherLabel, options["class"]);
+      if (!classEquals) { return false; }
+    }
+    return true;
+
+  }
   labelproto.css = JSAV.utils._helpers.css;
   labelproto._setcss = JSAV.anim(JSAV.utils._helpers._setcss);
   labelproto.addClass = JSAV.utils._helpers.addClass;
