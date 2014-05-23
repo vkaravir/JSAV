@@ -243,7 +243,28 @@
     }
   };
   edgeproto.state = function(newState) {
-    // TODO: implement state
+    if (typeof newState !== "undefined") {
+      this.g.css(newState.a); // set the css of the element
+      JSAV.utils._helpers.setElementClasses(this.element, newState.cls || []); // set classes
+      if (newState.l) { // set label
+        this.label(newState.l, {record: false});
+      } else if (this.label()) {
+        this.label("");
+      }
+      if (newState.w) { // set weight
+        this.weight(newState.w);
+      } else if (this.weight()) {
+        this.weight("");
+      }
+    } else {
+      var state = {a: this.g.rObj.attrs}, // get all attrs set for the element
+          cls = JSAV.utils._helpers.elementClasses(this.element); // get classes
+      if (cls.length > 0) { state.cls = cls; }
+      if (this.label()) { state.l = this.label(); } // label
+      if (this._weight) { state.w = this.weight(); } // weight
+
+      return state;
+    }
   };
   edgeproto.position = function() {
     var bbox = this.g.bounds();
