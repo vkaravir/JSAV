@@ -255,4 +255,55 @@
 
     ok(weightedGraph.equals(weightedGraph.clone()), "Cloning a graph with edge weights");
   });
+
+  test("Graph state() test", function() {
+    var av = new JSAV("emptycontainer");
+    var graph1 = av.ds.graph(),
+        graph2 = av.ds.graph(),
+        graph3 = av.ds.graph();
+    var a1 = graph1.addNode("A"),
+        b1 = graph1.addNode("B"),
+        c1 = graph1.addNode("C");
+    var a2 = graph2.addNode("A"),
+        b2 = graph2.addNode("B"),
+        c2 = graph2.addNode("C"),
+        d2 = graph2.addNode("D");
+    graph1.addEdge(a1, b1);
+    graph1.addEdge(b1, c1);
+    a1.highlight();
+    b1.addClass("testing");
+    c1.css({"color": "red"});
+    graph1.layout();
+
+    graph2.addEdge(a2, c2);
+    graph2.addEdge(b2, c2);
+    graph2.addEdge(a2, b2);
+    a2.addClass("testing2");
+
+    ok(!graph1.equals(graph2), "Different graphs should not be equal");
+    ok(!graph1.equals(graph2, {css: ["color", "background-color"]}), "Different graphs should not be equal");
+    ok(!graph1.equals(graph2, {"class": ["testing", "testing2", "jsavhighlight"],
+                               css: ["color", "background-color"]}), "Different graphs should not be equal");
+    // set state of graph which has fewer nodes and edges than source
+    graph2.state(graph1.state());
+
+    ok(graph1.equals(graph2), "After setting state, graphs should be equal");
+    ok(graph1.equals(graph2, {css: ["color", "background-color"]}), "After setting state, graphs should be equal");
+    ok(graph1.equals(graph2, {"class": ["testing", "testing2", "jsavhighlight"],
+      css: ["color", "background-color"]}), "After setting state, graphs should be equal");
+
+
+    ok(!graph1.equals(graph3), "Different graphs should not be equal");
+    ok(!graph1.equals(graph3, {css: ["color", "background-color"]}), "Different graphs should not be equal");
+    ok(!graph1.equals(graph3, {"class": ["testing", "testing2", "jsavhighlight"],
+      css: ["color", "background-color"]}), "Different graphs should not be equal");
+    // set state of an empty graph
+    graph3.state(graph1.state());
+
+    ok(graph1.equals(graph3), "After setting state, graphs should be equal");
+    ok(graph1.equals(graph3, {css: ["color", "background-color"]}), "After setting state, graphs should be equal");
+    ok(graph1.equals(graph3, {"class": ["testing", "testing2", "jsavhighlight"],
+      css: ["color", "background-color"]}), "After setting state, graphs should be equal");
+
+  });
 })();

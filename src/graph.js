@@ -272,6 +272,58 @@
     }
     return cloneGraph;
   };
+  graphproto.state = function(newState) {
+    if (typeof newState !== "undefined") {
+      // remove all edges
+      var edges = this.edges(),
+          nodes = this.nodes(Graph._nodeSortFunction),
+          newNodes = newState.n,
+          newEdges = newState.e,
+          i, l, e;
+      for (i = 0, l = edges.length; i < l; i++) {
+        e = edges[i];
+        this.removeEdge(e.start(), e.end(), {record: false});
+      }
+      // go through existing nodes and set the state
+      for (i = 0; i < nodes.length && i < newNodes.length; i++) {
+        nodes[i].state(newNodes[i]);
+      }
+      // remove extra nodes
+      while (i < nodes.length) {
+        this.removeNode(nodes[nodes.length - 1]);
+        i++;
+      }
+      //   or add needed nodes
+      while(i < newNodes.length) {
+        var newNode = this.newNode("", {record: false});
+        newNode.state(newNodes[nodes.length]);
+        nodes.push(newNode);
+        i++;
+      }
+      // create edges between the nodes
+      for (i = 0, l = newEdges.length; i < l; i++) {
+        e = newEdges[i]; // includes array like [startNodeIndex, endNodeIndex]
+        this.addEdge(nodes[e[0]], nodes[e[1]], {record: false});
+      }
+    } else {
+      var state = {},
+          nodes = [],
+          edges = [],
+          nodelist = this.nodes(Graph._nodeSortFunction),
+          edgelist = this.edges(),
+        i, e;
+      for (i = 0; i < nodelist.length; i++) {
+        nodes.push(nodelist[i].state());
+      }
+      for (i = 0; i < edgelist.length; i++) {
+        e = edgelist[i];
+        edges.push([nodelist.indexOf(e.start()), nodelist.indexOf(e.end())]);
+      }
+      state.n = nodes;
+      state.e = edges;
+      return state;
+    }
+  };
 
 
   // add the event handler registering functions

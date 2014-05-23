@@ -400,14 +400,7 @@
   nodeproto.state = function(newState) {
     if (typeof newState !== "undefined") {
       this.value(newState.v, {record: false});
-      /*if (newState.cls) {
-        console.log(newState.cls);
-        for (var i = newState.cls.length; i--; ) {
-          this.element.addClass(newState.cls[i]);
-        }
-      }*/
       JSAV.utils._helpers.setElementClasses(this.element, newState.cls || []);
-      //this.element.attr("class", newState.classes);
       this.element.attr("style", newState.css || "");
     } else {
       var state = { v: this.value() },
