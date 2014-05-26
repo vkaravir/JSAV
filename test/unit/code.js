@@ -161,28 +161,28 @@
     };
     av.displayInit();
     testCurrents(-1, -1);
-    pseudo.setCurrentLine(0);
+    pseudo.setCurrentLine(1);
     testCurrents(0, -1);
     av.step();
-    pseudo.setCurrentLine(1);
+    pseudo.setCurrentLine(2);
     testCurrents(1, 0);
     av.step();
-    pseudo.setCurrentLine(2);
+    pseudo.setCurrentLine(3);
     testCurrents(2, 1);
     av.step();
-    pseudo.setCurrentLine(1);
+    pseudo.setCurrentLine(2);
     testCurrents(1, 2);
     av.step();
-    pseudo.setCurrentLine(1);
+    pseudo.setCurrentLine(2);
     testCurrents(1, 1);
     av.step();
-    pseudo.setCurrentLine(2);
+    pseudo.setCurrentLine(3);
     testCurrents(2, 1);
     av.step();
-    pseudo.setCurrentLine(2);
+    pseudo.setCurrentLine(3);
     testCurrents(2, 2);
     av.step();
-    pseudo.setCurrentLine(-1);
+    pseudo.setCurrentLine(0);
     testCurrents(-1, -1);
   });
 
@@ -204,6 +204,7 @@
     equal(pseudoNoEscape.element.find(".jsavcodeline:eq(2)").text(), "line3  line4");
   });
 
+  module("code.pointer");
   test("Pointers positioning", function(assert) {
     var av = new JSAV("emptycontainer"),
         arr = av.ds.array([1, 2, 3, 4], {left: 500, top: 200}),
