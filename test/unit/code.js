@@ -204,6 +204,28 @@
     equal(pseudoNoEscape.element.find(".jsavcodeline:eq(2)").text(), "line3  line4");
   });
 
+  test("Pseudocode tags", function() {
+    var av = new JSAV("emptycontainer"),
+        lines = ["kissa", "istuu", "yksin", "katolla"],
+        tags = {theCat: 1, sits: 2, alone: 3, "on the roof": 4},
+        pseudo = av.code(lines, {tags: tags});
+    function testCSS (index, css, expectedValue) {
+      equal(pseudo.element.find(".jsavcodeline:eq(" + index + ")").css(css), expectedValue);
+    }
+    function testClass (index, testclass) {
+      ok(pseudo.element.find(".jsavcodeline:eq(" + index + ")").hasClass(testclass), "Line " + (index + 1) + " should have class " + testclass);
+    }
+
+    pseudo.highlight("sits");
+    testClass(1, "jsavhighlight");
+    pseudo.addClass("theCat", "lolcat");
+    testClass(0, "lolcat");
+    pseudo.css("alone", {"background-color": "#f00"});
+    testCSS(2, "background-color", "rgb(255, 0, 0)");
+    pseudo.css("on the roof", {color: "black"});
+    testCSS(3, "color", "rgb(0, 0, 0)");
+  });
+
   module("code.pointer");
   test("Pointers positioning", function(assert) {
     var av = new JSAV("emptycontainer"),
