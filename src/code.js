@@ -493,53 +493,67 @@
   codeproto.addCodeLine = JSAV.anim(function(newLine) {
     this.element.append(createCodeLine(newLine, this));
   });
-  // wrapper function for getIndices to add support for indexing with tags
-  function getCodeLineElements(self, indices) {
-    if (typeof indices === "string") {
-      if (self.options.tags && typeof self.options.tags[indices] !== "undefined") {
-        indices = self.options.tags[indices];
+  // wrapper function for getIndices to add support for numbering with tags
+  function getCodeLineElements(self, linenum) {
+    if (typeof linenum === "string") {
+      if (self.options.tags && typeof self.options.tags[linenum] !== "undefined") {
+        linenum = self.options.tags[linenum];
       } else {
-        indices = undefined;
+        linenum = undefined;
+      }
+    }
+    // Change line numbers to indices
+    var indices;
+    if (linenum) {
+      if (typeof linenum === "number") {
+        indices = linenum - 1;
+      } else if ($.isArray(linenum)) {
+        indices = [];
+        for (var i = 0; i < linenum.length; i++) {
+          indices[i] = linenum[i] - 1;
+        }
+      } else if ($.isFunction(linenum)) {
+        indices = function (ind) { return linenum(ind + 1); };
       }
     }
     return getIndices($(self.element).find("li.jsavcodeline"), indices);
   }
-  codeproto.highlight = function(index, options) {
-    return this.addClass(index, "jsavhighlight");
+  codeproto.highlight = function(linenum, options) {
+    return this.addClass(linenum, "jsavhighlight");
   };
-  codeproto.unhighlight = function(index, options) {
-    return this.removeClass(index, "jsavhighlight");
+  codeproto.unhighlight = function(linenum, options) {
+    return this.removeClass(linenum, "jsavhighlight");
   };
-  codeproto.isHighlight = function(index) {
-    return this.hasClass(index, "jsavhighlight");
+  codeproto.isHighlight = function(linenum) {
+    return this.hasClass(linenum, "jsavhighlight");
   };
-  codeproto.toggleClass = JSAV.anim(function(index, className, options) {
-    var $elems = getCodeLineElements(this, index);
+  codeproto.toggleClass = JSAV.anim(function(linenum, className, options) {
+    var $elems = getCodeLineElements(this, linenum);
     if (this.jsav._shouldAnimate()) {
       this.jsav.effects._toggleClass($elems, className, options);
     } else {
       $elems.toggleClass(className);
     }
-    return [index, className];
+    return [linenum, className];
   });
-  codeproto.addClass = function(index, className, options) {
-    var $elems = getCodeLineElements(this, index);
+  codeproto.addClass = function(linenum, className, options) {
+    var $elems = getCodeLineElements(this, linenum);
     if (!$elems.hasClass(className)) {
-      return this.toggleClass(index, className, options);
+      return this.toggleClass(linenum, className, options);
     } else {
       return this;
     }
   };
-  codeproto.removeClass = function(index, className, options) {
-    var $elems = getCodeLineElements(this, index);
+  codeproto.removeClass = function(linenum, className, options) {
+    var $elems = getCodeLineElements(this, linenum);
     if ($elems.hasClass(className)) {
-      return this.toggleClass(index, className, options);
+      return this.toggleClass(linenum, className, options);
     } else {
       return this;
     }
   };
-  codeproto.hasClass = function(index, className) {
-    var $elems = getCodeLineElements(this, index);
+  codeproto.hasClass = function(linenum, className) {
+    var $elems = getCodeLineElements(this, linenum);
     return $elems.hasClass(className);
   };
   codeproto._setcss = JSAV.anim(function(indices, cssprops, options) {
@@ -551,76 +565,76 @@
     }
     return this;
   });
-  codeproto.setCurrentLine = function(index, options) {
+  codeproto.setCurrentLine = function(linenum, options) {
     var $curr = this.element.find("li.jsavcurrentline"),
-        currindex = this.element.find("li.jsavcodeline").index($curr),
+        currlinenum = this.element.find("li.jsavcodeline").index($curr) + 1,
         $prev = this.element.find("li.jsavpreviousline"),
-        previndex = this.element.find("li.jsavcodeline").index($prev);
-    if (typeof index === "string") {
-      if (this.options.tags && typeof this.options.tags[index] !== "undefined") {
-        index = this.options.tags[index];
+        prevlinenum = this.element.find("li.jsavcodeline").index($prev) + 1;
+    if (typeof linenum === "string") {
+      if (this.options.tags && typeof this.options.tags[linenum] !== "undefined") {
+        linenum = this.options.tags[linenum];
       } else {
-        index = -1;
+        linenum = 0;
       }
     }
-    if (index === -1) {
-      if (currindex !== -1) { this.toggleClass(currindex, "jsavcurrentline"); }
-      if (previndex !== -1) { this.toggleClass(previndex, "jsavpreviousline"); }
-    } else if (previndex === -1 && currindex === -1) {
-      this.toggleClass(index, "jsavcurrentline");
-    } else if (previndex === -1 && currindex !== -1 && index !== currindex) {
-      this.toggleClass(currindex, "jsavpreviousline jsavcurrentline", options);
-      this.toggleClass(index, "jsavcurrentline");
-    } else if (previndex !== -1 && currindex !== -1 && index !== currindex && index !== previndex && previndex !== currindex) {
-      this.toggleClass(previndex, "jsavpreviousline", options);
-      this.toggleClass(currindex, "jsavpreviousline jsavcurrentline", options);
-      this.toggleClass(index, "jsavcurrentline", options);
-    } else if (previndex === index && currindex === index) {
+    if (linenum === 0) {
+      if (currlinenum !== 0) { this.toggleClass(currlinenum, "jsavcurrentline"); }
+      if (prevlinenum !== 0) { this.toggleClass(prevlinenum, "jsavpreviousline"); }
+    } else if (prevlinenum === 0 && currlinenum === 0) {
+      this.toggleClass(linenum, "jsavcurrentline");
+    } else if (prevlinenum === 0 && currlinenum !== 0 && linenum !== currlinenum) {
+      this.toggleClass(currlinenum, "jsavpreviousline jsavcurrentline", options);
+      this.toggleClass(linenum, "jsavcurrentline");
+    } else if (prevlinenum !== 0 && currlinenum !== 0 && linenum !== currlinenum && linenum !== prevlinenum && prevlinenum !== currlinenum) {
+      this.toggleClass(prevlinenum, "jsavpreviousline", options);
+      this.toggleClass(currlinenum, "jsavpreviousline jsavcurrentline", options);
+      this.toggleClass(linenum, "jsavcurrentline", options);
+    } else if (prevlinenum === linenum && currlinenum === linenum) {
       // nothing to be done
-    } else if (previndex !== -1 && currindex !== -1 && index === previndex) {
-      this.toggleClass(previndex, "jsavpreviousline jsavcurrentline", options);
-      this.toggleClass(currindex, "jsavpreviousline jsavcurrentline", options);
-    } else if (previndex !== -1 && currindex !== -1 && index === currindex) {
-      this.toggleClass(previndex, "jsavpreviousline", options);
-      this.toggleClass(currindex, "jsavpreviousline", options);
-    } else if (previndex !== -1 && currindex !== -1 && currindex === previndex) {
-      this.toggleClass(previndex, "jsavcurrentline", options);
-      this.toggleClass(index, "jsavcurrentline", options);
+    } else if (prevlinenum !== 0 && currlinenum !== 0 && linenum === prevlinenum) {
+      this.toggleClass(prevlinenum, "jsavpreviousline jsavcurrentline", options);
+      this.toggleClass(currlinenum, "jsavpreviousline jsavcurrentline", options);
+    } else if (prevlinenum !== 0 && currlinenum !== 0 && linenum === currlinenum) {
+      this.toggleClass(prevlinenum, "jsavpreviousline", options);
+      this.toggleClass(currlinenum, "jsavpreviousline", options);
+    } else if (prevlinenum !== 0 && currlinenum !== 0 && currlinenum === prevlinenum) {
+      this.toggleClass(prevlinenum, "jsavcurrentline", options);
+      this.toggleClass(linenum, "jsavcurrentline", options);
     }
     return this;
   };
-  codeproto.css = function(index, cssprop, options) {
-    var $elems = getCodeLineElements(this, index);
+  codeproto.css = function(linenum, cssprop, options) {
+    var $elems = getCodeLineElements(this, linenum);
     if (typeof cssprop === "string") {
       return $elems.css(cssprop);
-    } else if (typeof index === "string") {
-      return this.element.css(index);
+    } else if (typeof linenum === "string" && typeof cssprop === "undefined") {
+      return this.element.css(linenum);
     } else {
-      if ($.isFunction(index)) { // if index is a function, evaluate it right away and get a list of indices
+      if ($.isFunction(linenum)) { // if linenum is a function, evaluate it right away and get a list of indices
         var all_elems = $(this.element).find("li.jsavcodeline"),
           sel_indices = []; // array of selected indices
         for (var i = 0; i < $elems.size(); i++) {
-          sel_indices.push(all_elems.index($elems[i]));
+          sel_indices.push(all_elems.index($elems[i]) + 1);
         }
-        index = sel_indices;
+        linenum = sel_indices;
       }
-      return this._setcss(index, cssprop, options);
+      return this._setcss(linenum, cssprop, options);
     }
   };
-  codeproto.show = function(index, options) {
-    if ((typeof(index) === "undefined" || typeof(index) === "object") &&
-        !$.isArray(index) && this.element.filter(":visible").size() === 0) {
-      return this._toggleVisible(index);
+  codeproto.show = function(linenum, options) {
+    if ((typeof(linenum) === "undefined" || typeof(linenum) === "object") &&
+        !$.isArray(linenum) && this.element.filter(":visible").size() === 0) {
+      return this._toggleVisible(linenum);
     } else {
-      return this.removeClass(index, "jsavhiddencode", options);
+      return this.removeClass(linenum, "jsavhiddencode", options);
     }
   };
-  codeproto.hide = function(index, options) {
-    if ((typeof(index) === "undefined" || typeof(index) === "object") &&
-        !$.isArray(index) && this.element.filter(":visible").size() === 1) {
-      return this._toggleVisible(index);
+  codeproto.hide = function(linenum, options) {
+    if ((typeof(linenum) === "undefined" || typeof(linenum) === "object") &&
+        !$.isArray(linenum) && this.element.filter(":visible").size() === 1) {
+      return this._toggleVisible(linenum);
     } else {
-      return this.addClass(index, "jsavhiddencode", options);
+      return this.addClass(linenum, "jsavhiddencode", options);
     }
   };
   codeproto.state = function(newState) {
