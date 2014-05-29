@@ -114,6 +114,7 @@
   Exercise.GradeStepFilterFunction = gradeStepFilterFunction;
   var allEqual = function(initial, model, compare) {
     if ($.isArray(initial)) {
+      if (!compare ) { compare = [];} // initialize compare to an empty array
       for (var i = 0; i < initial.length; i++) {
         if (!model[i].equals(initial[i], compare[i])) {
           return false;
@@ -512,8 +513,8 @@
 
   JSAV._types.Exercise = Exercise;
   
-  JSAV.ext.exercise = function(model, reset, compare, options) {
-    var opts = $.extend({model: model, reset: reset, compare:compare}, options);
+  JSAV.ext.exercise = function(model, reset, options) {
+    var opts = $.extend({model: model, reset: reset}, options);
     return new Exercise(this, opts);
     // options:
     //  - reset: a function that initializes the exercise and returns the structure(s) to
