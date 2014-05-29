@@ -55,6 +55,10 @@ Options can include:
  * dialogClass: custom CSS classes to be added to the created component.
   Class ```jsavdialog``` is always added.
  * title: title of the dialog
+ * dialogBase: the base element inside which the dialog will be created. Defaults
+    to a newly created element ```<div class="jsavdialog"></div>".
+ * dialogRootElement: The element into which the dialog element will be appended.
+    By default, it will be appended at the end of the ```body``` element.
 
 <h3 class="apimethod">JSAV.utils.getInterpreter(languageJSON[, language])</h3>
 Returns an interpreter function which translates tags into strings or other
