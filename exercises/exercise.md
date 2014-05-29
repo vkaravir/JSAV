@@ -5,16 +5,16 @@ title: Exercise API
 
 The exercise API is used to create interactive, automatically assessed exercises.
 
-<h3 class="apimethod">.exercise(modelSolution, reset, compare, options)</h3>
+<h3 class="apimethod">.exercise(modelSolution, reset, options)</h3>
 An exercise is 
 initialized with a call to ```av.exercise(..)```. The parameters for the function are:
 
  * ```{modelSolution: <function>}``` The function to generate the model solution. The function has to return the data structures and/or variables used in grading of the exercise. The return value can be a single data structure or an array of structures.
  * ```{reset: <function>}``` The initialization function that resets the exercise. The function has to return the data structures and/or variables used in grading of the exercise. The return value can be a single data structure or an array of structures.
- * ```{compare: <Object or Array>}``` Specifies which properties to compare for the structures. In the example below, we set the comparison to be CSS property background-color so grading would check if the structures have same background color (that is, if they are highlighted).
 
 The function can also take several options, some of which are required. The full set of options are: 
 
+ * ```{compare: <Object or Array>}``` Specifies which properties to compare for the structures. In the example below, we set the comparison to be CSS property background-color so grading would check if the structures have same background color (that is, if they are highlighted).
  * ```{feedback: <string>}``` Will change the feedback mode, possible values continuous and atend (default). See Continuous feedback below.
  * ```{fixmode: <string>}``` Change the behavior in continuous mode, possible values are undo and fix. The default is undo.
  * ```{feedbackSelectable: <boolean>}``` The settings dialog will not, by default, allow student to change the feedback mode. Setting this option to true enables this choice.

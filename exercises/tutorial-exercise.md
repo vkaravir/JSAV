@@ -244,17 +244,20 @@ required. Given our ```initialize``` and ```modelSolution```
 functions, we initialize an exercise as follows.
 
 {% highlight javascript %}
-var exercise = av.exercise(modelSolution, initialize, {class: "jsavhighlight"});
+var exercise = av.exercise(modelSolution, initialize,
+                    {feedback: "continuous", compare: {class: "jsavhighlight"}});
 exercise.reset();
 {% endhighlight %}
 
-The options that we pass:
+The parameters that we pass:
 
  * ```{model: <function>}``` The function to generate the
   model solution. <strong>Required.</strong>
  * ```{reset: <function>}``` The initialization function
   that resets the exercise. <strong>Required.</strong>
- * ```{compare: <Object or Array>}``` Specifies which
+ * ```{options: <Object>}``` The only options we specify are ```feedback```
+  for setting the feedback mode to be continuous (feedback after each step) and
+  ```{compare: <Object or Array>}```. The compare option specifies which
   properties to compare for the structures. In the example above, we
   set the comparison to be the CSS class ```jsavhighlight```,
   since that is used to highlight indices. **Required.**
