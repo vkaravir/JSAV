@@ -76,8 +76,8 @@
     // define a variable to hold the value of index to be swapped
     var swapIndex;
     
-    var exercise = av.exercise(modelSolution, initialize, {class: "jsavhighlight"},
-                              { feedback: "continuous"});
+    var exercise = av.exercise(modelSolution, initialize,
+                              { feedback: "continuous", compare: {class: "jsavhighlight"}});
     exercise.reset();
 
     function arrayClickHandler(index) {
