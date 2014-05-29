@@ -9,6 +9,12 @@
 
   JSAV._translations = {
     "en": {
+      // animation control button titles
+      "backwardButtonTitle": "Backward",
+      "forwardButtonTitle": "Forward",
+      "beginButtonTitle": "Begin",
+      "endButtonTitle": "End",
+
       "resetButtonTitle": "Reset",
       "undoButtonTitle": "Undo",
       "modelButtonTitle": "Model Answer",
@@ -44,6 +50,11 @@
       "saved": "Saved..."
     },
     "fi": {
+      "backwardButtonTitle": "Askel taaksepäin",
+      "forwardButtonTitle": "Askel eteenpäin",
+      "beginButtonTitle": "Kelaa alkuun",
+      "endButtonTitle": "Kelaa loppuun",
+
       "resetButtonTitle": "Uudelleen",
       "undoButtonTitle": "Kumoa",
       "modelButtonTitle": "Mallivastaus",
