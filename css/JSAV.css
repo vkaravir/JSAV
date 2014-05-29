@@ -37,6 +37,10 @@
   margin-right: auto;
 }
 
+.jsavarray, .jsavlabel, .jsavcode, .jsavlist, .jsavtree, .jsavgraph, .jsavmatrix {
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
 .jsavhighlight, .jsavarray.jsavbararray .jsavindex.jsavhighlight .jsavvalue, .jsavvariable.jsavhighlight .jsavvalue {
   background-color: yellow !important;
   color: black !important;
@@ -76,9 +80,6 @@
 }
 .jsavarray * {
   -webkit-transform-style: preserve-3d;
-}
-.jsavarray.jsavindexed {
-  margin-bottom: 0;
 }
 .jsavarray:after {
   content: "";
@@ -180,9 +181,6 @@
   height: 100%;
   top: 0;
   background-color: #fff;
-}
-.jsavbararray.jsavindexed {
-  margin-bottom: 25px;
 }
 .jsavbararray .jsavindexlabel {
   font-size: 90%;
