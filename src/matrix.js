@@ -35,7 +35,8 @@
     this.element.addClass("jsavmatrix" + options.style);
 
     // create arrays within the matrix element
-    var arrayOpts = $.extend({}, options, {center: false}),
+    // set visible to false to prevent the array from animating show
+    var arrayOpts = $.extend({}, options, {center: false, visible: false}),
         arrayElem;
 
     // make sure we don't pass the matrix's id or positioning to the arrays
@@ -51,6 +52,8 @@
       this.element.append(arrayElem);
       // initialize the array
       this._arrays[i] = jsav.ds.array(initialData[i], arrayOpts);
+      // set the array visible, visibility will be handled by the matrix element
+      arrayElem.css("display", "block");
     }
     this.options = $.extend(true, {}, options);
     JSAV.utils._helpers.handlePosition(this);
