@@ -536,6 +536,67 @@
     "manual": manualLayout
   };
 
+
+  // a layout function using a layered graph layout algorithm
+  // expects the Dagre library (https://github.com/cpettitt/dagre) to be loaded
+  var dagreLayout = function(graph, options) {
+    // if dagre is not loaded, show error and return
+    if (!('dagre' in window)) {
+      console.error("You are trying to use the layered layout, please load dagre.js " +
+        "(https://github.com/cpettitt/dagre)!");
+      return;
+    }
+    var opts = $.extend({}, graph.options, options);
+    // create a dagre graph (directed always, even though the graph can be undirected)
+    var g = new dagre.Digraph();
+    // go through and add the nodes to the dagre graph
+    var nodes = graph.nodes();
+    var nmap = {};
+    while (nodes.hasNext()) {
+      var node = nodes.next();
+      nmap[node.id()] = node;
+      g.addNode(node.id(), {width: node.bounds().width, height: node.bounds().height})
+    }
+    // add the edges
+    var edges = graph.edges();
+    while (edges.hasNext()) {
+      var edge = edges.next();
+      g.addEdge(null, edge.start().id(), edge.end().id());
+    }
+    // run the dagre layout
+    var layout = dagre.layout().run(g);
+    // move the JSAV nodes to the layout positions
+    // and get max x and y of bottom-right corner
+    var maxX = -1,
+      maxY = -1;
+    layout.eachNode(function(u, value) {
+      if (!opts.boundsOnly) {
+        nmap[u].moveTo(value.x, value.y);
+      }
+      maxX = Math.max(value.x + value.width, maxX);
+      maxY = Math.max(value.y + value.height, maxY);
+    });
+    // new size of the graph should be:
+    var graphDims = { width: maxX + 5, height: maxY + 5}; // +5 for the box shadow :)
+    if (!opts.boundsOnly) { // if we should update..
+      // set the size of the graph
+      graph.css(graphDims);
+      // call the JSAV edge layout function for all the edges
+      edges = graph.edges();
+      while (edges.hasNext()) {
+        edge = edges.next();
+        edge.layout();
+      }
+    }
+    // return the new bounds of the graph
+    return $.extend({ top: graph.position().top }, graphDims);
+  };
+  // expose the dagre layout function as layered layout
+  JSAV.ext.ds.layout.graph.layered = dagreLayout;
+  // end the layered graph layout stuff..
+
+
+  // The GraphNode type definition
   var GraphNode = function(container, value, options) {
     this.jsav = container.jsav;
     this.container = container;

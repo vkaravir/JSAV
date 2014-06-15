@@ -23,6 +23,10 @@
       background-color: black;
       color: white;
     }
+    .jsavlabel {
+      font-size: 2em;
+      text-align: center;
+    }
 
     </style>
   </head>
@@ -38,12 +42,12 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js"></script>
     <script src="../lib/jquery.transit.js"></script>
     <script src="../lib/raphael.js"></script>
+    <script src="../lib/dagre.min.js"></script>
     <script src="../build/JSAV.js"></script>
     <script>
-    var jsav = new JSAV("av"),
-        g;
-    var initGraph = function() {
-      g = jsav.ds.graph({width: 500, height: 200, layout: "automatic"});
+    var jsav = new JSAV("av");
+    var initGraph = function(opts) {
+      var g = jsav.ds.graph($.extend({width: 500, height: 350}, opts));
       var a = g.addNode("A"),
           b = g.addNode("B"),
           c = g.addNode("C"),
@@ -56,10 +60,20 @@
       g.addEdge(e, a);
       g.addEdge(d, e);
       g.addEdge(d, f);
+      return g;
      };
-    initGraph();
+    var l2 = jsav.label("Default automatic graph layout")
+    var g2 = initGraph({layout: "automatic"});
+    g2.layout();
+    jsav.label("Layered graph layout")
+    var g = initGraph({layout: "layered"});
     g.layout();
     jsav.displayInit();
+
+    // hide the "other" graph
+    g2.hide();
+    l2.hide();
+    jsav.step();
 
     var preVisit = function(node, prev) {
       node.addClass("processing");
