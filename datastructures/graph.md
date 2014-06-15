@@ -6,7 +6,9 @@ title: Graph API
 <h3 class="apimethod">.ds.graph([options])</h3>
 This function of a JSAV instance initializes an empty graph. Options that the optional parameter can specify:
 
- * layout: Defines the layout used, either ```manual``` or ```automatic```. Defaults to manual layout.
+ * layout: Defines the layout used, either ```manual```, ```automatic```, or ```layered```. Defaults to manual layout. Note,
+    that if you use the ```layered``` layout, you will need to load [Dagre](https://github.com/cpettitt/dagre) (you can also
+    find it in ```JSAV/lib/dagre.min.js```).
  * visible: Boolean to determine if initially the graph is shown or not. Default true.
  * center: Boolean to determine if graph should be automatically centered within its container. Defaults to true.
  * left/top/right/bottom: Values to determine the absolute position of the graph relative to its container.
