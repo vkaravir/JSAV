@@ -101,7 +101,10 @@ if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
         var bbox = this.rObj.getBBox();
         return { left: bbox.x, top: bbox.y, width: bbox.width, height: bbox.height };
       },
-      id: JSAV._types.JSAVObject.id
+      id: JSAV._types.JSAVObject.id,
+      clear: function() {
+        this.rObj.remove();
+      }
     };
     JSAVGraphical.prototype.addClass = JSAV.utils._helpers.addClass;
     JSAVGraphical.prototype.removeClass = JSAV.utils._helpers.removeClass;
