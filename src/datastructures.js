@@ -315,19 +315,23 @@
         toY = Math.round(end.top + eHeight),
         fromAngle = normalizeAngle(2*Math.PI - Math.atan2(toY - fromY, toX - fromX)),
         toAngle = normalizeAngle(2*Math.PI - Math.atan2(fromY - toY, fromX - toX)),
-        fromPoint = getNodeBorderAtAngle(0, this.startnode.element,
-            {width: sWidth, height: sHeight, x: fromX, y: fromY}, fromAngle),
+        startRadius = parseInt(sElem.css("borderBottomRightRadius"), 10) || 0,
+        fromPoint = getNodeBorderAtAngle({width: sWidth, height: sHeight, x: fromX, y: fromY},
+                                        {x: toX, y: toY}, fromAngle, startRadius),
         // arbitrarily choose to use bottom-right border radius
         endRadius = parseInt(eElem.css("borderBottomRightRadius"), 10) || 0,
-        toPoint = getNodeBorderAtAngle(1, this.endnode.element,
-            {width: eWidth, height: eHeight, x: toX, y: toY}, toAngle, endRadius);
-    this.g.movePoints([fromPoint, toPoint], options);
+        toPoint = getNodeBorderAtAngle({width: eWidth, height: eHeight, x: toX, y: toY},
+                                        {x: fromX, y: fromY}, toAngle, endRadius);
+    // getNodeBorderAtAngle returns an array [x, y], and movePoints wants the point position
+    // in the (poly)line as first item in the array, so we'll create arrays like [0, x, y] and
+    // [1, x, y]
+    this.g.movePoints([[0].concat(fromPoint), [1].concat(toPoint)], options);
 
     if ($.isFunction(this._labelPositionUpdate)) {
-      var bbtop = Math.min(fromPoint[2], toPoint[2]),
-          bbleft = Math.min(fromPoint[1], toPoint[1]),
-          bbwidth = Math.abs(fromPoint[1] - toPoint[1]),
-          bbheight = Math.abs(fromPoint[2] - toPoint[2]),
+      var bbtop = Math.min(fromPoint[1], toPoint[1]),
+          bbleft = Math.min(fromPoint[0], toPoint[0]),
+          bbwidth = Math.abs(fromPoint[0] - toPoint[0]),
+          bbheight = Math.abs(fromPoint[1] - toPoint[1]),
           bbox = {top: bbtop, left: bbleft, width: bbwidth, height: bbheight};
       this._labelPositionUpdate($.extend({bbox: bbox}, options));
     }
@@ -351,32 +355,137 @@
     return angle;
   }
 
-  function getNodeBorderAtAngle(pos, node, dim, angle, radius) {
-    // dim: x, y coords of center and half of width and height
+  // calculate the intersection of line from pointa to pointb and circle with the given center and radius
+  function lineIntersectCircle(pointa, pointb, center, radius) {
+    var result = {};
+    var a = (pointb.x - pointa.x) * (pointb.x - pointa.x) + (pointb.y - pointa.y) * (pointb.y - pointa.y);
+    var b = 2 * ((pointb.x - pointa.x) * (pointa.x - center.x) +(pointb.y - pointa.y) * (pointa.y - center.y));
+    var cc = center.x * center.x + center.y * center.y + pointa.x * pointa.x + pointa.y * pointa.y -
+                2 * (center.x * pointa.x + center.y * pointa.y) - radius * radius;
+    var deter = b * b - 4 * a * cc;
+    function interpolate(p1, p2, d) {
+      return {x: p1.x+(p2.x-p1.x)*d, y:p1.y+(p2.y-p1.y)*d};
+    }
+    if (deter <= 0 ) {
+      result.inside = false;
+    } else {
+      var e = Math.sqrt (deter);
+      var u1 = ( - b + e ) / (2 * a );
+      var u2 = ( - b - e ) / (2 * a );
+      if ((u1 < 0 || u1 > 1) && (u2 < 0 || u2 > 1)) {
+        if ((u1 < 0 && u2 < 0) || (u1 > 1 && u2 > 1)) {
+          result.inside = false;
+        } else {
+          result.inside = true;
+        }
+      } else {
+        if (0 <= u2 && u2 <= 1) {
+          result.enter=interpolate (pointa, pointb, u2);
+        }
+        if (0 <= u1 && u1 <= 1) {
+          result.exit=interpolate (pointa, pointb, u1);
+        }
+        result.intersects = true;
+      }
+    }
+    return result;
+  }
+
+  function getNodeBorderAtAngle(dim, targetNodeCenter, angle, radius) {
+    // dim: x, y coords of center and *half* of width and height
     var x, y, pi = Math.PI,
         urCornerA = Math.atan2(dim.height*2.0, dim.width*2.0),
         ulCornerA = pi - urCornerA,
         lrCornerA = 2*pi - urCornerA,
-        llCornerA = urCornerA + pi;
-    if (!radius) { // everything but 0 radius is considered a circle
-      radius = dim.width;
-    } else {
-      radius = Math.min(radius, dim.width);
-    }
+        llCornerA = urCornerA + pi,
+        intersect, topAngle, bottomAngle, leftAngle, rightAngle;
+    // set the radius to be at most half the width or height of the element
+    radius = Math.min(radius, dim.width, dim.height);
+    // on the higher level, divide area (2pi) to four seqments based on which way the edge will be drawn:
+    //  - right side (angle < 45deg or angle > 315deg)
+    //  - top (45deg < angle < 135deg) or (pi/4 < angle < (3/4)*pi)
+    //  - left side (135deg < angle < 225deg)
+    //  - bottom (225deg < angle < 315deg)
+    // Each of these areas will then be divided to three sections:
+    //  - middle section, where the node border is a line
+    //  - two sections where the node border is part of the rounded corner circle
     if (angle < urCornerA || angle > lrCornerA) { // on right side
-      x = dim.x + radius * Math.cos(angle);
-      y = dim.y - radius * Math.sin(angle);
+      topAngle = Math.atan2(dim.height - radius, dim.width);
+      bottomAngle = 2*pi - topAngle;
+      // default to the right border line
+      x = dim.x + dim.width;
+      y = dim.y - dim.width * Math.tan(angle);
+
+      // handle the rounded corners if necessary
+      if (radius > 0 && angle > topAngle && angle < bottomAngle) { // the rounded corners
+        // calculate intersection of the line between node centers and the rounded corner circle
+        if (angle < bottomAngle && angle > pi) { // bottom right
+          intersect = lineIntersectCircle({x: dim.x, y: dim.y}, targetNodeCenter,
+                                      {x: dim.x + dim.width - radius, y: dim.y + dim.height - radius}, radius);
+        } else { // top right
+          intersect = lineIntersectCircle({x: dim.x, y: dim.y}, targetNodeCenter,
+                                      {x: dim.x + dim.width - radius, y: dim.y - dim.height + radius}, radius);
+        }
+      }
     } else if (angle > ulCornerA && angle < llCornerA) { // left
-      x = dim.x - radius * Math.cos(angle - pi);
-      y = dim.y + radius * Math.sin(angle - pi);
+      topAngle = pi - Math.atan2(dim.height - radius, dim.width);
+      bottomAngle = 2*pi - topAngle;
+
+      // default to the left border line
+      x = dim.x - dim.width;
+      y = dim.y + dim.width*Math.tan(angle);
+
+      // handle the rounded corners
+      if (radius > 0 && (angle < topAngle || angle > bottomAngle)) {
+        if (topAngle > angle) { // top left
+          intersect = lineIntersectCircle({x: dim.x, y: dim.y}, targetNodeCenter, // line
+                          {x: dim.x - dim.width + radius, y: dim.y - dim.height + radius}, radius); // circle
+        } else { // bottom left
+          intersect = lineIntersectCircle({x: dim.x, y: dim.y}, targetNodeCenter, // line
+                          {x: dim.x - dim.width + radius, y: dim.y + dim.height - radius}, radius); // circle
+        }
+      }
     } else if (angle <= ulCornerA) { // top
-      x = dim.x + radius * Math.cos(angle);
-      y = dim.y - radius * Math.sin(angle);
+      rightAngle = Math.atan2(dim.height, dim.width - radius);
+      leftAngle = pi - rightAngle;
+
+      // default to the top border line
+      y = dim.y - dim.height;
+      x = dim.x + (dim.height)/Math.tan(angle);
+
+      // handle the rounded corners
+      if (radius > 0 && (angle > leftAngle || angle < rightAngle)) {
+        if (angle > leftAngle) { // top left
+          intersect = lineIntersectCircle({x: dim.x, y: dim.y}, targetNodeCenter, // line
+                          {x: dim.x - dim.width + radius, y: dim.y - dim.height + radius}, radius); // circle
+        } else { // top right
+          intersect = lineIntersectCircle({x: dim.x, y: dim.y}, targetNodeCenter, // line
+                          {x: dim.x + dim.width - radius, y: dim.y - dim.height + radius}, radius); // circle
+        }
+      }
     } else { // on bottom side
-      x = dim.x - radius * Math.cos(angle - pi);
-      y = dim.y + radius * Math.sin(angle - pi);
+      leftAngle = pi + Math.atan2(dim.height, dim.width-radius);
+      rightAngle = 2*pi - Math.atan2(dim.height, dim.width-radius);
+
+      // default to the bottom border line
+      y = dim.y + dim.height;
+      x = dim.x - (dim.height)/Math.tan(angle);
+      if (radius > 0 && (angle < leftAngle || angle > rightAngle)) {
+        if (angle > rightAngle) { // bottom right
+          intersect = lineIntersectCircle({x: dim.x, y: dim.y}, targetNodeCenter, // line
+                          {x: dim.x + dim.width - radius, y: dim.y + dim.height - radius}, radius); // circle
+        } else { // bottom left
+          intersect = lineIntersectCircle({x: dim.x, y: dim.y}, targetNodeCenter, // line
+                          {x: dim.x - dim.width + radius, y: dim.y + dim.height - radius}, radius); // circle
+        }
+      }
     }
-    return [pos, Math.round(x), Math.round(y)];
+    // if on a corner and we found an intersection, set that as the edge coordinates
+    if (intersect && intersect.exit) {
+      x = intersect.exit.x;
+      y = intersect.exit.y;
+    }
+    return [Math.round(x), Math.round(y)];
   }
 
 
