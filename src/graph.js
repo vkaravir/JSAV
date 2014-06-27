@@ -571,7 +571,7 @@
       maxY = -1;
     layout.eachNode(function(u, value) {
       if (!opts.boundsOnly) {
-        nmap[u].moveTo(value.x, value.y);
+        nmap[u].moveTo(value.x - value.width/2.0, value.y - value.height/2.0);
       }
       maxX = Math.max(value.x + value.width, maxX);
       maxY = Math.max(value.y + value.height, maxY);
