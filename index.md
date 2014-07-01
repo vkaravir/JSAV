@@ -66,9 +66,13 @@ JSAV system paper:
 
 Articles discussing JSAV use:
 
- * Eric Fouh, Ville Karavirta, Daniel A. Breakiron, Sally Hamouda, Simin Hall, Thomas L. Naps, Clifford A. Shaffer (To Appear). Design and architecture of an interactive eTextbook – the OpenDSA system. Science of Computer Programming.
+ * Eric Fouh, Ville Karavirta, Daniel A. Breakiron, Sally Hamouda, Simin Hall, Thomas L. Naps, Clifford A. Shaffer
+   (2014). Design and architecture of an interactive eTextbook – the OpenDSA system. *Science of Computer Programming*,
+     88(1), pages 22–40.
    ([link](http://www.sciencedirect.com/science/article/pii/S016764231300333X))
- * Ville Karavirta, Ari Korhonen, Otto Seppälä (2013). Misconceptions in Visual Algorithm Simulation Revisited: On UI's Effect on Student Performance, Attitudes and Misconceptions. In Learning and Teaching in Computing and Engineering (LaTiCE), 2013, pp. 62–69.
+ * Ville Karavirta, Ari Korhonen, Otto Seppälä (2013). Misconceptions in Visual Algorithm Simulation Revisited: On
+   UI's Effect on Student Performance, Attitudes and Misconceptions. In *Learning and Teaching in Computing and
+   Engineering (LaTiCE)*, 2013, pages 62–69.
    ([link](http://dx.doi.org/10.1109/LaTiCE.2013.35))
 
 ### Presentations
