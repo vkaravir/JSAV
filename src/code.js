@@ -471,9 +471,10 @@
     JSAV.utils._helpers.handlePosition(this);
     JSAV.utils._helpers.handleVisibility(this, this.options);
     if (this.options.center && !this.options.left && !this.options.right && !this.options.top && !this.options.bottom) {
+      var prevDisplay = this.element.css("display");
       this.element.css("display", "inline-block");
       this.element.css("width", this.element.outerWidth());
-      this.element.css("display", "");
+      this.element.css("display", prevDisplay);
       this.element.addClass("jsavcenter");
     }
   };
