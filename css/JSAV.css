@@ -581,6 +581,10 @@ ul.jsavcode {
   transform: rotate(-45deg);
   transform-origin: right top;
 }
+.jsavpointer .jsavlabel {
+  margin-top: 0;
+  margin-bottom: 0;
+}
 
 /******** MATRIX DATA STRUCTURE ****/
 .jsavmatrix .jsavarray {
