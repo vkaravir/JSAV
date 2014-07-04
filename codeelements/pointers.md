@@ -45,6 +45,7 @@ If ```newTarget``` is not specified, returns the JSAV object this pointer points
       arr = jsav.ds.array([9, 8, 7, 6, 5, 4, 3, 2, 1],
                           {left: 50, top: 50});
   var pointer = jsav.pointer("p", arr.index(2)),
+      pointer2 = jsav.pointer("pos", arr.index(4), {left: 100, top: 0}),
       pointerBottom = jsav.pointer("bottom", arr,
                              { anchor: "center bottom",
                                myAnchor: "right top",
