@@ -83,10 +83,16 @@
     jsav.umsg("Change the appearance of the pointer with a CSS class");
     arrayPointer.addClass("mypointer");
     jsav.step();
+
+    jsav.umsg("Move the pointer");
+    arrayPointer.target(arr, {targetIndex : 3});
+    jsav.step();
+
     jsav.umsg("Hide the JSAV array for the list pointer example");
     arr.hide();
-
+    arrayPointer.hide();
     jsav.step();
+
     // Should move JSAV list 50px down to make room for pointer arrow canvas.
     var l = jsav.ds.list();
     l.css({top: 50});
