@@ -35,8 +35,22 @@
       </li>
 
     </ul>
-
     <p><a href="{{ site.github.repo }}">Project on GitHub</a></p>
     <p>&copy; {{ site.time | date: '%Y' }}. All rights reserved.</p>
   </div>
+    <p class="sitesearch">
+      <script>
+        (function() {
+          var cx = '012678228708208521486:z2j4lrcfa3y';
+          var gcse = document.createElement('script');
+          gcse.type = 'text/javascript';
+          gcse.async = true;
+          gcse.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') +
+              '//www.google.com/cse/cse.js?cx=' + cx;
+          var s = document.getElementsByTagName('script')[0];
+          s.parentNode.insertBefore(gcse, s);
+        })();
+      </script>
+      <gcse:search></gcse:search>
+    </p>
 </div>
