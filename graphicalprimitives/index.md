@@ -14,6 +14,25 @@ This would initialize a rectangle with upper-left corner at point (70, 60) that
 
 **Note:** Make sure you [load Rapha&euml;l.js](../getstarted/) when using the graphical primitives.
 
+Here is a cute example cat drawn using the polyline and path primitives.
+
+<div id="graphPrimExample" class="jsavexample"></div>
+<script>
+(function() {
+  var jsav = new JSAV("graphPrimExample"),
+      opts = { "stroke": "saddlebrown", "stroke-width": 5};
+  // left ear
+  jsav.g.polyline([[145, 43], [153, 12], [165, 30]], opts);
+  // right ear
+  jsav.g.polyline([[185, 30], [197, 12], [205, 43]], opts);
+  // tail
+  jsav.g.path("M175 200 A100 100 0 0 0 270 250", opts);
+  // and finally, the body and head; first the large circle
+  jsav.g.path("M150 100 A70 70 0 1 0 200 100 A40 40 0 1 0 150 100Z", opts);
+  jsav.displayInit();
+}());
+</script>
+
 All the graphical primitives have the following functions.
 
 <h3 class="apimethod">.show()</h3>

@@ -25,6 +25,9 @@ Parameter ```name``` is the (initial) name for the pointer. Parameter ```options
   In addition to values of anchor, can also be specified as percentages of width/height from top-left corner. For example,
   ```0 50%``` would match the default value ```top center```.
 
+**Note:** If you do not see the pointer arrow, it might be that the pointer is positioned outside the JSAV canvas and
+ thus is not visible. Moving the target structure down should fix the issue.
+
 A pointer instance has the functions of the Label object as well as the following functions.
 
 <h3 class="apimethod">.target([newTarget], [options])</h3>
@@ -45,6 +48,7 @@ If ```newTarget``` is not specified, returns the JSAV object this pointer points
       arr = jsav.ds.array([9, 8, 7, 6, 5, 4, 3, 2, 1],
                           {left: 50, top: 50});
   var pointer = jsav.pointer("p", arr.index(2)),
+      pointer2 = jsav.pointer("pos", arr.index(4), {left: 100, top: 0}),
       pointerBottom = jsav.pointer("bottom", arr,
                              { anchor: "center bottom",
                                myAnchor: "right top",
