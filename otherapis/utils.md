@@ -87,8 +87,7 @@ The returned function will return ```"Hello"``` when called with the argument
 placed in different files. In this case ```languageJSON``` could be a URL with
 the language tag ```{lang}``` that will be substituted with the value of
 ```language```. For instance if the URL is ```"path/to/{lang}.json"``` and
-```language``` is ```"en"``` the translation will be fetched from
-```"path/to/en.json"```.
+```language``` is ```"en"``` the translation will be fetched from ```"path/to/en.json"```.
 
 <h3 class="apimethod">JSAV.utils.replaceLabels(string, replacementObject)</h3>
 Returns a string where the labels (surrounded by curly brackets) in the string
@@ -114,11 +113,11 @@ undo and recorded animation. The returned function can for instance be
 used to show or hide non-JSAV DOM element.
 
 Arguments:
-```jsav``` - The jsav instance with the exercise or animation.
-```func``` - The function which performs the action. If the same function can
+ * ```jsav``` - The jsav instance with the exercise or animation.
+ * ```func``` - The function which performs the action. If the same function can
 be used to undo the performed action, it should return the undo arguments in an
 array.
-```undoFunc``` - (OPTIONAL IF func RETURNS THE UNDO ARGUMENTS) The function
+ * ```undoFunc``` - (OPTIONAL IF func RETURNS THE UNDO ARGUMENTS) The function
 which will undo the action performed by func.
 
 {% highlight javascript %}
