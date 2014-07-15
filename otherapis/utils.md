@@ -87,5 +87,59 @@ The returned function will return ```"Hello"``` when called with the argument
 placed in different files. In this case ```languageJSON``` could be a URL with
 the language tag ```{lang}``` that will be substituted with the value of
 ```language```. For instance if the URL is ```"path/to/{lang}.json"``` and
-```language``` is ```"en"``` the translation will be fetched from
-```"path/to/en.json"```.
+```language``` is ```"en"``` the translation will be fetched from ```"path/to/en.json"```.
+
+<h3 class="apimethod">JSAV.utils.replaceLabels(string, replacementObject)</h3>
+Returns a string where the labels (surrounded by curly brackets) in the string
+have been replaced by values in the replacementObject. The function works the
+same way as ```fill``` works for ```.umsg()```.
+
+For instance if the string is ```"The value of x is {x}"``` and the object
+containing the replacements for the tag is ```{x: 7}```, this function will
+return the string ```"The value of x is 7"```
+{% highlight javascript %}
+var str = "The value of x is {x}";
+var replacement = {x: 7};
+// the result will be "The value of x is 7"
+var result = JSAV.utils.replaceLabels(str, replacement);
+{% endhighlight %}
+
+This function uses regular expressions to replace the tags. Therefore tags
+should not use numbers or special characters such as ```$ ^ . + -``` etc.
+
+<h3 class="apimethod">JSAV.utils.getUndoableFunction(jsav, func, undoFunc)</h3>
+Returns an undoable/animatable function which will work with JSAV's
+undo and recorded animation. The returned function can for instance be
+used to show or hide non-JSAV DOM element.
+
+Arguments:
+ * ```jsav``` - The jsav instance with the exercise or animation.
+ * ```func``` - The function which performs the action. If the same function can
+be used to undo the performed action, it should return the undo arguments in an
+array.
+ * ```undoFunc``` - (OPTIONAL IF func RETURNS THE UNDO ARGUMENTS) The function
+which will undo the action performed by func.
+
+{% highlight javascript %}
+// JSAV undoable functions for enabling and disabling jQuery buttons
+var enableButton = JSAV.utils.getUndoableFunction(
+  av,
+  function (button) { button.attr("disabled", false); },
+  function (button) { button.attr("disabled", true); }
+);
+var disableButton = JSAV.utils.getUndoableFunction(
+  av,
+  function (button) { button.attr("disabled", true); },
+  function (button) { button.attr("disabled", false); }
+);
+
+// JSAV undoable function for changing html content of a jQuery object
+var setHTML = JSAV.utils.getUndoableFunction(av,
+  function ($object, html) {
+    var oldHtml = $object.html();
+    $object.html(html);
+    // return arguments (for the same function) that will undo the action
+    return [$object, oldHtml];
+  }
+);
+{% endhighlight %}
