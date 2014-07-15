@@ -430,16 +430,38 @@
    * should not use numbers or special characters such as . ? * + etc.
    */
   u.replaceLabels = function (string, replacementObject) {
-    if (!replacementObject || typeof replacementObject !== "object")
+    if (!replacementObject || typeof replacementObject !== "object") {
       return string;
+    }
 
     var result = string;
     for (var label in replacementObject) {
-      var reg = new RegExp("{"+label+"}", "g");
-      result = result.replace(reg, replacementObject[label]);
+      if (replacementObject.hasOwnProperty(label)) {
+        var reg = new RegExp("{"+label+"}", "g");
+        result = result.replace(reg, replacementObject[label]);
+      }
     }
 
     return result;
+  };
+
+  /*
+   * Returns an undoable/animatable function which will work with JSAV's
+   * undo and recorded animation. The returned function can for instance be
+   * used to show or hide non-JSAV DOM element.
+   *
+   * Arguments: jsav - The jsav instance with the exercise or animation.
+   *            func - The function which performs the action.
+   *                   If the same function can be used to undo the performed
+   *                   action, it should return the undo arguments in an array.
+   *            undoFunc - (OPTIONAL IF func RETURNS THE UNDO ARGUMENTS)
+   *                   The function which will undo the action performed by
+   *                   func.
+   *
+   */
+  u.getUndoableFunction = function (jsav, func, undoFunc) {
+    var f = JSAV.anim(func, undoFunc);
+    return function () { f.apply(jsav, arguments); };
   };
 
 /*!
