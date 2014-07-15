@@ -189,10 +189,12 @@
       if (that.options.id) { logData.questionId = that.options.id; }
       that.jsav.logEvent(logData);
     };
+    var dialogClass = this.jsav.options.questionDialogClass || "";
     // .. and finally create a dialog to show the question
     this.dialog = JSAV.utils.dialog($elems, {title: this.questionText,
                                              closeCallback: closeCallback,
-                                             closeOnClick: false
+                                             closeOnClick: false,
+                                             dialogClass: dialogClass
                                             });
 
     // log the question show and the choices
