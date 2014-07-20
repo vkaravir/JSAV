@@ -74,7 +74,27 @@ Apply the given CSS properties to the codelines at specified ```indices```.
 
 Sets the line at given ```index``` as the current line. Also, if another line was previously set as current, it will be
   marked as previous. If a line was also earlier marked as previous, that mark will be removed. This will help in creating a 
-  visual debugger-like code stepping functionality in visualizations.
+  visual debugger-like code stepping functionality in visualizations. You can clear the current line selection with index value 0.
+
+<div id="setCurrentExample" class="jsavexample">
+  <div class="jsavcounter"></div>
+  <div class="jsavcontrols"></div>
+</div>
+<script>
+(function() {
+  var jsav = new JSAV("setCurrentExample"),
+      code = jsav.code(["tmp = a", "a = b", "b = tmp"]);
+  jsav.displayInit();
+  code.setCurrentLine(1);
+  jsav.step();
+  code.setCurrentLine(2);
+  jsav.step();
+  code.setCurrentLine(3);
+  jsav.step();
+  code.setCurrentLine(0);
+  jsav.recorded();
+})();
+</script>
 
 <h3 class="apimethod">.clear()</h3>
 
