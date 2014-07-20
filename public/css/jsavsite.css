@@ -17,6 +17,9 @@ li.subpages {
 
 
 /** styling the JSAV examples **/
+.jsavexample .jsavcounter {
+  position: absolute;
+}
 .example-link, script.visible, style.visible {
   margin-bottom: 1em;
 }
