@@ -1,5 +1,5 @@
 /**
-* Module that contains the message output implementations.
+* Module that contains the question implementations.
 * Depends on core.js, anim.js, utils.js
 */
 /*global JSAV, jQuery */
@@ -63,7 +63,8 @@
       }
       answers.push(answer);
     });
-    $elems.filter(".jsavfeedback").html(correct?"Correct!":"Incorrect, try again")
+    $elems.filter(".jsavfeedback")
+        .html(correct?this.jsav._translate('questionCorrect'):this.jsav._translate('questionIncorrect'))
         .removeClass("jsavcorrect jsavincorrect")
         .addClass(correct?"jsavcorrect":"jsavincorrect");
     if (correct) {
@@ -159,25 +160,33 @@
     var $elems = $(),
         that = this,
         i;
+    // add feedback element
+    $elems = $elems.add($('<div class="jsavfeedback" > </div>'));
+    // add the answer choices
     for (i=0; i < this.choices.length; i++) {
       $elems = $elems.add(this.choices[i].elem());
     }
-    // add feedback element
-    $elems = $elems.add($('<div class="jsavfeedback" > </div>'));
     // ... and close button
-    var close = $('<input type="button" value="Close" />').click(
-      function() {
+    var close = $('<input type="button" value="' + this.jsav._translate('questionClose') + '" />').click(
+      function () {
         that.dialog.close();
       });
+    close.css("display", "none");
     $elems = $elems.add(close);
     // .. and submit button
-    var submit = $('<input type="submit" value="Submit" />').click(
-      function() {
+    var submit = $('<input type="submit" value="' + this.jsav._translate('questionCheck') + '" />').click(
+      function () {
         var logData = that.feedback($elems);
         logData.question = that.questionText;
         logData.type = "jsav-question-answer";
-        if (that.options.id) { logData.questionId = that.options.id; }
+        if (that.options.id) {
+          logData.questionId = that.options.id;
+        }
         that.jsav.logEvent(logData);
+        if (!that.jsav.options.questionResubmissionAllowed) {
+          submit.remove();
+          close.show();
+        }
       });
     $elems = $elems.add(submit);
     // .. create a close callback handler for logging the close
@@ -192,10 +201,12 @@
     var dialogClass = this.jsav.options.questionDialogClass || "";
     // .. and finally create a dialog to show the question
     this.dialog = JSAV.utils.dialog($elems, {title: this.questionText,
+                                             dialogRootElement: this.jsav.options.questionDialogBase,
                                              closeCallback: closeCallback,
                                              closeOnClick: false,
                                              dialogClass: dialogClass
                                             });
+    this.dialog.filter(".jsavdialog").addClass(".jsavquestiondialog");
 
     // log the question show and the choices
     var logChoices = [];
@@ -289,6 +300,11 @@
       this._questionSetting = true;
       this.settings.add(questionSetting(this));
     }
+    var logData = {
+      type: "jsav-question-created",
+      question: questionText
+    };
+    this.logEvent(logData);
     if (qtype === "IFRAME") {
       return new QuestionFrame(this, questionText, options);
     } else {

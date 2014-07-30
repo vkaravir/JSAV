@@ -47,7 +47,12 @@
       "(slowFast)": "(slow - fast)",
       "valueBetween1And10": "Value between 1 (Slow) and 10 (Fast).",
       "save": "Save",
-      "saved": "Saved..."
+      "saved": "Saved...",
+
+      "questionClose": "Close",
+      "questionCheck": "Check Answer",
+      "questionCorrect": "Correct!",
+      "questionIncorrect": "Incorrect"
     },
     "fi": {
       "backwardButtonTitle": "Askel taaksepäin",
@@ -87,7 +92,13 @@
       "(slowFast)": "(hidas - nopea)",
       "valueBetween1And10": "Anna arvo 1:n (hidas) ja 10:n (nopea) välillä.",
       "save": "Tallenna",
-      "saved": "Tallennettu..."
+      "saved": "Tallennettu...",
+
+      "questionClose": "Sulje",
+      "questionCheck": "Tarkista vastaus",
+      "questionCorrect": "Oikein!",
+      "questionIncorrect": "Väärin"
+
     },
     "sv": {
       "resetButtonTitle": "Börja om",
