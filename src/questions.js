@@ -52,8 +52,10 @@
     cbs.each(function(index, item) {
       var qi = that.choiceById(item.id);
       var $item = $(item);
-      answer = {label: qi.label,
+      answer = {
+        label: qi.label,
         selected: !!$item.prop("checked"),
+        type: $item.attr("type"),
         correct: true // assume correct and mark false if incorrect
       };
       if (!!$item.prop("checked") !== !!qi.options.correct) {
@@ -67,10 +69,7 @@
         .html(correct?this.jsav._translate('questionCorrect'):this.jsav._translate('questionIncorrect'))
         .removeClass("jsavcorrect jsavincorrect")
         .addClass(correct?"jsavcorrect":"jsavincorrect");
-    if (correct) {
-      cbs.prop("disabled", true);
-      $elems.filter('[type="submit"]').remove();
-    }
+    $elems.filter('[type="submit"]').remove();
     return {correct: correct, answers: answers};
     // TODO: add support for points, feedback comments etc.
   };
@@ -206,7 +205,7 @@
                                              closeOnClick: false,
                                              dialogClass: dialogClass
                                             });
-    this.dialog.filter(".jsavdialog").addClass(".jsavquestiondialog");
+    this.dialog.filter(".jsavdialog").addClass("jsavquestiondialog");
 
     // log the question show and the choices
     var logChoices = [];
