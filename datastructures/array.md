@@ -154,6 +154,17 @@ For example, to highlight all indices:
 
 {% highlight javascript %}arr.highlight(true);{% endhighlight %}
 
+
+<h3 class="apimethod">.unhighlight(indices)</h3>
+Removes the highlight from the given ```indices```.
+There are corresponding versions of this function with parameters like
+for highlight.
+
+**Returns:** a JSAV array object. Thus, this method can be chained.
+
+<h3 class="apimethod">.ishighlight(number)</h3>
+Returns true or false depending on whether the element at index ```number``` is highlighted or not.
+
 <h3 class="apimethod">.show()</h3>
 Make the array visible.
 
@@ -172,13 +183,6 @@ Swaps the values of the two array positions. Options supported:
  * ```swapClasses```: A boolean specifying whether to swap the classes of the array indices as well. Defaults to false.
  * ```highlight```: A boolean indicating whether the swapped elements should be highlighted. The highlight is
    adding the class ```jsavswap``` which, by default, sets the background color to red. Defaults to true.
-
-<h3 class="apimethod">.unhighlight(indices)</h3>
-Removes the highlight from the given ```indices```.
-There are corresponding versions of this function with parameters like
-for highlight.
-
-**Returns:** a JSAV array object. Thus, this method can be chained.
 
 <h3 class="apimethod">.value(index)</h3>
 Returns the value of the element at the given index.
