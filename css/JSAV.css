@@ -651,3 +651,7 @@ ul.jsavcode {
   background-color: pink !important;
   color: red !important;
 }
+
+.jsavdisabled {
+  pointer-events: none;
+}

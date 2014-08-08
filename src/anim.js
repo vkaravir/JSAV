@@ -217,6 +217,7 @@
       tmpTranslation = this._translate("endButtonTitle");
       $("<a class='jsavend' href='#' title='" + tmpTranslation + "'>" + tmpTranslation +
                     "</a>").click(endHandler).appendTo($controls);
+      this._controlsContainer = $controls;
     }
     // bind the handlers to events to enable control by triggering events
     this.container.bind({ "jsav-forward": forwardHandler,
@@ -428,6 +429,16 @@
   };
   JSAV.ext._shouldAnimate = function() {
     return (!this.RECORD && !$.fx.off);
+  };
+  JSAV.ext.disableControls = function() {
+    if (this._controlsContainer) {
+      this._controlsContainer.addClass("jsavdisabled");
+    }
+  };
+  JSAV.ext.enableControls = function() {
+    if (this._controlsContainer) {
+      this._controlsContainer.removeClass("jsavdisabled");
+    }
   };
 }(jQuery));
 

@@ -155,6 +155,7 @@
     if (this.asked || !this.jsav._shouldAnimate() || !this.jsav.options.showQuestions) {
       return;
     }
+    this.jsav.disableControls();
     this.asked = true; // mark asked
     var $elems = $(),
         that = this,
@@ -194,6 +195,7 @@
         type: "jsav-question-close",
         question: that.questionText
       };
+      that.jsav.enableControls();
       if (that.options.id) { logData.questionId = that.options.id; }
       that.jsav.logEvent(logData);
     };
