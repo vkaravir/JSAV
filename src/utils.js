@@ -168,6 +168,7 @@
       if (!eventData.hasOwnProperty('av')) {
         eventData.av = this.id();
       }
+      eventData.currentStep = this.currentStep();
     }
     if ($.isFunction(this.options.logEvent)) {
       this.options.logEvent(eventData);
