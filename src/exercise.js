@@ -113,17 +113,12 @@
   };
   Exercise.GradeStepFilterFunction = gradeStepFilterFunction;
   var allEqual = function(initial, model, compare) {
-    if ($.isArray(initial)) {
-      if (!compare ) { compare = [];} // initialize compare to an empty array
-      for (var i = 0; i < initial.length; i++) {
-        if (!model[i].equals(initial[i], compare[i])) {
-          return false;
-        }
+    for (var i = 0; i < initial.length; i++) {
+      if (!model[i].equals(initial[i], compare[i])) {
+        return false;
       }
-      return true;
-    } else {
-      return model.equals(initial, compare);
     }
+    return true;
   };
   var graders = {
     "default": function() {
@@ -325,6 +320,9 @@
       this.modelDialog = JSAV.utils.dialog(modelav.container, modelOpts );
       // 3. generate the model structures and the state sequence
       this.modelStructures = model(modelav);
+      if (!$.isArray(this.modelStructures)) {
+        this.modelStructures = [this.modelStructures];
+      }
       // 4. rewind the model answer and hide the dialog
       modelav.recorded();
       var oldFx = $.fx.off || false;
@@ -360,6 +358,10 @@
     this.score = {total: 0, correct: 0, undo: 0, fix: 0, student: 0};
     this.jsav.RECORD = true;
     this.initialStructures = this.options.reset();
+    // make sure initialStructures is always an array
+    if (!$.isArray(this.initialStructures)) {
+      this.initialStructures = [this.initialStructures];
+    }
     this.jsav.displayInit();
     this.jsav.recorded();
     if (this.modelav) {
@@ -491,15 +493,11 @@
         oldFx = $.fx.off || false;
     $.fx.off = true;
     var getstate = function() {
-      if ($.isArray(initial)) {
-        var state = [];
-        for (var i=0, l=initial.length; i < l; i++) {
-          state.push(initial[i].state());
-        }
-        return state;
-      } else {
-        return initial.state();
+      var state = [];
+      for (var i=0, l=initial.length; i < l; i++) {
+        state.push(initial[i].state());
       }
+      return state;
     };
     jsav.begin();
     while (forw) {
@@ -514,7 +512,12 @@
   JSAV._types.Exercise = Exercise;
   
   JSAV.ext.exercise = function(model, reset, options) {
-    var opts = $.extend({model: model, reset: reset}, options);
+    // make sure compare is an array
+    var comp = [];
+    if (options) {
+      comp = $.isArray(options.compare) ? options.compare : [options.compare];
+    }
+    var opts = $.extend({model: model, reset: reset, compare: comp}, options);
     return new Exercise(this, opts);
     // options:
     //  - reset: a function that initializes the exercise and returns the structure(s) to
