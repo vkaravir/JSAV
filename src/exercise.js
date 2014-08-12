@@ -239,11 +239,25 @@
         container.find(".jsavamidone").html((score.total === score.correct)?
             this.jsav._translate("doneLabel"):this.jsav._translate("remainingLabel") + " <span class='jsavpointsleft'></span>");
       }
-      container.find(".jsavcurrentscore").text(score.correct);
-      container.find(".jsavcurrentmaxscore").text(score.correct + score.fix);
+      // Fields of the score object:
+      // score.total = steps in total in the exercise
+      // score.correct = steps correct in the student solution
+      // score.fix = steps fixed in the student solution
+      // score.undo = steps undone in the student solution
+
+      // check how many points have been undone
+      var undo = score.undo;
+      // if the current step was undone, it is not counted in the correct field yet
+      // so we have to reduce the undo by one
+      if (this._undoneSteps[this.jsav.currentStep()]) {
+        undo = undo - 1;
+      }
+      // update the widget fields
+      container.find(".jsavcurrentscore").text(score.correct - undo);
+      container.find(".jsavcurrentmaxscore").text(score.correct + score.fix + score.undo);
       container.find(".jsavmaxscore").text(score.total);
       container.find(".jsavpointsleft").text((score.total - score.correct  - score.fix) || this.jsav._translate("doneLabel"));
-      container.find(".jsavpointslost").text(score.fix || 0);
+      container.find(".jsavpointslost").text(score.fix || score.undo || 0);
     }
   };
   exerproto.grade = function(continuousMode) {
@@ -358,6 +372,7 @@
   exerproto.reset = function() {
     this.jsav.clear();
     this.score = {total: 0, correct: 0, undo: 0, fix: 0, student: 0};
+    this._undoneSteps = [];
     this.jsav.RECORD = true;
     this.initialStructures = this.options.reset();
     this.jsav.displayInit();
@@ -444,14 +459,20 @@
           that.jsav.logEvent({type: "jsav-exercise-step-fixed", score: $.extend({}, grade)});
           window.alert(that.jsav._translate("fixedPopup"));
         } else if (fixmode === "fix") {
-          that.score.undo++;
+          if (!that._undoneSteps[that.jsav.currentStep()]) {
+            that.score.undo++;
+            that._undoneSteps[that.jsav.currentStep()] = true;
+          }
           that.jsav.logEvent({type: "jsav-exercise-step-undone", score: $.extend({}, grade)});
           moveModelBackward(that);
           window.alert(that.jsav._translate("fixFailedPopup"));
         } else if (fixmode === "none") {
           // DO nothing
         } else {
-          that.score.undo++;
+          if (!that._undoneSteps[that.jsav.currentStep()]) {
+            that.score.undo++;
+            that._undoneSteps[that.jsav.currentStep()] = true;
+          }
           that.jsav.logEvent({type: "jsav-exercise-step-undone", score: $.extend({}, grade)});
           moveModelBackward(that);
           window.alert(that.jsav._translate("undonePopup"));
