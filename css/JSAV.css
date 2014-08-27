@@ -488,6 +488,7 @@ a.jsavdialogclose {
   z-index: 700;
   position: absolute;
   display: inline-block;
+  margin: 0;
 }
 
 /******** LINKED LIST STRUCTURE ******/
