@@ -352,36 +352,40 @@
   var horizontalNodePosUpdate = function(node, prevNode, prevPos, opts) {
     // function for calculating node positions in horizontal list
     var nodePos = node.element.position(),
-        newPos = { left: nodePos.left, top: nodePos.top }; // by default, don't move it
-    if (opts.updateLeft) { newPos.left = prevNode?(prevPos.left +
-                            prevNode.element.outerWidth() + opts.nodegap):0; }
+        newPos = { left: nodePos.left, top: nodePos.top }, // by default, don't move it
+        result = { node: node, nodePos: newPos };
+    if (opts.updateLeft) {
+      newPos.left = prevNode?(prevPos.left + prevNode.element.outerWidth() + opts.nodegap):0;
+    }
     if (opts.updateTop) { newPos.top = 0; }
     var edge = prevNode?prevNode._edgetonext:undefined;
     if (edge && opts.updateEdges) {
-      var start = [0, prevPos.left + prevNode.element.outerWidth() - 5,
-                  prevPos.top + Math.round(prevNode.element.outerHeight()/2)],
-          end = [1, newPos.left - 3,
-                  newPos.top + Math.round(node.element.outerHeight()/2)];
-      return [newPos, [start, end]];
+      result.edge = edge;
+      result.edgeFromPoint = [
+        prevPos.left + prevNode.element.outerWidth() - 5,
+        prevPos.top + Math.round(prevNode.element.outerHeight()/2)
+      ];
     }
-    return [newPos];
+    return result;
   };
   var verticalNodePosUpdate = function(node, prevNode, prevPos, opts) {
     // function for calculating node positions in vertical list
     var nodePos = node.element.position(),
-        newPos = { left: nodePos.left, top: nodePos.top };
+        newPos = { left: nodePos.left, top: nodePos.top },
+        result = { node: node, nodePos: newPos };
     if (opts.updateLeft) { newPos.left = 0; }
-    if (opts.updateTop) { newPos.top = prevNode?(prevPos.top +
-                          prevNode.element.outerHeight() + opts.nodegap):0; }
+    if (opts.updateTop) {
+      newPos.top = prevNode?(prevPos.top + prevNode.element.outerHeight() + opts.nodegap):0;
+    }
     var edge = prevNode?prevNode._edgetonext:undefined;
     if (edge && opts.updateEdges) {
-      var start = [0, prevPos.left + Math.round(prevNode.element.width()/2),
-                  prevPos.top + Math.round(prevNode.element.height()) + 2],
-          end = [1, newPos.left + Math.round(prevNode.element.width()/2),
-                  Math.round(newPos.top - 4)];
-      return [newPos, [start, end]];
+      result.edge = edge;
+      result.edgeFromPoint = [
+        prevPos.left + Math.round(prevNode.element.outerWidth()/2),
+        prevPos.top + prevNode.element.outerHeight() - 5
+      ];
     }
-    return [newPos];
+    return result;
   };
   var listLayout = function(list, options, updateFunc) {
     // a general list layout that goes through the nodes and calls given updateFunc
@@ -389,6 +393,7 @@
     var curNode = list.first(),
         prevNode,
         opts = $.extend({updateLeft: true, updateTop: true, updateEdges: true}, list.options, options),
+        curPos,
         prevPos = {},
         minLeft = Number.MAX_VALUE,
         minTop = Number.MAX_VALUE,
@@ -398,24 +403,20 @@
         height,
         left,
         posData = [],
-        nodePos;
+        curPosData;
     // two phase layout: first go through all the nodes calculate positions
     while (curNode) {
-      nodePos = updateFunc(curNode, prevNode, prevPos, opts);
-      prevPos = nodePos[0];
+      curPosData = updateFunc(curNode, prevNode, prevPos, opts);
+      curPos = curPosData.nodePos;
       // keep track of max and min coordinates to calculate the size of the container
-      minLeft = (typeof prevPos.left !== "undefined")?Math.min(prevPos.left, minLeft):minLeft;
-      minTop  = (typeof prevPos.top  !== "undefined")?Math.min(prevPos.top, minTop):minTop;
-      maxLeft = (typeof prevPos.left !== "undefined")?Math.max(prevPos.left + curNode.element.outerWidth(), maxLeft):maxLeft;
-      maxTop  = (typeof prevPos.top  !== "undefined")?Math.max(prevPos.top + curNode.element.outerHeight(), maxTop):maxTop;
-      posData.unshift({node: curNode, nodePos: prevPos});
-      // if we also have edge position data, store that
-      if (nodePos.length > 1) {
-        posData[0].edgePos = nodePos[1];
-        posData[0].edge = prevNode.edgeToNext();
-      }
+      minLeft = (typeof curPos.left !== "undefined")?Math.min(curPos.left, minLeft):minLeft;
+      minTop  = (typeof curPos.top  !== "undefined")?Math.min(curPos.top, minTop):minTop;
+      maxLeft = (typeof curPos.left !== "undefined")?Math.max(curPos.left + curNode.element.outerWidth(), maxLeft):maxLeft;
+      maxTop  = (typeof curPos.top  !== "undefined")?Math.max(curPos.top + curNode.element.outerHeight(), maxTop):maxTop;
+      posData.unshift(curPosData);
       // go to next node and continue with that
       prevNode = curNode;
+      prevPos = curPos;
       curNode = curNode.next();
     }
     if (list.size()) {
@@ -440,7 +441,7 @@
         var posItem = posData[i];
         posItem.node.moveTo(posItem.nodePos.left, posItem.nodePos.top);
         if (posItem.edge) {
-          posItem.edge.g.movePoints(posItem.edgePos, opts);
+          posItem.edge.layout({fromPoint: posItem.edgeFromPoint, end: posItem.nodePos});
         }
       }
     }
