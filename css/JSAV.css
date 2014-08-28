@@ -462,7 +462,30 @@ a.jsavdialogclose {
 .jsavexercisecontrols.active .actionIndicator {
   background-image: url(images/spinner.gif);
 }
-
+/* Customized buttons */
+.jsavexercisecontrols input[type="button"] {
+  background-color: #eee;
+  background: linear-gradient(#fff, #ccc);
+  border: 1px solid #777;
+  margin: 0;
+  padding: 3px 10px;
+  cursor: pointer;
+}
+.jsavexercisecontrols input[type="button"]:hover {
+  background-color: #ddd;
+  background: linear-gradient(#fff, #bbb);
+}
+.jsavexercisecontrols input[type="button"]:last-of-type {
+  border-top-right-radius: 7px;
+  border-bottom-right-radius: 7px;
+}
+.jsavexercisecontrols input[type="button"]:first-of-type {
+  border-top-left-radius: 7px;
+  border-bottom-left-radius: 7px;
+}
+.jsavexercisecontrols input[type="button"]:not(:last-of-type) {
+  border-right: none;
+}
 /********* TREE / GRAPH DATA STRUCTURE *******/
 
 .jsavtree, .jsavgraph, .jsavlist {
