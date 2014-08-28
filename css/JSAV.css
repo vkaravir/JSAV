@@ -523,6 +523,8 @@ a.jsavdialogclose {
 }
 .jsavlistnode {
   position: absolute;
+  border-radius: 3px;
+  overflow: hidden;
 }
 .jsavlist .jsavedge {
   stroke-width: 2;
