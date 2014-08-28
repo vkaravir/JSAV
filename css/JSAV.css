@@ -523,6 +523,15 @@ a.jsavdialogclose {
 }
 .jsavlistnode {
   position: absolute;
+  border-radius: 3px;
+}
+.jsavverticallist .jsavlistnode .jsavpointerarea {
+  border-bottom-left-radius: 3px;
+  border-bottom-right-radius: 3px;
+}
+.jsavhorizontallist .jsavlistnode .jsavpointerarea {
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 3px;
 }
 .jsavlist .jsavedge {
   stroke-width: 2;
