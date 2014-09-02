@@ -2,7 +2,7 @@
 * Module that contains the array data structure implementations.
 * Depends on core.js, anim.js, utils.js, effects.js, datastructures.js
 */
-/* global JSAV, jQuery */
+/* global JSAV, jQuery, Sortable */
 (function($) {
   "use strict";
   if (typeof JSAV === "undefined") { return; }
@@ -11,13 +11,17 @@
 
   // templates used to create new elements into the array, depending on the layout options
   var templates = { };
-  templates.array =  '<span class="jsavvalue">' +
-                            '<span class="jsavvaluelabel">{{value}}</span>' +
-                          '</span>';
+  templates.array = '<span class="jsavvalue">' +
+                      '<span class="jsavvaluelabel">{{value}}</span>' +
+                    '</span>';
   templates["array-indexed"] = templates.array +
-                          '<span class="jsavindexlabel">{{index}}</span>';
+                               '<span class="jsavindexlabel">{{index}}</span>';
   templates.vertical = templates.array;
   templates["vertical-indexed"] = templates["array-indexed"];
+  templates["vertical-sortable"] = '<div class="jsavvalue">' +
+                                     '<div class="jsavvaluelabel">{{value}}</div>' +
+                                     '<span class="jsavrighticon">&equiv;</span>' +
+                                   '</div>';
   templates.bar = '<span class="jsavvaluebar"></span>' + templates.array;
   templates["bar-indexed"] = templates.bar + '<span class="jsavindexlabel">{{index}}</span>';
 
@@ -66,10 +70,22 @@
 
   /* Array data structure for JSAV library. */
   var AVArray = function(jsav, element, options) {
+    var defaultOptions = {
+      autoresize: true,
+      center: true,
+      layout: "array"
+    };
     this.jsav = jsav;
-    this.options = $.extend(true, {autoresize: true, center: true, layout: "array"}, options);
+    this.options = $.extend(true, defaultOptions, options);
+    if (this.options.sortable) {
+      this.options.layout = "vertical";
+      this.options.autoresize = false;
+      this.options.indexed = false;
+    }
     if (!this.options.template) {
-      this.options.template = templates[this.options.layout + (this.options.indexed?"-indexed":"")];
+      this.options.template = templates[this.options.layout +
+                                        (this.options.sortable?"-sortable":"") +
+                                        (this.options.indexed?"-indexed":"")];
     }
     this._indices = [];
     if ($.isArray(element)) {
@@ -87,11 +103,58 @@
     if (this.options.indexed) {
       this.element.addClass("jsavindexed");
     }
+    if (this.options.sortable && !this.options.draggingOff) {
+      /* requires Sortable.js */
+      if (typeof Sortable === "undefined") {
+        window.console.warn("Sortable arrays require Sortable.js. The script can be found in the JSAV/lib folder.");
+      } else {
+        var that = this,
+            onStartIndex;
+        var getIndex = function (el) {
+          return that.element.find("li").index(el);
+        };
+
+        this.sortable = new Sortable(this.element[0], {
+          onStart: function (event) {
+            onStartIndex = getIndex(event.item);
+          },
+          onEnd: function (event) {
+            var ind = getIndex(event.item);
+            that._shift(onStartIndex, ind);
+            if ($.isFunction(that.options.dropCallback)){
+              that.options.dropCallback();
+            }
+          }
+        });
+      }
+    }
   };
   JSAV.utils.extend(AVArray, JSAV._types.ds.JSAVDataStructure);
   AVArray._templates = templates;
   var arrproto = AVArray.prototype;
 
+  arrproto._shift = JSAV.anim(function (fromIndex, toIndex) {
+    // get the index and value element from _indices and _values respectively
+    var indexElement = this._indices.splice(fromIndex, 1)[0],
+        valueElement = this._values.splice(fromIndex, 1)[0],
+        $lis = this.element.find("li");
+    // window.console.log("from", fromIndex, "to", toIndex);
+    // move the element if undoing or redoing
+    if (fromIndex !== toIndex && $lis.index(indexElement.element) === fromIndex) {
+      if (toIndex < fromIndex) {
+        $lis.eq(fromIndex).insertBefore($lis[toIndex]);
+      } else {
+        $lis.eq(fromIndex).insertAfter($lis[toIndex]);
+      }
+    }
+    // update _indices and _values
+    this._indices.splice(toIndex, 0, indexElement);
+    this._values.splice(toIndex, 0, valueElement);
+    for (var i = 0; i < this.size(); i++) {
+      this._indices[i].index = i;
+    }
+    return [toIndex, fromIndex];
+  });
   arrproto.isHighlight = function(index, options) {
     return this.hasClass(index, "jsavhighlight");
   };
@@ -518,7 +581,7 @@
 /// array layout
 (function($) {
   "use strict";
-  function setArrayWidth(array, $lastItem, options) {
+  function setArrayWidth(array, options) {
     var width = 0;
     array.element.find("li").each(function(index, item) {
       width += $(this).outerWidth(true);
@@ -530,14 +593,14 @@
 
   function horizontalArray(array, options) {
     var $arr = $(array.element).addClass("jsavhorizontalarray"),
-      $items = $arr.find("li"),
-      maxHeight = -1;
+        $items = $arr.find("li"),
+        maxHeight = -1;
     $items.each(function(index, item) {
       var $i = $(this);
       maxHeight = Math.max(maxHeight, $i.outerHeight());
     });
     $arr.height(maxHeight + (array.options.indexed?30:0));
-    setArrayWidth(array, $items.last(), options);
+    setArrayWidth(array, options);
     var arrPos = $arr.position();
     return { width: $arr.outerWidth(), height: $arr.outerHeight(),
               left: arrPos.left, top: arrPos.top };
@@ -545,9 +608,13 @@
 
   function verticalArray(array, options) {
     var $arr = $(array.element).addClass("jsavverticalarray"),
-      $items = $arr.find("li"),
-      maxWidth = -1,
-      indexed = !!array.options.indexed;
+        $items = $arr.find("li"),
+        maxWidth = -1,
+        indexed = !!array.options.indexed,
+        sortable = !!array.options.sortable;
+    if (sortable) {
+      $arr.addClass("jsavsortablearray");
+    }
     if (indexed) {
       $items.each(function(index, item) {
         var $i = $(this);
@@ -559,7 +626,7 @@
       });
       $items.css("margin-left", maxWidth);
     }
-    setArrayWidth(array, $items.last(), options);
+    // setArrayWidth(array, options);
     var arrPos = $arr.position();
     return { width: $arr.outerWidth(), height: $arr.outerHeight(),
               left: arrPos.left, top: arrPos.top };
@@ -567,10 +634,10 @@
 
   function barArray(array, options) {
     var $arr = $(array.element).addClass("jsavbararray"),
-      $items = $arr.find("li.jsavindex"),//.css({"position":"relative", "float": "left"}),
-      maxValue = Number.MIN_VALUE,
-      width = $items.first().outerWidth(),
-      size = array.size();
+        $items = $arr.find("li.jsavindex"),//.css({"position":"relative", "float": "left"}),
+        maxValue = Number.MIN_VALUE,
+        width = $items.first().outerWidth(),
+        size = array.size();
     for (var i = 0; i < size; i++) {
       maxValue = Math.max(maxValue, array.value(i));
     }
@@ -599,7 +666,7 @@
         setBarHeight.call(array, $value, newBarHeight);
       }
     });
-    setArrayWidth(array, $items.last(), options);
+    setArrayWidth(array, options);
     return { width: array.element.outerWidth(), height: array.element.outerHeight(),
               left: array.position().left, top: array.position().top };
   }
