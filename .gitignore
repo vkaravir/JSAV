@@ -10,6 +10,9 @@ build
 .project
 .settings
 
+#InteliJ IDE settings
+.idea
+
 #Generated files
 src/version.txt
 src/front.js

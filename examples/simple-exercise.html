@@ -95,7 +95,7 @@
           // the swap of indices index and stored swapIndex
           this.swap(index, swapIndex.value());
           // change the font-size back to normal
-          this.css([swapIndex.value(), index], {"font-size": "100%"});
+          this.css(swapIndex.value(), {"font-size": "100%"});
           swapIndex.value(-1);
           exercise.gradeableStep(); // this step will be graded
         }
@@ -108,7 +108,7 @@
         // mark this as a gradeable step; also handles continuous feedback
         exercise.gradeableStep();
       }
-    };
+    }
     </script>
 </body>
 </html>
