@@ -336,5 +336,9 @@
     if (typeof this.options.showQuestions === "undefined") {
       this.options.showQuestions = true;
     }
-  });
+    // bind the jsav-question-reset event of the container to reset the questions
+    this.container.bind({"jsav-question-reset": function() {
+        this.resetQuestionAnswers();
+      }.bind(this)});
+    });
 }(jQuery));
