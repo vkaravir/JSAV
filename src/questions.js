@@ -312,6 +312,25 @@
       return new Question(this, qtype, questionText, $.extend({}, options));
     }
   };
+  // Resets the flags of whether pop-up quetions questions have been asked already.
+  // As a side effect, this rewinds the animation to the beginning
+  JSAV.ext.resetQuestionAnswers = function() {
+    // rewind the animation
+    this.begin();
+    // go through all the animations steps..
+    for (var i = 0; i < this._redo.length; i++) {
+      // ..and all the operations in all the steps
+      var stepOperations = this._redo[i].operations;
+      for (var j = 0; j < stepOperations.length; j++) {
+        // if the target object of the operation is a question
+        var obj = stepOperations[j].obj;
+        if (obj && obj instanceof Question) {
+          // set the question as not asked
+          obj.asked = false;
+        }
+      }
+    }
+  };
   JSAV.init(function() {
     // default to true for showing questions
     if (typeof this.options.showQuestions === "undefined") {
