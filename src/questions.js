@@ -162,9 +162,20 @@
         i;
     // add feedback element
     $elems = $elems.add($('<div class="jsavfeedback" > </div>'));
-    // add the answer choices
+    // add the answer choices, randomize order
+    var order = [];
+    for (i=this.choices.length; i--; ) {
+      order.push(i);
+    }
+    for (i=5*order.length; i--; ) {
+      var rand1 = JSAV.utils.rand.numKey(0, order.length + 1),
+          rand2 = JSAV.utils.rand.numKey(0, order.length + 1),
+          tmp = order[rand1];
+      order[rand1] = order[rand2];
+      order[rand1] = tmp;
+    }
     for (i=0; i < this.choices.length; i++) {
-      $elems = $elems.add(this.choices[i].elem());
+      $elems = $elems.add(this.choices[order[i]].elem());
     }
     // ... and close button
     var close = $('<input type="button" value="' + this.jsav._translate('questionClose') + '" />').click(
