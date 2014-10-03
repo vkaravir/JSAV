@@ -9,8 +9,14 @@
 <style>
   #jsavcontainer {
     width: 500px;
-    height: 250px;
-    background-color: #efe;
+    height: 270px;
+    border-color: #b6c0b2;
+    background-color: #e2eedd;
+    border-radius: 10px;
+    padding: 40px;
+  }
+  #jsavcontainer h1 {
+    margin-top: 0;
   }
   p.jsavoutput.jsavline {
     height: 40px;
@@ -19,10 +25,11 @@
     text-align: center;
   }
 </style>
-  <h1>A Simple JSAV Interactive Exercise</h1>
   <div id="jsavcontainer">
-    <a class="jsavsettings" href="#">Settings</a>
-    <p align="center" class="jsavexercisecontrols"></p>
+    <h1>A Simple JSAV Interactive Exercise</h1>
+    <p align="center" class="jsavexercisecontrols">
+      <a class="jsavsettings" href="#">Settings</a>
+    </p>
     <p class="jsavscore"></p>
     <p class="jsavoutput jsavline"></p>
   </div>

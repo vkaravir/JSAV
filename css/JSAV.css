@@ -380,17 +380,20 @@ a.jsavsettings {
   background-color: #aaa;
   text-indent: 120%;
   padding: 2px;
-  border: 1px solid black;
+  border: 1px solid #777;
   -o-border-radius: 3px;
   -ms-border-radius: 3px;
   -moz-border-radius: 3px;
   -webkit-border-radius: 3px;
-  border-radius: 3px;
+  border-radius: 50%;
   float:right; 
   margin-right:10px; 
   display:block;
   white-space: nowrap;
   overflow: hidden;
+}
+a.jsavsettings:hover {
+  background-color: #888;
 }
 .jsavsettings .jsavhelp {
   font-size: 80%;
