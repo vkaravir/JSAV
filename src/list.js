@@ -286,6 +286,7 @@
     if (typeof newNext === "undefined") {
       return this._next;
     } else {
+      if (this._edgetonext) { this._edgetonext.show(); }
       return this._setnext(newNext, options);
     }
   };
@@ -318,7 +319,7 @@
       if (!classEquals) { return false; }
     }
     // compare edge style
-    if (this.edgeToNext()) {
+    if (this.next() && this.edgeToNext()) {
       var edgeEquals = this.edgeToNext().equals(otherNode.edgeToNext(),
           $.extend({}, options, {dontCheckNodes: true}));
       if (!edgeEquals) { return false; }
