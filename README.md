@@ -1,22 +1,31 @@
+#JSAV
 This is the JSAV development library for creating Algorithm
 Visualizations in JavaScript.
 
-JSAV is a part of the OpenDSA project. OpenDSA aims to create a
+JSAV is a part of the [OpenDSA](https://github.com/OpenDSA/OpenDSA/) project. OpenDSA aims to create a
 complete hypertextbook for Data Structures and Algorithms along with
 the necessary supporting infrastructure. For more information about
 OpenDSA, see http://algoviz.org/ebook .
 
+## License
+
 JSAV and OpenDSA are released under the MIT license. See the file
 MIT-license.txt included with this distribution.
 
-The official "stable release" versions of JSAV are maintained as part
-of the OpenAlgoViz project at SourceForge. The OpenDSA SourceForge
-repository also stores the AVs that actually make use of JSAV. These
-materials are available by checking out:
-svn co https://openalgoviz.svn.sourceforge.net/svnroot/openalgoviz/OpenDSA OpenDSA
+## Documentation
+The JSAV documentation is available at [jsav.io](http://jsav.io/)
+
+## Extensions
+JSAV is extandible, meaning that you can create your own data structures
+for it or use data structures created by someone else. OpenDSA contains
+several extensions which can be found
+[here](https://github.com/OpenDSA/OpenDSA/tree/master/DataStructures).
+
+## For developers
 
 The day-to-day working JSAV repository is located at GitHub. For new
 developers who want to use the Github working version of JSAV:
+
 * Install Git
 * Check out the JSAV repository. For example, at the commandline you
   can do the following to create a new JSAV folder or directory:
@@ -32,5 +41,6 @@ developers who want to use the Github working version of JSAV:
   your own development projects.
 
 For SVN users new to git:
+
 * To "checkout" a new copy of the library, use "git clone".
 * To "update" your copy of the repository, use "git pull".
