@@ -392,6 +392,9 @@
 
   function getNodeBorderAtAngle(dim, targetNodeCenter, angle, radius) {
     // dim: x, y coords of center and *half* of width and height
+    // make sure they have non-zero values
+    dim.width = Math.max(dim.width, 1);
+    dim.height = Math.max(dim.height, 1);
     var x, y, pi = Math.PI,
         urCornerA = Math.atan2(dim.height*2.0, dim.width*2.0),
         ulCornerA = pi - urCornerA,
