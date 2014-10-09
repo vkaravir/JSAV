@@ -299,7 +299,7 @@
 .jsavcontrols {
   text-align: center;
 }
-.jsavcontrols a {
+.jsavcontrols span {
   display: inline-block;
   color: transparent;
   text-indent: 9999px;
@@ -314,8 +314,9 @@
   border-radius: 20px;
   background-repeat:no-repeat;
   background-position:50% 50%;
+  cursor: pointer;
 }
-.jsavplaying a {
+.jsavplaying span {
   cursor: default;
 }
 .jsavcontrols .jsavbegin {
@@ -425,7 +426,7 @@ a.jsavsettings:hover {
   position: absolute;
   top: 15px;
 }
-.jsavmodelanswer .jsavcontrols a {
+.jsavmodelanswer .jsavcontrols span {
   margin: 5px 20px 0 0;
 }
 .jsavmodelanswer .jsavcontrols .jsavend {

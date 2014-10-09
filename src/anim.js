@@ -206,17 +206,17 @@
     };
     if ($controls.size() !== 0) {
       var tmpTranslation = this._translate("beginButtonTitle");
-      $("<a class='jsavbegin' href='#' title='" + tmpTranslation + "'>" + tmpTranslation +
-                    "</a>").click(beginHandler).appendTo($controls);
+      $("<span class='jsavbegin' title='" + tmpTranslation + "'>" + tmpTranslation +
+                    "</span>").click(beginHandler).appendTo($controls);
       tmpTranslation = this._translate("backwardButtonTitle");
-      $("<a class='jsavbackward' href='#' title='" + tmpTranslation + "'>" + tmpTranslation +
-                    "</a>").click(backwardHandler).appendTo($controls);
+      $("<span class='jsavbackward' title='" + tmpTranslation + "'>" + tmpTranslation +
+                    "</span>").click(backwardHandler).appendTo($controls);
       tmpTranslation = this._translate("forwardButtonTitle");
-      $("<a class='jsavforward' href='#' title='" + tmpTranslation + "'>" + tmpTranslation +
-                    "</a>").click(forwardHandler).appendTo($controls);
+      $("<span class='jsavforward' title='" + tmpTranslation + "'>" + tmpTranslation +
+                    "</span>").click(forwardHandler).appendTo($controls);
       tmpTranslation = this._translate("endButtonTitle");
-      $("<a class='jsavend' href='#' title='" + tmpTranslation + "'>" + tmpTranslation +
-                    "</a>").click(endHandler).appendTo($controls);
+      $("<span class='jsavend' title='" + tmpTranslation + "'>" + tmpTranslation +
+                    "</span>").click(endHandler).appendTo($controls);
       this._controlsContainer = $controls;
     }
     // bind the handlers to events to enable control by triggering events
