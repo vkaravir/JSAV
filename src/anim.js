@@ -428,7 +428,7 @@
     return !!this.container.find(":animated").size() || this._animations > 0;
   };
   JSAV.ext._shouldAnimate = function() {
-    return (!this.RECORD && !$.fx.off);
+    return (!this.RECORD && !$.fx.off && this.SPEED > 50);
   };
   JSAV.ext.disableControls = function() {
     if (this._controlsContainer) {
