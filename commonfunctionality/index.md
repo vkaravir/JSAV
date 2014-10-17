@@ -10,7 +10,7 @@ Many JSAV objects share common options and functions. These are explained below.
 ## Common Options
 
  *  ```{visible: <boolean>}``` Determine whether the object is visible on creation. Defaults to true.
- * ***{element: <DOM Element>}``` The DOM element inside which the JSAV object's elements should be added. This should
+ * ```{element: <DOM Element>}``` The DOM element inside which the JSAV object's elements should be added. This should
    be either a DOM Element or a jQuery object for a single element.
 
 
