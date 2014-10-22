@@ -241,7 +241,16 @@ if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
     JSAV.utils.extend(Line, JSAVGraphical);
 
     Line.prototype.translatePoint = translatePoint;
-    Line.prototype.movePoints = movePoints;
+    Line.prototype._polylineMovePoints = movePoints;
+    Line.prototype.movePoints = function(newx1, newy1, newx2, newy2) {
+      if ($.isArray(newx1)) {
+        // assume it's an array suitable for "general" movePoints
+        return this._polylineMovePoints(newx1);
+      } else {
+        // otherwise create an array suitable for "general" movePoints
+        return this._polylineMovePoints([[0, newx1, newy1], [1, newx2, newy2]]);
+      }
+    };
     Line.prototype.points = points;
 
     var Ellipse = function(jsav, raphael, x, y, rx, ry, props) {

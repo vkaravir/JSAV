@@ -323,6 +323,8 @@
     av.step();
     l.movePoints([[0, 10, 20], [1, 150, 140]]);
     av.step();
+    l.movePoints(50, 60, 90, 100);
+    av.step();
     l.css({"stroke-width": 4, "stroke": "red", "fill": "rgb(120,120,120)"});
     av.step();
     l.hide();
@@ -390,6 +392,13 @@
     equal(Math.round(currBB.y), Math.round(origBB.y) + 40);
     equal(Math.round(currBB.width), Math.round(origBB.width));
     equal(Math.round(currBB.height), Math.round(origBB.height));
+
+    av.forward(); // apply second type of move points
+    currBB = l.rObj.getBBox();
+    equal(Math.round(currBB.x), 50 + 30);
+    equal(Math.round(currBB.y), 60 + 40);
+    equal(Math.round(currBB.width), 40);
+    equal(Math.round(currBB.height), 40);
 
     av.forward(); // apply css
     equal(l.css("stroke"), "red", "line stroke color");
