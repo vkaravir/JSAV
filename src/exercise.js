@@ -316,6 +316,12 @@
                               }
                              },
                             this.options.modelDialog); // options passed for the model answer window
+    // add a class to "hide" the dialog when preparing it
+    if (modelOpts.dialogClass) {
+      modelOpts.dialogClass += " jsavmodelpreparing";
+    } else {
+      modelOpts.dialogClass = "jsavmodelpreparing";
+    }
     // function that will "catch" the model answer animator log events and rewrite
     // their type to have the jsav-exercise-model prefix and the av id
     var modelLogHandler = function(eventData) {
@@ -366,7 +372,8 @@
     this.modelanswer(prevPosition);
     // rewind the model av
     this.modelav.begin();
-    // show the dialog
+    // show the dialog and remove preparing class
+    this.modelDialog.removeClass("jsavmodelpreparing");
     this.modelDialog.show();
   };
   exerproto.reset = function() {

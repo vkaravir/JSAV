@@ -432,6 +432,10 @@ a.jsavsettings:hover {
 .jsavmodelanswer .jsavcontrols .jsavend {
   margin-right: 0;
 }
+/* move the (model answer) dialog outside of view when preparing it */
+.jsavdialog.jsavmodelpreparing {
+  left: -110% !important;
+}
 a.jsavdialogclose {
   background-color: #AAA;
   border: 2px solid white;
