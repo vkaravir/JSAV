@@ -181,7 +181,7 @@
       var edge = edges[i];
       if (edge.start() === fromNode && edge.end() === toNode) {
         return edge;
-      } else if (edge.end() === fromNode && edge.start() === toNode) {
+      } else if (!this.options.directed && edge.end() === fromNode && edge.start() === toNode) {
         return edge;
       }
     }
