@@ -295,6 +295,13 @@
   z-index: 100;
 }
 
+.jsavcontainer svg {
+  pointer-events: none;
+}
+.jsavcontainer svg * {
+  pointer-events: visible;
+}
+
 /**** STYLING THE CONTROLS ****/
 .jsavcontrols {
   text-align: center;
@@ -416,9 +423,6 @@ a.jsavsettings:hover {
   border-width: 0;
   border-radius: 8px;
   position: relative;
-}
-.jsavcontainer svg {
-  pointer-events: none;
 }
 .jsavmodelanswer .jsavcounter {
   float: left;
