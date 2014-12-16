@@ -1,6 +1,6 @@
 RM = rm -rf
 LIB = lib
-MINIMIZE = java -jar tools/yuicompressor-2.4.6.jar --nomunge --preserve-semi -o $(TARGET)/JSAV-min.js  $(TARGET)/JSAV.js 
+MINIMIZE = java -jar tools/yuicompressor-2.4.8.jar --nomunge --preserve-semi -o $(TARGET)/JSAV-min.js  $(TARGET)/JSAV.js
 CAT = cat
 SRC = src
 TARGET = build
