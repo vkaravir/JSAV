@@ -497,4 +497,65 @@
     ok(label1.equals(label2, {css: ["font-size", "border"]}));
     ok(label1.equals(label2, {css: ["font-size", "border"], "class": ["testing", "testing2"]}));
   });
+
+
+
+  test("Test click event", function() {
+    expect(9); // expect 9 assertions to be made
+    var handler1 = function(event) {
+      equal(this.id(), circle.id());
+      ok(event);
+    };
+    var handler2 = function(myval, event) {
+      equal(this.id(), line.id());
+      equal(myval, "kissa");
+      ok(event);
+    };
+    var handler3 = function(myval, myval2, event) {
+      equal(this.id(), path.id());
+      equal(myval, "kissa");
+      equal(myval2, "koira");
+      ok(event);
+    };
+    var av = new JSAV("arraycontainer"),
+        circle = av.g.circle(50, 60, 70),
+        line = av.g.line(10, 20, 150, 140),
+         path = av.g.path("M175 200 A100 100 0 0 0 270 250");
+    circle.click(handler1);
+    line.click(["kissa"], handler2);
+    path.click(["kissa", "koira"], handler3);
+    circle.element.click();
+    line.element.click();
+    path.element.click();
+  });
+
+  test("Test on event binding and custom events", function() {
+    expect(9); // expect 9 assertions to be made
+    var handler1 = function(event) {
+      equal(this.id(), circle.id());
+      ok(event);
+    };
+    var handler2 = function(myval, event) {
+      equal(this.id(), line.id());
+      equal(myval, "kissa");
+      ok(event);
+    };
+    var handler3 = function(myval, myval2, event) {
+      equal(this.id(), path.id());
+      equal(myval, "kissa");
+      equal(myval2, "koira");
+      ok(event);
+    };
+    var av = new JSAV("arraycontainer"),
+        circle = av.g.circle(50, 60, 70),
+        line = av.g.line(10, 20, 150, 140),
+        path = av.g.path("M175 200 A100 100 0 0 0 270 250");
+
+    circle.on("jsavclick", handler1);
+    line.on("jsavclick", "kissa", handler2);
+    path.on("jsavclick", ["kissa", "koira"], handler3);
+    circle.element.trigger("jsavclick");
+    line.element.trigger("jsavclick");
+    path.element.trigger("jsavclick");
+  });
 }());

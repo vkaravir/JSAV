@@ -101,15 +101,53 @@ if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
         var bbox = this.rObj.getBBox();
         return { left: bbox.x, top: bbox.y, width: bbox.width, height: bbox.height };
       },
-      id: JSAV._types.JSAVObject.id,
+      id: JSAV._types.JSAVObject.prototype.id,
       clear: function() {
         this.rObj.remove();
       }
     };
-    JSAVGraphical.prototype.addClass = JSAV.utils._helpers.addClass;
-    JSAVGraphical.prototype.removeClass = JSAV.utils._helpers.removeClass;
-    JSAVGraphical.prototype.hasClass = JSAV.utils._helpers.hasClass;
-    JSAVGraphical.prototype.toggleClass = JSAV.anim(JSAV.utils._helpers._toggleClass);
+    var graphicalproto = JSAVGraphical.prototype;
+    graphicalproto.addClass = JSAV.utils._helpers.addClass;
+    graphicalproto.removeClass = JSAV.utils._helpers.removeClass;
+    graphicalproto.hasClass = JSAV.utils._helpers.hasClass;
+    graphicalproto.toggleClass = JSAV.anim(JSAV.utils._helpers._toggleClass);
+
+    // events to register as functions on the graphical primitive "super"prototype
+    var events = ["click", "dblclick", "mousedown", "mousemove", "mouseup",
+      "mouseenter", "mouseleave"];
+    // returns a function for the passed eventType that binds a passed
+    // function to that eventType for the graphical primitive
+    var eventhandler = function(eventType) {
+      return function(data, handler) {
+        // store reference to this, needed when executing the handler
+        var self = this;
+        // bind a jQuery event handler, limit to .jsavindex
+        this.element.on(eventType, function(e) {
+          // log the event
+          self.jsav.logEvent({type: "jsav-graphical-" + eventType, objid: self.id()});
+          if ($.isFunction(data)) { // if no custom data..
+            // ..bind this to the graphical primitive and call handler
+            // with the event as param
+            data.call(self, e);
+          } else if ($.isFunction(handler)) { // if custom data is passed
+            // ..bind this to the graphical primitive and call handler
+            var params = $.isArray(data)?data.slice(0):[data]; // get a cloned data array or data as array
+            params.push(e); // jQuery event as the last
+            handler.apply(self, params); // apply the function
+          }
+        });
+        return this;
+      };
+    };
+    // create the event binding functions and add to the prototype
+    for (var i = events.length; i--; ) {
+      graphicalproto[events[i]] = eventhandler(events[i]);
+    }
+    // a function to bind any other events then the ones specially registered
+    graphicalproto.on = function(eventName, data, handler) {
+      eventhandler(eventName).call(this, data, handler);
+      return this;
+    };
 
     var init = function(obj, jsav, props) {
       obj.jsav = jsav;
