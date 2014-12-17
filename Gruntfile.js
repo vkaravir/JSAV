@@ -78,6 +78,12 @@ module.exports = function(grunt) {
       jsav: {
         src: ['css/JSAV.css']
       }
+    },
+    watch: {
+      jssrc: {
+        files: ['src/*.js'],
+        tasks: ['default']
+      }
     }
   });
 

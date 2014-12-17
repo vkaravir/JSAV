@@ -316,10 +316,19 @@
         fromAngle = normalizeAngle(2*Math.PI - Math.atan2(toY - fromY, toX - fromX)),
         toAngle = normalizeAngle(2*Math.PI - Math.atan2(fromY - toY, fromX - toX)),
         startRadius = parseInt(sElem.css("borderBottomRightRadius"), 10) || 0,
-        fromPoint = (options && options.fromPoint)?options.fromPoint:getNodeBorderAtAngle({width: sWidth, height: sHeight, x: fromX, y: fromY}, {x: toX, y: toY}, fromAngle, startRadius),
+        ADJUSTMENT_MAGIC = 2.2, // magic number to work with "all" stroke widths
+        strokeWidth = parseInt(this.g.element.css("stroke-width"), 10),
+        // adjustment for the arrow drawn before the end of the edge line
+        startStrokeAdjust = this.options["arrow-begin"]? strokeWidth * ADJUSTMENT_MAGIC:0,
+        fromPoint = (options && options.fromPoint)?options.fromPoint:
+                                    getNodeBorderAtAngle({width: sWidth + startStrokeAdjust,
+                                                          height: sHeight + startStrokeAdjust,
+                                                          x: fromX, y: fromY}, {x: toX, y: toY}, fromAngle, startRadius),
         // arbitrarily choose to use bottom-right border radius
         endRadius = parseInt(eElem.css("borderBottomRightRadius"), 10) || 0,
-        toPoint = getNodeBorderAtAngle({width: eWidth, height: eHeight, x: toX, y: toY},
+        // adjustment for the arrow drawn after the end of the edge line
+        endStrokeAdjust = this.options["arrow-end"]?strokeWidth * ADJUSTMENT_MAGIC:0,
+        toPoint = getNodeBorderAtAngle({width: eWidth + endStrokeAdjust, height: eHeight + endStrokeAdjust, x: toX, y: toY},
                                         {x: fromX, y: fromY}, toAngle, endRadius);
     // getNodeBorderAtAngle returns an array [x, y], and movePoints wants the point position
     // in the (poly)line as first item in the array, so we'll create arrays like [0, x, y] and
