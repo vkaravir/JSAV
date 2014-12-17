@@ -3,11 +3,16 @@ layout: page
 title: Graphical Primitives
 ---
 
-JSAV supports the following graphical primitives: [circle](circle/), [rectangle](rectangle/), [line](lines/),
-  [ellipse](ellipse/), [polygon](lines/), [polyline](lines/), and [path](path/). All these are in the JSAV.g namespace. A
-  rectangle, for example, can be initialized like follows.
 
-    var rect = av.g.rect(70, 60, 50, 40);
+JSAV supports the following graphical primitives:
+  {% include subpages.html %}
+The primitive-specific pages give more details on what functions are available for each type, while this page gives an
+overview of their common functionality. All the types are in the JSAV.g namespace. A rectangle, for example, can be
+initialized like follows.
+
+```javascript
+var rect = av.g.rect(70, 60, 50, 40);
+```
 
 This would initialize a rectangle with upper-left corner at point (70, 60) that
   is 50 pixels wide and 40 pixels tall.
@@ -51,7 +56,9 @@ Rotates the object by the given amount of degrees around the center of the shape
 Scales the object by given amount. The shortcuts for X/Y scaling only
   are the same as calling ```.scale(sx, 0)``` and ```.scale(0, sy)```. For example
 
-    rect.scale(2, 1.5)
+```javascript
+rect.scale(2, 1.5)
+```
 
 would make the rectangle from the previous example to have width of 100 pixels and height of 60px. Note, that the position of the rectangle would also change, since the scaling is done relative to the center of the shape.
 
@@ -68,6 +75,30 @@ Like the .css functions of the other JSAV objects, these can be used to animate
   attributes of the SVG element visualizing the shape. For a list of valid values,
   see <a href="http://raphaeljs.com/reference.html#Element.attr">Rapha&euml;l JS documentation</a>.
 
+<h3 class="apimethod">Events</h3>
+There are functions to attach event handlers for the graphical primitives. The events that can be listened for are:
+```click```, ```dblclick```, ```mousedown```, ```mousemove```, ```mouseup```, ```mouseenter```, and
+```mouseleave```. See <a href="http://api.jquery.com/category/events/">jQuery documentation</a> for details on
+the events. The last parameter for the event handler is the jQuery event object. Inside the event
+handler function, ```this``` will refer to the JSAV graphical primitive object.
 
-The primitive-specific pages give more details on what functions are available for each type.
-  {% include subpages.html %}
+Here's an example of attaching event handlers to different primitives. Try clicking the circle, hovering over the
+arc, and double clicking the line.
+
+<div id="graphPrimEvents" class="jsavexample"></div>
+<script>
+(function() {
+  var jsav = new JSAV("graphPrimEvents"),
+      circle = jsav.g.circle(70, 100, 50, {"stroke-width": 15}),
+      line = jsav.g.line(450, 50, 500, 160, {stroke: "orange", "stroke-width": 15}),
+      path = jsav.g.path("M275 80 A100 100 0 0 0 370 120", {stroke: "darkgreen", "stroke-width": 20});
+  circle.click(function() { alert("Circle clicked!"); });
+  line.dblclick(function() { alert("Line doubleclicked!"); });
+  path.mouseenter({stroke: "darkred"}, path.css)
+      .mouseleave({stroke: "darkgreen"}, path.css);
+  jsav.displayInit();
+}());
+</script>
+
+In general, the event handlers for graphical primitives work similarly to events on an array, so refer to the
+[array documentation](../datastructures/array/).
