@@ -292,14 +292,21 @@
   position: absolute;
   height: 100%;
   width: 100%;
-  z-index: 100;
+  z-index: 110;
+}
+
+.jsavcontainer svg {
+  pointer-events: none;
+}
+.jsavcontainer svg * {
+  pointer-events: visible;
 }
 
 /**** STYLING THE CONTROLS ****/
 .jsavcontrols {
   text-align: center;
 }
-.jsavcontrols a {
+.jsavcontrols span {
   display: inline-block;
   color: transparent;
   text-indent: 9999px;
@@ -314,8 +321,9 @@
   border-radius: 20px;
   background-repeat:no-repeat;
   background-position:50% 50%;
+  cursor: pointer;
 }
-.jsavplaying a {
+.jsavplaying span {
   cursor: default;
 }
 .jsavcontrols .jsavbegin {
@@ -380,17 +388,20 @@ a.jsavsettings {
   background-color: #aaa;
   text-indent: 120%;
   padding: 2px;
-  border: 1px solid black;
+  border: 1px solid #777;
   -o-border-radius: 3px;
   -ms-border-radius: 3px;
   -moz-border-radius: 3px;
   -webkit-border-radius: 3px;
-  border-radius: 3px;
+  border-radius: 50%;
   float:right; 
   margin-right:10px; 
   display:block;
   white-space: nowrap;
   overflow: hidden;
+}
+a.jsavsettings:hover {
+  background-color: #888;
 }
 .jsavsettings .jsavhelp {
   font-size: 80%;
@@ -413,20 +424,21 @@ a.jsavsettings {
   border-radius: 8px;
   position: relative;
 }
-.jsavcontainer svg {
-  pointer-events: none;
-}
 .jsavmodelanswer .jsavcounter {
   float: left;
   left: 10px;
   position: absolute;
   top: 15px;
 }
-.jsavmodelanswer .jsavcontrols a {
+.jsavmodelanswer .jsavcontrols span {
   margin: 5px 20px 0 0;
 }
 .jsavmodelanswer .jsavcontrols .jsavend {
   margin-right: 0;
+}
+/* move the (model answer) dialog outside of view when preparing it */
+.jsavdialog.jsavmodelpreparing {
+  left: -110% !important;
 }
 a.jsavdialogclose {
   background-color: #AAA;
@@ -462,7 +474,30 @@ a.jsavdialogclose {
 .jsavexercisecontrols.active .actionIndicator {
   background-image: url(images/spinner.gif);
 }
-
+/* Customized buttons */
+.jsavexercisecontrols input[type="button"] {
+  background-color: #eee;
+  background: linear-gradient(#fff, #ccc);
+  border: 1px solid #777;
+  margin: 0;
+  padding: 3px 10px;
+  cursor: pointer;
+}
+.jsavexercisecontrols input[type="button"]:hover {
+  background-color: #ddd;
+  background: linear-gradient(#fff, #bbb);
+}
+.jsavexercisecontrols input[type="button"]:last-of-type {
+  border-top-right-radius: 7px;
+  border-bottom-right-radius: 7px;
+}
+.jsavexercisecontrols input[type="button"]:first-of-type {
+  border-top-left-radius: 7px;
+  border-bottom-left-radius: 7px;
+}
+.jsavexercisecontrols input[type="button"]:not(:last-of-type) {
+  border-right: none;
+}
 /********* TREE / GRAPH DATA STRUCTURE *******/
 
 .jsavtree, .jsavgraph, .jsavlist {
@@ -488,6 +523,7 @@ a.jsavdialogclose {
   z-index: 700;
   position: absolute;
   display: inline-block;
+  margin: 0;
 }
 
 /******** LINKED LIST STRUCTURE ******/
@@ -522,6 +558,15 @@ a.jsavdialogclose {
 }
 .jsavlistnode {
   position: absolute;
+  border-radius: 3px;
+}
+.jsavverticallist .jsavlistnode .jsavpointerarea {
+  border-bottom-left-radius: 3px;
+  border-bottom-right-radius: 3px;
+}
+.jsavhorizontallist .jsavlistnode .jsavpointerarea {
+  border-top-right-radius: 3px;
+  border-bottom-right-radius: 3px;
 }
 .jsavlist .jsavedge {
   stroke-width: 2;
@@ -650,4 +695,8 @@ ul.jsavcode {
 .jsavswap, .jsavswap .jsavvalue {
   background-color: pink !important;
   color: red !important;
+}
+
+.jsavdisabled {
+  pointer-events: none;
 }
