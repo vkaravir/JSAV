@@ -349,7 +349,7 @@
   };
   JSAV.ext.step = function(options) {
     this.container.trigger("jsav-updaterelative");
-    if (!this.options.animationMode === "none") {
+    if (this.options.animationMode !== "none") {
       this._undo.push(new AnimStep(options)); // add new empty step to oper. stack
       if (options && this.message && options.message) {
         this.message(options.message);
