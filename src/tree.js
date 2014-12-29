@@ -221,7 +221,16 @@
       if (!this._edgetoparent) {
         this._setEdgeToParent(new Edge(this.jsav, this, newParent, options));
       }
-      return this._setparent(newParent, options);
+      this._setparent(newParent, options);
+
+      // if both this node and parent are visible but the edge is not, show it
+      if (this.isVisible() && newParent && newParent.isVisible() && !this._edgetoparent.isVisible()) {
+        this._edgetoparent.show();
+      } else if ((!this.isVisible() || !newParent || !newParent.isVisible()) && this._edgetoparent.isVisible()) {
+        // if either this node or new parent are invisible but the edge is not, hide it
+        this._edgetoparent.hide();
+      }
+      return this;
     }
   };
   nodeproto._setEdgeToParent = JSAV.anim(function(edge, options) {
