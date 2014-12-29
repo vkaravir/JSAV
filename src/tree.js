@@ -381,18 +381,26 @@
     return this;
   };
   nodeproto.hide = function(options) {
+    var opts = $.extend({recursive: true}, options),
+        ch, i, l;
     if (this.element.filter(":visible").size() > 0) {
       this._toggleVisible(options);
     }
-    var opts = $.extend({recursive: true}, options);
     if (this._edgetoparent) {
-      this._edgetoparent.hide();
+      this._edgetoparent.hide(options);
     }
-    if (opts.recursive) {
-      var ch = this.children();
+    if (opts.recursive) { // hide children recursively
+      ch = this.children();
       if (ch) {
-        for (var i = 0, l = ch.length; i < l; i++) {
+        for (i = 0, l = ch.length; i < l; i++) {
           ch[i].hide(options); // also hide the child nodes
+        }
+      }
+    } else { // hide only edges to children
+      ch = this.children();
+      if (ch) {
+        for (i = 0, l = ch.length; i < l; i++) {
+          ch[i].edgeToParent().hide(options); // also hide the edges to child nodes
         }
       }
     }

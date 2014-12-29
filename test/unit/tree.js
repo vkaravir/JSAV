@@ -607,6 +607,9 @@
 
     av.step();
     tree.root().hide({recursive: false}); // hide root
+    // edges from root to children should still be hidden
+    ok(!tree.root().left().edgeToParent().isVisible());
+    ok(!tree.root().right().edgeToParent().isVisible());
     tree.root().left().hide(); // hide left child of root
     checkVisibility([1, 0, 0, 1, 0]);
     av.recorded();
