@@ -145,9 +145,21 @@ The optional third argument ```options``` should be an object. The following opt
 
  * ```edgeLabel```: specify a label shown on the edge connecting the new node to its parent.
 
+The function returns the node the child was added to.
+
 <h3 class="apimethod">.addChild(node [,options])</h3>
 Adds a child node to this node. The ```node``` can be a value or a node of correct type to the node.
   The ```options``` parameter works like above.
+
+The function returns the node the child was added to. So you can chain the calls to add multiple children to the same node:
+
+```javascript
+node.addChild("A")
+    .addChild("B")
+    .addChild("C");
+```
+
+This code would add children A, B, and C to the <code>node</code>.
 
 <h3 class="apimethod">.remove([options])</h3>
 Removes the node from its parent. The node and its child nodes are hidden recursively, unless option ```hide``` is set to ```false```.
