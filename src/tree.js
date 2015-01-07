@@ -438,7 +438,7 @@
           if (!child && !state[childName]) { // no such child
             return;
           } else if (child && state[childName]) { // both such children
-            setNodeState(child, state);
+            setNodeState(child, state[childName]);
           } else if (child) { // existing child, need to remove
             node[childName](null, {record: false});
           } else { // no existing child but new child, need to add node
