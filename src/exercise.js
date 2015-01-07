@@ -280,7 +280,11 @@
     }
     var prevFx = $.fx.off || false;
     $.fx.off = true;
-    graders[this.options.grader + (continuousMode?"-continuous":"")].call(this);
+    if ($.isFunction(this.options.grader)) {
+      this.options.grader.call(this);
+    } else {
+      graders[this.options.grader + (continuousMode ? "-continuous" : "")].call(this);
+    }
     if (!continuousMode) {
       this.jsav.jumpToStep(origStep);
       this.modelav.jumpToStep(origModelStep);
