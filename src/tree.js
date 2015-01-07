@@ -227,8 +227,11 @@
       if (this.isVisible() && newParent && newParent.isVisible() && !this._edgetoparent.isVisible()) {
         this._edgetoparent.show();
       } else if ((!this.isVisible() || !newParent || !newParent.isVisible()) && this._edgetoparent.isVisible()) {
-        // if either this node or new parent are invisible but the edge is not, hide it
-        this._edgetoparent.hide();
+        // if either this node or new parent are invisible but the edge is not,
+        // and hide option is either not set ot it's true -> hide the edge to parent
+        if (!options || typeof options.hide === "undefined" || options.hide) {
+          this._edgetoparent.hide();
+        }
       }
       return this;
     }
@@ -284,7 +287,7 @@
         opts = $.extend({hide: true}, options);
     if (oldval) {
       if (opts.hide) { oldval.hide(); }
-      oldval.parent(null);
+      oldval.parent(null, opts);
     }
     if (node) {
       var newchildnodes = self.childnodes.slice(0);
@@ -496,7 +499,7 @@
       nullopts.edgeLabel = undefined;
       if (node === null) { // node is null, remove child
         if (child && child.value() !== "jsavnull") {
-          child.parent(null);
+          child.parent(null, opts);
           // child exists
           if (!oChild || oChild.value() === "jsavnull") { // ..but no other child
             if (opts.hide) { child.hide(); }
