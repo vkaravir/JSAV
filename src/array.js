@@ -524,7 +524,9 @@
       width += $(this).outerWidth(true);
     });
     if (width !== array.element.width()) {
-      array.css({"width": width + "px"});
+      // add +1 to reduce problems with different browser zoom levels and
+      // last element ovefflowing from the array container
+      array.css({"width": (width + 1) + "px"});
     }
   }
 
