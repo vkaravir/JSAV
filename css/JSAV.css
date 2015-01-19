@@ -31,7 +31,6 @@
   cursor: default;
   /* add a subtle shadow to nodes */
   box-shadow: 2px 2px 5px rgba(120, 120, 120, 0.5);
-  box-sizing: border-box;
 }
 .jsavcenter {
   margin-left: auto;
@@ -94,6 +93,9 @@
   color: black;
   position: absolute;
   vertical-align: middle;
+}
+.jsavindex {
+  box-sizing: border-box;
 }
 .jsavindex span {
   z-index: 99;
