@@ -5,25 +5,6 @@ module.exports = function(grunt) {
   var BUILD_DIR = 'build/',
       SRC_DIR = 'src/';
 
-  // content added to the beginning of the built file
-  var JS_BANNER = '/*!\n' +
-    ' * JSAV - JavaScript Algorithm Visualization Library\n' +
-    ' * Version <%= gitinfo.version %>\n' +
-    ' * Copyright (c) 2011-' + new Date().getFullYear() + ' by Ville Karavirta and Cliff Shaffer\n' +
-    ' * Released under the MIT license.\n' +
-    ' */\n';
-  // content added at the end of the file
-  var JS_FOOTER = '\n/**\n' +
-    ' * Version support\n' +
-    ' * Depends on core.js\n' +
-    ' */\n' +
-    '(function() {\n' +
-    '   if (typeof JSAV === "undefined") { return; }\n' +
-    '   JSAV.version = function() {\n' +
-    '     return "<%= gitinfo.version %>";\n' +
-    '   };\n' +
-    '})();\n';
-
   // autoload all grunt tasks in package.json
   require('load-grunt-tasks')(grunt);
 
@@ -34,12 +15,13 @@ module.exports = function(grunt) {
       }
     },
     concat: {  // concat the JSAV javascript file
-      options: { // use the header and footer specified above
-        banner: JS_BANNER,
-        footer: JS_FOOTER
-      },
+      //options: { // use the header and footer specified above
+      //  banner: JS_BANNER,
+      //  footer: JS_FOOTER
+      //},
       build: { // the order matters, so list every file manually
-        src: [SRC_DIR + 'core.js',
+        src: [SRC_DIR + 'front.js',
+              SRC_DIR + 'core.js',
               SRC_DIR + 'translations.js',
               SRC_DIR + 'anim.js',
               SRC_DIR + 'utils.js',
@@ -56,14 +38,16 @@ module.exports = function(grunt) {
               SRC_DIR + 'code.js',
               SRC_DIR + 'settings.js',
               SRC_DIR + 'questions.js',
-              SRC_DIR + 'exercise.js'],
+              SRC_DIR + 'exercise.js',
+              SRC_DIR + 'version.js'],
         dest: BUILD_DIR + 'JSAV.js'
       }
     },
     uglify: { // for building the minified version
       build: {
         options: {
-          preserveComments: 'some'
+          preserveComments: 'some',
+          mangle: false
         },
         files: {
           'build/JSAV-min.js': [BUILD_DIR + 'JSAV.js']
@@ -79,6 +63,11 @@ module.exports = function(grunt) {
         src: ['css/JSAV.css']
       }
     },
+    exec: {
+      version: "git describe --tags --long | awk '{ printf \"%s\", $0 }' > " + SRC_DIR + "version.txt",
+      front: "cat src/front1.txt src/version.txt src/front2.txt > src/front.js",
+      versionjs: "cat src/version1.txt src/version.txt src/version2.txt > src/version.js"
+    },
     watch: {
       jssrc: {
         files: ['src/*.js'],
@@ -87,7 +76,7 @@ module.exports = function(grunt) {
     }
   });
 
-  grunt.registerTask('build', ['gitinfo', 'concat', 'uglify']);
+  grunt.registerTask('build', ['exec', 'concat', 'uglify']);
   grunt.registerTask('lint', ['jshint', 'csslint']);
   grunt.registerTask('default', ['build']);
 };
