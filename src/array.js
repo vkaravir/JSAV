@@ -78,15 +78,6 @@
       this.element = $(element);
       this.initializeFromElement();
     }
-    if (this.options.autoresize) {
-      this.element.addClass("jsavautoresize");
-    }
-    if (this.options.center) {
-      this.element.addClass("jsavcenter");
-    }
-    if (this.options.indexed) {
-      this.element.addClass("jsavindexed");
-    }
   };
   JSAV.utils.extend(AVArray, JSAV._types.ds.JSAVDataStructure);
   AVArray._templates = templates;
@@ -193,6 +184,17 @@
     $index.find(".jsavvaluelabel").html("" + newValue);
     return [index, oldval];
   });
+  arrproto._initOptionClasses = function() {
+    if (this.options.autoresize) {
+      this.element.addClass("jsavautoresize");
+    }
+    if (this.options.center) {
+      this.element.addClass("jsavcenter");
+    }
+    if (this.options.indexed) {
+      this.element.addClass("jsavindexed");
+    }
+  };
   arrproto.initialize = function(data) {
     var el = this.options.element || $("<ol/>"),
       key, val, i;
@@ -200,6 +202,7 @@
       $(this.jsav.canvas).append(el);
     }
     this.element = el;
+    this._initOptionClasses();
     this._values = data.slice(0);
     // replace null values with empty strings
     for (i = 0; i < data.length; i++) {
@@ -237,6 +240,8 @@
       }
     }
     $elem.addClass("jsavarray");
+    this._initOptionClasses();
+
     this._values = [];
     $elems.each(function(index) {
       var $this = $(this),
