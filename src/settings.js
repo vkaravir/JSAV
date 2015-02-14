@@ -139,6 +139,8 @@
     for (var i = 0; i < this.components.length; i++) {
       $cont.append(this.components[i]);
     }
+    // append the JSAV version to the settings dialog
+    $cont.append("<span class='jsavversion'>" + JSAV.version() + "</span>");
     
     var translate;
     if (this.jsav) {

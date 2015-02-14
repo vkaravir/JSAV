@@ -410,6 +410,10 @@ a.jsavsettings:hover {
   font-size: 80%;
   margin-left: 40px;
 }
+.jsavsettings .jsavversion {
+  float: right;
+  font-size: smaller;
+}
 .jsavrow {
   margin: 15px 8px 4px 8px;
 }
