@@ -331,6 +331,9 @@
 .jsavplaying span {
   cursor: default;
 }
+.jsavbegin, .jsavend {
+  letter-spacing: -2px;
+}
 /**** END STYLING THE CONTROLS ****/
 
 /**** STYLING THE DIALOG ****/
