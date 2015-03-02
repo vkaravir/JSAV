@@ -199,23 +199,31 @@ if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
     var movePoints  = function(points, options) {
       var currPath = this.rObj.attrs.path,
           newPath = currPath.slice(),
+          newPoints = this.points(),
           pathElem, i, l;
       for (i = 0, l = points.length; i < l; i++) {
         var p = points[i];
         pathElem = currPath[p[0]];
         newPath[p[0]] = [pathElem[0], p[1], p[2]];
+        newPoints[p[0]] = p.slice(1);
       }
       var np = "";
       for (i = 0, l = newPath.length; i < l; i++) {
         pathElem = newPath[i];
         np += pathElem.join(' ');
       }
+      this._setpoints(newPoints);
       this._setattrs({"path": np}, $.extend({dontAnimate: ("" + currPath) === "M-1,-1L-1,-1"}, options));
       return this;
     };
+    var _setpoints = JSAV.anim(function (newPoints) {
+      var oldPoints = $.extend(true, [], this._points);
+      this._points = newPoints;
+      return [oldPoints];
+    });
     // A function for getting the points of a path such as a line or polyline
     var points = function() {
-      return this._points.slice(0);
+      return $.extend(true, [], this._points); // deep copy of points
     };
 
     var Circle = function(jsav, raphael, x, y, r, props) {
@@ -290,6 +298,7 @@ if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
       }
     };
     Line.prototype.points = points;
+    Line.prototype._setpoints = _setpoints;
 
     var Ellipse = function(jsav, raphael, x, y, rx, ry, props) {
       this.rObj = raphael.ellipse(x, y, rx, ry);
@@ -332,6 +341,7 @@ if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
     Polyline.prototype.translatePoint = translatePoint;
     Polyline.prototype.movePoints = movePoints;
     Polyline.prototype.points = points;
+    Polyline.prototype._setpoints = _setpoints;
 
     var Path = function(jsav, raphael, path, props) {
       this.rObj = raphael.path(path);
