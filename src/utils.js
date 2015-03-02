@@ -699,25 +699,57 @@ mixkey(math.random(), pool);
                           "jsavvariable", "jsavedge"];
   _helpers.setElementClasses = function(element, cls) {
     var elem = element[0],
-        clsList = elem.classList;
-    var curCls = Array.prototype.slice.call(element[0].classList, 0);
-    for (var i = curCls.length; i--; ) {
-      var c = curCls[i];
-      if (JSAV_CLASS_NAMES.indexOf(c) === -1 && cls.indexOf(c) === -1) {
-        clsList.remove(c);
+        clsList,
+        curCls,
+        c, i;
+    if (elem instanceof SVGElement && typeof elem.classList === "object") {
+      clsList = elem.classList;
+      curCls = Array.prototype.slice.call(elem.classList, 0);
+      for (i = curCls.length; i--; ) {
+        c = curCls[i];
+        if (JSAV_CLASS_NAMES.indexOf(c) === -1 && cls.indexOf(c) === -1) {
+          clsList.remove(c);
+        }
       }
-    }
-    for (i = cls.length; i--; ) {
-      c = cls[i];
-      if (!clsList.contains(c)) {
-        clsList.add(c);
+      for (i = cls.length; i--; ) {
+        c = cls[i];
+        if (!clsList.contains(c)) {
+          clsList.add(c);
+        }
       }
+    } else {
+      // Fallback for SVG elements in PhantomJS
+      // PhantomJS does not use classList for SVG elements
+      clsList = element.first().attr("class").split(" ");
+      curCls = clsList.slice(0);
+      for (i = curCls.length; i--; ) {
+        c = curCls[i];
+        if (JSAV_CLASS_NAMES.indexOf(c) === -1 && cls.indexOf(c) === -1) {
+          clsList.splice(clsList.indexOf(c), 1); // remote c from clsList
+        }
+      }
+      for (i = cls.length; i--; ) {
+        c = cls[i];
+        if (clsList.indexOf(c) === -1) {
+          clsList.push(c); // add c to clsList
+        }
+      }
+      element.first().attr("class", clsList.join(" "));
     }
   };
   _helpers.elementClasses = function(element) {
-    var cls = Array.prototype.slice.call(element[0].classList, 0),
-        customCls = [];
-    for (var i = cls.length; i--; ) {
+    var elem = element[0],
+        cls,
+        customCls = [],
+        i;
+    if (elem instanceof SVGElement && typeof elem.classList === "object") {
+      cls = Array.prototype.slice.call(element[0].classList, 0);
+    } else {
+      // Fallback for SVG elements in PhantomJS
+      // PhantomJS does not use classList for SVG elements
+      cls = element.first().attr("class").split(" ");
+    }
+    for (i = cls.length; i--; ) {
       if (JSAV_CLASS_NAMES.indexOf(cls[i]) === -1) {
         customCls.push(cls[i]);
       }
