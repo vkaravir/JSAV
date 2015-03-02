@@ -311,35 +311,25 @@
 }
 .jsavcontrols span {
   display: inline-block;
-  color: transparent;
-  text-indent: 9999px;
+  color: #777;
+  font-family: 'Times New Roman';
+  font-size: 20px;
+  font-weight: bolder;
+  line-height: 45px;
   width: 45px;
   height: 45px;
   margin: 15px 40px;
-  background-color: #aaa;
-  -o-border-radius: 20px;
-  -moz-border-radius: 20px;
-  -webkit-border-radius: 20px;
-  -ms-border-radius: 20px;
-  border-radius: 20px;
-  background-repeat:no-repeat;
-  background-position:50% 50%;
+  background-color: #fff;
+  border: 1px solid #777;
+  -o-border-radius: 50%;
+  -moz-border-radius: 50%;
+  -webkit-border-radius: 50%;
+  -ms-border-radius: 50%;
+  border-radius: 50%;
   cursor: pointer;
 }
 .jsavplaying span {
   cursor: default;
-}
-.jsavcontrols .jsavbegin {
-  background-image: url(images/begin.png);
-}
-.jsavcontrols .jsavend {
-  background-image: url(images/end.png);
-}
-.jsavcontrols .jsavbackward {
-  background-image: url(images/backward.png);
-}
-.jsavcontrols .jsavforward {
-  background-image: url(images/forward.png);
 }
 /**** END STYLING THE CONTROLS ****/
 
