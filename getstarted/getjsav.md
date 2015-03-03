@@ -10,11 +10,9 @@ the linked sites for installation instructions.
 
  * [Git](http://git-scm.com/) is needed for checking the JSAV source code. We suggest you install Git, but you can get
     the code without Git (see below).
- * [Java](http://www.java.com/) is needed for building the minified version of JSAV. Using the non-minified version is
-    perfectly fine for development, so you don't necessarily need Java. If building JSAV for development, we strongly
-    suggest you install Java.
- * [Make](https://www.gnu.org/software/make/) is used for building the JSAV library from the multiple source files.
-    There is no simple way to build JSAV without installing Make.
+ * [Node.js](http://nodejs.org/) is needed in order to build JSAV.
+ * [Make](https://www.gnu.org/software/make/) and/or [Grunt](http://gruntjs.com/) is used for building the JSAV library from the multiple source files. You can choose whichever tool you like better or find easier to install.
+ * **uglify-js** is needed if you use ```make```. You can install it with ```npm install -g uglify-js```.
 
 ###Getting the code from Github
 
@@ -31,12 +29,29 @@ of the code and unzip it. Note, that this approach will make updating JSAV more 
 
 ###Building JSAV
 
-Building JSAV is relatively simple as well. Move to the ```JSAV``` directory you cloned (or unzipped), and type
+Building JSAV is relatively simple as well.
+
+#### Building with Make
+
+Move to the ```JSAV``` directory you cloned (or unzipped), and type
 
     make
 
 That should build JSAV into the ```build/``` directory. There should be two files in that directory: ```JSAV.js``` and
-the minified version ```JSAV-min.js```. If you don't have Java installed, ```make``` will throw an error and you won't
+the minified version ```JSAV-min.js```. If you don't have uglify-js installed, ```make``` will throw an error and you won't
 have the minified version. You can still use the non-minified version, though.
+
+#### Building with Grunt
+
+First, make sure you have Grunt installed. The first time you build you need to install the npm dependencies. It's as easy as typing
+
+    npm install
+
+in the ```JSAV``` directory. Once you have installed the dependencies, you can build JSAV with simply typing
+
+    grunt
+
+That should build JSAV into the ```build/``` directory. There should be two files in that directory: ```JSAV.js``` and
+the minified version ```JSAV-min.js```.
 
 The [next section](../html) will tell you what to do with those files.
