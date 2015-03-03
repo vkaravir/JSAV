@@ -344,7 +344,8 @@
     return info;
   };
   JSAV.ext.step = function(options) {
-    this.container.trigger("jsav-updaterelative");
+    var updateRelative = (options && options.updateRelative === false ? false : true);
+    if (updateRelative) { this.container.trigger("jsav-updaterelative"); }
     if (this.options.animationMode !== "none") {
       this._undo.push(new AnimStep(options)); // add new empty step to oper. stack
       if (options && this.message && options.message) {

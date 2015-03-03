@@ -410,7 +410,7 @@
     if ((undoGraders.indexOf(this.options.grader) !== -1 ) && this.jsav.backward(gradeStepFilterFunction)) {
       // if such step was found, redo it
       this.jsav.forward();
-      this.jsav.step();
+      this.jsav.step({updateRelative: false});
     } else {
       // ..if not, the first student step was incorrent and we can rewind to beginning
       this.jsav.begin();
