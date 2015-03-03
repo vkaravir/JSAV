@@ -47,6 +47,7 @@
   test("Exercise compare option (multiple structures)", function() {
     var jsav = new JSAV("emptycontainer");
     jsav.recorded();
+    jsav.SPEED = 0;
     var exer = setupExercise(jsav, {feedback: "atend"});
     // test that the grading works properly and gives 3 correct when only values are compared
     strictEqual(exer.grade().correct, 3);
