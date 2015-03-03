@@ -1,6 +1,6 @@
 RM = rm -rf
 LIB = lib
-MINIMIZE = java -jar tools/yuicompressor-2.4.8.jar --nomunge --preserve-semi -o $(TARGET)/JSAV-min.js  $(TARGET)/JSAV.js
+MINIMIZE = uglifyjs $(TARGET)/JSAV.js --comments '/^!|@preserve|@license|@cc_on/i' >$(TARGET)/JSAV-min.js
 CAT = cat
 SRC = src
 TARGET = build
