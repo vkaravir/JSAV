@@ -1,4 +1,4 @@
-#JSAV
+#JSAV ![Travis CI Build status](https://travis-ci.org/vkaravir/JSAV.svg?branch=master)
 This is the JSAV development library for creating Algorithm
 Visualizations in JavaScript.
 
