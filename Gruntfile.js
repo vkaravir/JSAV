@@ -54,6 +54,9 @@ module.exports = function(grunt) {
         }
       }
     },
+    qunit: {
+      files: ['test/index.html']
+    },
     jshint: { // for linting the JS
       sources: ['Gruntfile.js', 'src/*.js'],
       tests: ['test/**/*.js']
@@ -78,5 +81,6 @@ module.exports = function(grunt) {
 
   grunt.registerTask('build', ['exec', 'concat', 'uglify']);
   grunt.registerTask('lint', ['jshint', 'csslint']);
+  grunt.registerTask('test', ['qunit']);
   grunt.registerTask('default', ['build']);
 };
