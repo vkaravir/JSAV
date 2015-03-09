@@ -192,12 +192,11 @@
     //  - dialogBase
     //  - dialogRootElement
     options = $.extend({}, {modal: true, closeOnClick: true}, options);
-    var d = {
-      },
-      modal = options.modal,
-      $dialog = $(options.dialogBase || dialogBase),
-      i, l, attr,
-      attrOptions = ["width", "height", "minWidth", "minHeight", "maxWidth", "maxHeight"];
+    var d = {},
+        modal = options.modal,
+        $dialog = $(options.dialogBase || dialogBase),
+        i, l, attr,
+        attrOptions = ["width", "height", "minWidth", "minHeight", "maxWidth", "maxHeight"];
     if (typeof html === "string") {
       $dialog.html(html);
     } else if ($.isFunction(html)) {
@@ -206,7 +205,7 @@
       $dialog.append(html); // jquery or dom element
     }
     if ("title" in options) {
-      $dialog.prepend("<h2>" + options.title + "<a href='#' class='jsavdialogclose'>X</a></h2>");
+      $dialog.prepend("<h2>" + options.title + "<a href='#' class='jsavdialogclose'>&times;</a></h2>");
     }
     if ("dialogClass" in options) {
       $dialog.addClass(options.dialogClass);
@@ -242,7 +241,6 @@
     };
     if (modal) {
       $modalElem = $modalElem || $('<div class="jsavmodal" />');
-      $modalElem.css({width: docWidth, height: docHeight});
       $modalElem.appendTo($("body"));
       if (options.closeOnClick) {
         $modalElem.click(close);
@@ -255,7 +253,7 @@
       $dialog.append(closeButton);
     }
 
-    var $dial = $dialog.appendTo(options.dialogRootElement || $("body")).add($modalElem);
+    var $dial = $dialog.appendTo(options.dialogRootElement || $("body"));
     $dial.draggable();
     var center = function() {
       $dialog.css({
