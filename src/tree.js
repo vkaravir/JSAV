@@ -766,7 +766,7 @@
         return 0;
       }
       var containerWidth = $(tree.jsav.canvas).width();
-      return (containerWidth - width)/2 - tree.position().left;
+      return Math.max(0, (containerWidth - width)/2) - tree.position().left;
     };
 
     var treeDims = { width: maxX - minX, height: maxY - minY },
