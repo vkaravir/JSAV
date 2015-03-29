@@ -354,7 +354,7 @@
     }
     return this;
   };
-  JSAV.ext.clear = function(options) {
+  JSAV.ext.clearAnimation = function(options) {
     var opts = $.extend({undo: true, redo: true}, options);
     if (opts.undo) {
       this._undo = [];
@@ -365,7 +365,7 @@
   };
   JSAV.ext.displayInit = function() {
     this.container.trigger("jsav-updaterelative");
-    this.clear({redo: false});
+    this.clearAnimation({redo: false});
     return this;
   };
   /** Jumps to step number step. */

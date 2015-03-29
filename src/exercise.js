@@ -381,7 +381,7 @@
     this.modelDialog.show();
   };
   exerproto.reset = function() {
-    this.jsav.clear();
+    this.jsav.clearAnimation();
     this.score = {total: 0, correct: 0, undo: 0, fix: 0, student: 0};
     this._undoneSteps = [];
     this.jsav.RECORD = true;

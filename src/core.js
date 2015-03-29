@@ -33,6 +33,11 @@
     }
     return id;
   };
+  jsavproto.clear = function() {
+    // clear the container and find the new ref to canvas
+    this.container.html(this._initialHTML);
+    this.canvas = this.container.find(".jsavcanvas");
+  };
   JSAV._types = {}; // for exposing types of JSAV for customization
   JSAV.ext = {}; // for extensions
   JSAV.init = function(f) { // for initialization functions
@@ -60,6 +65,8 @@
     }
 
     var initialHTML = this.container.clone().wrap("<p/>").parent().html();
+    this._initialHTML = initialHTML;
+
     this.container.addClass("jsavcontainer");
     this.canvas = this.container.find(".jsavcanvas");
     if (this.canvas.size() === 0) {
