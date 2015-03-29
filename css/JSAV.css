@@ -76,6 +76,7 @@
   min-height: 50px;
   padding: 0;
   clear:both;
+  white-space: nowrap;
   -webkit-transform-style: preserve-3d;
 }
 .jsavarray * {
