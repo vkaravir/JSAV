@@ -64,8 +64,9 @@
       this.container = $(this.options.element);
     }
 
+    // initialHTML will be logged as jsav-init, this._initialHTML used in clear
     var initialHTML = this.container.clone().wrap("<p/>").parent().html();
-    this._initialHTML = initialHTML;
+    this._initialHTML = this.container.html();
 
     this.container.addClass("jsavcontainer");
     this.canvas = this.container.find(".jsavcanvas");
