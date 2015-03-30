@@ -34,6 +34,11 @@
       this.element.addClass("jsavautoresize");
     }
     JSAV.utils._helpers.handlePosition(this);
+    this.constructors = $.extend({
+      Tree: Tree,
+      Node: TreeNode,
+      Edge: Edge
+    }, this.options.constructors);
     this.rootnode = this.newNode("", null);
     this.element.attr({"data-root": this.rootnode.id(), "id": this.id()});
     this.rootnode.element.attr("data-child-role", "root");
@@ -52,7 +57,7 @@
     var opts = $.extend({hide: true}, options);
     if (typeof newRoot === "undefined") {
       return this.rootnode;
-    } else if (newRoot instanceof TreeNode) {
+    } else if (newRoot instanceof this.constructors.Node) {
       var oldroot = this.rootnode;
       this._setrootnode(newRoot, options);
       this.rootnode.edgeToParent(null);
@@ -71,7 +76,7 @@
     this.element.remove();
   };
   treeproto.newNode = function(value, parent, options) {
-    return new TreeNode(this, value, parent, options);
+    return new this.constructors.Node(this, value, parent, options);
   };
   treeproto.height = function() {
     return this.rootnode.height();
@@ -81,7 +86,7 @@
     return this.jsav.ds.layout.tree[layoutAlg](this, options);
   };
   treeproto.equals = function(otherTree, options) {
-    if (!otherTree instanceof Tree) {
+    if (!otherTree instanceof this.constructors.Tree) {
       return false;
     }
     return this.root().equals(otherTree.root(), options);
@@ -173,6 +178,7 @@
     this.container = container;
     this.parentnode = parent;
     this.options = $.extend(true, {visible: true}, parent?parent.options:{}, options);
+    this.constructors = $.extend({}, container.constructors, this.options.constructors);
     var el = this.options.nodeelement || $("<div><span class='jsavvalue'>" + this._valstring(value) + "</span></div>"),
       valtype = typeof(value);
     if (valtype === "object") { valtype = "string"; }
@@ -190,7 +196,7 @@
 
     JSAV.utils._helpers.handleVisibility(this, this.options);
     if (parent) {
-      this._edgetoparent = new Edge(this.jsav, this, parent);
+      this._edgetoparent = new this.constructors.Edge(this.jsav, this, parent);
       if (this.options.edgeLabel) {
         this._edgetoparent.label(this.options.edgeLabel);
       }
@@ -219,7 +225,7 @@
       return this.parentnode;
     } else {
       if (!this._edgetoparent) {
-        this._setEdgeToParent(new Edge(this.jsav, this, newParent, options));
+        this._setEdgeToParent(new this.constructors.Edge(this.jsav, this, newParent, options));
       }
       this._setparent(newParent, options);
 
@@ -309,7 +315,7 @@
     if (typeof node === "undefined") {
       return this.childnodes[pos];
     } else {
-      if (node !== null && !(node instanceof TreeNode)) {
+      if (node !== null && !(node instanceof this.constructors.Node)) {
         node = this.container.newNode(node, this, options);
       }
       return setchildhelper(this, pos, node, options);
@@ -422,14 +428,16 @@
   
   /// Binary Tree implementation
   var BinaryTree = function(jsav, options) {
-    this.init(jsav, options);
+    var opts = $.extend({constructors: {
+      Tree: BinaryTree,
+      Node: BinaryTreeNode,
+      Edge: Edge
+    }}, options);
+    this.init(jsav, opts);
     this.element.addClass("jsavbinarytree");
   };
   JSAV.utils.extend(BinaryTree, Tree);
   var bintreeproto = BinaryTree.prototype;
-  bintreeproto.newNode = function(value, parent, options) {
-    return new BinaryTreeNode(this, value, parent, options);
-  };
   bintreeproto.state = function(newState) {
     if (typeof newState !== "undefined") {
       var tree = this;
@@ -466,7 +474,7 @@
           state.right = nodeState(node.right());
         }
         return state;
-      }
+      };
       return nodeState(this.root());
     }
   };
@@ -517,7 +525,7 @@
           }
         }
       } else { // create a new node and set the child
-        if (!(node instanceof BinaryTreeNode)) {
+        if (!(node instanceof self.constructors.Node)) {
           // if there is a child node and value is number or string, just change the value of the node
           if (child && (typeof node === "number" || typeof node === "string")) {
             return child.value(node, opts);
@@ -801,13 +809,13 @@
     // return the dimensions of the tree
     return $.extend({ top: tree.position().top }, treeDims);
   }
-  
+
   var layouts = JSAV.ext.ds.layout;
   layouts.tree = {
     "_default": treeLayout
   };
 
-var TreeContours = function(left, right, height, data) {
+  var TreeContours = function(left, right, height, data) {
     this.cHeight = height;
     this.leftCDims = [];
     this.leftCDims[this.leftCDims.length] = {width: -left, height: height};
@@ -816,150 +824,150 @@ var TreeContours = function(left, right, height, data) {
     this.rightCDims[this.rightCDims.length] = {width: -right, height: height};
     this.cRightExtent = right;
   };
-TreeContours.prototype = {
-  addOnTop: function(left, right, height, addHeight, originTrans) {
-    var lCD = this.leftCDims,
-        rCD = this.rightCDims;
-    lCD[lCD.length-1].height += addHeight;
-    lCD[lCD.length-1].width += originTrans + left;
-    rCD[rCD.length-1].height += addHeight;
-    rCD[rCD.length-1].width += originTrans + right;
+  TreeContours.prototype = {
+    addOnTop: function(left, right, height, addHeight, originTrans) {
+      var lCD = this.leftCDims,
+          rCD = this.rightCDims;
+      lCD[lCD.length-1].height += addHeight;
+      lCD[lCD.length-1].width += originTrans + left;
+      rCD[rCD.length-1].height += addHeight;
+      rCD[rCD.length-1].width += originTrans + right;
 
-    lCD.push({width: -left, height: height});
-    rCD.push({width: -right, height: height});
-    this.cHeight += height + addHeight;
-    this.cLeftExtent -= originTrans;
-    this.cRightExtent -= originTrans;
-    if (left < this.cLeftExtent) {
-      this.cLeftExtent = left;
-    }
-    if (right > this.cRightExtent) {
-      this.cRightExtent = right;
-    }
-  },
-  joinWith: function(other, hDist) {
-    var thisCDisp, otherCDisp, middle;
-    if (other.cHeight > this.cHeight) {
-      var newLeftC = [];
-      var otherLeft = other.cHeight - this.cHeight;
-      thisCDisp = 0;
-      otherCDisp = 0;
-      $.each(other.leftCDims, function (index, item) {
-        if (otherLeft > 0 ) {
-          var dim = {width: item.width, height: item.height};
-          otherLeft -= item.height;
-          if (otherLeft < 0) {
-            dim.height += otherLeft;
+      lCD.push({width: -left, height: height});
+      rCD.push({width: -right, height: height});
+      this.cHeight += height + addHeight;
+      this.cLeftExtent -= originTrans;
+      this.cRightExtent -= originTrans;
+      if (left < this.cLeftExtent) {
+        this.cLeftExtent = left;
+      }
+      if (right > this.cRightExtent) {
+        this.cRightExtent = right;
+      }
+    },
+    joinWith: function(other, hDist) {
+      var thisCDisp, otherCDisp, middle;
+      if (other.cHeight > this.cHeight) {
+        var newLeftC = [];
+        var otherLeft = other.cHeight - this.cHeight;
+        thisCDisp = 0;
+        otherCDisp = 0;
+        $.each(other.leftCDims, function (index, item) {
+          if (otherLeft > 0 ) {
+            var dim = {width: item.width, height: item.height};
+            otherLeft -= item.height;
+            if (otherLeft < 0) {
+              dim.height += otherLeft;
+            }
+            newLeftC[newLeftC.length] = dim;
+          } else {
+            otherCDisp += item.width;
           }
-          newLeftC[newLeftC.length] = dim;
-        } else {
-          otherCDisp += item.width;
-        }
-      });
-      middle = newLeftC[newLeftC.length - 1];
+        });
+        middle = newLeftC[newLeftC.length - 1];
 
-      $.each(this.leftCDims, function(index, item) {
-        thisCDisp += item.width;
-        newLeftC[newLeftC.length] = {width: item.width, height: item.height};
-      });
-               
-      middle.width -= thisCDisp - otherCDisp;
-      middle.width -= hDist;
-      this.leftCDims = newLeftC;
-    }
-    if (other.cHeight >= this.cHeight) {
-      this.rightCDims = other.rightCDims.slice();
-    } else {
-      var thisLeft = this.cHeight - other.cHeight;
-      var nextIndex = 0;
-
-      thisCDisp = 0;
-      otherCDisp = 0;
-      $.each(this.rightCDims, function (index, item) {
-        if (thisLeft > 0 ) {
-          nextIndex++;
-          thisLeft -= item.height;
-          if (thisLeft < 0) {
-            item.height += thisLeft;
-          }
-        } else {
+        $.each(this.leftCDims, function(index, item) {
           thisCDisp += item.width;
-        }
-      });
-      for (var i = nextIndex + 1, l=this.rightCDims.length; i < l; i++) {
-        this.rightCDims[i] = null;
+          newLeftC[newLeftC.length] = {width: item.width, height: item.height};
+        });
+
+        middle.width -= thisCDisp - otherCDisp;
+        middle.width -= hDist;
+        this.leftCDims = newLeftC;
       }
-      this.rightCDims = $.map(this.rightCDims, function(item) {return item;});
-      middle = this.rightCDims[nextIndex];
-
-      for (i = 0, l=other.rightCDims.length; i < l; i++) {
-        var item = other.rightCDims[i];
-        otherCDisp += item.width;
-        this.rightCDims[this.rightCDims.length] = {width: item.width, height: item.height};
-      }
-      middle.width += thisCDisp - otherCDisp;
-      middle.width += hDist;
-    }
-    this.rightCDims[this.rightCDims.length-1].width -= hDist;
-
-    if (other.cHeight > this.cHeight) {
-      this.cHeight = other.cHeight;
-    }
-    if (other.cLeftExtent + hDist < this.cLeftExtent) {
-      this.cLeftExtent = other.cLeftExtent + hDist;
-    }
-    if (other.cRightExtent + hDist > this.cRightExtent) {
-      this.cRightExtent = other.cRightExtent + hDist;
-    }
-  },
-  calcTranslation: function(other, wantedDist) {
-    var lc = this.rightCDims,
-        rc = other.leftCDims,
-        li = lc.length - 1,
-        ri = rc.length - 1,
-        lCumD = {width: 0, height: 0},
-        rCumD = {width: 0, height: 0},
-        displacement = wantedDist,
-        ld, rd;
-
-    while (true) {
-      if (li < 0) {
-        if (ri < 0 || rCumD.height >= lCumD.height) {
-          break;
-        }
-        rd = rc[ri];
-        rCumD.height += rd.height;
-        rCumD.width += rd.width;
-        ri--;
-      } else if (ri < 0) {
-        if (lCumD.height >= rCumD.height) {
-          break;
-        }
-        ld = lc[li];
-        lCumD.height += ld.height;
-        lCumD.width += ld.width;
-        li--;
+      if (other.cHeight >= this.cHeight) {
+        this.rightCDims = other.rightCDims.slice();
       } else {
-        ld = lc[li];
-        rd = rc[ri];
-        var leftNewHeight = lCumD.height,
-            rightNewHeight = rCumD.height;
-        if (leftNewHeight <= rightNewHeight) {
-          lCumD.height += ld.height;
-          lCumD.width += ld.width;
-          li--;
+        var thisLeft = this.cHeight - other.cHeight;
+        var nextIndex = 0;
+
+        thisCDisp = 0;
+        otherCDisp = 0;
+        $.each(this.rightCDims, function (index, item) {
+          if (thisLeft > 0 ) {
+            nextIndex++;
+            thisLeft -= item.height;
+            if (thisLeft < 0) {
+              item.height += thisLeft;
+            }
+          } else {
+            thisCDisp += item.width;
+          }
+        });
+        for (var i = nextIndex + 1, l=this.rightCDims.length; i < l; i++) {
+          this.rightCDims[i] = null;
         }
-        if (rightNewHeight <= leftNewHeight) {
+        this.rightCDims = $.map(this.rightCDims, function(item) {return item;});
+        middle = this.rightCDims[nextIndex];
+
+        for (i = 0, l=other.rightCDims.length; i < l; i++) {
+          var item = other.rightCDims[i];
+          otherCDisp += item.width;
+          this.rightCDims[this.rightCDims.length] = {width: item.width, height: item.height};
+        }
+        middle.width += thisCDisp - otherCDisp;
+        middle.width += hDist;
+      }
+      this.rightCDims[this.rightCDims.length-1].width -= hDist;
+
+      if (other.cHeight > this.cHeight) {
+        this.cHeight = other.cHeight;
+      }
+      if (other.cLeftExtent + hDist < this.cLeftExtent) {
+        this.cLeftExtent = other.cLeftExtent + hDist;
+      }
+      if (other.cRightExtent + hDist > this.cRightExtent) {
+        this.cRightExtent = other.cRightExtent + hDist;
+      }
+    },
+    calcTranslation: function(other, wantedDist) {
+      var lc = this.rightCDims,
+          rc = other.leftCDims,
+          li = lc.length - 1,
+          ri = rc.length - 1,
+          lCumD = {width: 0, height: 0},
+          rCumD = {width: 0, height: 0},
+          displacement = wantedDist,
+          ld, rd;
+
+      while (true) {
+        if (li < 0) {
+          if (ri < 0 || rCumD.height >= lCumD.height) {
+            break;
+          }
+          rd = rc[ri];
           rCumD.height += rd.height;
           rCumD.width += rd.width;
           ri--;
+        } else if (ri < 0) {
+          if (lCumD.height >= rCumD.height) {
+            break;
+          }
+          ld = lc[li];
+          lCumD.height += ld.height;
+          lCumD.width += ld.width;
+          li--;
+        } else {
+          ld = lc[li];
+          rd = rc[ri];
+          var leftNewHeight = lCumD.height,
+              rightNewHeight = rCumD.height;
+          if (leftNewHeight <= rightNewHeight) {
+            lCumD.height += ld.height;
+            lCumD.width += ld.width;
+            li--;
+          }
+          if (rightNewHeight <= leftNewHeight) {
+            rCumD.height += rd.height;
+            rCumD.width += rd.width;
+            ri--;
+          }
+        }
+        if (displacement < rCumD.width - lCumD.width + wantedDist) {
+          displacement = rCumD.width - lCumD.width + wantedDist;
         }
       }
-      if (displacement < rCumD.width - lCumD.width + wantedDist) {
-        displacement = rCumD.width - lCumD.width + wantedDist;
-      }
+      return displacement;
     }
-    return displacement;
-  }
-};
+  };
 }(jQuery));
