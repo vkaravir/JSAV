@@ -64,7 +64,7 @@
       this.container = $(this.options.element);
     }
 
-    var initialHTML = this.container.clone().wrap("<p/>").parent().html();
+    var initialHTML = this.container.html();
     this._initialHTML = initialHTML;
 
     this.container.addClass("jsavcontainer");
