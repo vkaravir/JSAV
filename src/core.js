@@ -136,8 +136,8 @@
               itemPos = $item.position();
           // ignore SVG, since it will be handled differently since it's sized 100%x100%
           if (item.nodeName.toLowerCase() !== "svg") {
-            maxTop = Math.max(maxTop, itemPos.top + $item.innerHeight());
-            maxLeft = Math.max(maxLeft, itemPos.left + $item.innerWidth());
+            maxTop = Math.max(maxTop, itemPos.top + $item.outerHeight(true));
+            maxLeft = Math.max(maxLeft, itemPos.left + $item.outerWidth(true));
           }
         });
         if (that.svg) { // handling of SVG
