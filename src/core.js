@@ -55,11 +55,15 @@
       this.container = arguments[0];
     }
 
+    var defaultOptions = $.extend({
+      autoresize: true,
+      scroll: true
+    }, window.JSAV_OPTIONS);
     // if the container was set based on the first argument, options are the second arg
     if (this.container) {
-      this.options = $.extend({autoresize: true}, window.JSAV_OPTIONS, arguments[1]);
+      this.options = $.extend(defaultOptions, arguments[1]);
     } else { // otherwise assume the first argument is options (if exists)
-      this.options = $.extend({autoresize: true}, window.JSAV_OPTIONS, arguments[0]);
+      this.options = $.extend(defaultOptions, arguments[0]);
       // set the element option as the container
       this.container = $(this.options.element);
     }
@@ -98,18 +102,18 @@
     for (var prop in add) {
       if (add.hasOwnProperty(prop) && !(prop in con)) {
         switch (typeof add[prop]) {
-          case "function":
-            (function (f) {
-              con[prop] = con === jsav ? f : function () { return f.apply(jsav, arguments); };
-            }(add[prop]));
-            break;
-          case "object":
-            con[prop] = con[prop] || {};
-            extensions(jsav, con[prop], add[prop]);
-            break;
-          default:
-            con[prop] = add[prop];
-            break;
+        case "function":
+          (function (f) {
+            con[prop] = con === jsav ? f : function () { return f.apply(jsav, arguments); };
+          }(add[prop]));
+          break;
+        case "object":
+          con[prop] = con[prop] || {};
+          extensions(jsav, con[prop], add[prop]);
+          break;
+        default:
+          con[prop] = add[prop];
+          break;
         }
       }
     }
@@ -146,6 +150,11 @@
             maxLeft = Math.max(maxLeft, bbox.x2 + strokeWidth);
             curr = curr.next;
           }
+        }
+        // limit minWidth to parent width if scroll is set to true
+        if (that.options.scroll) {
+          var parentWidth = that.canvas.parent().width();
+          maxLeft = Math.min(maxLeft, parentWidth);
         }
         // set minheight and minwidth on the jsavcanvas element
         that.canvas.css({"minHeight": maxTop, "minWidth": maxLeft});

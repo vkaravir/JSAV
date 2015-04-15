@@ -773,8 +773,9 @@
       if (opts.hasOwnProperty("center") && !opts.center) {
         return 0;
       }
-      var containerWidth = $(tree.jsav.canvas).width();
-      return Math.max(0, (containerWidth - width)/2) - tree.position().left;
+      var containerWidth = $(tree.jsav.canvas).width(),
+          treeLeft = parseInt(tree.element.css("left"), 10) || 0;
+      return Math.max(0, (containerWidth - width)/2) - treeLeft;
     };
 
     var treeDims = { width: maxX - minX, height: maxY - minY },

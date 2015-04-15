@@ -16,6 +16,7 @@
 .jsavcanvas {
   position: relative;
   background-color: inherit;
+  overflow-x: auto;
 }
 
 .jsavnode {
