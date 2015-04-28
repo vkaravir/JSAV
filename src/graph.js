@@ -39,7 +39,7 @@
   };
   // a helper function to sort an array of nodes based on the node value
   Graph._nodeSortFunction = function(a, b) {
-    return a.value() < b.value();
+    return a.value() - b.value();
   };
 
   JSAV.utils.extend(Graph, JSAV._types.ds.JSAVDataStructure);
