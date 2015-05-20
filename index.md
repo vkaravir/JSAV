@@ -77,7 +77,6 @@ Articles discussing JSAV use:
 
 ### Presentations
 
-<iframe src="http://www.slideshare.net/slideshow/embed_code/24154049" width="427" height="356" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" style="border:1px solid #CCC; border-width:1px 1px 0; margin-bottom:5px; max-width: 100%;" allowfullscreen> </iframe>
-
+<iframe src="//www.slideshare.net/slideshow/embed_code/key/MlzHrOmGWh8jNR" width="425" height="355" frameborder="0" marginwidth="0" marginheight="0" scrolling="no" style="border:1px solid #CCC; border-width:1px; margin-bottom:5px; max-width: 100%;" allowfullscreen> </iframe>
 ### JSAV in use
 The [OpenDSA project](http://algoviz.org/OpenDSA/) uses JSAV in most of its content. You can, for example, take a look at the [sample book](http://algoviz.org/OpenDSA/Books/OpenDSA/html/).

@@ -20,7 +20,7 @@ paginate:         5
 baseurl:          ''
 
 # Custom vars
-version:          0.8dev
+version:          1.0.x
 
 github:
   repo:           https://github.com/vkaravir/JSAV/
