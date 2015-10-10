@@ -262,7 +262,7 @@
       valtype = typeof(value);
     if (valtype === "object") { valtype = "string"; }
     this.element = el;
-    el.addClass("jsavnode jsavlistnode")
+    el.addClass("jsavnode jsavlistnode" + (this._next ? '' : ' jsavnonext'))
         .attr({"data-value": value, "id": this.id(), "data-value-type": valtype })
         .data("node", this);
     if ("first" in options && options.first) {
@@ -300,6 +300,11 @@
     }
     if (options && options.edgeLabel) {
       this._edgetonext.label(options.edgeLabel);
+    }
+    if (!oldNext && newNext) {
+      this.element.removeClass('jsavnonext');
+    } else if (oldNext && !newNext) {
+      this.element.addClass('jsavnonext');
     }
     return [oldNext];
   });

@@ -575,6 +575,14 @@ a.jsavsettings:hover {
   border-top-right-radius: 3px;
   border-bottom-right-radius: 3px;
 }
+.jsavhorizontallist .jsavnonext .jsavpointerarea:after {
+    display: inline-block;
+    content: "";
+    height: 104%;
+    width: 1px;
+    background-color: #000;
+    transform: rotate(12deg);
+}
 .jsavlist .jsavedge {
   stroke-width: 2;
 }
