@@ -1,18 +1,20 @@
 /**
-* Module that contains utility functions.
-* Depends on core.js
-*/
+ * Module that contains utility functions.
+ * Depends on core.js
+ */
 /*global JSAV, jQuery */
 (function($) {
   "use strict";
-  if (typeof JSAV === "undefined") { return; }
+  if (typeof JSAV === "undefined") {
+    return;
+  }
 
   // Test if range type is supported and add to jQuery.support
   var inp = $("<input type='range' />");
   $.support.inputTypeRange = (inp.prop("type") === "range");
 
   var ObjCommons = function() {},
-      objproto = ObjCommons.prototype;
+    objproto = ObjCommons.prototype;
   // gets or sets the id of the object
   objproto.id = function(newId) {
     if (newId) {
@@ -29,10 +31,15 @@
   };
   objproto.bounds = function(recalculate, options) {
     if (recalculate && $.isFunction(this.layout)) {
-      return this.layout($.extend({boundsOnly: true}, options));
+      return this.layout($.extend({
+        boundsOnly: true
+      }, options));
     } else {
       var pos = this.position();
-      return $.extend({width: this.element.width(), height: this.element.height()}, pos);
+      return $.extend({
+        width: this.element.width(),
+        height: this.element.height()
+      }, pos);
     }
   };
   objproto.position = function() {
@@ -48,12 +55,23 @@
     }
   };
   objproto._animateTranslate = JSAV.anim(function(dx, dy, options) {
-    var leftie = this.element.css("left")==="auto"?dx:"+="+dx,
-        toppie = this.element.css("top")==="auto"?dy:"+="+dy;
-    this.element.css({left: leftie + "px", top: toppie + "px"});
+    var leftie = this.element.css("left") === "auto" ? dx : "+=" + dx,
+      toppie = this.element.css("top") === "auto" ? dy : "+=" + dy;
+    this.element.css({
+      left: leftie + "px",
+      top: toppie + "px"
+    });
     if (this.jsav._shouldAnimate()) {
-      this.element.css({x: -dx, y: -dy, z: 1});
-      this.jsav.effects.transition(this.element, {x: 0, y: 0, z: 1}, options);
+      this.element.css({
+        x: -dx,
+        y: -dy,
+        z: 1
+      });
+      this.jsav.effects.transition(this.element, {
+        x: 0,
+        y: 0,
+        z: 1
+      }, options);
     }
     return [-dx, -dy, options];
   });
@@ -72,8 +90,8 @@
   };
   objproto.moveTo = function(newLeft, newTop, options) {
     var curPos = this.element.position(),
-        dx = newLeft - curPos.left,
-        dy = newTop - curPos.top;
+      dx = newLeft - curPos.left,
+      dy = newTop - curPos.top;
     var val = this._animateTranslate(dx, dy, options);
     if (this._moveListeners) {
       this.element.trigger("jsav-object-move", [dx, dy]);
@@ -81,7 +99,9 @@
   };
   objproto._registerMoveListener = function(callback) {
     // if callback isn't a function, do nothing
-    if (!$.isFunction(callback)) { return; }
+    if (!$.isFunction(callback)) {
+      return;
+    }
     // register the callback as an event handler for jsav-move-object
     this._moveListeners = (this._moveListeners || 0) + 1;
     this.element.on("jsav-object-move", callback);
@@ -111,7 +131,7 @@
       pair;
     if (params) {
       params = params.slice(1).split('&'); // get rid of ?
-      for (i=params.length; i--; ) {
+      for (i = params.length; i--;) {
         pair = params[i].split('='); // split to name and value
         vars[pair[0]] = decodeURIComponent(pair[1]); // decode URI
         if (name && pair[0] === name) {
@@ -119,24 +139,26 @@
         }
       }
     }
-    if (name) { return; } // name was passed but param was not found, return undefined
+    if (name) {
+      return;
+    } // name was passed but param was not found, return undefined
     return vars;
   };
   /* from raphaeljs */
   u.createUUID = function() {
     // http://www.ietf.org/rfc/rfc4122.txt
     var s = [],
-        i = 0;
+      i = 0;
     for (; i < 32; i++) {
       s[i] = (~~(Math.random() * 16)).toString(16);
     }
-    s[12] = 4;  // bits 12-15 of the time_hi_and_version field to 0010
-    s[16] = ((s[16] & 3) | 8).toString(16);  // bits 6-7 of the clock_seq_hi_and_reserved to 01
+    s[12] = 4; // bits 12-15 of the time_hi_and_version field to 0010
+    s[16] = ((s[16] & 3) | 8).toString(16); // bits 6-7 of the clock_seq_hi_and_reserved to 01
     return "jsav-" + s.join("");
   };
 
   /** Returns an iterable version of the passed array that has functions .next() and
-    * .hasNext(). Note, that the array is a clone of the original array! */
+   * .hasNext(). Note, that the array is a clone of the original array! */
   u.iterable = function(array) {
     var i = 0,
       array_clone = array.slice(0);
@@ -154,7 +176,9 @@
 
   /** Returns true if the passed object is a graphical primitive, false otherwise. */
   u.isGraphicalPrimitive = function(jsavobj) {
-    if (!jsavobj) { return false; }
+    if (!jsavobj) {
+      return false;
+    }
     return !!jsavobj.rObj;
   };
 
@@ -176,11 +200,11 @@
       $("body").trigger("jsav-log-event", [eventData]);
     }
   };
-  
+
   var dialogBase = '<div class="jsavdialog"></div>',
     $modalElem = null;
-  
-  u.dialog = function(html, options) {
+
+  u.dialog = function(html, options, event) {
     // options supported :
     //  - modal (default true)
     //  - width (and min/maxWidth)
@@ -191,12 +215,15 @@
     //  - closeCallback
     //  - dialogBase
     //  - dialogRootElement
-    options = $.extend({}, {modal: true, closeOnClick: true}, options);
+    options = $.extend({}, {
+      modal: true,
+      closeOnClick: true
+    }, options);
     var d = {},
-        modal = options.modal,
-        $dialog = $(options.dialogBase || dialogBase),
-        i, l, attr,
-        attrOptions = ["width", "height", "minWidth", "minHeight", "maxWidth", "maxHeight"];
+      modal = options.modal,
+      $dialog = $(options.dialogBase || dialogBase),
+      i, l, attr,
+      attrOptions = ["width", "height", "minWidth", "minHeight", "maxWidth", "maxHeight"];
     if (typeof html === "string") {
       $dialog.html(html);
     } else if ($.isFunction(html)) {
@@ -210,7 +237,7 @@
     if ("dialogClass" in options) {
       $dialog.addClass(options.dialogClass);
     }
-    for (i = 0, l = attrOptions.length; i < l; i++ ) {
+    for (i = 0, l = attrOptions.length; i < l; i++) {
       attr = attrOptions[i];
       if (options[attr] !== undefined) {
         $dialog.css(attr, options[attr]);
@@ -225,7 +252,7 @@
       scrollLeft = $doc.scrollLeft(),
       scrollTop = $doc.scrollTop();
     if (!("width" in options)) {
-      $dialog.css("width", Math.max(500, winWidth*0.7)); // min width 500px, default 70% of window
+      $dialog.css("width", Math.max(500, winWidth * 0.7)); // min width 500px, default 70% of window
     }
     var close = function(e) {
       if (e) { // if used as an event handler, prevent default behavior
@@ -255,21 +282,37 @@
 
     var $dial = $dialog.appendTo(options.dialogRootElement || $("body"));
     $dial.draggable();
-    var center = function() {
-      $dialog.css({
-        top: Math.max(scrollTop + (winHeight - $dialog.outerHeight())/2, 0),
-        left: scrollLeft + (winWidth - $dialog.outerWidth())/2
-      });
+    var event = event || false;
+    var center = function(event) {
+      if (event) {
+        var $target = $(event.target);
+        var pos = $target.offset();
+        var eWidth = $target.outerWidth();
+        var mWidth = $dialog.outerWidth();
+        var left = (pos.left + eWidth - mWidth) + "px";
+        var top = 3 + pos.top + "px";
+        $dialog.css({
+          position: 'absolute',
+          zIndex: 5000,
+          left: left,
+          top: top
+        });
+      } else {
+        $dialog.css({
+          top: Math.max(scrollTop + (winHeight - $dialog.outerHeight()) / 2, 0),
+          left: scrollLeft + (winWidth - $dialog.outerWidth()) / 2
+        });
+      }
     };
-    center();
+    center(event);
     $dial.show = function() {
-      center();
+      center(event);
       $dial.fadeIn();
     };
     $dial.close = close;
     return $dial;
   };
-  
+
   u.value2type = function(val, valtype) {
     if (valtype === "number") {
       return Number(val);
@@ -284,37 +327,51 @@
       return val;
     }
   };
-  
-  var dummyTestFunction = function(dataArr) { return true; };
+
+  var dummyTestFunction = function(dataArr) {
+    return true;
+  };
   u.rand = {
     random: Math.random,
     numKey: function(min, max) {
-      return Math.floor(this.random()*(max-min) + min);
+      return Math.floor(this.random() * (max - min) + min);
     },
     numKeys: function(min, max, num, options) {
-      var opts = $.extend(true, {sorted: false, test: dummyTestFunction,
-                                tries: 10}, options);
-      var keys, tries = opts.tries, size = num;
+      var opts = $.extend(true, {
+        sorted: false,
+        test: dummyTestFunction,
+        tries: 10
+      }, options);
+      var keys, tries = opts.tries,
+        size = num;
       do {
         keys = [];
-        for (size = num; size--; ) {
+        for (size = num; size--;) {
           keys.push(this.numKey(min, max));
         }
       } while (tries-- && !opts.test(keys));
-      if (opts.sorted) { keys.sort(opts.sortfunc || function(a, b) {return a - b;}); }
+      if (opts.sorted) {
+        keys.sort(opts.sortfunc || function(a, b) {
+          return a - b;
+        });
+      }
       return keys;
     },
     /** returns an array of num random items from given array collection */
     sample: function(collection, num, options) {
-      var opts = $.extend(true, {test: dummyTestFunction,
-                                 tries: 10}, options);
+      var opts = $.extend(true, {
+        test: dummyTestFunction,
+        tries: 10
+      }, options);
       var min = 0,
         max = collection.length,
         result = [],
         dupl,
         tmp, rnd,
         tries = opts.tries;
-      if (max < num || num < 0) { return undefined; }
+      if (max < num || num < 0) {
+        return undefined;
+      }
       do {
         dupl = collection.slice(0);
 
@@ -368,10 +425,10 @@
    *      fi: {message: "Moi!"}
    *    }
    */
-  u.getInterpreter = function (langJSON, selectedLanguage) {
+  u.getInterpreter = function(langJSON, selectedLanguage) {
     var trans;
 
-    // get the translation from the given location or object 
+    // get the translation from the given location or object
     if (typeof langJSON === "string") {
       // assume langJSON is a url
       if (langJSON.indexOf("{lang}") !== -1) {
@@ -383,7 +440,7 @@
         url: langJSON,
         async: false,
         dataType: "json",
-        success: function (data) {
+        success: function(data) {
           if (selectedLanguage) {
             trans = data[selectedLanguage];
           } else {
@@ -404,13 +461,13 @@
     // return a dummy function
     if (typeof trans !== "object") {
       console.warn("Language not found (" + selectedLanguage + ")");
-      return function (label) {
+      return function(label) {
         return "[" + label + "]";
       };
     }
 
     // return the interpreter function for the selected language
-    return function (label) {
+    return function(label) {
       if (typeof trans[label] === "undefined") {
         console.warn("Cannot find label: " + label);
         return "[" + label + "]";
@@ -420,7 +477,7 @@
   };
 
   /* Replaces the labels (surrounded by curly brackets) in a string with a value
-   * 
+   *
    * For instance if the string is "The value of x is {x}" and the object
    * containing the replacements for the tag is {x: 7}, this function will
    * return the string "The value of x is 7"
@@ -428,7 +485,7 @@
    * This function uses regular expressions to replace the tags. Therefore tags
    * should not use numbers or special characters such as . ? * + etc.
    */
-  u.replaceLabels = function (string, replacementObject) {
+  u.replaceLabels = function(string, replacementObject) {
     if (!replacementObject || typeof replacementObject !== "object") {
       return string;
     }
@@ -436,7 +493,7 @@
     var result = string;
     for (var label in replacementObject) {
       if (replacementObject.hasOwnProperty(label)) {
-        var reg = new RegExp("{"+label+"}", "g");
+        var reg = new RegExp("{" + label + "}", "g");
         result = result.replace(reg, replacementObject[label]);
       }
     }
@@ -458,12 +515,14 @@
    *                   func.
    *
    */
-  u.getUndoableFunction = function (jsav, func, undoFunc) {
+  u.getUndoableFunction = function(jsav, func, undoFunc) {
     var f = JSAV.anim(func, undoFunc);
-    return function () { f.apply(jsav, arguments); };
+    return function() {
+      f.apply(jsav, arguments);
+    };
   };
 
-/*!
+  /*!
 // based on seedrandom.js version 2.0.
 // Author: David Bau 4/2/2011
 // http://davidbau.com/encode/seedrandom.js
@@ -501,215 +560,232 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 // OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-/**
- * All code is in an anonymous closure to keep the global namespace clean.
- *
- * @param {number=} overflow
- * @param {number=} startdenom
- */
-(function (pool, math, width, chunks, significance, overflow, startdenom) {
+  /**
+   * All code is in an anonymous closure to keep the global namespace clean.
+   *
+   * @param {number=} overflow
+   * @param {number=} startdenom
+   */
+  (function(pool, math, width, chunks, significance, overflow, startdenom) {
 
 
-//
-// seedrandom()
-// This is the seedrandom function described above.
-//
-math.seedrandom = function seedrandom(seed, use_entropy) {
-  var key = [];
-  var arc4;
+    //
+    // seedrandom()
+    // This is the seedrandom function described above.
+    //
+    math.seedrandom = function seedrandom(seed, use_entropy) {
+      var key = [];
+      var arc4;
 
-  // Flatten the seed string or build one from local entropy if needed.
-  seed = mixkey(flatten(
-    use_entropy ? [seed, pool] :
-    arguments.length ? seed :
-    [new Date().getTime(), pool, window], 3), key);
+      // Flatten the seed string or build one from local entropy if needed.
+      seed = mixkey(flatten(
+        use_entropy ? [seed, pool] :
+        arguments.length ? seed :
+        [new Date().getTime(), pool, window], 3), key);
 
-  // Use the seed to initialize an ARC4 generator.
-  arc4 = new ARC4(key);
+      // Use the seed to initialize an ARC4 generator.
+      arc4 = new ARC4(key);
 
-  // Mix the randomness into accumulated entropy.
-  mixkey(arc4.S, pool);
+      // Mix the randomness into accumulated entropy.
+      mixkey(arc4.S, pool);
 
-  // Override Math.random
+      // Override Math.random
 
-  // This function returns a random double in [0, 1) that contains
-  // randomness in every bit of the mantissa of the IEEE 754 value.
+      // This function returns a random double in [0, 1) that contains
+      // randomness in every bit of the mantissa of the IEEE 754 value.
 
-  math.random = function random() {  // Closure to return a random double:
-    var n = arc4.g(chunks);             // Start with a numerator n < 2 ^ 48
-    var d = startdenom;                 //   and denominator d = 2 ^ 48.
-    var x = 0;                          //   and no 'extra last byte'.
-    while (n < significance) {          // Fill up all significant digits by
-      n = (n + x) * width;              //   shifting numerator and
-      d *= width;                       //   denominator and generating a
-      x = arc4.g(1);                    //   new least-significant-byte.
-    }
-    while (n >= overflow) {             // To avoid rounding up, before adding
-      n /= 2;                           //   last byte, shift everything
-      d /= 2;                           //   right using integer math until
-      x >>>= 1;                         //   we have exactly the desired bits.
-    }
-    return (n + x) / d;                 // Form the number within [0, 1).
-  };
+      math.random = function random() { // Closure to return a random double:
+        var n = arc4.g(chunks); // Start with a numerator n < 2 ^ 48
+        var d = startdenom; //   and denominator d = 2 ^ 48.
+        var x = 0; //   and no 'extra last byte'.
+        while (n < significance) { // Fill up all significant digits by
+          n = (n + x) * width; //   shifting numerator and
+          d *= width; //   denominator and generating a
+          x = arc4.g(1); //   new least-significant-byte.
+        }
+        while (n >= overflow) { // To avoid rounding up, before adding
+          n /= 2; //   last byte, shift everything
+          d /= 2; //   right using integer math until
+          x >>>= 1; //   we have exactly the desired bits.
+        }
+        return (n + x) / d; // Form the number within [0, 1).
+      };
 
-  // Return the seed that was used
-  return seed;
-};
+      // Return the seed that was used
+      return seed;
+    };
 
-//
-// ARC4
-//
-// An ARC4 implementation.  The constructor takes a key in the form of
-// an array of at most (width) integers that should be 0 <= x < (width).
-//
-// The g(count) method returns a pseudorandom integer that concatenates
-// the next (count) outputs from ARC4.  Its return value is a number x
-// that is in the range 0 <= x < (width ^ count).
-//
-/** @constructor */
-function ARC4(key) {
-  var t, u, me = this, keylen = key.length;
-  var i = 0, j = me.i = me.j = me.m = 0;
-  me.S = [];
-  me.c = [];
+    //
+    // ARC4
+    //
+    // An ARC4 implementation.  The constructor takes a key in the form of
+    // an array of at most (width) integers that should be 0 <= x < (width).
+    //
+    // The g(count) method returns a pseudorandom integer that concatenates
+    // the next (count) outputs from ARC4.  Its return value is a number x
+    // that is in the range 0 <= x < (width ^ count).
+    //
+    /** @constructor */
+    function ARC4(key) {
+      var t, u, me = this,
+        keylen = key.length;
+      var i = 0,
+        j = me.i = me.j = me.m = 0;
+      me.S = [];
+      me.c = [];
 
-  // The empty key [] is treated as [0].
-  if (!keylen) { key = [keylen++]; }
-
-  // Set up S using the standard key scheduling algorithm.
-  while (i < width) { me.S[i] = i++; }
-  for (i = 0; i < width; i++) {
-    t = me.S[i];
-    j = lowbits(j + t + key[i % keylen]);
-    u = me.S[j];
-    me.S[i] = u;
-    me.S[j] = t;
-  }
-
-  // The "g" method returns the next (count) outputs as one number.
-  me.g = function getnext(count) {
-    var s = me.S;
-    var i = lowbits(me.i + 1); var t = s[i];
-    var j = lowbits(me.j + t); var u = s[j];
-    s[i] = u;
-    s[j] = t;
-    var r = s[lowbits(t + u)];
-    while (--count) {
-      i = lowbits(i + 1); t = s[i];
-      j = lowbits(j + t); u = s[j];
-      s[i] = u;
-      s[j] = t;
-      r = r * width + s[lowbits(t + u)];
-    }
-    me.i = i;
-    me.j = j;
-    return r;
-  };
-  // For robust unpredictability discard an initial batch of values.
-  // See http://www.rsa.com/rsalabs/node.asp?id=2009
-  me.g(width);
-}
-
-//
-// flatten()
-// Converts an object tree to nested arrays of strings.
-//
-/** @param {Object=} result
-  * @param {string=} prop
-  * @param {string=} typ */
-function flatten(obj, depth, result, prop, typ) {
-  result = [];
-  typ = typeof(obj);
-  if (depth && typ == 'object') {
-    for (prop in obj) {
-      if (prop.indexOf('S') < 5) {    // Avoid FF3 bug (local/sessionStorage)
-        try { result.push(flatten(obj[prop], depth - 1)); } catch (e) {}
+      // The empty key [] is treated as [0].
+      if (!keylen) {
+        key = [keylen++];
       }
+
+      // Set up S using the standard key scheduling algorithm.
+      while (i < width) {
+        me.S[i] = i++;
+      }
+      for (i = 0; i < width; i++) {
+        t = me.S[i];
+        j = lowbits(j + t + key[i % keylen]);
+        u = me.S[j];
+        me.S[i] = u;
+        me.S[j] = t;
+      }
+
+      // The "g" method returns the next (count) outputs as one number.
+      me.g = function getnext(count) {
+        var s = me.S;
+        var i = lowbits(me.i + 1);
+        var t = s[i];
+        var j = lowbits(me.j + t);
+        var u = s[j];
+        s[i] = u;
+        s[j] = t;
+        var r = s[lowbits(t + u)];
+        while (--count) {
+          i = lowbits(i + 1);
+          t = s[i];
+          j = lowbits(j + t);
+          u = s[j];
+          s[i] = u;
+          s[j] = t;
+          r = r * width + s[lowbits(t + u)];
+        }
+        me.i = i;
+        me.j = j;
+        return r;
+      };
+      // For robust unpredictability discard an initial batch of values.
+      // See http://www.rsa.com/rsalabs/node.asp?id=2009
+      me.g(width);
     }
-  }
-  return (result.length ? result : obj + (typ != 'string' ? '\0' : ''));
-}
 
-//
-// mixkey()
-// Mixes a string seed into a key that is an array of integers, and
-// returns a shortened string seed that is equivalent to the result key.
-//
-/** @param {number=} smear
-  * @param {number=} j */
-function mixkey(seed, key, smear, j) {
-  seed += '';                         // Ensure the seed is a string
-  smear = 0;
-  for (j = 0; j < seed.length; j++) {
-    key[lowbits(j)] =
-      lowbits((smear ^= key[lowbits(j)] * 19) + seed.charCodeAt(j));
-  }
-  seed = '';
-  for (j in key) { seed += String.fromCharCode(key[j]); }
-  return seed;
-}
+    //
+    // flatten()
+    // Converts an object tree to nested arrays of strings.
+    //
+    /** @param {Object=} result
+     * @param {string=} prop
+     * @param {string=} typ */
+    function flatten(obj, depth, result, prop, typ) {
+      result = [];
+      typ = typeof(obj);
+      if (depth && typ == 'object') {
+        for (prop in obj) {
+          if (prop.indexOf('S') < 5) { // Avoid FF3 bug (local/sessionStorage)
+            try {
+              result.push(flatten(obj[prop], depth - 1));
+            } catch (e) {}
+          }
+        }
+      }
+      return (result.length ? result : obj + (typ != 'string' ? '\0' : ''));
+    }
 
-//
-// lowbits()
-// A quick "n mod width" for width a power of 2.
-//
-function lowbits(n) { return n & (width - 1); }
+    //
+    // mixkey()
+    // Mixes a string seed into a key that is an array of integers, and
+    // returns a shortened string seed that is equivalent to the result key.
+    //
+    /** @param {number=} smear
+     * @param {number=} j */
+    function mixkey(seed, key, smear, j) {
+      seed += ''; // Ensure the seed is a string
+      smear = 0;
+      for (j = 0; j < seed.length; j++) {
+        key[lowbits(j)] =
+          lowbits((smear ^= key[lowbits(j)] * 19) + seed.charCodeAt(j));
+      }
+      seed = '';
+      for (j in key) {
+        seed += String.fromCharCode(key[j]);
+      }
+      return seed;
+    }
 
-//
-// The following constants are related to IEEE 754 limits.
-//
-startdenom = Math.pow(width, chunks);
-significance = Math.pow(2, significance);
-overflow = significance * 2;
+    //
+    // lowbits()
+    // A quick "n mod width" for width a power of 2.
+    //
+    function lowbits(n) {
+      return n & (width - 1);
+    }
 
-//
-// When seedrandom.js is loaded, we immediately mix a few bits
-// from the built-in RNG into the entropy pool.  Because we do
-// not want to intefere with determinstic PRNG state later,
-// seedrandom will not call math.random on its own again after
-// initialization.
-//
-mixkey(math.random(), pool);
+    //
+    // The following constants are related to IEEE 754 limits.
+    //
+    startdenom = Math.pow(width, chunks);
+    significance = Math.pow(2, significance);
+    overflow = significance * 2;
 
-// End anonymous scope, and pass initial values.
-}(
-  [],   // pool: entropy pool starts empty
-  u.rand, // math: package containing random, pow, and seedrandom
-  256,  // width: each RC4 output is 0 <= x < 256
-  6,    // chunks: at least six RC4 outputs for each double
-  52    // significance: there are 52 significant digits in a double
-));
-/*!
+    //
+    // When seedrandom.js is loaded, we immediately mix a few bits
+    // from the built-in RNG into the entropy pool.  Because we do
+    // not want to intefere with determinstic PRNG state later,
+    // seedrandom will not call math.random on its own again after
+    // initialization.
+    //
+    mixkey(math.random(), pool);
+
+    // End anonymous scope, and pass initial values.
+  }(
+    [], // pool: entropy pool starts empty
+    u.rand, // math: package containing random, pow, and seedrandom
+    256, // width: each RC4 output is 0 <= x < 256
+    6, // chunks: at least six RC4 outputs for each double
+    52 // significance: there are 52 significant digits in a double
+  ));
+  /*!
  End seedrandom.js
  */
- 
+
   var _helpers = {};
   u._helpers = _helpers;
   var JSAV_CLASS_NAMES = ["jsavarray", "jsavhorizontalarray", "jsavverticalarray",
-                          "jsavbararray", "jsavindexed",
-                          "jsavnode", "jsavindex",
-                          "jsavcommontree", "jsavtree", "jsavbinarytree",
-                          "jsavbinarynode", "jsavtreenode",
-                          "jsavlistnode", "jsavlist", "jsavverticallist",
-                          "jsavhorizontallist",
-                          "jsavmatrix",
-                          "jsavgraphnode",
-                          "jsavvariable", "jsavedge"];
+    "jsavbararray", "jsavindexed",
+    "jsavnode", "jsavindex",
+    "jsavcommontree", "jsavtree", "jsavbinarytree",
+    "jsavbinarynode", "jsavtreenode",
+    "jsavlistnode", "jsavlist", "jsavverticallist",
+    "jsavhorizontallist",
+    "jsavmatrix",
+    "jsavgraphnode",
+    "jsavvariable", "jsavedge"
+  ];
   _helpers.setElementClasses = function(element, cls) {
     var elem = element[0],
-        clsList,
-        curCls,
-        c, i;
+      clsList,
+      curCls,
+      c, i;
     if (elem instanceof SVGElement && typeof elem.classList === "object") {
       clsList = elem.classList;
       curCls = Array.prototype.slice.call(elem.classList, 0);
-      for (i = curCls.length; i--; ) {
+      for (i = curCls.length; i--;) {
         c = curCls[i];
         if (JSAV_CLASS_NAMES.indexOf(c) === -1 && cls.indexOf(c) === -1) {
           clsList.remove(c);
         }
       }
-      for (i = cls.length; i--; ) {
+      for (i = cls.length; i--;) {
         c = cls[i];
         if (!clsList.contains(c)) {
           clsList.add(c);
@@ -720,13 +796,13 @@ mixkey(math.random(), pool);
       // PhantomJS does not use classList for SVG elements
       clsList = element.first().attr("class").split(" ");
       curCls = clsList.slice(0);
-      for (i = curCls.length; i--; ) {
+      for (i = curCls.length; i--;) {
         c = curCls[i];
         if (JSAV_CLASS_NAMES.indexOf(c) === -1 && cls.indexOf(c) === -1) {
           clsList.splice(clsList.indexOf(c), 1); // remote c from clsList
         }
       }
-      for (i = cls.length; i--; ) {
+      for (i = cls.length; i--;) {
         c = cls[i];
         if (clsList.indexOf(c) === -1) {
           clsList.push(c); // add c to clsList
@@ -737,9 +813,9 @@ mixkey(math.random(), pool);
   };
   _helpers.elementClasses = function(element) {
     var elem = element[0],
-        cls,
-        customCls = [],
-        i;
+      cls,
+      customCls = [],
+      i;
     if (elem instanceof SVGElement && typeof elem.classList === "object") {
       cls = Array.prototype.slice.call(element[0].classList, 0);
     } else {
@@ -747,7 +823,7 @@ mixkey(math.random(), pool);
       // PhantomJS does not use classList for SVG elements
       cls = element.first().attr("class").split(" ");
     }
-    for (i = cls.length; i--; ) {
+    for (i = cls.length; i--;) {
       if (JSAV_CLASS_NAMES.indexOf(cls[i]) === -1) {
         customCls.push(cls[i]);
       }
@@ -763,8 +839,8 @@ mixkey(math.random(), pool);
   };
   _helpers._setcss = function(cssprop, value, options) {
     var oldProps,
-        el = this.element,
-        newprops, opts = options;
+      el = this.element,
+      newprops, opts = options;
     if (typeof cssprop === "string" && typeof value !== "undefined") {
       // handle args like (propName, newValue)
       oldProps = {}; //we will still return an object of old props
@@ -792,14 +868,18 @@ mixkey(math.random(), pool);
   // function that selects elements from $elems that match the indices
   // filter (number, array of numbers, or filter function)
   _helpers.getIndices = function($elems, indices) {
-    if (typeof indices === "undefined") { return $elems; } // use all if no restrictions are given
+    if (typeof indices === "undefined") {
+      return $elems;
+    } // use all if no restrictions are given
     if ($.isFunction(indices)) { // use a filter function..
       return $elems.filter(indices); // ..and let jQuery do the work
     } else if ($.isArray(indices)) {
       // return indices that are in the array
       return $elems.filter(function(index, item) {
-        for (var i=0; i < indices.length; i++) {
-          if (indices[i] === index) { return true; }
+        for (var i = 0; i < indices.length; i++) {
+          if (indices[i] === index) {
+            return true;
+          }
         }
         return false;
       });
@@ -807,7 +887,7 @@ mixkey(math.random(), pool);
       return $elems.eq(indices); // return the specific index
     } else if (typeof indices === "boolean") {
       // return all elems if indices is true, empty set otherwise
-      return indices?$elems:$({});
+      return indices ? $elems : $({});
     } else {
       try { // last resort, try if the argument can be parsed into an int..
         return $elems.eq(parseInt(indices, 10));
@@ -818,8 +898,8 @@ mixkey(math.random(), pool);
   };
   _helpers.normalizeIndices = function($elems, indices, test) {
     var normIndices = [],
-        $normElems = this.getIndices($elems, indices),
-        i, l;
+      $normElems = this.getIndices($elems, indices),
+      i, l;
     if (typeof test !== "undefined") {
       $normElems = $normElems.filter(test);
     }
@@ -833,11 +913,15 @@ mixkey(math.random(), pool);
     if ($.isArray(cssProps)) { // array of property names
       for (i = 0; i < cssProps.length; i++) {
         cssprop = cssProps[i];
-        if (jsavObj1.css(cssprop) !== jsavObj2.css(cssprop)) { return false; }
+        if (jsavObj1.css(cssprop) !== jsavObj2.css(cssprop)) {
+          return false;
+        }
       }
     } else { // if not array, expect it to be a property name string
       cssprop = cssProps;
-      if (jsavObj1.css(cssprop) !== jsavObj2.css(cssprop)) { return false; }
+      if (jsavObj1.css(cssprop) !== jsavObj2.css(cssprop)) {
+        return false;
+      }
     }
     return true;
   };
@@ -863,27 +947,38 @@ mixkey(math.random(), pool);
   // the move is animated
   var animateToNewRelativePosition = function(jsavobj, relElem, offsetLeft, offsetTop, anchor, myAnchor) {
     var el = jsavobj.element,
-        elemCurPos = el.position();
+      elemCurPos = el.position();
 
     // use jqueryui to position the el relative to the relElem
-    el.position({my: myAnchor,
+    el.position({
+      my: myAnchor,
       at: anchor,
       of: relElem,
       offset: offsetLeft + " " + offsetTop,
-      collision: "none"});
+      collision: "none"
+    });
     var elemPos = el.position();
     var elemLeft = elemPos.left;
     var elemTop = elemPos.top;
     if (elemLeft === elemCurPos.left && elemTop === elemCurPos.top) { // relativeTo element has not changed pos
-      return {left: 0, top: 0}; // no change to animate, just return
+      return {
+        left: 0,
+        top: 0
+      }; // no change to animate, just return
     } else {
       // move it back to the original position
-      el.css({left: elemCurPos.left, top: elemCurPos.top});
+      el.css({
+        left: elemCurPos.left,
+        top: elemCurPos.top
+      });
       // animate the move
       jsavobj.moveTo(elemLeft, elemTop); // change the position
     }
     // return the change in position
-    return {left: elemLeft - elemCurPos.left, top: elemTop - elemCurPos.top};
+    return {
+      left: elemLeft - elemCurPos.left,
+      top: elemTop - elemCurPos.top
+    };
   };
 
   // Set jsavobj to move after target. possible optional options. Both jsavobj and target
@@ -903,8 +998,8 @@ mixkey(math.random(), pool);
     // keep track of the size of the change. the target can move position multiple times,
     // and we will make the animation simpler and sum those changes and move the jsavobj once
     var leftSum = 0,
-        topSum = 0,
-        callbackFunc = options && $.isFunction(options.callback);
+      topSum = 0,
+      callbackFunc = options && $.isFunction(options.callback);
 
     // handler for the jsav-updaterelative event, this is when the jsavobj is finally moved
     var updaterelativehandle = function() {
@@ -917,7 +1012,9 @@ mixkey(math.random(), pool);
     // handler for the target object moves
     var relativehandle = function(evt, dleft, dtop) {
       evt.stopPropagation();
-      if (callbackFunc) { options.callback(dleft, dtop); }
+      if (callbackFunc) {
+        options.callback(dleft, dtop);
+      }
       leftSum += dleft;
       topSum += dtop;
     };
@@ -938,15 +1035,15 @@ mixkey(math.random(), pool);
   _helpers.setRelativePositioning = function(jsavobj, options) {
     // possible options
     var el = jsavobj.element,
-        relElem = options.relativeTo, // REQUIRED
-        anchor = options.anchor || "center",
-        myAnchor = options.myAnchor || "center",
-        follow = !!options.follow; // default to false
+      relElem = options.relativeTo, // REQUIRED
+      anchor = options.anchor || "center",
+      myAnchor = options.myAnchor || "center",
+      follow = !!options.follow; // default to false
 
     if (!(relElem instanceof jQuery)) {
       if (relElem.nodeType === Node.ELEMENT_NODE) { // check if it's DOM element
         relElem = $(relElem);
-      } else if (relElem.constructor === JSAV._types.ds.AVArray && "relativeIndex" in options)  {
+      } else if (relElem.constructor === JSAV._types.ds.AVArray && "relativeIndex" in options) {
         // position relative to the given array index, so set relElem to that index element
         relElem = relElem.index(options.relativeIndex).element; // get the array index object
       } else if (JSAV.utils.isGraphicalPrimitive(relElem)) { // JSAV graphical primitive
@@ -957,9 +1054,11 @@ mixkey(math.random(), pool);
       }
     }
     // make sure the jsavobj element is absolutely positioned
-    el.css({ position: "absolute" });
+    el.css({
+      position: "absolute"
+    });
     var offsetLeft = parseInt(options.left || 0, 10),
-        offsetTop = parseInt(options.top || 0, 10);
+      offsetTop = parseInt(options.top || 0, 10);
 
     // if we have previous handler (and we are thus changing targets), animate to the new position
     // and also call the callback with the position change if we have one
@@ -969,31 +1068,37 @@ mixkey(math.random(), pool);
         options.callback(move.left, move.top);
       }
     } else { // set the initial position to the current position (to prevent unnecessary animations)
-      el.position({my: myAnchor,
-                   at: anchor,
-                   of: relElem,
-                   offset: offsetLeft + " " + offsetTop,
-                   collision: "none"});
+      el.position({
+        my: myAnchor,
+        at: anchor,
+        of: relElem,
+        offset: offsetLeft + " " + offsetTop,
+        collision: "none"
+      });
     }
     if (follow) { // if the jsavobj should move along with the target, register it to do so
-      this._setRelativeFollowUpdater(jsavobj, options.relativeTo, $.extend({autotranslate: true}, options));
+      this._setRelativeFollowUpdater(jsavobj, options.relativeTo, $.extend({
+        autotranslate: true
+      }, options));
     }
   };
 
   /* Handles top, left, right, bottom options and positions the given element accordingly */
   _helpers.handlePosition = function(jsavobj) {
     var el = jsavobj.element,
-        options = jsavobj.options;
+      options = jsavobj.options;
     if ("relativeTo" in options || "left" in options || "top" in options || "bottom" in options || "right" in options) {
       var positions = ["right", "bottom", "top", "left"],
-          posProps = {"position": "absolute"},
-          pos;
+        posProps = {
+          "position": "absolute"
+        },
+        pos;
       options.center = false;
       // if positioning relative to some other object
       if ("relativeTo" in options && options.relativeTo) {
         this.setRelativePositioning(jsavobj, options);
       } else { // positioning absolutely
-        for (var i = positions.length; i--; ) {
+        for (var i = positions.length; i--;) {
           pos = positions[i];
           if (options.hasOwnProperty(pos)) {
             posProps[positions[i]] = options[pos];
@@ -1016,7 +1121,9 @@ mixkey(math.random(), pool);
   // For example:
   // treenode.toggleClass = JSAV.anim(JSAV.utils._helpers._toggleClass);
   _helpers._toggleClass = function(className, options) {
-    var opts = $.extend({animate: true}, options);
+    var opts = $.extend({
+      animate: true
+    }, options);
     if (this.jsav._shouldAnimate() && opts.animate) {
       this.jsav.effects._toggleClass(this.element, className, options);
     } else {
