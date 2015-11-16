@@ -1,11 +1,13 @@
 /**
-* Module that contains the configurable settings panel implementation
-* Depends on core.js, utils.js, trasnlations.js
-*/
+ * Module that contains the configurable settings panel implementation
+ * Depends on core.js, utils.js, trasnlations.js
+ */
 /*global JSAV, jQuery */
 (function($) {
   "use strict";
-  if (typeof JSAV === "undefined") { return; }
+  if (typeof JSAV === "undefined") {
+    return;
+  }
   var speedChoices = [5000, 3000, 1500, 1000, 500, 400, 300, 200, 100, 50];
   var getSpeedChoice = function(speedVal) {
     var curval = speedChoices.length - 1;
@@ -22,9 +24,8 @@
       } else {
         var lang = "en";
         if (window.JSAV_OPTIONS &&
-            window.JSAV_OPTIONS.lang &&
-            typeof JSAV._translations[window.JSAV_OPTIONS.lang] === "object")
-        {
+          window.JSAV_OPTIONS.lang &&
+          typeof JSAV._translations[window.JSAV_OPTIONS.lang] === "object") {
           lang = window.JSAV_OPTIONS.lang;
         }
         translate = JSAV.utils.getInterpreter(JSAV._translations, lang);
@@ -34,14 +35,16 @@
       // get the closest speed choice to the current speed
       var curval = getSpeedChoice(curSpeed);
       // add explanation if using range slider, help text otherwise
-      var $elem = $('<div class="jsavrow">' + translate("animationSpeed") + (rangeSupported?' ' + translate("(slowFast)"):'') +
-          ': <input type="range" min="1" max="10" step="1" size="30" value="' + curval + '"/> ' +
-          (rangeSupported?'':'<button>' + translate("save") + '</button><div class="jsavhelp">' + translate("valueBetween1And10")) +
-          '</div>');
+      var $elem = $('<div class="jsavrow">' + translate("animationSpeed") + (rangeSupported ? ' ' + translate("(slowFast)") : '') +
+        ': <input type="range" min="1" max="10" step="1" size="30" value="' + curval + '"/> ' +
+        (rangeSupported ? '' : '<button>' + translate("save") + '</button><div class="jsavhelp">' + translate("valueBetween1And10")) +
+        '</div>');
       // event handler function for storing the speed
       var speedChangeHandler = function() {
         var speed = parseInt($(this).val(), 10);
-        if (isNaN(speed) || speed < 1 || speed > 10) { return; }
+        if (isNaN(speed) || speed < 1 || speed > 10) {
+          return;
+        }
         speed = speedChoices[speed - 1]; // speed in milliseconds
         curSpeed = speed;
         JSAV.ext.SPEED = speed;
@@ -59,7 +62,9 @@
         $elem.find("button").click(function() {
           speedChangeHandler.call($inputElem);
           var savedElem = $("<span>" + translate("saved") + "</span>");
-          setTimeout(function() { savedElem.fadeOut(); }, 1000);
+          setTimeout(function() {
+            savedElem.fadeOut();
+          }, 1000);
           $(this).after(savedElem);
         });
       }
@@ -68,16 +73,18 @@
       return $elem;
     };
   };
-  
+
   /* Creates an input component to be used in the settings panel. varname should be unique
     within the document. Options can specify the label of the component, in which case
     a label element is created. Option value specifies the default value of the element.
     Every other option will be set as an attribute of the input element. */
   var createInputComponent = function(varname, options) {
     var label,
-        opts = $.extend({"type": "text"}, options),
-        input = $('<input id="jsavsettings-' + varname + '" type="' +
-          opts.type + '"/>');
+      opts = $.extend({
+        "type": "text"
+      }, options),
+      input = $('<input id="jsavsettings-' + varname + '" type="' +
+        opts.type + '"/>');
     if ('label' in opts) {
       label = $('<label for="jsavsettings-' + varname + '">' + opts.label + "</label>");
     }
@@ -91,7 +98,7 @@
     }
     return $('<div class="jsavrow"/>').append(label).append(input);
   };
-  
+
   /* Creates a select component to be used in the settings panel. varname should be unique
     within the document. Options can specify the label of the component, in which case
     a label element is created. Option value specifies the default value of the element.
@@ -99,7 +106,7 @@
     in the form. Every other option will be set as an attribute of the input element. */
   var createSelectComponent = function(varname, options) {
     var label,
-        select = $('<select id="jsavsettings-' + varname + '" />');
+      select = $('<select id="jsavsettings-' + varname + '" />');
     if ('label' in options) {
       label = $('<label for="jsavsettings-' + varname + '">' + options.label + "</label>");
     }
@@ -120,43 +127,44 @@
     }
     return $('<div class="jsavrow"/>').append(label).append(select);
   };
-  
+
   var Settings = function(elem) {
       this.components = [];
       this.add(speedSetting(this));
-      
+
       var that = this;
       if (elem) {
         $(elem).click(function(e) {
           e.preventDefault();
-          that.show();
+          that.show(e);
         });
       }
     },
     sproto = Settings.prototype;
-  sproto.show = function() {
+  sproto.show = function(event) {
     var $cont = $("<div class='jsavsettings'></div>");
     for (var i = 0; i < this.components.length; i++) {
       $cont.append(this.components[i]);
     }
     // append the JSAV version to the settings dialog
     $cont.append("<span class='jsavversion'>" + JSAV.version() + "</span>");
-    
+
     var translate;
     if (this.jsav) {
       translate = this.jsav._translate;
     } else {
       var lang = "en";
       if (window.JSAV_OPTIONS &&
-          window.JSAV_OPTIONS.lang &&
-          typeof JSAV._translations[window.JSAV_OPTIONS.lang] === "object")
-      {
+        window.JSAV_OPTIONS.lang &&
+        typeof JSAV._translations[window.JSAV_OPTIONS.lang] === "object") {
         lang = window.JSAV_OPTIONS.lang;
       }
       translate = JSAV.utils.getInterpreter(JSAV._translations, lang);
     }
     var title = translate("settings");
-    this.dialog = JSAV.utils.dialog($cont, {title: title});
+    this.dialog = JSAV.utils.dialog($cont, {
+      title: title
+    }, event);
   };
   sproto.close = function() {
     if (this.dialog) {
