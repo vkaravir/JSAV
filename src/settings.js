@@ -68,7 +68,7 @@
       return $elem;
     };
   };
-  
+
   /* Creates an input component to be used in the settings panel. varname should be unique
     within the document. Options can specify the label of the component, in which case
     a label element is created. Option value specifies the default value of the element.
@@ -91,7 +91,7 @@
     }
     return $('<div class="jsavrow"/>').append(label).append(input);
   };
-  
+
   /* Creates a select component to be used in the settings panel. varname should be unique
     within the document. Options can specify the label of the component, in which case
     a label element is created. Option value specifies the default value of the element.
@@ -120,28 +120,28 @@
     }
     return $('<div class="jsavrow"/>').append(label).append(select);
   };
-  
+
   var Settings = function(elem) {
       this.components = [];
       this.add(speedSetting(this));
-      
+
       var that = this;
       if (elem) {
         $(elem).click(function(e) {
           e.preventDefault();
-          that.show();
+          that.show(e);
         });
       }
     },
     sproto = Settings.prototype;
-  sproto.show = function() {
+  sproto.show = function(event) {
     var $cont = $("<div class='jsavsettings'></div>");
     for (var i = 0; i < this.components.length; i++) {
       $cont.append(this.components[i]);
     }
     // append the JSAV version to the settings dialog
     $cont.append("<span class='jsavversion'>" + JSAV.version() + "</span>");
-    
+
     var translate;
     if (this.jsav) {
       translate = this.jsav._translate;
@@ -156,7 +156,7 @@
       translate = JSAV.utils.getInterpreter(JSAV._translations, lang);
     }
     var title = translate("settings");
-    this.dialog = JSAV.utils.dialog($cont, {title: title});
+    this.dialog = JSAV.utils.dialog($cont, {title: title}, event);
   };
   sproto.close = function() {
     if (this.dialog) {

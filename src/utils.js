@@ -176,11 +176,11 @@
       $("body").trigger("jsav-log-event", [eventData]);
     }
   };
-  
+
   var dialogBase = '<div class="jsavdialog"></div>',
     $modalElem = null;
-  
-  u.dialog = function(html, options) {
+
+  u.dialog = function(html, options, event) {
     // options supported :
     //  - modal (default true)
     //  - width (and min/maxWidth)
@@ -255,21 +255,37 @@
 
     var $dial = $dialog.appendTo(options.dialogRootElement || $("body"));
     $dial.draggable();
-    var center = function() {
-      $dialog.css({
-        top: Math.max(scrollTop + (winHeight - $dialog.outerHeight())/2, 0),
-        left: scrollLeft + (winWidth - $dialog.outerWidth())/2
-      });
+    var event = event || false;
+    var center = function(event) {
+      if (event) {
+        var $target = $(event.target),
+          pos = $target.offset(),
+          eWidth = $target.outerWidth(),
+          mWidth = $dialog.outerWidth(),
+          left = (pos.left + eWidth - mWidth) + "px",
+          top = 3 + pos.top + "px";
+          $dialog.css({
+            position: 'absolute',
+            zIndex: 5000,
+            left: left,
+            top: top
+          });
+      } else {
+        $dialog.css({
+          top: Math.max(scrollTop + (winHeight - $dialog.outerHeight())/2, 0),
+          left: scrollLeft + (winWidth - $dialog.outerWidth())/2
+        });
+      }
     };
-    center();
+    center(event);
     $dial.show = function() {
-      center();
+      center(event);
       $dial.fadeIn();
     };
     $dial.close = close;
     return $dial;
   };
-  
+
   u.value2type = function(val, valtype) {
     if (valtype === "number") {
       return Number(val);
@@ -284,7 +300,7 @@
       return val;
     }
   };
-  
+
   var dummyTestFunction = function(dataArr) { return true; };
   u.rand = {
     random: Math.random,
@@ -371,7 +387,7 @@
   u.getInterpreter = function (langJSON, selectedLanguage) {
     var trans;
 
-    // get the translation from the given location or object 
+    // get the translation from the given location or object
     if (typeof langJSON === "string") {
       // assume langJSON is a url
       if (langJSON.indexOf("{lang}") !== -1) {
@@ -420,7 +436,7 @@
   };
 
   /* Replaces the labels (surrounded by curly brackets) in a string with a value
-   * 
+   *
    * For instance if the string is "The value of x is {x}" and the object
    * containing the replacements for the tag is {x: 7}, this function will
    * return the string "The value of x is 7"
@@ -682,7 +698,7 @@ mixkey(math.random(), pool);
 /*!
  End seedrandom.js
  */
- 
+
   var _helpers = {};
   u._helpers = _helpers;
   var JSAV_CLASS_NAMES = ["jsavarray", "jsavhorizontalarray", "jsavverticalarray",
