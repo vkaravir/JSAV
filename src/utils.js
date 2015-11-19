@@ -258,15 +258,34 @@
     var event = event || false;
     var center = function(event) {
       if (event) {
-        var $target = $(event.target),
-          pos = $target.offset(),
+        var parents;
+
+        // get .jsavcontainer element for slideshow
+        var $target = $(event.target).closest('.jsavcontainer');
+
+        // get .avcontainer or .jsavcontainer element for AV
+        if ($target.length === 0){
+          parents = $(event.target).parents();
+
+          parents.each(function(index, value){
+            var targetElem = $(value).find('.avcontainer, .jsavcontainer');
+            if (targetElem.length > 0){
+              $target = $(targetElem);
+              return false;
+            }
+          });
+        }
+
+        var pos = $target.offset(),
           eWidth = $target.outerWidth(),
-          mWidth = $dialog.outerWidth(),
-          left = (pos.left + eWidth - mWidth) + "px",
-          top = 3 + pos.top + "px";
+          dWidth = $dialog.outerWidth(),
+          eHeight = $target.outerHeight(),
+          dHeight = $dialog.outerHeight(),
+          left = (pos.left + eWidth/2 - dWidth/2) + "px",
+          top = (pos.top + eHeight/2 - dHeight/2) + "px";
           $dialog.css({
             position: 'absolute',
-            zIndex: 5000,
+            zIndex: 1000,
             left: left,
             top: top
           });
