@@ -179,7 +179,20 @@
   
   var dialogBase = '<div class="jsavdialog"></div>',
     $modalElem = null;
-  
+
+  var centerDialog = function($dialog) {
+    var $doc = $(document),
+        $win = $(window),
+        winHeight = $win.height(),
+        winWidth = $win.width(),
+        scrollLeft = $doc.scrollLeft(),
+        scrollTop = $doc.scrollTop();
+    $dialog.css({
+      top: Math.max(scrollTop + (winHeight - $dialog.outerHeight())/2, 0),
+      left: scrollLeft + (winWidth - $dialog.outerWidth())/2
+    });
+  };
+
   u.dialog = function(html, options) {
     // options supported :
     //  - modal (default true)
@@ -189,11 +202,11 @@
     //  - dialogClass
     //  - title
     //  - closeCallback
+    //  - positionCallback
     //  - dialogBase
     //  - dialogRootElement
     options = $.extend({}, {modal: true, closeOnClick: true}, options);
-    var d = {},
-        modal = options.modal,
+    var modal = options.modal,
         $dialog = $(options.dialogBase || dialogBase),
         i, l, attr,
         attrOptions = ["width", "height", "minWidth", "minHeight", "maxWidth", "maxHeight"];
@@ -216,14 +229,7 @@
         $dialog.css(attr, options[attr]);
       }
     }
-    var $doc = $(document),
-      $win = $(window),
-      docHeight = $doc.height(),
-      docWidth = $doc.width(),
-      winHeight = $win.height(),
-      winWidth = $win.width(),
-      scrollLeft = $doc.scrollLeft(),
-      scrollTop = $doc.scrollTop();
+    var winWidth = $(window).width();
     if (!("width" in options)) {
       $dialog.css("width", Math.max(500, winWidth*0.7)); // min width 500px, default 70% of window
     }
@@ -255,15 +261,10 @@
 
     var $dial = $dialog.appendTo(options.dialogRootElement || $("body"));
     $dial.draggable();
-    var center = function() {
-      $dialog.css({
-        top: Math.max(scrollTop + (winHeight - $dialog.outerHeight())/2, 0),
-        left: scrollLeft + (winWidth - $dialog.outerWidth())/2
-      });
-    };
-    center();
+    var position = options.positionCallback || centerDialog;
+    position($dialog);
     $dial.show = function() {
-      center();
+      position($dialog);
       $dial.fadeIn();
     };
     $dial.close = close;
