@@ -348,6 +348,60 @@
   left: 0;
   box-shadow: 0 0 15px rgba(0,0,0,0.8);
 }
+.jsavsettings-dialog {
+  border-radius: 10px;
+}
+.jsavsettings-dialog.arrow-top-left {
+  border-top-left-radius: 0;
+}
+.jsavsettings-dialog.arrow-top-right {
+  border-top-right-radius: 0;
+}
+.jsavsettings-dialog.arrow-bottom-left {
+  border-bottom-left-radius: 0;
+}
+.jsavsettings-dialog.arrow-bottom-right {
+  border-bottom-right-radius: 0;
+}
+.jsavsettings-dialog:after {
+  content: "";
+  display: block;
+  width: 0;
+  height: 0;
+  position: absolute;
+  border: 8px solid transparent;
+  border-left-color: #eee;
+  transform: rotate(-90deg);
+}
+.jsavsettings-dialog.arrow-top-left:after {
+  top: -16px;
+  left: 0;
+}
+.jsavsettings-dialog.arrow-top-right:after {
+  top: -16px;
+  right: 0;
+}
+.jsavsettings-dialog.arrow-bottom-left:after,
+.jsavsettings-dialog.arrow-bottom-right:after {
+  border-left-color: #fff;
+  transform: rotate(90deg);
+  bottom: -16px;
+}
+.jsavsettings-dialog.arrow-bottom-left:after {
+  left: 0;
+}
+.jsavsettings-dialog.arrow-bottom-right:after {
+  right: 0;
+}
+.jsavsettings-dialog h2 {
+  border-radius: 10px 10px 0 0;
+}
+.jsavsettings-dialog.arrow-top-left h2 {
+  border-radius: 0 10px 0 0;
+}
+.jsavsettings-dialog.arrow-top-right h2 {
+  border-radius: 10px 0 0 0;
+}
 .jsavmodal {
   z-index: 999;
   background-color: rgb(120, 120, 120);

@@ -68,7 +68,7 @@
       return $elem;
     };
   };
-
+  
   /* Creates an input component to be used in the settings panel. varname should be unique
     within the document. Options can specify the label of the component, in which case
     a label element is created. Option value specifies the default value of the element.
@@ -91,7 +91,7 @@
     }
     return $('<div class="jsavrow"/>').append(label).append(input);
   };
-
+  
   /* Creates a select component to be used in the settings panel. varname should be unique
     within the document. Options can specify the label of the component, in which case
     a label element is created. Option value specifies the default value of the element.
@@ -120,11 +120,11 @@
     }
     return $('<div class="jsavrow"/>').append(label).append(select);
   };
-
+  
   var Settings = function(elem) {
       this.components = [];
       this.add(speedSetting(this));
-
+      
       var that = this;
       if (elem) {
         $(elem).click(function(e) {
@@ -134,14 +134,14 @@
       }
     },
     sproto = Settings.prototype;
-  sproto.show = function(event) {
+  sproto.show = function(evt) {
     var $cont = $("<div class='jsavsettings'></div>");
     for (var i = 0; i < this.components.length; i++) {
       $cont.append(this.components[i]);
     }
     // append the JSAV version to the settings dialog
     $cont.append("<span class='jsavversion'>" + JSAV.version() + "</span>");
-
+    
     var translate;
     if (this.jsav) {
       translate = this.jsav._translate;
@@ -156,7 +156,38 @@
       translate = JSAV.utils.getInterpreter(JSAV._translations, lang);
     }
     var title = translate("settings");
-    this.dialog = JSAV.utils.dialog($cont, {title: title}, event);
+    var dialogPosition = function($dialog) {
+      // position the settings dialog relative to the settings button
+      // depending on the position of the button, the dialog can be
+      // above or below and left or right of the button
+      var $button = $(evt.target),
+          buttonPos = $button.offset(),
+          $win = $(window),
+          winWidth = $win.width(),
+          winHeight = $win.height(),
+          scrollTop = $win.scrollTop(),
+          scrollLeft = $win.scrollLeft();
+      var leftOfCenter = buttonPos.left - scrollLeft < (winWidth / 2),
+          aboveMiddle = buttonPos.top - scrollTop < (winHeight / 2);
+      $dialog.addClass('arrow-' + (aboveMiddle?'top':'bottom') + '-' +
+                        (leftOfCenter ?'left':'right'));
+      // magic numbers based on the position of the arrow
+      $dialog.css({
+          top: aboveMiddle
+                  ? buttonPos.top + $button.outerHeight() + 8
+                  : buttonPos.top - $dialog.height() - 8,
+          left: leftOfCenter
+                  ? buttonPos.left + $button.outerWidth()/2 - 8
+                  : buttonPos.left - $dialog.width() + $button.outerWidth()/2 + 8
+      });
+    };
+
+    this.dialog = JSAV.utils.dialog($cont, {
+                          title: title,
+                          dialogClass: 'jsavsettings-dialog',
+                          positionCallback: dialogPosition,
+                          width: '500px'
+                        });
   };
   sproto.close = function() {
     if (this.dialog) {
