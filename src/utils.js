@@ -860,6 +860,30 @@ mixkey(math.random(), pool);
     return true;
   };
 
+  // logic for handling anchors like in jQueryUI code
+  var rhorizontal = /left|center|right/,
+      rvertical = /top|center|bottom/;
+  var combineAnchorAndOffsets = function(anchor, offsetLeft, offsetTop) {
+    // for new jQueryUI, we need to combine the offsets into the anchor, and
+    // that's what this function does
+    var pos = ( anchor || "" ).split( " " );
+
+    // if we ony have one anchor, figure out which one it's
+    // default to center for the other
+    if ( pos.length === 1 ) {
+      pos = rhorizontal.test( pos[ 0 ] ) ?
+        pos.concat( [ "center" ] ) :
+        rvertical.test( pos[ 0 ] ) ?
+          [ "center" ].concat( pos ) :
+          [ "center", "center" ];
+    }
+    pos[ 0 ] = rhorizontal.test( pos[ 0 ] ) ? pos[ 0 ] : "center";
+    pos[ 1 ] = rvertical.test( pos[ 1 ] ) ? pos[ 1 ] : "center";
+
+    return pos[0] + (offsetLeft >= 0 ? '+' + offsetLeft : offsetLeft) +
+          ' ' + pos[1] + (offsetTop >= 0 ? '+' + offsetTop : offsetTop);
+  };
+
   // position the given object relative to relElem, taking into account offsets and anchors
   // the move is animated
   var animateToNewRelativePosition = function(jsavobj, relElem, offsetLeft, offsetTop, anchor, myAnchor) {
@@ -867,10 +891,9 @@ mixkey(math.random(), pool);
         elemCurPos = el.position();
 
     // use jqueryui to position the el relative to the relElem
-    el.position({my: myAnchor,
+    el.position({my: combineAnchorAndOffsets(myAnchor, offsetLeft, offsetTop),
       at: anchor,
       of: relElem,
-      offset: offsetLeft + " " + offsetTop,
       collision: "none"});
     var elemPos = el.position();
     var elemLeft = elemPos.left;
@@ -970,10 +993,9 @@ mixkey(math.random(), pool);
         options.callback(move.left, move.top);
       }
     } else { // set the initial position to the current position (to prevent unnecessary animations)
-      el.position({my: myAnchor,
+      el.position({my: combineAnchorAndOffsets(myAnchor, offsetLeft, offsetTop),
                    at: anchor,
                    of: relElem,
-                   offset: offsetLeft + " " + offsetTop,
                    collision: "none"});
     }
     if (follow) { // if the jsavobj should move along with the target, register it to do so

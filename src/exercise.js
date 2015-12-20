@@ -66,7 +66,7 @@
       } else {
         cont.append($reset, $model, $action);
       }
-      $action.position({of: cont.children().last(), at: "right center", my: "left center", offset: "5 -2"});
+      $action.position({of: cont.children().last(), at: "right center", my: "left+5 center-2"});
     }
     // if feedbacktype can be selected, add settings for it
     if (this.options.feedbackSelectable) {
