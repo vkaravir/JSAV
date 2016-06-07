@@ -59,7 +59,9 @@ Documentation for v{{ site.version }}
 <p><a href="{{ site.github.repo }}">Project on GitHub</a></p>
 
 ### Publications
-JSAV system paper:
+JSAV system papers:
+
+ * Ville Karavirta, Clifford A. Shaffer (Early Access). Creating Engaging Online Learning Material with the JSAV JavaScript Algorithm Visualization Library. IEEE Transactions on Learning Technologies. ([link](http://dx.doi.org/10.1109/TLT.2015.2490673))
 
  * Ville Karavirta, Clifford A. Shaffer (2013). JSAV: the JavaScript algorithm visualization library. In Proceedings of the 18th ACM conference on Innovation and technology in computer science education, pp. 159–164, New York, NY, USA.
    ([link](http://dl.acm.org/citation.cfm?id=2462487))
@@ -72,7 +74,7 @@ Articles discussing JSAV use:
    ([link](http://www.sciencedirect.com/science/article/pii/S016764231300333X))
  * Ville Karavirta, Ari Korhonen, Otto Seppälä (2013). Misconceptions in Visual Algorithm Simulation Revisited: On
    UI's Effect on Student Performance, Attitudes and Misconceptions. In *Learning and Teaching in Computing and
-   Engineering (LaTiCE)*, 2013, pages 62–69.
+   Engineering (LaTiCE)*, pages 62–69.
    ([link](http://dx.doi.org/10.1109/LaTiCE.2013.35))
 
 ### Presentations
