@@ -3,7 +3,7 @@ layout: subpage
 title: Downloading and Installing JSAV
 ---
 
-###Before you Begin (Install Dependencies)
+### Before you Begin (Install Dependencies)
 
 In order to get JSAV downloaded and built, you need some software. Here's a list of the requirements, see
 the linked sites for installation instructions.
@@ -14,7 +14,7 @@ the linked sites for installation instructions.
  * [Make](https://www.gnu.org/software/make/) and/or [Grunt](http://gruntjs.com/) is used for building the JSAV library from the multiple source files. You can choose whichever tool you like better or find easier to install.
  * **uglify-js** is needed if you use ```make```. You can install it with ```npm install -g uglify-js```.
 
-###Getting the code from Github
+### Getting the code from Github
 
 Once you have ```git``` installed, getting JSAV source code is simple as going to command line, change directory to
 where you want the JSAV code to be downloaded (git will make a subdirectory called ```JSAV```), and cloning the
@@ -27,7 +27,7 @@ Now you have the JSAV code in the ```JSAV``` directory.
 If you don't have ```git``` installed, you can [download a ZIP file](https://github.com/vkaravir/JSAV/archive/master.zip)
 of the code and unzip it. Note, that this approach will make updating JSAV more difficult.
 
-###Building JSAV
+### Building JSAV
 
 Building JSAV is relatively simple as well.
 

@@ -3,7 +3,7 @@ layout: subpage
 title: Required Files and HTML
 ---
 
-## Loading the Required Files
+### Loading the Required Files
 
 
 The easiest way to check the required files is to look at
@@ -37,7 +37,7 @@ In addition, developers must include the supporting .css file:
 <code>[JSAV]/css/JSAV.css</code>
 
 
-## HTML Template for the Visualization
+### HTML Template for the Visualization
 
 
 Visualizations generally include two parts:
