@@ -8,7 +8,7 @@ The pseudocode API in JSAV is intended for showing a static set of codelines tha
 
 <h3 class="apimethod">.code(codelines[, options]) or .code([options])</h3>
 
-Both of these are functions of a JSAV object instance. The first version takes either an array or a string 
+Both of these are functions of a JSAV object instance. The first version takes either an array or a string
   to be used as the lines of code. If a string is passed, it will be split on newline characters (```\n```)
   to get the codelines.
 
@@ -18,7 +18,7 @@ The options that can be specified:
     newline characters (```\n```). Note, that if the codelines parameter is given, this option is ignored. Also, same-origin
     policies in browsers might prevent this from working across domains.
  *  ```{tags: <object>}``` Enables referring to lines with strings. The JavaScript object should map strings to either line numbers or arrays of line numbers. For instance if the tags are defined with the object ```{hello: 5}``` it means that ```.highlight("hello")``` will be equivalent to ```.highlight(5)```.
- *  ```{lineNumbers: <boolean>}``` Determine whether linenumbers should be shown. Defaults to true. 
+ *  ```{lineNumbers: <boolean>}``` Determine whether linenumbers should be shown. Defaults to true.
  *  ```{visible: <boolean>}``` Determine whether the pseudocode is visible on creation. Defaults to true.
  *  ```{before: <UI element>}``` Add the pseudocode before element ```UI element```
  *  ```{after: <UI element>}``` Add the pseudocode after element ```UI element```
@@ -32,10 +32,10 @@ within its container. Defaults to true.
  * relativeTo: A JSAV data structure object or DOM element that this structure should be positioned relative to.
   If this option is specified, left and top options will change structure's position relative to the relativeTo
   element. Note, that the element pointed by relativeTo needs to be visible.
- * anchor: Defines which position on the element being positioned to align with the target element. Should be in 
+ * anchor: Defines which position on the element being positioned to align with the target element. Should be in
   format ```horizontal vertical```. Possible horizontal values are "left", "center", "right" and vertical values "top", "center", "bottom". Defaults to ```center center```. Only has an effect if relativeTo is
   specified.
- * myAnchor: Similar to anchor, but the position on this element. Defaults to ```center center```. Only 
+ * myAnchor: Similar to anchor, but the position on this element. Defaults to ```center center```. Only
   has an effect if relativeTo is specified.
  * follow: A boolean indicating whether or not this structure should move when the relative element moves. Only
     has an effect if relativeTo is specified.
@@ -48,7 +48,9 @@ Pseudocode objects have the following functions.
 
 Highlight and unhighlight the codelines at given indices. Lines are numbered from 0, so first line could be highlighted with:
 
-    pseudo.highlight(0)
+{% highlight javascript %}
+pseudo.highlight(0)
+{% endhighlight %}
 
 Similarly to the array (un)highlight, the ```indices``` parameter can be either a number, an array of numbers, a function or a tag (see tags in options).
 
@@ -63,17 +65,19 @@ Show/hide the codelines at given indices. Again, indices can be a number, an arr
 <h3 class="apimethod">.css(indices, css)</h3>
 
 Apply the given CSS properties to the codelines at specified ```indices```.
-  Parameter ```indices``` can be a number, array, function or a tag like for 
+  Parameter ```indices``` can be a number, array, function or a tag like for
   the ```highlight``` method.
   The argument ```css``` should be an object with property name-and-value pairs. For example, to make
   lines 0 and 4 have green color and lightgray background:
 
-    pseudo.css([0, 4], {"color": "green", "background-color": "#eee"});
+{% highlight javascript %}
+pseudo.css([0, 4], {"color": "green", "background-color": "#eee"});
+{% endhighlight %}
 
 <h3 class="apimethod">.setCurrentLine(index)</h3>
 
 Sets the line at given ```index``` as the current line. Also, if another line was previously set as current, it will be
-  marked as previous. If a line was also earlier marked as previous, that mark will be removed. This will help in creating a 
+  marked as previous. If a line was also earlier marked as previous, that mark will be removed. This will help in creating a
   visual debugger-like code stepping functionality in visualizations. You can clear the current line selection with index value 0.
 
 <div id="setCurrentExample" class="jsavexample">
@@ -98,8 +102,8 @@ Sets the line at given ```index``` as the current line. Also, if another line wa
 
 <h3 class="apimethod">.clear()</h3>
 
-Removes the DOM element of this object from the document. This is useful, for example, in 
-re-initializing exercises when the existing object needs to be removed. 
+Removes the DOM element of this object from the document. This is useful, for example, in
+re-initializing exercises when the existing object needs to be removed.
 
 <h3 class="apimethod">.addClass(indices, className, [options])</h3>
 

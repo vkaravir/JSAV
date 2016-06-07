@@ -44,10 +44,12 @@ Visualizations generally include two parts:
 HTML DOM elements, and JavaScript elements.
 The HTML section typical includes something like this:
 
-    <div id="container">
-      <div class="jsavcontrols"></div>
-      <p class="jsavoutput jsavline"></p>
-    </div>
+{% highlight html %}
+<div id="container">
+  <div class="jsavcontrols"></div>
+  <p class="jsavoutput jsavline"></p>
+</div>
+{% endhighlight %}
 
  * <code>container</code> This is the container element for the visualization
  * <code>jsavcontrols</code> The library will generate slideshow controls inside this

@@ -4,15 +4,21 @@ title: Creating A Visualization
 ---
 
 Initializing the visualization container is simple:
-<pre>var av = new JSAV("container");</pre>
+
+{% highlight javascript %}
+var av = new JSAV("container");
+{% endhighlight %}
+
 The <code>container</code> here refers to the id attribute of the
   container element (see the HTML template above).
   Alternatively, a DOM or jQuery element can be
   used as well. So, the following are alternative ways to achieve
   the same result:
 
-    var av = new JSAV(document.getElementById("container"));
-    var av = new JSAV(jQuery("#container"));
+{% highlight javascript %}
+var av = new JSAV(document.getElementById("container"));
+var av = new JSAV(jQuery("#container"));
+{% endhighlight %}
 
 Both alternatives accept an optional second parameter <code>options</code>
   which should be a JavaScript object. The options that are currently
@@ -29,4 +35,3 @@ Both alternatives accept an optional second parameter <code>options</code>
 In addition to the options passed to the function, any options specified
   in a global variable <code>JSAV_OPTIONS</code> will be used. Those passed on
   initialization always override the global options.
-

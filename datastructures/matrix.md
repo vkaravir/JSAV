@@ -34,7 +34,9 @@ Matrix supports the [common options and position options]({{ site.baseurl }}/com
 For example, this would create a 2x2 matrix: ```var m = jsav.ds.matrix([[0, 1], [2, 3]])```.
   An empty 5x8 matrix using the matrix style could be created like this:
 
-    var m = jsav.ds.matrix({rows: 5, columns: 8, style: "matrix"});
+{% highlight javascript %}
+var m = jsav.ds.matrix({rows: 5, columns: 8, style: "matrix"});
+{% endhighlight %}
 
 <h3 class="apimethod">.swap(row1, col1, row2, col2[, options])</h3>
 Swaps two values of the matrix, namely (row1, col1) with (ro2, col2).

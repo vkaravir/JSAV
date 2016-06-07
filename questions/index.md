@@ -22,10 +22,12 @@ The ```questionText``` parameter is the actual question shown to a student. For 
 
 An example of initializing a true-false question is below.
 
-    var q = av.question("TF", "JSAV supports questions now?",
-                        {correct: true,
-                        falseLabel: "No",
-                        trueLabel: "Yes"});
+{% highlight javascript %}
+var q = av.question("TF", "JSAV supports questions now?",
+                    {correct: true,
+                    falseLabel: "No",
+                    trueLabel: "Yes"});
+{% endhighlight %}
 
 The function returns an instance of a question. Answer choices can be added
 to this instance using the following methods.
@@ -39,8 +41,10 @@ is ```false```. Note, that this method does nothing for the true-false type ques
 This function will show the question in the current step in the algorithm. This way, the initialization, addition of answers, and displaying the question can happen in different steps in the animation. It helps when the goal is to show students questions that require prediction of the algorithm's behavior.
 A complete example of a multiple-select question:
 
-    var q = av.question("MS", "Life is good?");
-    q.addChoice("Of course", {correct: true});
-    q.addChoice("Certainly", {correct: true});
-    q.addChoice("No way!");
-    q.show();
+{% highlight javascript %}
+var q = av.question("MS", "Life is good?");
+q.addChoice("Of course", {correct: true});
+q.addChoice("Certainly", {correct: true});
+q.addChoice("No way!");
+q.show();
+{% endhighlight %}

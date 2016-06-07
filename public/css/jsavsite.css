@@ -14,7 +14,10 @@ h3.apimethod {
 li.subpages {
   list-style: none;
 }
-
+figure.highlight {
+  margin-left: 0;
+  margin-right: 0;
+}
 
 /** styling the JSAV examples **/
 .jsavexample .jsavcounter {

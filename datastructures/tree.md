@@ -47,7 +47,9 @@ Animates the value of the given CSS property to value. This function exists for 
 <h3 class="apimethod">.css({map})</h3>
 Animates values of the CSS properties in the map to the given values. This function exists for all trees, nodes, and edges. For example
 
-    tree.css({color: "green", "font-size": "20px"});
+{% highlight javascript %}
+tree.css({color: "green", "font-size": "20px"});
+{% endhighlight %}
 
 would animate the color and font-size properties of the tree.
 
@@ -93,7 +95,7 @@ that can be
 listened for are: click, dblclick, mousedown, mousemove, mouseup, mouseenter, and mouseleave.
 See <a href="http://api.jquery.com/category/events/">jQuery documentation</a> for details on
 the events. Every event handler gets as a parameter the jQuery event object. Inside the event
-handler function, ```this``` will refer to the JSAV node or edge object. 
+handler function, ```this``` will refer to the JSAV node or edge object.
 
 The function takes another, optional, parameter options that should be an object. It can be
 used to specify whether the event handler is for nodes or edges. By default, it is attached to only nodes.
@@ -103,16 +105,20 @@ used to specify whether the event handler is for nodes or edges. By default, it 
 For example, to highlight an node on mouseenter and unhighlight on mouseleave,
 you can use:
 
-<pre>tree.mouseenter(function() { this.highlight(); })
-  .mouseleave(function() { this.unhighlight(); });</pre>
+{% highlight javascript %}
+tree.mouseenter(function() { this.highlight(); })
+    .mouseleave(function() { this.unhighlight(); });
+{% endhighlight %}
 
 To attach a handler to edges, you can do:
 
-    tree.mouseenter(yourEventHandler, {edge: true});
+{% highlight javascript %}
+tree.mouseenter(yourEventHandler, {edge: true});
+{% endhighlight %}
 
 Similarly to arrays, you can also pass custom data to the handler. For example,
   ```bt.click({"color": "blue"}, JSAV.utils._helpers.css);``` would call the ```css```
-  function with the given parameter. 
+  function with the given parameter.
 
 <h3 class="apimethod">.on(eventName, [data,], handler, options)</h3>
 To bind other events than the ones listed above, you can use the ```on``` function. It takes
@@ -153,11 +159,11 @@ Adds a child node to this node. The ```node``` can be a value or a node of corre
 
 The function returns the node the child was added to. So you can chain the calls to add multiple children to the same node:
 
-```javascript
+{% highlight javascript %}
 node.addChild("A")
     .addChild("B")
     .addChild("C");
-```
+{% endhighlight %}
 
 This code would add children A, B, and C to the <code>node</code>.
 
@@ -177,7 +183,7 @@ any effect until the tree is set visible by calling show.
 <h2>Binary Tree Node API</h2>
 <h3 class="apimethod">.left([node [, options]])</h3>
 Returns the left child or undefined if node has no left child. If optional parameter ```node``` is given, sets the left child. The parameter can be a value or a binary tree node. If value ```null``` is given as ```node```, the left child is removed. Note, that this also hides the removed node and the edge.
-The additional ```options``` parameter works like for ```.child(...)``` above. 
+The additional ```options``` parameter works like for ```.child(...)``` above.
 
 <h3 class="apimethod">.right([node [,options]])</h3>
 Returns the right child or undefined if node has no right child. If optional parameter ```node``` is given, sets the right child. The parameter can be a value or a binary tree node. Passing ```null``` as node works similarly to the left function. The additional ```options``` parameter works like for ```.child(...)``` above.
@@ -187,4 +193,3 @@ Returns the edge that connects this node to its left child. Returns ```undefined
 
 <h3 class="apimethod">.edgeToRight()</h3>
 Returns the edge that connects this node to its right child. Returns ```undefined``` if node has no right child.
- 

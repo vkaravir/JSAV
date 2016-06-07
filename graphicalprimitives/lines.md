@@ -4,18 +4,20 @@ title: Line, Polygon, and Polyline API
 ---
 
 <h3 class="apimethod">jsav.g.line(x1, y1, x2, y2[, properties])</h3>
-Initializes a line from point ```x1, y1``` to ```x2, y2```. Optional parameter 
-  ```properties```,if given, should be an object with key-value pairs. See 
+Initializes a line from point ```x1, y1``` to ```x2, y2```. Optional parameter
+  ```properties```,if given, should be an object with key-value pairs. See
   <a href="http://raphaeljs.com/reference.html#Element.attr">raphael.attr</a> for valid keys and values.
 
 <h3 class="apimethod">jsav.g.polyline(points[, properties]) and jsav.polygon(points[, properties])</h3>
 Initializes a polyline or polygon. Parameter ```points``` should be an array of arrays with
   x and y coordinates. For example:
 
-    var polyline = av.g.polyline([[0, 0], [20, 20], [200, 200]], 
-                                  {"stroke-width": 7, "stroke":"#ddd"});
-Optional parameter 
-  ```properties```,if given, should be an object with key-value pairs. See 
+{% highlight javascript %}
+var polyline = av.g.polyline([[0, 0], [20, 20], [200, 200]],
+                              {"stroke-width": 7, "stroke":"#ddd"});
+{% endhighlight %}
+
+Optional parameter ```properties```, if given, should be an object with key-value pairs. See
   <a href="http://raphaeljs.com/reference.html#Element.attr">raphael.attr</a> for valid keys and values.
 
 <h3 class="apimethod">.translatePoint(point, dx, dy)</h3>

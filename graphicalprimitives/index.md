@@ -10,9 +10,9 @@ The primitive-specific pages give more details on what functions are available f
 overview of their common functionality. All the types are in the JSAV.g namespace. A rectangle, for example, can be
 initialized like follows.
 
-```javascript
+{% highlight javascript %}
 var rect = av.g.rect(70, 60, 50, 40);
-```
+{% endhighlight %}
 
 This would initialize a rectangle with upper-left corner at point (70, 60) that
   is 50 pixels wide and 40 pixels tall.
@@ -56,9 +56,9 @@ Rotates the object by the given amount of degrees around the center of the shape
 Scales the object by given amount. The shortcuts for X/Y scaling only
   are the same as calling ```.scale(sx, 0)``` and ```.scale(0, sy)```. For example
 
-```javascript
+{% highlight javascript %}
 rect.scale(2, 1.5)
-```
+{% endhighlight %}
 
 would make the rectangle from the previous example to have width of 100 pixels and height of 60px. Note, that the position of the rectangle would also change, since the scaling is done relative to the center of the shape.
 
