@@ -1,6 +1,6 @@
 ---
 layout: subpage
-title: Tutorial - Creating a Profiency Exercise with JSAV
+title: Tutorial - Creating a Proficiency Exercise with JSAV
 ---
 
 
