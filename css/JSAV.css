@@ -773,3 +773,72 @@ ul.jsavcode {
 .jsavdisabled {
   pointer-events: none;
 }
+
+/******** KEY-VALUE PAIR DATA STRUCTURE ****/
+.jsav-pair-section {
+  display: flex;
+  margin-top: 5px;
+}
+
+.jsav-pair {
+  min-width: 70%;
+  position: relative;
+  display: inline-block;
+  text-align: center;
+  margin: 0 auto;
+  list-style: none;
+  border: 2px solid black;
+  font-size: 1.1em;
+  font-family: monospace;
+  box-shadow: 2px 2px 5px rgba(120, 120, 120, 0.5);
+}
+
+.jsav-pair.jsav-pair-highlight {
+  background-color: green;
+}
+
+.jsav-pair-key,
+.jsav-pair-values {
+  line-height: 40px;
+  display: inline-block;
+  box-sizing: border-box;
+}
+
+.jsav-pair-key {
+  width: 40%;
+  float: left;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+}
+
+.jsav-pair-key.jsav-pair-key-highlight {
+  background-color: cornflowerblue;
+}
+
+.jsav-pair-values {
+  width: 60%;
+  float: right;
+  border-left: 2px solid black;
+}
+
+.jsav-pair-values.jsav-pair-values-highlight {
+  background-color: yellow;
+}
+
+.jsav-pair:hover {
+  background-color: rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+}
+
+.idContainer {
+  width: 100px;
+  height: 44px;
+  color: black;
+  display: inline-block;
+  text-align: center;
+  margin: 0 auto;
+  box-sizing: border-box;
+  border: 2px solid black;
+}

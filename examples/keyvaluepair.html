@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Title</title>
+
+        <link rel="stylesheet" href="../css/JSAV.css" type="text/css" media="screen" title="no title" charset="utf-8" />
+    </head>
+    <body>
+        <h1>Key-Value Pair Prototype</h1>
+        <div id="av">
+            <div class="jsavcontrols"></div>
+            <span class="jsavcounter"></span>
+            <p class="jsavoutput jsavline"></p>
+            <div class="jsavcanvas"></div>
+        </div>
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js"></script>
+        <script src="../lib/jquery.transit.js"></script>
+        <script src="../lib/raphael.js"></script>
+        <script src="../build/JSAV.js"></script>
+
+        <script>
+            (function() {
+                var getKeyValuePair = function(key, values) {
+                    var keyValuePair = {
+                        key: key,
+                        values: values
+                    };
+
+                    return keyValuePair;
+                };
+
+                var av = new JSAV("av");
+
+                var p1 = {key: "hello", values: "1, 1"}; //getKeyValuePair("Hello", "1");
+
+                av.umsg("Placing elements into dummy pair");
+                var pair = av.ds.keyValuePair(p1);
+                pair.layout();
+                av.displayInit();
+                av.step();
+
+                pair.addIDContainer("Test", 1);
+
+                av.umsg("Highlighting whole pair");
+                pair.highlight();
+                av.step();
+
+                av.umsg("Unhighlighting whole pair");
+                pair.unhighlight();
+                av.step();
+
+                av.umsg("Highlighting key");
+                pair.highlightKey();
+                av.step();
+
+                av.umsg("Unhighlighting key");
+                pair.unhighlightKey();
+                av.step();
+
+                av.umsg("Highlighting value/s");
+                pair.highlightValues();
+                av.step();
+
+                av.umsg("Unhighlighting value/s");
+                pair.unhighlightValues();
+                av.step();
+
+                av.umsg("Adding a second Key-Value Pair");
+                var p2 = {key: "world", values: "1, 1"};
+                var pair2 = av.ds.keyValuePair(p2);
+                pair2.layout();
+                av.step();
+
+                av.recorded();
+            }());
+        </script>
+    </body>
+</html>

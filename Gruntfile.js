@@ -31,6 +31,7 @@ module.exports = function(grunt) {
               SRC_DIR + 'graphicals.js',
               SRC_DIR + 'datastructures.js',
               SRC_DIR + 'array.js',
+              SRC_DIR + 'keyvaluepair.js',
               SRC_DIR + 'tree.js',
               SRC_DIR + 'list.js',
               SRC_DIR + 'graph.js',
