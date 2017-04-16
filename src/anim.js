@@ -115,6 +115,10 @@
   
 
   JSAV.init(function() {
+    // Make sure that we initialize everything if this is being re-created
+    $(".jsavcontrols").html("");
+    $(".jsavcanvas").empty();
+
     this._animations = 0;
     this._redo = []; // stack for operations to redo
     this._undo = []; // stack for operations to undo
