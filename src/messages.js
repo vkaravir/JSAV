@@ -146,14 +146,14 @@
       if($(this).hasClass("sound")) {
         $(this).removeClass("sound").addClass("soundOff");
         jsav.logEvent({
-          "type": "jsav-narration-on",
+          "type": "jsav-narration-off",
           "currentStep": jsav.currentStep(),
           "totalSteps": jsav.totalSteps()
         });
       } else {
         $(this).removeClass("soundOff").addClass("sound");
         jsav.logEvent({
-          "type": "jsav-narration-off",
+          "type": "jsav-narration-on",
           "currentStep": jsav.currentStep(),
           "totalSteps": jsav.totalSteps()
         });
