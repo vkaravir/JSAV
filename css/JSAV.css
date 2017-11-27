@@ -842,3 +842,37 @@ ul.jsavcode {
   box-sizing: border-box;
   border: 2px solid black;
 }
+
+.jsavsound {
+  position:relative;
+  width: 26px;
+  height: 26px;
+  background-position: 50% 50%;
+  background-repeat: no-repeat;
+  background-color: #aaa;
+  text-indent: 120%;
+  padding: 2px;
+  border: 1px solid #777;
+  -o-border-radius: 3px;
+  -ms-border-radius: 3px;
+  -moz-border-radius: 3px;
+  -webkit-border-radius: 3px;
+  border-radius: 50%;
+  float:right;
+  margin-right:10px;
+  display:block;
+  white-space: nowrap;
+  overflow: hidden;
+  z-index:500;
+  outline: 0;
+}
+.jsavsound.sound {
+  background-image: url(images/sound-icon.png);
+}
+.jsavsound.soundOff {
+  background-image: url(images/sound-off.png);
+}
+.jsavsound.sound:hover,
+.jsavsound.soundOff:hover {
+  background-color: #888;
+}
