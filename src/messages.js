@@ -75,15 +75,6 @@
 
   ////////////////////////
   ///////TextToSpeech/////
-  
-  JSAV.narrationEnabled = false;
-  JSAV.enableNarration = function() {
-    JSAV.narrationEnabled = true;
-  };
-  JSAV.disableNarration = function() {
-    JSAV.narrationEnabled = false;
-  };
-
   JSAV.ext.textToSpeech = function(speechText) {
     var modifiedMsg;
     modifiedMsg = speechText.replace(/<[^>]*>/g, "");
@@ -176,8 +167,7 @@
     var self = this;
     var output = options.output ? $(options.output) : $(this.container).find(".jsavoutput");
     this._msg = new MessageHandler(this, output);
-    var narrationEnabled = typeof options.narrationEnabled === "undefined" ? JSAV.narrationEnabled : options.narrationEnabled;
-    if (narrationEnabled) {
+    if (options.narrationEnabled === true) {
       //adding sound button if there is no sound button in the container and the container has both controls and settings button
       if(($(this.container).parent().find(".new").length === 0) && ($(this.container).find(".jsavcontrols").length !== 0) && ($(this.container).parent().find(".jsavsettings").length !== 0)) {
         $(this.container).parent().find(".jsavsettings").wrap("<span class='new'></span>");

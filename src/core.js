@@ -57,7 +57,8 @@
 
     var defaultOptions = $.extend({
       autoresize: true,
-      scroll: true
+      scroll: true,
+      narrationEnabled: false
     }, window.JSAV_OPTIONS);
     // if the container was set based on the first argument, options are the second arg
     if (this.container) {
