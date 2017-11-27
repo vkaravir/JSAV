@@ -29,6 +29,10 @@ Both alternatives accept an optional second parameter <code>options</code>
  * <code>animationMode</code> Use "none" to turn off animation (slideshow) mode.
  * <code>output</code> The output buffer element to use with the Messaging API. The value
     of the option should be a DOM element, CSS selector string, or a jQuery object.
+ * <code>narrationEnabled</code> For slideshows, whether a button should be displayed that will allow the user to
+    turn on narration using the browser's 
+    <code>[SpeechSynthesis](https://developer.mozilla.org/en-US/docs/Web/API/SpeechSynthesis)</code>
+    functionality. Every call to <code>umsg()</code> will be narrated.
  * <code>autoresize</code> Control whether the JSAV canvas element automatically adjusts
     its size based on the content. Defaults to <code>true</code>.
 

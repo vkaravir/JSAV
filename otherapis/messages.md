@@ -79,3 +79,20 @@ Clear the contents of the output message buffer.
 The message API will trigger a ```jsav-message``` event on the JSAV
   ```container``` whenever the output buffer content should change. You
   can listen for this event to integrate more complex output behavior.
+
+<h2>Narration</h2>
+
+JSAV can narrate calls to <code>umsg</code> using the browser's <code>[SpeechSynthesis](https://developer.mozilla.org/en-US/docs/Web/API/SpeechSynthesis)</code> functionality. Narration is disabled by default. To enable narration globally, do: 
+
+{% highlight javascript %}
+window.JSAV_OPTIONS.narrationEnabled = true;. 
+{% endhighlight %}
+
+When enabled, a button that users can click to turn on narration will be added to slideshows. 
+
+To override the global narration setting for an individual 
+slideshow, do:
+
+{% highlight javascript %}
+var av = new JSAV("myAV", {narrationEnabled: true};. 
+{% endhighlight %}
