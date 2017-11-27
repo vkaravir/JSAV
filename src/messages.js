@@ -88,8 +88,6 @@
     var synth = window.speechSynthesis;
     var u = new SpeechSynthesisUtterance();
     var amISpeaking = synth.speaking;
-    var voices = synth.getVoices();
-    u.voice = voices[0];
     u.lang = "en-US";
     u.rate = 1.0;
     // Assign the umsg text to the narration file
