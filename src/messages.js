@@ -41,7 +41,7 @@
     }
     // Narrating every call to umsg
     if($(this.jsav.container).attr("voice") === "true") {
-      JSAV.ext.textToSpeech(msg);
+      this.jsav.textToSpeech(msg);
     }
     if (!this.jsav.RECORD) { // trigger events only if not recording
       this.jsav.container.trigger("jsav-message", [msg, options]);
@@ -59,7 +59,7 @@
       this.jsav.container.trigger("jsav-message", [newValue, this.options]);
       // Narrating for Backward buttons
       if($(this.jsav.container).attr("voice") === "true") {
-        JSAV.ext.textToSpeech(newValue);
+        this.jsav.textToSpeech(newValue);
       }
     } else {
       return this.output.html() || "<span/>";
@@ -73,22 +73,22 @@
     this._msg.clear();
   };
 
-  ////////////////////////
-  ///////TextToSpeech/////
   JSAV.ext.textToSpeech = function(speechText) {
-    var modifiedMsg;
-    modifiedMsg = speechText.replace(/<[^>]*>/g, "");
-    modifiedMsg = modifiedMsg.replace(/\$/g, "");
-    modifiedMsg = modifiedMsg.replace(/\\mathbf/gi, "");
-    modifiedMsg = modifiedMsg.replace(/\\displaystyle/gi, "");
-    modifiedMsg = modifiedMsg.replace(/\\mbox/gi, "");
-    modifiedMsg = modifiedMsg.replace(/n-/gi, "n minus");
-    modifiedMsg = modifiedMsg.replace(/m-/gi, "m minus");
-    modifiedMsg = modifiedMsg.replace(/%/gi, "remainder");
     var synth = window.speechSynthesis;
+    if (typeof synth === "undefined") {
+      return;
+    }
+    var modifiedMsg = speechText;
+    var mods = this.options.narration.replacements;
+    if (mods) {
+      for (var i = 0; i < mods.length; i++) {
+        var mod = mods[i];
+        modifiedMsg = modifiedMsg.replace(mod.searchValue, mod.replaceValue);
+      }
+    }
     var u = new SpeechSynthesisUtterance();
     var amISpeaking = synth.speaking;
-    u.lang = "en-US";
+    u.lang = this.options.narration.lang;
     u.rate = 1.0;
     // Assign the umsg text to the narration file
     u.text = modifiedMsg;
@@ -97,16 +97,14 @@
     }
     synth.speak(u);
   };
-  //////////////////////////////////////////
-////////////Sound control button
-  JSAV.ext.soundSettings = function(jsav) {
-    var self = this;
+
+  var soundSettings = function(jsav) {
     // creating the button element
     var $elem = $("<button class='jsavsound soundOff'></button>");
     // Sound button click event
     $elem.click(function() {
       var txt = $(this.offsetParent).find(".jsavoutput").clone().find(".MathJax").remove().end().text();
-      JSAV.ext.textToSpeech(txt);
+      jsav.textToSpeech(txt);
       // SwitchingOff sound buttons in other frames
       for (var j = 0; j < window.length; j++) {
         $(".sound", window.frames[j].document).not(this).each(function() {
@@ -159,17 +157,26 @@
     });
     return $elem;
   };
-/////////end of sound control
-/////////////////////////////////////////
+
   JSAV.init(function(options) {
-    var self = this;
     var output = options.output ? $(options.output) : $(this.container).find(".jsavoutput");
     this._msg = new MessageHandler(this, output);
-    if (options.narrationEnabled === true) {
-      //adding sound button if there is no sound button in the container and the container has both controls and settings button
-      if(($(this.container).parent().find(".new").length === 0) && ($(this.container).find(".jsavcontrols").length !== 0) && ($(this.container).parent().find(".jsavsettings").length !== 0)) {
+
+    var supportsSpeech = typeof window.speechSynthesis !== "undefined";
+    if (supportsSpeech && options.narration && options.narration.enabled) {
+      // determining language code the browser will use to choose a voice
+      var langMap = this.options.narration.langMap || {};
+      var lang = this.options.lang || 'en';
+      options.narration.lang = langMap[lang] || lang;
+
+      // adding sound button if there is no sound button in the container and 
+      // the container has both controls and settings button
+      if(($(this.container).parent().find(".new").length === 0) && 
+          ($(this.container).find(".jsavcontrols").length !== 0) && 
+          ($(this.container).parent().find(".jsavsettings").length !== 0)) {
+
         $(this.container).parent().find(".jsavsettings").wrap("<span class='new'></span>");
-        $(this.container).parent().find(".new").append(JSAV.ext.soundSettings(self));
+        $(this.container).parent().find(".new").append(soundSettings(this));
       }
       //adding voice attribute to the container
       $(this.container).attr("voice", "false");

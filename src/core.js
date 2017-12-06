@@ -57,14 +57,13 @@
 
     var defaultOptions = $.extend({
       autoresize: true,
-      scroll: true,
-      narrationEnabled: false
+      scroll: true
     }, window.JSAV_OPTIONS);
     // if the container was set based on the first argument, options are the second arg
     if (this.container) {
-      this.options = $.extend(defaultOptions, arguments[1]);
+      this.options = $.extend(true, defaultOptions, arguments[1]);
     } else { // otherwise assume the first argument is options (if exists)
-      this.options = $.extend(defaultOptions, arguments[0]);
+      this.options = $.extend(true, defaultOptions, arguments[0]);
       // set the element option as the container
       this.container = $(this.options.element);
     }
@@ -165,5 +164,32 @@
 
   if (window) {
     window.JSAV = JSAV;
+
+    // Set narration options here so that developers can access and modify the 
+    // default narration replacement patterns used.
+    window.JSAV_OPTIONS = {
+      narration: {
+        enabled: false,
+        // specifies replacement patterns for text that should 
+        // not be read by the narrator
+        replacements: [
+          {searchValue: /<[^>]*>/g, replaceValue: ""},
+          {searchValue: /\$/g, replaceValue: ""},
+          {searchValue: /\\mathbf/gi, replaceValue: ""},
+          {searchValue: /\\displaystyle/gi, replaceValue: ""},
+          {searchValue: /\\mbox/gi, replaceValue: ""},
+          {searchValue: /n-/gi, replaceValue: ""},
+          {searchValue: /m-/gi, replaceValue: ""},
+          {searchValue: /%/gi, replaceValue: ""}
+        ],
+        // The speechSynthesis API uses IETF language tags.
+        // For languages that have regional variations, this mapping
+        // specifies which variation to use for the narration voice.
+        langMap: {
+          "en": "en-US",
+          "fr": "fr-FR"
+        }
+      }
+    };
   }
 }(jQuery));
