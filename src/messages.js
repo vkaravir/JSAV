@@ -41,7 +41,7 @@
     }
     // Narrating every call to umsg
     if($(this.jsav.container).attr("voice") === "true") {
-      this.jsav.textToSpeech(msg);
+      this.jsav.textToSpeech(msg, this.jsav.options.narration);
     }
     if (!this.jsav.RECORD) { // trigger events only if not recording
       this.jsav.container.trigger("jsav-message", [msg, options]);
@@ -59,13 +59,13 @@
       this.jsav.container.trigger("jsav-message", [newValue, this.options]);
       // Narrating for Backward buttons
       if($(this.jsav.container).attr("voice") === "true") {
-        this.jsav.textToSpeech(newValue);
+        this.jsav.textToSpeech(newValue, this.jsav.options.narration);
       }
     } else {
       return this.output.html() || "<span/>";
     }
   };
-  
+
   JSAV.ext.umsg = function(msg, options) {
     this._msg.umsg(msg, options);
   };
@@ -73,22 +73,23 @@
     this._msg.clear();
   };
 
-  JSAV.ext.textToSpeech = function(speechText) {
+  JSAV.ext.textToSpeech = function(speechText, options) {
     var synth = window.speechSynthesis;
     if (typeof synth === "undefined") {
       return;
     }
     var modifiedMsg = speechText;
-    var mods = this.options.narration.replacements;
-    if (mods) {
-      for (var i = 0; i < mods.length; i++) {
-        var mod = mods[i];
-        modifiedMsg = modifiedMsg.replace(mod.searchValue, mod.replaceValue);
-      }
+    var replacements = options.overrideReplacements || options.replacements || [];
+    if (options.appendReplacements) {
+      replacements = replacements.concat(options.appendReplacements);
+    }
+    for (var i = 0; i < replacements.length; i++) {
+      var replacement = replacements[i];
+      modifiedMsg = modifiedMsg.replace(replacement.searchValue, replacement.replaceValue);
     }
     var u = new SpeechSynthesisUtterance();
     var amISpeaking = synth.speaking;
-    u.lang = this.options.narration.lang;
+    u.lang = options.lang || 'en';
     u.rate = 1.0;
     // Assign the umsg text to the narration file
     u.text = modifiedMsg;
@@ -103,9 +104,6 @@
     var $elem = $("<button class='jsavsound soundOff'></button>");
     // Sound button click event
     $elem.click(function() {
-      var txt = $(this.offsetParent).find(".jsavoutput").clone().find(".MathJax").remove().end().text();
-      jsav.textToSpeech(txt);
-      // SwitchingOff sound buttons in other frames
       for (var j = 0; j < window.length; j++) {
         $(".sound", window.frames[j].document).not(this).each(function() {
           $(this.offsetParent).parent().find(".jsavcontainer").attr("voice", "false");
@@ -147,6 +145,8 @@
           "totalSteps": jsav.totalSteps()
         });
       } else {
+        var txt = $(this.offsetParent).find(".jsavoutput").clone().find(".MathJax").remove().end().text();
+        jsav.textToSpeech(txt, jsav.options.narration);
         $(this).removeClass("soundOff").addClass("sound");
         jsav.logEvent({
           "type": "jsav-narration-on",
@@ -169,10 +169,10 @@
       var lang = this.options.lang || 'en';
       options.narration.lang = langMap[lang] || lang;
 
-      // adding sound button if there is no sound button in the container and 
+      // adding sound button if there is no sound button in the container and
       // the container has both controls and settings button
-      if(($(this.container).parent().find(".new").length === 0) && 
-          ($(this.container).find(".jsavcontrols").length !== 0) && 
+      if(($(this.container).parent().find(".new").length === 0) &&
+          ($(this.container).find(".jsavcontrols").length !== 0) &&
           ($(this.container).parent().find(".jsavsettings").length !== 0)) {
 
         $(this.container).parent().find(".jsavsettings").wrap("<span class='new'></span>");

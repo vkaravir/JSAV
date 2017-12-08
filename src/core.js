@@ -44,7 +44,7 @@
     JSAV.init.functions.push(f);
   };
   JSAV.init.functions = [];
-  
+
   var create = function() {
     // this will point to a newly-created JSAV instance
     if (typeof arguments[0] === "string") {
@@ -165,12 +165,12 @@
   if (window) {
     window.JSAV = JSAV;
 
-    // Set narration options here so that developers can access and modify the 
+    // Set narration options here so that developers can access and modify the
     // default narration replacement patterns used.
     window.JSAV_OPTIONS = {
       narration: {
         enabled: false,
-        // specifies replacement patterns for text that should 
+        // specifies replacement patterns for text that should
         // not be read by the narrator
         replacements: [
           {searchValue: /<[^>]*>/g, replaceValue: ""},
@@ -178,9 +178,9 @@
           {searchValue: /\\mathbf/gi, replaceValue: ""},
           {searchValue: /\\displaystyle/gi, replaceValue: ""},
           {searchValue: /\\mbox/gi, replaceValue: ""},
-          {searchValue: /n-/gi, replaceValue: ""},
-          {searchValue: /m-/gi, replaceValue: ""},
-          {searchValue: /%/gi, replaceValue: ""}
+          {searchValue: /n-/gi, replaceValue: "n minus"},
+          {searchValue: /m-/gi, replaceValue: "m minus"},
+          {searchValue: /%/gi, replaceValue: "remainder"}
         ],
         // The speechSynthesis API uses IETF language tags.
         // For languages that have regional variations, this mapping
