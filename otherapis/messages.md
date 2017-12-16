@@ -83,8 +83,6 @@ The message API will trigger a ```jsav-message``` event on the JSAV
 <h2>Narration</h2>
 
 JSAV can narrate calls to <code>umsg</code> using the browser's [SpeechSynthesis](https://developer.mozilla.org/en-US/docs/Web/API/SpeechSynthesis) functionality. Narration is disabled by default. To configure global narration options, you can modify the properties of the <code>window.JSAV_OPTIONS.narration</code> object. The properties of this object include:
-
-Global narration options also include:
 - enabled: A boolean indicating whether a button that users can click to turn on/off narration will be added to slideshows. Defaults to <code>false</code>.
 - replacements: An array of objects that specify certain patterns that should be replaced
 before the text is given to the SpeechSynthesis API. These objects have the format:
