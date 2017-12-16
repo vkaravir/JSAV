@@ -82,17 +82,28 @@ The message API will trigger a ```jsav-message``` event on the JSAV
 
 <h2>Narration</h2>
 
-JSAV can narrate calls to <code>umsg</code> using the browser's <code>[SpeechSynthesis](https://developer.mozilla.org/en-US/docs/Web/API/SpeechSynthesis)</code> functionality. Narration is disabled by default. To enable narration globally, do: 
+JSAV can narrate calls to <code>umsg</code> using the browser's [SpeechSynthesis](https://developer.mozilla.org/en-US/docs/Web/API/SpeechSynthesis) functionality. Narration is disabled by default. To configure global narration options, you can modify the properties of the <code>window.JSAV_OPTIONS.narration</code> object. The properties of this object include:
 
-{% highlight javascript %}
-window.JSAV_OPTIONS.narrationEnabled = true;. 
-{% endhighlight %}
+Global narration options also include:
+- enabled: A boolean indicating whether a button that users can click to turn on/off narration will be added to slideshows. Defaults to <code>false</code>.
+- replacements: An array of objects that specify certain patterns that should be replaced
+before the text is given to the SpeechSynthesis API. These objects have the format:
+  ```
+    {
+      searchValue: <regexp or substring>,
+      replaceValue: <replacement substring, or function>
+    }
+  ```
+  The values specified by searchValue and replaceValue will be passed as arguments to 
+  <code>[String.replace()](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/replace)</code>.
+- langMap: The speechSynthesis API uses IETF lanaguage tags to label, which can include region subtags for languages that have regional variations (e.g. en-US and en-UK). This object specifies how the language of the visualization should be mapped to IETF language tags, which can affect the accent of the voice used by the SpeechSynthesis API. If no mapping exists, then the language of the visualization will be used directly. Below is an example of a langMap object:
+  ```
+    {
+      "en": "en-US",
+      "fr": "fr-FR"
+    }
+  ```
+  
+So in order to enable narration, you can do <code>window.JSAV_OPTIONS.narration.enabled = true</code>
 
-When enabled, a button that users can click to turn on narration will be added to slideshows. 
-
-To override the global narration setting for an individual 
-slideshow, do:
-
-{% highlight javascript %}
-var av = new JSAV("myAV", {narrationEnabled: true};. 
-{% endhighlight %}
+For information on how to override the global narration settings for an individual slideshow, see [Creating A Visualization](../getstarted/creatingvisualization.md).
