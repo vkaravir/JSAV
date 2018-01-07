@@ -89,10 +89,7 @@ We create a placeholder for what will display the current score.
 Finally, we position the message output, which is merely a special
 type of paragraph.
 
-
-<p>
 Next we load in the various libraries.
-
 
 {% highlight html %}
 <script
