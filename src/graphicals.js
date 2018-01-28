@@ -104,6 +104,18 @@ if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
       id: JSAV._types.JSAVObject.prototype.id,
       clear: function() {
         this.rObj.remove();
+      },
+      equals: function (otherObj, options) {
+        if (!otherObj || !(otherObj instanceof JSAVGraphical)) {
+          return false;
+        }
+        // TODO: this should also consider the relevant attributes
+        // of the object in order for grading to work properly
+        if (options && 'class' in options) { // if comparing class attributes
+          var classEquals = JSAV.utils._helpers.classEquals(this, otherObj, options["class"]);
+          if (!classEquals) { return false; }
+        }
+        return true;
       }
     };
     var graphicalproto = JSAVGraphical.prototype;
