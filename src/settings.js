@@ -47,7 +47,7 @@
         JSAV.ext.SPEED = speed;
         //trigger speed change event to update all AVs on the page
         $(document).trigger("jsav-speed-change", speed);
-        if (localStorage) {
+        if (typeof localStorage !== 'undefined' && localStorage) {
           localStorage.setItem("jsav-speed", speed);
         }
       };
