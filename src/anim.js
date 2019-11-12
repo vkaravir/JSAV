@@ -161,7 +161,6 @@
     };
     // reqister event handlers for the control buttons
     var beginHandler = function(e) {
-      MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
       e.preventDefault();
       e.stopPropagation();
       // if playing flag is set, don't respond
@@ -174,7 +173,6 @@
       logAnimEvent("jsav-begin");
     };
     var backwardHandler = function(e, filter) {
-      MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
       e.preventDefault();
       e.stopPropagation();
       e.stopPropagation();
@@ -187,7 +185,6 @@
       logAnimEvent("jsav-backward");
     };
     var forwardHandler = function(e, filter) {
-      MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
       e.preventDefault();
       e.stopPropagation();
       if (that.container.hasClass(playingCl)) { return; }
@@ -198,7 +195,6 @@
       logAnimEvent("jsav-forward");
     };
     var endHandler = function(e) {
-      MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
       e.preventDefault();
       e.stopPropagation();
       if (that.container.hasClass(playingCl)) { return; }
