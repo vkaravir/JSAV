@@ -421,7 +421,7 @@
     } else if (typeof(codelines) === "string") {
       // strings will be split at newline characters
       codelines = codelines.split("\n");
-    } else if (typeof(codelines) === "object" && !$.isArray(codelines)) {
+    } else if (typeof(codelines) === "object" && !Array.isArray(codelines)) {
       options = codelines;
       // if no codelines are given, we assume options includes a URL
       $.ajax( {
@@ -508,12 +508,12 @@
     if (linenum) {
       if (typeof linenum === "number") {
         indices = linenum - 1;
-      } else if ($.isArray(linenum)) {
+      } else if (Array.isArray(linenum)) {
         indices = [];
         for (var i = 0; i < linenum.length; i++) {
           indices[i] = linenum[i] - 1;
         }
-      } else if ($.isFunction(linenum)) {
+      } else if (typeof linenum === "function") {
         indices = function (ind) { return linenum(ind + 1); };
       }
     }
@@ -611,10 +611,10 @@
     } else if (typeof linenum === "string" && typeof cssprop === "undefined") {
       return this.element.css(linenum);
     } else {
-      if ($.isFunction(linenum)) { // if linenum is a function, evaluate it right away and get a list of indices
+      if (typeof linenum === "function") { // if linenum is a function, evaluate it right away and get a list of indices
         var all_elems = $(this.element).find("li.jsavcodeline"),
           sel_indices = []; // array of selected indices
-        for (var i = 0; i < $elems.size(); i++) {
+        for (var i = 0; i < $elems.length; i++) {
           sel_indices.push(all_elems.index($elems[i]) + 1);
         }
         linenum = sel_indices;
@@ -624,7 +624,7 @@
   };
   codeproto.show = function(linenum, options) {
     if ((typeof(linenum) === "undefined" || typeof(linenum) === "object") &&
-        !$.isArray(linenum) && this.element.filter(":visible").size() === 0) {
+        !Array.isArray(linenum) && this.element.filter(":visible").length === 0) {
       return this._toggleVisible(linenum);
     } else {
       return this.removeClass(linenum, "jsavhiddencode", options);
@@ -632,7 +632,7 @@
   };
   codeproto.hide = function(linenum, options) {
     if ((typeof(linenum) === "undefined" || typeof(linenum) === "object") &&
-        !$.isArray(linenum) && this.element.filter(":visible").size() === 1) {
+        !Array.isArray(linenum) && this.element.filter(":visible").length === 1) {
       return this._toggleVisible(linenum);
     } else {
       return this.addClass(linenum, "jsavhiddencode", options);

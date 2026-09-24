@@ -78,7 +78,7 @@
     // == Environments ====================================================
     //
     // These options pre-define global variables that are exposed by
-    // popular JavaScript libraries and runtime environments—such as
+    // popular JavaScript libraries and runtime environmentsï¿½such as
     // browser or node.js.
     
     "browser"       : true,     // Standard browser globals e.g. `window`, `document`.
@@ -113,7 +113,8 @@
     "maxerr"        : 100,      // Maximum errors before stopping.
     "predef"        : [         // Extra globals.
         "JSAV", 
-        "Raphael"
+        "d3"
+        // "Raphael"
     ],
     "indent"        : 2         // Specify indentation spacing
 }

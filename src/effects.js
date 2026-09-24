@@ -200,13 +200,38 @@
         complete: function() { that._animations--; }
       });
     },
+    createArrowEnd: function(svg, options) {
+      
+      var markerId = "arrow-style-" + options[0];
+      var existingMarker = d3.select(svg).select("#" + markerId);
+
+      if (!existingMarker.empty()) {
+        return markerId;
+      }
+
+      var arrow_end = d3.select(svg).append("marker")
+        .attr("id", markerId)
+        .attr("viewBox", "0 -5 10 10")
+        .attr("refX", 5)
+        .attr("refY", 0)
+        .attr("markerWidth", 4)
+        .attr("markerHeight", 4)
+        .attr("orient", "270deg")
+        .append("path")
+        .attr("d", options[1])
+        .attr("fill", "lightGray");
+      
+      return markerId;
+    },
     /* Animate the properties of the given elements with CSS3 transitions */
     transition: function($elems, cssProps, options) {
       this._animations += $elems.length;
       var that = this;
-      $elems.transition(cssProps, {duration: (options && options.duration) || this.SPEED,
-                                    delay: (options && options.delay) || 0,
-                                    complete: function() { that._animations--; }
+      
+      var duration = (options && options.duration) || this.SPEED;
+      var delay = (options && options.delay) || 0;
+      $elems.delay(delay).animate(cssProps, duration, function() {
+        that._animations--;
       });
     },
     /* toggles visibility of an element */
@@ -220,14 +245,14 @@
     },
     /* shows an element */
     show: function(options) {
-      if (this.element.filter(":visible").size() === 0) {
+      if (this.element.filter(":visible").length === 0) {
         this._toggleVisible(options);
       }
       return this;
     },
     /* hides an element */
     hide: function(options) {
-      if (this.element.filter(":visible").size() > 0) {
+      if (this.element.filter(":visible").length > 0) {
         this._toggleVisible(options);
       }
       return this;
@@ -250,7 +275,8 @@
       JSAV.anim(doValueEffect).call(this, params);
     },
     swap: function($str1, $str2, options) {
-      var opts = $.extend({translateY: true, arrow: true, highlight: true, swapClasses: false}, options),
+      // var opts = $.extend({translateY: true, arrow: true, highlight: true, swapClasses: false}, options),
+      var opts = $.extend({translateY: true, marker: true, highlight: true, swapClasses: false}, options),
           $val1 = $str1.find("span.jsavvalue"),
           $val2 = $str2.find("span.jsavvalue"),
           classes1 = $str1.attr("class"),
@@ -276,7 +302,8 @@
 
       // ..and finally animate..
       if (this._shouldAnimate()) {  // only animate when playing, not when recording
-        if ('Raphael' in window && opts.arrow) { // draw arrows only if Raphael is loaded
+        // if ('Raphael' in window && opts.arrow) { // draw arrows only if Raphael is loaded
+        if ('d3' in window && opts.marker){
           var off1 = $val1.offset(),
               off2 = $val2.offset(),
               coff = this.canvas.offset(),
@@ -289,7 +316,8 @@
               cx2 = x2,
               cy1 = y2 + curve,
               cy2 = y2 + curve,
-              arrowStyle = "classic-wide-long";
+              // arrowStyle = "classic-wide-long";
+              upward = ["upward", "M0,5L10,0L0,-5L3,0Z"];
           if (posdiffY > 1 || posdiffY < 1) {
             y2 = off2.top - coff.top + $val2.outerHeight() + 5;
             var angle = (y2 - y1) / (x2 - x1),
@@ -301,7 +329,23 @@
             cx2 = x2 - angle*Math.sqrt(y2*y2 - c2);
           }
           // .. and draw a curved path with arrowheads
-          var arr = this.getSvg().path("M" + x1 + "," + y1 + "C" + cx1 + "," + cy1 + " " + cx2 + "," + cy2 + " " + x2 + "," + y2).attr({"arrow-start": arrowStyle, "arrow-end": arrowStyle, "stroke-width": 5, "stroke":"lightGray"});
+          // var arr = this.getSvg().path("M" + x1 + "," + y1 + "C" + cx1 + "," + cy1 + " " + cx2 + "," + cy2 + " " + x2 + "," + y2).attr({"arrow-start": arrowStyle, "arrow-end": arrowStyle, "stroke-width": 5, "stroke":"lightGray"});
+          var arr_svg = this.getSvg();
+
+          // Create the arrow end
+          var upwardstr = this.effects.createArrowEnd(arr_svg, upward);
+
+          var arr = d3.select(arr_svg)
+          .append('path')
+          .attr('d', "M" + x1 + "," + y1 + "C" + cx1 + "," + cy1 + " " + cx2 + "," + cy2 + " " + x2 + "," + y2)
+          .attr('path', "M" + " " + x1 + "," + y1 + "C" + " " + cx1 + "," + cy1 + " " + cx2 + "," + cy2 + " " + x2 + "," + y2)    
+          .attr("stroke-width", 5)
+          .attr('stroke', 'lightGray')
+          .attr('fill', 'none')
+          .attr('opacity', 1)
+          .attr("marker-start", "url(#" + upwardstr + ")")
+          .attr("marker-end", "url(#" + upwardstr + ")");
+ 
         }
         // .. then set the position so that the array appears unchanged..
         $val2.css({"x": -posdiffX, "y": -posdiffY, z: 1});

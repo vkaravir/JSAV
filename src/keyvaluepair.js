@@ -126,7 +126,7 @@
     keyValuePairPrototype.css = function(cssprop, options) {
         if (typeof cssprop === "string") {
             return this.element.css(cssprop);
-        } else if (!$.isArray(cssprop) && typeof cssprop === "object") { // object, apply for array
+        } else if (!Array.isArray(cssprop) && typeof cssprop === "object") { // object, apply for array
             return this._setPairCss(cssprop, options);
         }
     };
@@ -281,13 +281,13 @@
                 // log the event
                 self.jsav.logEvent({type: "jsav-pair-" + eventType, pair: pair});
 
-                if ($.isFunction(data)) { // if no custom data..
+                if (typeof data === "function") { // if no custom data..
                     // ..bind this to the pair and call handler
                     // with params pair index and the event
                     data.call(self, pair, e);
-                } else if ($.isFunction(handler)) { // if custom data is passed
+                } else if (typeof handler === "function") { // if custom data is passed
                     // ..bind this to the array and call handler
-                    var params = $.isArray(data)?data.slice(0):[data]; // get a cloned array or data as array
+                    var params = Array.isArray(data)?data.slice(0):[data]; // get a cloned array or data as array
                     params.unshift(pair); // add index to first parameter
                     params.push(e); // jQuery event as the last
                     handler.apply(self, params); // apply the function

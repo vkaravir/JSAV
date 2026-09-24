@@ -72,7 +72,7 @@
       this.options.template = templates[this.options.layout + (this.options.indexed?"-indexed":"")];
     }
     this._indices = [];
-    if ($.isArray(element)) {
+    if (Array.isArray(element)) {
       this.initialize(element);
     } else if (element) { // assume it's a DOM element
       this.element = $(element);
@@ -123,7 +123,7 @@
       return $elems.css(cssprop);
     } else if (typeof indices === "string") {
       return this.element.css(indices);
-    } else if (!$.isArray(indices) && typeof indices === "object") { // object, apply for array
+    } else if (!Array.isArray(indices) && typeof indices === "object") { // object, apply for array
       return this._setarraycss(indices, options);
     } else {
       var indArray = JSAV.utils._helpers.normalizeIndices($(this.element).find("li.jsavindex"), indices);
@@ -152,7 +152,7 @@
     newArray.state(this.state());
     return newArray;
   };
-  arrproto.size = function() { return this.element.find("li").size(); };
+  arrproto.size = function() { return this.element.find("li").length; };
   arrproto.value = function(index, newValue, options) {
     if (typeof newValue === "undefined") {
       return this._values[index];
@@ -309,7 +309,7 @@
       cssprop,
       clazzname,
       len;
-    if ($.isArray(otherArray)) { // simple case of array values
+    if (Array.isArray(otherArray)) { // simple case of array values
       if (!options) { // if nothing in options is specified
         len = otherArray.length;
         if (this.size() !== len) { // don't compare arrays of different size
@@ -342,7 +342,7 @@
         }
       }
       if ('css' in opts) { // if comparing css properties
-        if ($.isArray(opts.css)) { // array of property names
+        if (Array.isArray(opts.css)) { // array of property names
           for (i = 0; i < opts.css.length; i++) {
             cssprop = opts.css[i];
             for (j = 0; j < len; j++) {
@@ -359,7 +359,7 @@
         }
       }
       if ('class' in opts) { // if comparing class attributes
-        if ($.isArray(opts["class"])) { // array of class names
+        if (Array.isArray(opts["class"])) { // array of class names
           for (i = 0; i < opts["class"].length; i++) {
             clazzname = opts["class"][i];
             for (j = 0; j < len; j++) {
@@ -434,13 +434,13 @@
         var index = self.element.find(".jsavindex").index(this);
         // log the event
         self.jsav.logEvent({type: "jsav-array-" + eventType, arrayid: self.id(), index: index});
-        if ($.isFunction(data)) { // if no custom data..
+        if (typeof data === "function") { // if no custom data..
           // ..bind this to the array and call handler
           // with params array index and the event
           data.call(self, index, e);
-        } else if ($.isFunction(handler)) { // if custom data is passed
+        } else if (typeof handler === "function") { // if custom data is passed
           // ..bind this to the array and call handler
-          var params = $.isArray(data)?data.slice(0):[data]; // get a cloned array or data as array
+          var params = Array.isArray(data)?data.slice(0):[data]; // get a cloned array or data as array
           params.unshift(index); // add index to first parameter
           params.push(e); // jQuery event as the last
           handler.apply(self, params); // apply the function
@@ -474,12 +474,12 @@
       if (this.options.layout !== "bar") { return; } // not bar layout
       var valelem = this.element.find("li .jsavvalue").eq(index),
           lielem = valelem.parent();
-      if (valelem.size() === 0 ) { return; } // no such index
+      if (valelem.length === 0 ) { return; } // no such index
       var opts = $.extend({startIndex: 0, endIndex: this.size() - 1}, options);
 
       var $mark = lielem.find(".jsavmark"),
           $markline = lielem.find(".jsavmarkline");
-      if ($markline.size() === 0 && $mark.size() === 0) { // no mark exists yet
+      if ($markline.length === 0 && $mark.length === 0) { // no mark exists yet
         if (opts.markStyle !== null) { // mark is not disabled
           $mark = $("<div class='jsavmark' />");
           lielem.prepend($mark);

@@ -195,7 +195,7 @@
     }
   };
   sproto.add = function(create, options) {
-    if ($.isFunction(create)) {
+    if (typeof create === "function") {
       // create is a function that returns a DOM Element or jQuery object or HTML string
       this.components.push(create);
     } else {

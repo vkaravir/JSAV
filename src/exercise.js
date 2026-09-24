@@ -24,7 +24,7 @@
     // initialize controls
     var cont = $(this.options.controls),
         self = this;
-    if (cont.size() === 0) {
+    if (cont.length === 0) {
       cont = this.jsav.container.find(".jsavexercisecontrols");
     }
     // function to handle the reset event
@@ -42,7 +42,7 @@
     // allow reset and model answer through an event triggered on container
     this.jsav.container.bind({"jsav-exercise-reset": resetHandler,
                               "jsav-exercise-model": modelHandler});
-    if (cont.size()) {
+    if (cont.length) {
       var $reset = $('<input type="button" name="reset" value="' + this.options.resetButtonTitle + '" />')
                       .click(resetHandler),
           $model = $('<input type="button" name="answer" value="' + this.options.modelButtonTitle + '" />')
@@ -91,7 +91,7 @@
 
     // if jsavscore element is present and empty, add default structure
     var $jsavscore = this.jsav.container.find(".jsavscore");
-    if ($jsavscore.size() === 1 && $jsavscore.children().size() === 0 &&
+    if ($jsavscore.length === 1 && $jsavscore.children().length === 0 &&
       this.options.feedback === "continuous") {
       $jsavscore.html(this.jsav._translate("scoreLabel") + ' <span class="jsavcurrentscore"></span> / ' +
           '<span class="jsavmaxscore" ></span>, <span class="jsavamidone">' + this.jsav._translate("remainingLabel") +
@@ -101,7 +101,7 @@
     }
     
     // if custom showGrade function is given
-    if (this.options.showGrade && $.isFunction(this.options.showGrade)) {
+    if (this.options.showGrade && typeof this.options.showGrade === "function") {
       this.showGrade = this.options.showGrade;
     }
 
@@ -113,8 +113,8 @@
   };
   Exercise.GradeStepFilterFunction = gradeStepFilterFunction;
   var allEqual = function(initial, model, compare) {
-    if ($.isArray(initial)) {
-      if (!compare ) { compare = [];} // initialize compare to an empty array
+    if (Array.isArray(initial)) {
+      if (!compare) { compare = [];} // initialize compare to an empty array
       for (var i = 0; i < initial.length; i++) {
         if (!model[i].equals(initial[i], compare[i])) {
           return false;
@@ -280,7 +280,7 @@
     }
     var prevFx = $.fx.off || false;
     $.fx.off = true;
-    if ($.isFunction(this.options.grader)) {
+    if (typeof this.options.grader === "function") {
       this.options.grader.call(this);
     } else {
       graders[this.options.grader + (continuousMode ? "-continuous" : "")].call(this);
@@ -333,10 +333,10 @@
       eventData.type = eventData.type.replace("jsav-", "jsav-exercise-model-");
       $("body").trigger("jsav-log-event", eventData);
     };
-    if ($.isFunction(model)) {
+    if (typeof model === "function") {
       // behavior in a nutshell:
       // 1. create a new JSAV (and the HTML required for it)
-      modelav = new JSAV($("<div><span class='jsavcounter'/><div class='jsavcontrols'/><p class='jsavoutput jsavline'></p></div>").addClass("jsavmodelanswer"),
+      modelav = new JSAV($("<div><span class='jsavcounter'></span><div class='jsavcontrols'></div><p class='jsavoutput jsavline'></p></div>").addClass("jsavmodelanswer"),
               {logEvent: modelLogHandler });
 
       // add a gradeableStep function to the modelanswer jsav instance
@@ -455,7 +455,7 @@
           that.undo();
           that.score.student--;
         }
-        if (fixmode === "fix" && $.isFunction(that.options.fix)) {
+        if (fixmode === "fix" && typeof that.options.fix === "function") {
           // call the fix function of the exercise to correct the state
           that._fixing = true;
           var modelAv = that.modelav, studentAv = that.jsav;
@@ -507,7 +507,7 @@
   };
   exerproto.fix = function() {
     var fix = this.options.fix;
-    if ($.isFunction(fix)) {
+    if (typeof fix === "function") {
       var prevFx = $.fx.off || false;
       $.fx.off = true;
       fix(this.modelStructures);
@@ -523,7 +523,7 @@
         oldFx = $.fx.off || false;
     $.fx.off = true;
     var getstate = function() {
-      if ($.isArray(initial)) {
+      if (Array.isArray(initial)) {
         var state = [];
         for (var i=0, l=initial.length; i < l; i++) {
           state.push(initial[i].state());

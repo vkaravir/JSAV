@@ -33,12 +33,12 @@
             elem = $curr.data(eventOpts.dataField);
           }
           jsav.logEvent({type: eventOpts.logEventPrefix + eventType, objid: elem.id(), objvalue: elem.value() });
-          if ($.isFunction(data)) { // if no data -> 1st arg is the handler function
+          if (typeof data === "function") { // if no data -> 1st arg is the handler function
             // bind this to the elem and call handler
             // with the event as parameter
             data.call(elem, e);
-          } else if ($.isFunction(handler)) { // data provided, 2nd arg is the handler function
-            var params = $.isArray(data)?data.slice(0):[data]; // get a cloned array or data as array
+          } else if (typeof handler === "function") { // data provided, 2nd arg is the handler function
+            var params = Array.isArray(data)?data.slice(0):[data]; // get a cloned array or data as array
             params.push(e); // jQuery event as the last parameter
             handler.apply(elem, params); // apply the given handler function
           }
@@ -50,12 +50,12 @@
           var edge = $(this).data("edge"); // get the JSAV edge object
           jsav.logEvent({type: "jsav-edge-" + eventType, startvalue: edge.start().value(),
                         endvalue: edge.end().value(), startid: edge.start().id(), endid: edge.end().id() });
-          if ($.isFunction(data)) { // no data
+          if (typeof data === "function") { // no data
             // bind this to the edge and call handler
             // with the event as parameter
             data.call(edge, e);
-          } else if ($.isFunction(handler)) { // data provided
-            var params = $.isArray(data)?data.slice(0):[data]; // get a cloned array or data as array
+          } else if (typeof handler === "function") { // data provided
+            var params = Array.isArray(data)?data.slice(0):[data]; // get a cloned array or data as array
             params.push(e); // jQuery event as the last parameter
             handler.apply(edge, params); // apply the function
           }

@@ -29,7 +29,7 @@
       state = obj.state?obj.state():null;
     var retVal = this.effect.apply(this.obj, this.args);
     if (typeof retVal === "undefined" || retVal === this.obj) {
-      if (typeof this.undoeffect === "undefined" || !$.isFunction(this.undoeffect)) {
+      if (typeof this.undoeffect === "undefined" || typeof this.undoeffect !== "function") {
         this.undoeffect = (function() {
           return function() { // we create one that will set the state of obj to its current state
             obj.state(state);
@@ -71,7 +71,7 @@
     this._redo.unshift(step);
     // if a filter function is given, check if this step matches
     // if not, continue moving backward
-    if (filter && $.isFunction(filter) && !filter(step)) {
+    if (filter && typeof filter === "function" && !filter(step)) {
       this.backward(filter);
     }
     // trigger an event on the container to update the counter
@@ -139,7 +139,7 @@
         if (!jsav.isAnimating()) {
           jsav.container.removeClass(playingCl);
           jsav._animations = 0;
-          if ($.isFunction(callback)) {
+          if (typeof callback === "function") {
             callback();
           }
           clearInterval(timerid);
@@ -154,7 +154,7 @@
         clearPlayingTimeout(this, callback);
       } else {
         this.container.removeClass(playingCl);
-        if ($.isFunction(callback)) {
+        if (typeof callback === "function") {
           callback();
         }
       }
@@ -204,7 +204,15 @@
       // log the event
       logAnimEvent("jsav-end");
     };
-    if ($controls.size() !== 0) {
+    if ($controls.length !== 0) {
+      // allow stepping the slideshow with the left/right arrow keys
+      this.container[0].addEventListener("keydown", function(e) {
+        if (e.keyCode == 37) {
+          backwardHandler(e);
+        } else if (e.keyCode == 39) {
+          forwardHandler(e);
+        }
+      });
       var tmpTranslation = this._translate("beginButtonTitle");
       $("<span class='jsavbegin' title='" + tmpTranslation + "'>&lt;&lt;</span>").click(beginHandler).appendTo($controls);
       tmpTranslation = this._translate("backwardButtonTitle");
@@ -224,7 +232,7 @@
     // add slideshow counter if an element with class counter exists
     var counter = $(".jsavcounter", this.container);
     // register an event to be triggered on container to update the counter
-    if (counter.size() > 0) {
+    if (counter.length > 0) {
       counter.text("0 / 0"); // initialize the counter text
       // register event handler to update the counter
       this.container.bind("jsav-updatecounter", function(evet, current, total) {
@@ -282,7 +290,7 @@
       return false;
     }
     if (filter) {
-      if ($.isFunction(filter)) {
+      if (typeof filter === "function") {
         var filterMatch = filter(step),
           matched = filterMatch;
         while (!filterMatch && this.currentStep() < this.totalSteps()) {
@@ -424,7 +432,7 @@
   };
   JSAV.ext.isAnimating = function() {
     // returns true if animation is playing, false otherwise
-    return !!this.container.find(":animated").size() || this._animations > 0;
+    return !!this.container.find(":animated").length || this._animations > 0;
   };
   JSAV.ext._shouldAnimate = function() {
     return (!this.RECORD && !$.fx.off && this.SPEED > 50);

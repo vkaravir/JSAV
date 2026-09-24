@@ -1,7 +1,9 @@
 /**
 * Module that contains JSAV core.
 */
-/*global JSAV, jQuery, Raphael */
+/*global JSAV, jQuery, Raphael, d3 */
+
+
 (function($) {
   "use strict";
   var JSAV = function() {
@@ -18,18 +20,26 @@
   var jsavproto = JSAV.prototype;
   jsavproto.getSvg = function() {
     if (!this.svg) { // lazily create the SVG overlay only when needed
-      this.svg = Raphael(this.canvas[0]);
+      //this.svg = Raphael(this.canvas[0]);
+      const container = d3.select(this.canvas[0]);
+      this.svg = container.insert('svg', ':first-child').node();
+
 //      this.svg.renderfix();
-      var style = this.svg.canvas.style;
+      
+      // this.svg.canvas.style("position", "absolute");
+      var style = this.svg.style;
+      style.overflow = "hidden";
       style.position = "absolute";
     }
     return this.svg;
   };
   jsavproto.id = function() {
     var id = this.container[0].id;
+    // var id = this.container.attr("id");
     if (!id) {
       id = JSAV.utils.createUUID();
       this.container[0].id = id;
+      // this.container.attr("id", id);
     }
     return id;
   };
@@ -49,8 +59,10 @@
     // this will point to a newly-created JSAV instance
     if (typeof arguments[0] === "string") {
       this.container = $(document.getElementById(arguments[0]));
+      // this.container = d3.select(document.getElementById(arguments[0]));
     } else if (arguments[0] instanceof HTMLElement) {
       this.container = $(arguments[0]); // make sure it is jQuery object
+      // this.container = d3.select(arguments[0]);
     } else if (arguments[0] && typeof arguments[0] === "object" && arguments[0].constructor === jQuery) {
       this.container = arguments[0];
     }
@@ -66,6 +78,7 @@
       this.options = $.extend(true, defaultOptions, arguments[0]);
       // set the element option as the container
       this.container = $(this.options.element);
+      // this.container = d3.select(this.options.element);
     }
 
     // initialHTML will be logged as jsav-init, this._initialHTML used in clear
@@ -74,11 +87,13 @@
 
     this.container.addClass("jsavcontainer");
     this.canvas = this.container.find(".jsavcanvas");
-    if (this.canvas.size() === 0) {
+    if (this.canvas.length === 0) {
       this.canvas = $("<div />").addClass("jsavcanvas").appendTo(this.container);
+      // this.canvas = d3.create("div").classed("jsavcanvas", true).append("div");
     }
     // element used to block events when animating
     var shutter = $("<div class='jsavshutter' />").appendTo(this.container);
+    // var shutter = d3.create("div").classed("jsavshutter", true).append("div");
     this._shutter = shutter;
 
     this.RECORD = true;
@@ -93,7 +108,7 @@
   function initializations(jsav, options) {
     var fs = JSAV.init.functions;
     for (var i = 0; i < fs.length; i++) {
-      if ($.isFunction(fs[i])) {
+      if (typeof fs[i] === "function") {
         fs[i].call(jsav, options);
       }
     }
@@ -136,19 +151,61 @@
               itemPos = $item.position();
           // ignore SVG, since it will be handled differently since it's sized 100%x100%
           if (item.nodeName.toLowerCase() !== "svg") {
+            
             maxTop = Math.max(maxTop, itemPos.top + $item.outerHeight(true));
             maxLeft = Math.max(maxLeft, itemPos.left + $item.outerWidth(true));
           }
         });
+        // var svg_elem = d3.selectAll('svg').nodes().pop();
         if (that.svg) { // handling of SVG
-          var curr = that.svg.bottom, // start from the element in the behind
-              bbox, strokeWidth;
+          // var curr = that.svg.bottom, // start from the element in the behind
+          //     bbox, strokeWidth;
+          var curr = d3.select(that.svg).selectAll("*").
+          filter(function(d, i, nodes) { return i === nodes.length - 1; })
+          .node();
+
+          var bbox, strokeWidth, x2, y2;
           while (curr) { // iterate all SVG objects in Raphael
-            bbox = curr.getBBox();
-            strokeWidth = curr.attr("stroke-width");
-            maxTop = Math.max(maxTop, bbox.y2 + strokeWidth);
-            maxLeft = Math.max(maxLeft, bbox.x2 + strokeWidth);
-            curr = curr.next;
+
+            // Ignore markers object
+            if (curr.id.includes("arrow-style")) {
+              curr = d3.select(curr.previousSibling).node();
+              continue;
+            }
+
+            if (curr.tagName === "set") {
+              const children = d3.select(curr).selectAll(function(){
+                return this.children;
+              });
+              children.each(function() {
+                bbox = this.getBBox();
+            
+                // strokeWidth = curr.attr("stroke-width");
+                strokeWidth = parseInt(d3.select(this).attr("stroke-width"), 10);
+                x2 = bbox.x + bbox.width;
+                y2 = bbox.y + bbox.height;
+                maxTop = Math.max(maxTop, y2 + strokeWidth);
+                maxLeft = Math.max(maxLeft, x2 + strokeWidth);
+              });
+              curr = d3.select(curr.previousSibling).node();
+            }
+            else {
+              bbox = curr.getBBox();
+            
+                // strokeWidth = curr.attr("stroke-width");
+                strokeWidth = parseInt(d3.select(curr).attr("stroke-width"), 10);
+                x2 = bbox.x + bbox.width;
+                y2 = bbox.y + bbox.height;
+                maxTop = Math.max(maxTop, y2 + strokeWidth);
+                maxLeft = Math.max(maxLeft, x2 + strokeWidth);
+                // curr = curr.next;
+                
+                curr = d3.select(curr.previousSibling).node();
+            }
+
+            
+           
+
           }
         }
         // limit minWidth to parent width if scroll is set to true

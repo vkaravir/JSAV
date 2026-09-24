@@ -45,7 +45,7 @@
     var cbs = $elems.find('[type="checkbox"]'),
       that = this,
       correct = true;
-    if (cbs.size() === 0) {
+    if (cbs.length === 0) {
       cbs = $elems.find('[type="radio"]');
     }
     var answers = [], answer;

@@ -2,7 +2,8 @@
 * Module that contains the data structure implementations.
 * Depends on core.js, anim.js, utils.js, effects.js
 */
-/*global JSAV, jQuery, Raphael */
+/*global JSAV, jQuery, Raphael, d3 */
+
 (function($) {
   "use strict";
   if (typeof JSAV === "undefined") { return; }
@@ -17,7 +18,7 @@
       arg;
     for (var i = 0; i < arguments.length; i++) {
       arg = arguments[i];
-      if ($.isArray(arg)) {
+      if (Array.isArray(arg)) {
         for (var j = 0; j < arg.length; j++) {
           res[arg[j]] = this.css(arg[j]);
         }
@@ -35,10 +36,17 @@
   var dsproto = JSAVDataStructure.prototype;
   dsproto.getSvg = function() {
       if (!this.svg) { // lazily create the SVG overlay only when needed
-        this.svg = new Raphael(this.element[0]);
-        this.svg.renderfix();
-        var style = this.svg.canvas.style;
+        // this.svg = new Raphael(this.element[0]);
+        
+        const container = d3.select(this.element[0]);
+        this.svg = container.insert('svg', ':first-child').node();
+        
+        //this.svg.renderfix();
+        
+        var style = this.svg.style;
+        style.overflow = "hidden";
         style.position = "absolute";
+        
       }
       return this.svg;
     };
@@ -68,6 +76,8 @@
     if (startPos.left === endPos.left && startPos.top === endPos.top) {
       // layout not done yet
       this.g = this.jsav.g.line(-1, -1, -1, -1, $.extend({container: this.container}, this.options));
+      
+      
     } else {
       if (end) {
         endPos.left += end.element.outerWidth() / 2;
@@ -80,14 +90,18 @@
                               startPos.top,
                               endPos.left,
                               endPos.top, $.extend({container: this.container}, this.options));
+      
     }
 
-    this.element = $(this.g.rObj.node);
+
+    this.element = $(this.g.rObj);
 
     var visible = (typeof this.options.display === "boolean" && this.options.display === true);
-    this.g.rObj.attr({"opacity": 0});
+    // this.g.rObj.attr({"opacity": 0});
+    d3.select(this.g.rObj).attr('opacity', 0);
+    
     this.element.addClass("jsavedge");
-    if (start) {
+    if (start) {      
       this.element[0].setAttribute("data-startnode", this.startnode.id());
     }
     if (end) {
@@ -111,7 +125,9 @@
       return this.startnode;
     } else {
       this.startnode = node;
-      this.g.rObj.node.setAttribute("data-startnode", this.startnode?this.startnode.id():"");
+      
+      // this.g.rObj.node().setAttribute("data-startnode", this.startnode?this.startnode.id():"");
+      this.g.rObj.setAttribute("data-startnode", this.startnode?this.startnode.id():"");
       return this;
     }
   };
@@ -120,7 +136,9 @@
       return this.endnode;
     } else {
       this.endnode = node;
-      this.g.rObj.node.setAttribute("data-endnode", this.endnode?this.endnode.id():"");
+     
+      // this.g.rObj.node().setAttribute("data-endnode", this.endnode?this.endnode.id():"");
+      this.g.rObj.setAttribute("data-endnode", this.endnode?this.endnode.id():"");
       return this;
     }
   };
@@ -138,7 +156,7 @@
     }
   };
   edgeproto.clear = function() {
-    this.g.rObj.remove();
+    d3.select(this.g.rObj).remove();
   };
   edgeproto.hide = function(options) {
     if (this.g.isVisible()) {
@@ -157,7 +175,7 @@
   };
   edgeproto.label = function(newLabel, options) {
     if (typeof newLabel === "undefined") {
-      if (this._label && this._label.element.filter(":visible").size() > 0) {
+      if (this._label && this._label.element.filter(":visible").length > 0) {
         return this._label.text();
       } else {
         return undefined;
@@ -216,35 +234,51 @@
     var oldProps = $.extend(true, {}, cssprop),
         el = this.g.rObj,
         newprops;
+    
     if (typeof cssprop === "string" && typeof value !== "undefined") {
-      oldProps[cssprop] = el.attr(cssprop);
+      // oldProps[cssprop] = el.attr(cssprop);
+      oldProps[cssprop] = d3.select(el).attr(cssprop);
       newprops = {};
       newprops[cssprop] = value;
     } else {
       for (var i in cssprop) {
         if (cssprop.hasOwnProperty(i)) {
-          oldProps[i] = el.attr(i);
+          // oldProps[i] = el.attr(i);
+          oldProps[i] = d3.select(el).attr(i);
+          
         }
       }
       newprops = cssprop;
     }
     if (this.jsav._shouldAnimate()) { // only animate when playing, not when recording
-      el.animate(newprops, this.jsav.SPEED);
+      // el.animate(newprops, this.jsav.SPEED);
+      for (i in newprops) {
+        d3.select(el).attr(i, newprops[i]);
+      }
+      d3.select(el).transition().duration(this.jsav.SPEED);
     } else {
-      el.attr(newprops);
+      // el.attr(newprops);
+      for (i in newprops) {
+        if (newprops.hasOwnProperty(i)) {
+          d3.select(el).attr(i, newprops[i]);
+        }
+      }
     }
     return [oldProps];
   });
   edgeproto.css = function(cssprop, value, options) {
     if (typeof cssprop === "string" && typeof value === "undefined") {
-      return this.g.rObj.attr(cssprop);
+      // return this.g.rObj.attr(cssprop);
+      return d3.select(this.g.rObj).attr(cssprop);
     } else {
-      return this._setcss(cssprop, value, options);
+      return this._setattrs(cssprop, value, options);
     }
   };
   edgeproto.state = function(newState) {
     if (typeof newState !== "undefined") {
+
       this.g.css(newState.a); // set the css of the element
+
       JSAV.utils._helpers.setElementClasses(this.element, newState.cls || []); // set classes
       if (newState.l) { // set label
         this.label(newState.l, {record: false});
@@ -257,7 +291,8 @@
         this.weight("");
       }
     } else {
-      var state = {a: this.g.rObj.attrs}, // get all attrs set for the element
+      //var state = {a: this.g.rObj.attrs}, // get all attrs set for the element
+      var state = {a: d3.select(this.g.rObj).attr()},
           cls = JSAV.utils._helpers.elementClasses(this.element); // get classes
       if (cls.length > 0) { state.cls = cls; }
       if (this.label()) { state.l = this.label(); } // label
@@ -267,6 +302,7 @@
     }
   };
   edgeproto.position = function() {
+    //var bbox = d3.select(this.g).bounds();
     var bbox = this.g.bounds();
     return {left: bbox.left, top: bbox.top};
   };
@@ -317,9 +353,11 @@
         toAngle = normalizeAngle(2*Math.PI - Math.atan2(fromY - toY, fromX - toX)),
         startRadius = parseInt(sElem.css("borderBottomRightRadius"), 10) || 0,
         ADJUSTMENT_MAGIC = 2.2, // magic number to work with "all" stroke widths
+        
         strokeWidth = parseInt(this.g.element.css("stroke-width"), 10),
         // adjustment for the arrow drawn before the end of the edge line
-        startStrokeAdjust = this.options["arrow-begin"]? strokeWidth * ADJUSTMENT_MAGIC:0,
+        // startStrokeAdjust = this.options["arrow-begin"]? strokeWidth * ADJUSTMENT_MAGIC:0,
+        startStrokeAdjust = this.options["marker-begin"]? strokeWidth * ADJUSTMENT_MAGIC:0,
         fromPoint = (options && options.fromPoint)?options.fromPoint:
                                     getNodeBorderAtAngle({width: sWidth + startStrokeAdjust,
                                                           height: sHeight + startStrokeAdjust,
@@ -327,15 +365,18 @@
         // arbitrarily choose to use bottom-right border radius
         endRadius = parseInt(eElem.css("borderBottomRightRadius"), 10) || 0,
         // adjustment for the arrow drawn after the end of the edge line
-        endStrokeAdjust = this.options["arrow-end"]?strokeWidth * ADJUSTMENT_MAGIC:0,
+        // endStrokeAdjust = this.options["arrow-end"]?strokeWidth * ADJUSTMENT_MAGIC:0,
+        endStrokeAdjust = this.options["marker-end"]?strokeWidth * ADJUSTMENT_MAGIC:0,
         toPoint = getNodeBorderAtAngle({width: eWidth + endStrokeAdjust, height: eHeight + endStrokeAdjust, x: toX, y: toY},
                                         {x: fromX, y: fromY}, toAngle, endRadius);
+        
     // getNodeBorderAtAngle returns an array [x, y], and movePoints wants the point position
     // in the (poly)line as first item in the array, so we'll create arrays like [0, x, y] and
     // [1, x, y]
+
     this.g.movePoints([[0].concat(fromPoint), [1].concat(toPoint)], options);
 
-    if ($.isFunction(this._labelPositionUpdate)) {
+    if (typeof this._labelPositionUpdate === "function") {
       var bbtop = Math.min(fromPoint[1], toPoint[1]),
           bbleft = Math.min(fromPoint[0], toPoint[0]),
           bbwidth = Math.abs(fromPoint[0] - toPoint[0]),
@@ -543,9 +584,11 @@
       this.value(newState.v, {record: false});
       JSAV.utils._helpers.setElementClasses(this.element, newState.cls || []);
       this.element.attr("style", newState.css || "");
+      
     } else {
       var state = { v: this.value() },
         style = this.element.attr("style");
+       
       var cls = JSAV.utils._helpers.elementClasses(this.element);
       if (cls.length > 0) {
         state.cls = cls;

@@ -24,7 +24,7 @@
       if (this.output.hasClass("jsavline") && opts.preserve) {
         var el = this.output.find("div:last"),
           newmsg = "<span style='color:" + opts.color + ";'>" + msg + "</span>";
-        if (el.size() > 0) { // existing content in message output
+        if (el.length > 0) { // existing content in message output
           el.append(newmsg);
         } else { // first message
           this.output.html("<div style='color:" + opts.color + ";'>" + msg + "</div>");
@@ -101,7 +101,7 @@
 
   var soundSettings = function(jsav) {
     // creating the button element
-    var $elem = $("<button class='jsavsound soundOff'></button>");
+    var $elem = $("<button aria-label='Sound' class='jsavsound soundOff'></button>");
     // Sound button click event
     $elem.click(function() {
       for (var j = 0; j < window.length; j++) {
@@ -182,7 +182,7 @@
       $(this.container).attr("voice", "false");
     }
   });
-  $(window).unload(function() {
+  $(window).on("unload", function() {
     var synth = window.speechSynthesis;
     synth.cancel();
   });

@@ -48,6 +48,8 @@
     av.forward();
 
     var currBB = c.rObj.getBBox();
+    // console.log(c.rObj);
+    // console.log(currBB);
     equal(Math.round(currBB.x), Math.round(origBB.x));
     equal(Math.round(currBB.y), Math.round(origBB.y));
     equal(Math.round(currBB.width), Math.round(origBB.width), "scale undone correctly");

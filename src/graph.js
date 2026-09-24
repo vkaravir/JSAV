@@ -65,9 +65,53 @@
     return [oldadj, index, options];
   });
 
+  // Node drag handlers. Defined as prototype methods so that subclasses
+  // (such as the OpenDSA FiniteAutomaton) can inherit and extend them
+  // instead of duplicating the logic.
+  // Called when a node drag begins; slows down the animation during the drag.
+  graphproto.dragStart = function(node, event, ui) {
+    $(document).trigger("jsav-speed-change", 50);
+  };
+  // Called continuously while a node is dragged;
+  // relayouts all edges connected to the dragged node.
+  graphproto.drag = function(node, event, ui) {
+    var edges = this.edges();
+    for (var i = 0; i < edges.length; i++) {
+      var edge = edges[i];
+      if (edge.start().id() === node.id() ||
+          edge.end().id() === node.id()) {
+        edge.layout();
+      }
+    }
+  };
+  // Called when a node drag ends; restores the animation speed.
+  graphproto.dragStop = function(node, event, ui) {
+    $(document).trigger("jsav-speed-change", JSAV.ext.SPEED);
+  };
+  // Makes the given node draggable, dispatching to the (possibly overridden)
+  // dragStart/drag/dragStop prototype methods above.
+  graphproto._setupNodeDrag = function(node) {
+    var graph = this;
+    node.element.draggable({
+      start: function(event, ui) {
+        graph.dragStart($(this).data("node"), event, ui);
+      },
+      drag: function(event, ui) {
+        graph.drag($(this).data("node"), event, ui);
+      },
+      stop: function(event, ui) {
+        graph.dragStop($(this).data("node"), event, ui);
+      },
+      containment: "parent" // keep nodes within graph bounds
+    });
+  };
+
   // returns a new graph node
   graphproto.newNode = function(value, options) {
-    var newNode = new GraphNode(this, value, options), // create new node
+    // use the node constructor of the subclass, if one is defined
+    // (e.g. the OpenDSA FiniteAutomaton State), otherwise GraphNode
+    var nodeConstructor = (this.constructors && this.constructors.Node) || GraphNode;
+    var newNode = new nodeConstructor(this, value, options), // create new node
         newNodes = this._nodes.slice(0);
     newNodes.push(newNode); // add new node to clone of node array
     // set the nodes (makes the operation animatable
@@ -76,6 +120,11 @@
     var newAdjs = this._edges.slice(0);
     newAdjs.push([]);
     this._setadjs(newAdjs, options);
+
+    // enable node dragging if the draggable option is set
+    if (this.options.draggable) {
+      this._setupNodeDrag(newNode);
+    }
 
     return newNode;
   };
