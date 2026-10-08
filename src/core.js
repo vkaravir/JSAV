@@ -1,7 +1,7 @@
 /**
 * Module that contains JSAV core.
 */
-/*global JSAV, jQuery, Raphael, d3 */
+/*global JSAV, jQuery, d3 */
 
 
 (function($) {
@@ -20,7 +20,6 @@
   var jsavproto = JSAV.prototype;
   jsavproto.getSvg = function() {
     if (!this.svg) { // lazily create the SVG overlay only when needed
-      //this.svg = Raphael(this.canvas[0]);
       const container = d3.select(this.canvas[0]);
       this.svg = container.insert('svg', ':first-child').node();
 
@@ -165,7 +164,7 @@
           .node();
 
           var bbox, strokeWidth, x2, y2;
-          while (curr) { // iterate all SVG objects in Raphael
+          while (curr) { // iterate all SVG objects in d3
 
             // Ignore markers object
             if (curr.id.includes("arrow-style")) {

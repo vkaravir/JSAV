@@ -224,7 +224,7 @@
       this._controlsContainer = $controls;
     }
     // bind the handlers to events to enable control by triggering events
-    this.container.bind({ "jsav-forward": forwardHandler,
+    this.container.on({ "jsav-forward": forwardHandler,
                           "jsav-backward": backwardHandler,
                           "jsav-begin": beginHandler,
                           "jsav-end": endHandler });
@@ -235,13 +235,13 @@
     if (counter.length > 0) {
       counter.text("0 / 0"); // initialize the counter text
       // register event handler to update the counter
-      this.container.bind("jsav-updatecounter", function(evet, current, total) {
+      this.container.on("jsav-updatecounter", function(evet, current, total) {
         counter.text(current + " / " + total);
       });
     }
     
     // register a listener for the speed change event
-    $(document).bind("jsav-speed-change", function(e, args) {
+    $(document).on("jsav-speed-change", function(e, args) {
       that.SPEED = args;
     });
   });

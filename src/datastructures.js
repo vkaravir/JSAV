@@ -2,7 +2,7 @@
 * Module that contains the data structure implementations.
 * Depends on core.js, anim.js, utils.js, effects.js
 */
-/*global JSAV, jQuery, Raphael, d3 */
+/*global JSAV, jQuery, d3 */
 
 (function($) {
   "use strict";
@@ -35,9 +35,7 @@
   JSAV.utils.extend(JSAVDataStructure, JSAV._types.JSAVObject);
   var dsproto = JSAVDataStructure.prototype;
   dsproto.getSvg = function() {
-      if (!this.svg) { // lazily create the SVG overlay only when needed
-        // this.svg = new Raphael(this.element[0]);
-        
+      if (!this.svg) { // lazily create the SVG overlay only when needed        
         const container = d3.select(this.element[0]);
         this.svg = container.insert('svg', ':first-child').node();
         

@@ -1,10 +1,10 @@
 /**
  * Module that contains the graphical primitive implementations.
- * Depends on core.js, anim.js, jQuery, Raphael, d3
+ * Depends on core.js, anim.js, jQuery, d3
  */
-/*global JSAV, jQuery, Raphael, d3 */
+/*global JSAV, jQuery, d3 */
 
-// if (typeof Raphael !== "undefined") { // only execute if Raphael is loaded
+// if (typeof d3 !== "undefined") { // only execute if d3 is loaded
 if (typeof d3 !== "undefined") {
   (function ($, R) {
     "use strict";
@@ -365,7 +365,6 @@ if (typeof d3 !== "undefined") {
       return $.extend(true, [], this._points); // deep copy of points
     };
 
-    // var Circle = function(jsav, raphael, x, y, r, props) {
     var Circle = function (jsav, canvas, x, y, r, props) {
 
       this.rObj = d3.select(canvas)
@@ -411,9 +410,7 @@ if (typeof d3 !== "undefined") {
       }
     };
 
-    // var Rect = function(jsav, raphael, x, y, w, h, r, props) {
     var Rect = function (jsav, canvas, x, y, w, h, r, props) {
-      // this.rObj = raphael.rect(x, y, w, h, r);
 
       this.rObj = d3.select(canvas)
         .append("rect")
@@ -451,9 +448,9 @@ if (typeof d3 !== "undefined") {
       }
     };
 
-    // var Line = function(jsav, raphael, x1, y1, x2, y2, props) {
+    // var Line = function(jsav, canvas, x1, y1, x2, y2, props) {
     var Line = function Line(jsav, canvas, x1, y1, x2, y2, props) {
-      // this.rObj = raphael.path("M" + x1 + " "+ y1 + "L" + x2 + " " + y2);
+      // this.rObj = d3.select(canvas).append("path").attr("d", "M" + x1 + " "+ y1 + "L" + x2 + " " + y2);
       if (Array.isArray(x1)){
         var coords = x1;
         props = y1;
@@ -535,9 +532,9 @@ if (typeof d3 !== "undefined") {
     Line.prototype.points = points;
     Line.prototype._setpoints = _setpoints;
 
-    // var Ellipse = function(jsav, raphael, x, y, rx, ry, props) {
+    // var Ellipse = function(jsav, canvas, x, y, rx, ry, props) {
     var Ellipse = function Ellipse(jsav, canvas, x, y, rx, ry, props) {
-      // this.rObj = raphael.ellipse(x, y, rx, ry);
+      // this.rObj = d3.select(canvas).append("ellipse").attr("cx", x).attr("cy", y).attr("rx", rx).attr("ry", ry);
       this.rObj = d3.select(canvas)
           .append("ellipse")
           .attr("cx", x)
@@ -573,7 +570,7 @@ if (typeof d3 !== "undefined") {
       return this;
     };
 
-    // var Polyline = function(jsav, raphael, points, close, props) {
+    // var Polyline = function(jsav, canvas, points, close, props) {
     var Polyline = function Polyline(jsav, canvas, points, close, props) {
       var path = "M ";
       var path_string = "M ";
@@ -589,7 +586,7 @@ if (typeof d3 !== "undefined") {
         path += "Z";
         path_string += ",Z ";
       }
-      // this.rObj = raphael.path(path);
+      // this.rObj = d3.select(canvas).append("path").attr("d", path);
 
       this.rObj = d3.select(canvas)
         .append("path")
@@ -612,9 +609,9 @@ if (typeof d3 !== "undefined") {
     Polyline.prototype.points = points;
     Polyline.prototype._setpoints = _setpoints;
 
-    // var Path = function(jsav, raphael, path, props) {
+    // var Path = function(jsav, canvas, path, props) {
     var Path = function (jsav, canvas, path, props) {
-      // this.rObj = raphael.path(path);
+      // this.rObj = d3.select(canvas).append("path").attr("d", path);
 
       console.log(path);
 
@@ -640,9 +637,9 @@ if (typeof d3 !== "undefined") {
       }
     };
 
-    // var Set = function(jsav, raphael, props) {
+    // var Set = function(jsav, canvas, props) {
     var Set = function Set(jsav, canvas, props) {
-      // this.rObj = raphael.set();
+      // this.rObj = d3.select(canvas).append("set");
 
       this.rObj = d3.select(canvas).append("set").node();
       init(this, jsav, props);
@@ -860,7 +857,7 @@ if (typeof d3 !== "undefined") {
     })($.fn.hasClass);
     /*! End Keith Wood's utilities */
   })(jQuery, d3);
-  // (jQuery, Raphael));
+  // (jQuery, d3));
 } else {
   // end if d3 !== "undefined"
   // if d3 is not loaded, create dummy functions which warn when using primitives without Raphael

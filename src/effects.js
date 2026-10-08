@@ -47,7 +47,7 @@
         var cb = function() {
           if (called) { return; }
           called = true;
-          if (bound) { self.unbind($.support.transitionEnd, cb); }
+          if (bound) { self.off($.support.transitionEnd, cb); }
 
           self.each(function() {
             // clear the transition properties of all elements
@@ -60,7 +60,7 @@
         if ((opt.duration > 0) && ($.support.transitionEnd) && ($.transit.useTransitionEnd)) {
           // Use the 'transitionend' event if it's available.
           bound = true;
-          self.bind($.support.transitionEnd, cb);
+          self.on($.support.transitionEnd, cb);
         }
 
         // Fallback to timers if the 'transitionend' event isn't supported or fails to trigger.
@@ -302,7 +302,6 @@
 
       // ..and finally animate..
       if (this._shouldAnimate()) {  // only animate when playing, not when recording
-        // if ('Raphael' in window && opts.arrow) { // draw arrows only if Raphael is loaded
         if ('d3' in window && opts.marker){
           var off1 = $val1.offset(),
               off2 = $val2.offset(),

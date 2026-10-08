@@ -122,7 +122,7 @@
     if (name) { return; } // name was passed but param was not found, return undefined
     return vars;
   };
-  /* from raphaeljs */
+  /* from d3js */
   u.createUUID = function() {
     // http://www.ietf.org/rfc/rfc4122.txt
     var s = [],

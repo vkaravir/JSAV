@@ -40,7 +40,7 @@
       cont.removeClass("active");
     };
     // allow reset and model answer through an event triggered on container
-    this.jsav.container.bind({"jsav-exercise-reset": resetHandler,
+    this.jsav.container.on({"jsav-exercise-reset": resetHandler,
                               "jsav-exercise-model": modelHandler});
     if (cont.length) {
       var $reset = $('<input type="button" name="reset" value="' + this.options.resetButtonTitle + '" />')
